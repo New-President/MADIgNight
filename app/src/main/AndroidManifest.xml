@@ -10,6 +10,25 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.IgNight">
         <activity
+            android:name=".ui.login.LoginTest"
+            android:exported="false"
+            android:label="@string/title_activity_login_test" />
+        <activity
+            android:name=".LoginActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ViewProfileActivity"
+            android:exported="false" />
+        <activity
+            android:name=".BlogActivity"
+            android:exported="false" />
+        <activity
+            android:name=".MainMenuActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ChatListActivity"
+            android:exported="false" />
+        <activity
             android:name=".MainActivity"
             android:exported="true">
             <intent-filter>
