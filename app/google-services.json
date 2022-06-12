@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "901719946261",
+    "project_id": "madignight",
+    "storage_bucket": "madignight.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:901719946261:android:3c9f2fea51b489273b4a1c",
+        "android_client_info": {
+          "package_name": "sg.edu.np.ignight"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "901719946261-lrub5rlr5ielmgrorvbhbq3i1gljen2q.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCSqZidDPWlXif6XszKoRdzFfAjOnOMP8g"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "901719946261-lrub5rlr5ielmgrorvbhbq3i1gljen2q.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
