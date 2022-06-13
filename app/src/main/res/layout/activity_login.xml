@@ -11,13 +11,13 @@
         android:id="@+id/phoneNumberInputContainer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginLeft="50dp"
+        android:layout_marginTop="100dp"
+        android:layout_marginRight="50dp"
         android:orientation="horizontal"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:layout_marginTop="100dp"
-        android:layout_marginLeft="50dp"
-        android:layout_marginRight="50dp">
+        app:layout_constraintTop_toTopOf="parent">
 
         <TextView
             android:id="@+id/phonePrefix"
@@ -33,60 +33,89 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="0.8"
-            android:hint="Enter Phone Number" />
+            android:hint="Enter Phone Number"
+            android:digits="0123456789"/>
     </LinearLayout>
 
     <LinearLayout
         android:id="@+id/OTPInputContainer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginLeft="50dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginRight="50dp"
         android:orientation="horizontal"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/phoneNumberInputContainer"
-        android:layout_marginLeft="50dp"
-        android:layout_marginRight="50dp"
-        android:layout_marginTop="20dp">
+        app:layout_constraintTop_toBottomOf="@+id/phoneNumberInputContainer">
 
         <EditText
             android:id="@+id/OTPInput"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="0.7"
-            android:hint="Enter Code" />
+            android:hint="Enter Code"
+            android:digits="0123456789" />
 
         <Button
-            android:layout_weight="0.3"
+            android:id="@+id/sendOTPButton"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:id="@+id/sendOTPButton"
-            android:text="send OTP"
-            android:enabled="false"/>
+            android:layout_weight="0.3"
+            android:enabled="false"
+            android:text="send OTP" />
     </LinearLayout>
 
     <TextView
         android:id="@+id/loginErrorMessage"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textColor="#FF0000"
         android:text="Oops! An error occurred, please try again"
+        android:textColor="#FF0000"
+        android:visibility="gone"
         app:layout_constraintBottom_toTopOf="@+id/loginButton"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/OTPInputContainer"
-        android:visibility="gone"/>
+        app:layout_constraintTop_toBottomOf="@+id/OTPInputContainer" />
 
     <Button
         android:id="@+id/loginButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="152dp"
+        android:enabled="false"
         android:text="login"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/OTPInputContainer"
-        android:enabled="false"/>
+        app:layout_constraintTop_toBottomOf="@+id/OTPInputContainer" />
 
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="50dp"
+        android:gravity="center"
+        android:orientation="vertical"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/loginButton">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Wrong Number?"
+            android:textAlignment="center" />
+
+        <Button
+            android:id="@+id/resetLoginFields"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:backgroundTint="#ffffff"
+            android:minWidth="0dp"
+            android:minHeight="0dp"
+            android:text="reset"
+            android:textColor="#FF0000"
+            android:textSize="12sp" />
+    </LinearLayout>
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

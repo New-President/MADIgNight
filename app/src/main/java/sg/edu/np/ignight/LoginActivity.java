@@ -5,8 +5,10 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -35,7 +37,7 @@ import java.util.concurrent.TimeUnit;
 public class LoginActivity extends AppCompatActivity {
 
     private EditText phoneNumberInput, codeInput;
-    private Button loginButton, sendOTPButton;
+    private Button loginButton, sendOTPButton, resetLoginFieldsButton;
     private TextView errorMessage, phonePrefix;
 
     private PhoneAuthProvider.OnVerificationStateChangedCallbacks callbacks;
@@ -54,14 +56,15 @@ public class LoginActivity extends AppCompatActivity {
         codeInput = findViewById(R.id.OTPInput);  // EditText field for OTP
         sendOTPButton = findViewById(R.id.sendOTPButton);  // Button for sending OTP
         loginButton = findViewById(R.id.loginButton);  // Button for verification and login
+        resetLoginFieldsButton = findViewById(R.id.resetLoginFields);  // Button to reset fields to default
         errorMessage = findViewById(R.id.loginErrorMessage);  // TextView to show error in logging in
         phonePrefix = findViewById(R.id.phonePrefix);  // TextView with phone number prefix (set to +65)
 
         // turn off phone auth app verification
         FirebaseAuth.getInstance().getFirebaseAuthSettings().setAppVerificationDisabledForTesting(true);
 
-        // disable codeInput as default
-        toggleEditText(codeInput, false);
+        // set default fields first
+        setDefaultFields(false);
 
         // callbacks to be used in startPhoneNumberVerification()
         callbacks = new PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
@@ -80,10 +83,10 @@ public class LoginActivity extends AppCompatActivity {
                 verificationId = s;
             }
 
-            // verification failed -> call errorOccurred()
+            // verification failed -> call setDefaultFields()
             @Override
             public void onVerificationFailed(@NonNull FirebaseException e) {
-                errorOccurred();
+                setDefaultFields(true);
             }
         };
 
@@ -117,8 +120,9 @@ public class LoginActivity extends AppCompatActivity {
             public void afterTextChanged(Editable editable) {}
         });
 
-        // send OTP, enable codeInput and disable phoneNumberInput and sendOTPButton
-        // also hide the error message in case it is visible
+        // enable codeInput and disable phoneNumberInput and sendOTPButton
+        // hide the error message in case it is visible
+        // start countDownTimer and send OTP
         sendOTPButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -126,17 +130,36 @@ public class LoginActivity extends AppCompatActivity {
                 toggleEditText(phoneNumberInput, false);
                 sendOTPButton.setEnabled(false);
                 errorMessage.setVisibility(View.GONE);
+                allowResendOTP();
                 startPhoneNumberVerification();
             }
         });
 
         // verify phone number with verification code and disable codeInput and loginButton
+        // stop countDownTimer if it is active and reset sendOTPButton text
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 toggleEditText(codeInput, false);
                 loginButton.setEnabled(false);
+                if (countDownTimer != null) {
+                    countDownTimer.cancel();
+                    sendOTPButton.setText("send OTP");
+                }
                 verifyPhoneNumberWithCode();
+            }
+        });
+
+        // reset login fields to default
+        // stop countDownTimer if it is active and reset sendOTPButton text
+        resetLoginFieldsButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (countDownTimer != null) {
+                    countDownTimer.cancel();
+                    sendOTPButton.setText("send OTP");
+                }
+                setDefaultFields(false);
             }
         });
 
@@ -164,7 +187,7 @@ public class LoginActivity extends AppCompatActivity {
         FirebaseAuth.getInstance().signInWithCredential(phoneAuthCredential).addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
-                // if successfully logged in -> update database and call userIsLoggedIn(), otherwise call errorOccurred()
+                // if successfully logged in -> update database and call userIsLoggedIn(), otherwise call setDefaultFields()
                 if (task.isSuccessful()) {
 
                     FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
@@ -186,13 +209,13 @@ public class LoginActivity extends AppCompatActivity {
 
                             @Override
                             public void onCancelled(@NonNull DatabaseError error) {
-                                errorOccurred();
+                                setDefaultFields(true);
                             }
                         });
                     }
                 }
                 else {
-                    errorOccurred();
+                    setDefaultFields(true);
                 }
             }
         });
@@ -207,9 +230,9 @@ public class LoginActivity extends AppCompatActivity {
         }
     }
 
-    // to use when an error occurred
-    // clear verification id / reset input fields / disable buttons / show error message
-    private void errorOccurred() {
+    // reset fields to default
+    // clear verification id / reset input fields / disable buttons / show error message if showErrorMessage is true
+    private void setDefaultFields(boolean showErrorMessage) {
         verificationId = null;
         phoneNumberInput.setText("");
         toggleEditText(phoneNumberInput, true);
@@ -217,7 +240,7 @@ public class LoginActivity extends AppCompatActivity {
         toggleEditText(codeInput, false);
         sendOTPButton.setEnabled(false);
         loginButton.setEnabled(false);
-        errorMessage.setVisibility(View.VISIBLE);
+        errorMessage.setVisibility((showErrorMessage)?View.VISIBLE:View.GONE);
     }
 
     // to disable/enable EditText field - set toEnable to false to disable/true to enable
@@ -230,5 +253,24 @@ public class LoginActivity extends AppCompatActivity {
         }
         editText.setEnabled(toEnable);
         editText.setCursorVisible(toEnable);
+    }
+
+    CountDownTimer countDownTimer;
+
+    // use countdown timer to change sendOTPButton text and enable the button to allow resending the OTP after one minute
+    private void allowResendOTP() {
+        countDownTimer = new CountDownTimer(60000, 1000) {
+            @Override
+            public void onTick(long l) {
+                sendOTPButton.setText(Long.toString(Math.round(l / 1000.0)) + "(s)");
+            }
+
+            @Override
+            public void onFinish() {
+                sendOTPButton.setText("send OTP");
+                sendOTPButton.setEnabled(true);
+            }
+        };
+        countDownTimer.start();
     }
 }
