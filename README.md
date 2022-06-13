@@ -5,7 +5,7 @@ Yong Zi Ren (S10219524J)
 
 Lee Wee Kang (S10222162C)
 
-Lim Long Teck
+Lim Long Teck (S10221824G)
 
 Han Xihe (S10222998D)
 
