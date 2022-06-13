@@ -7,6 +7,6 @@ Lee Wee Kang (S10222162C)
 
 Lim Long Teck
 
-Han Xihe
+Han Xihe (S10222998D)
 
-Keefe Chong Wenkai
+Keefe Cheong Wenkai (S10222423C)
