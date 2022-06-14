@@ -69,90 +69,111 @@
                 <com.google.android.material.navigation.NavigationView
                     android:id="@+id/PreferencesView"
                     android:layout_width="0dp"
-                    android:layout_height="308dp"
+                    android:layout_height="400dp"
                     android:layout_marginTop="24dp"
                     android:background="#FFE3BA"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/InterestView">
 
-                    <androidx.constraintlayout.widget.ConstraintLayout
+                    <HorizontalScrollView
                         android:layout_width="match_parent"
                         android:layout_height="match_parent">
 
-                        <TextView
-                            android:id="@+id/Preferences"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="32dp"
-                            android:layout_marginTop="16dp"
-                            android:text="Preferences"
-                            android:textSize="20sp"
-                            android:textStyle="bold"
-                            app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toTopOf="parent" />
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:orientation="vertical">
 
-                        <TextView
-                            android:id="@+id/RelationshipPref"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="32dp"
-                            android:layout_marginTop="24dp"
-                            android:text="Relationship Preferences"
-                            android:textStyle="bold"
-                            app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toBottomOf="@+id/Preferences" />
+                            <androidx.constraintlayout.widget.ConstraintLayout
+                                android:layout_width="423dp"
+                                android:layout_height="match_parent">
 
-                        <Spinner
-                            android:id="@+id/RelationshipPrefDropdown"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="32dp"
-                            android:layout_marginTop="8dp"
-                            app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toBottomOf="@+id/RelationshipPref" />
+                                <TextView
+                                    android:id="@+id/Preferences"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginStart="32dp"
+                                    android:layout_marginTop="16dp"
+                                    android:text="Preferences"
+                                    android:textSize="20sp"
+                                    android:textStyle="bold"
+                                    app:layout_constraintStart_toStartOf="parent"
+                                    app:layout_constraintTop_toTopOf="parent" />
 
-                        <TextView
-                            android:id="@+id/PreferredGender"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="32dp"
-                            android:layout_marginTop="24dp"
-                            android:text="Gender"
-                            android:textStyle="bold"
-                            app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toBottomOf="@+id/RelationshipPrefDropdown" />
+                                <TextView
+                                    android:id="@+id/RelationshipPref"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginStart="32dp"
+                                    android:layout_marginTop="24dp"
+                                    android:text="Relationship Preferences"
+                                    android:textStyle="bold"
+                                    app:layout_constraintStart_toStartOf="parent"
+                                    app:layout_constraintTop_toBottomOf="@+id/Preferences" />
 
-                        <Spinner
-                            android:id="@+id/GenderPrefDropdown"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="32dp"
-                            android:layout_marginTop="8dp"
-                            app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toBottomOf="@+id/PreferredGender" />
+                                <Spinner
+                                    android:id="@+id/RelationshipPrefDropdown"
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginStart="32dp"
+                                    android:layout_marginTop="8dp"
+                                    android:spinnerMode="dropdown"
+                                    app:layout_constraintStart_toStartOf="parent"
+                                    app:layout_constraintTop_toBottomOf="@+id/RelationshipPref" />
 
-                        <TextView
-                            android:id="@+id/DateLocation"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="32dp"
-                            android:layout_marginTop="24dp"
-                            android:text="Date Location"
-                            android:textStyle="bold"
-                            app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toBottomOf="@+id/GenderPrefDropdown" />
+                                <TextView
+                                    android:id="@+id/PreferredGender"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginStart="32dp"
+                                    android:layout_marginTop="24dp"
+                                    android:text="Gender"
+                                    android:textStyle="bold"
+                                    app:layout_constraintStart_toStartOf="parent"
+                                    app:layout_constraintTop_toBottomOf="@+id/RelationshipPrefDropdown" />
 
-                        <Spinner
-                            android:id="@+id/DateLocationDropdown"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="32dp"
-                            android:layout_marginTop="8dp"
-                            app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toBottomOf="@+id/DateLocation" />
+                                <Spinner
+                                    android:id="@+id/GenderPrefDropdown"
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginStart="32dp"
+                                    android:layout_marginTop="8dp"
+                                    android:spinnerMode="dropdown"
+                                    app:layout_constraintStart_toStartOf="parent"
+                                    app:layout_constraintTop_toBottomOf="@+id/PreferredGender" />
 
-                    </androidx.constraintlayout.widget.ConstraintLayout>
+                                <TextView
+                                    android:id="@+id/DateLocation"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginStart="32dp"
+                                    android:layout_marginTop="24dp"
+                                    android:text="Date Location"
+                                    android:textStyle="bold"
+                                    app:layout_constraintStart_toStartOf="parent"
+                                    app:layout_constraintTop_toBottomOf="@+id/GenderPrefDropdown" />
+
+                                <TextView
+                                    android:id="@+id/DateLocDropdown"
+                                    android:layout_width="200dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginStart="33dp"
+                                    android:layout_marginTop="8dp"
+                                    android:background="@android:drawable/editbox_background"
+                                    android:drawableRight="@android:drawable/arrow_down_float"
+                                    android:drawablePadding="16dp"
+                                    android:hint="Select Language"
+                                    android:padding="12dp"
+                                    android:text="Date Location"
+                                    android:textStyle="bold"
+                                    app:layout_constraintStart_toStartOf="parent"
+                                    app:layout_constraintTop_toBottomOf="@+id/DateLocation" />
+
+                            </androidx.constraintlayout.widget.ConstraintLayout>
+                        </LinearLayout>
+                    </HorizontalScrollView>
+
                 </com.google.android.material.navigation.NavigationView>
 
                 <com.google.android.material.navigation.NavigationView
@@ -249,18 +270,18 @@
                             android:layout_height="wrap_content"
                             android:layout_marginStart="32dp"
                             android:layout_marginTop="8dp"
+                            android:spinnerMode="dropdown"
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toBottomOf="@+id/Gender" />
 
                         <Spinner
                             android:id="@+id/AgeDropdown"
-                            android:layout_width="wrap_content"
+                            android:layout_width="115dp"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="8dp"
                             android:layout_marginEnd="90dp"
+                            android:spinnerMode="dropdown"
                             app:layout_constraintEnd_toEndOf="parent"
-                            app:layout_constraintHorizontal_bias="1.0"
-                            app:layout_constraintStart_toEndOf="@+id/GenderDropdown"
                             app:layout_constraintTop_toBottomOf="@+id/Age" />
 
                         <TextView
@@ -268,7 +289,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="16dp"
-                            android:layout_marginEnd="100dp"
+                            android:layout_marginEnd="175dp"
                             android:text="Age"
                             android:textStyle="bold"
                             app:layout_constraintEnd_toEndOf="parent"
