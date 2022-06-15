@@ -2,9 +2,12 @@ package sg.edu.np.ignight;
 
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -95,6 +98,28 @@ public class ProfileCreationActivity extends AppCompatActivity {
         rv.setAdapter(adapter);
         rv.setLayoutManager(layout);*/
 
+        EditText aboutMeInput = findViewById(R.id.AboutMeInput);
+        TextView aboutMeView = findViewById(R.id.AboutMeTextView);
+
+        aboutMeInput.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                aboutMeView.setText(charSequence.toString());
+                float size = aboutMeView.getTextSize();
+                size = size/3;
+                aboutMeInput.setTextSize((int)size);
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+            }
+        });
 
 
     }

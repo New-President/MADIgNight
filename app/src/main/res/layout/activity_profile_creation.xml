@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#FFD596"
-    tools:context=".ProfileCreation">
+    tools:context=".ProfileCreationActivity">
 
     <ScrollView
         android:layout_width="match_parent"
@@ -29,7 +29,7 @@
                 <com.google.android.material.navigation.NavigationView
                     android:id="@+id/AboutView"
                     android:layout_width="0dp"
-                    android:layout_height="110dp"
+                    android:layout_height="230dp"
                     android:layout_marginTop="24dp"
                     android:background="#FFE3BA"
                     app:layout_constraintEnd_toEndOf="parent"
@@ -47,23 +47,42 @@
                             android:layout_marginStart="32dp"
                             android:layout_marginTop="16dp"
                             android:text="About Me"
-                            android:textSize="20sp"
+                            android:textSize="25sp"
                             android:textStyle="bold"
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toTopOf="parent" />
 
                         <EditText
-                            android:id="@+id/InputAboutMe"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="32dp"
-                            android:layout_marginTop="8dp"
-                            android:ems="10"
-                            android:inputType="textPersonName"
-                            android:text="About Me"
-                            android:textSize="12sp"
+                            android:id="@+id/AboutMeInput"
+                            android:layout_width="match_parent"
+                            android:layout_height="130dp"
+                            android:layout_marginTop="16dp"
+                            android:gravity="center"
+                            android:hint="About Me"
+                            android:maxLength="200"
+                            android:padding="20dp"
+                            android:textSize="20dp"
+                            app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toBottomOf="@+id/AboutMe" />
+
+                        <TextView
+                            android:id="@+id/AboutMeTextView"
+                            android:layout_width="match_parent"
+                            android:layout_height="130dp"
+                            android:layout_marginTop="16dp"
+                            android:autoSizeMaxTextSize="23sp"
+                            android:autoSizeMinTextSize="17sp"
+                            android:autoSizeStepGranularity="1sp"
+                            android:autoSizeTextType="uniform"
+                            android:gravity="center"
+                            android:padding="20dp"
+                            android:visibility="invisible"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@+id/AboutMe"
+                            tools:visibility="visible" />
+
                     </androidx.constraintlayout.widget.ConstraintLayout>
                 </com.google.android.material.navigation.NavigationView>
 
@@ -97,7 +116,7 @@
                                     android:layout_marginStart="32dp"
                                     android:layout_marginTop="16dp"
                                     android:text="Preferences"
-                                    android:textSize="20sp"
+                                    android:textSize="25sp"
                                     android:textStyle="bold"
                                     app:layout_constraintStart_toStartOf="parent"
                                     app:layout_constraintTop_toTopOf="parent" />
@@ -109,6 +128,7 @@
                                     android:layout_marginStart="32dp"
                                     android:layout_marginTop="24dp"
                                     android:text="Relationship Preferences"
+                                    android:textSize="17sp"
                                     android:textStyle="bold"
                                     app:layout_constraintStart_toStartOf="parent"
                                     app:layout_constraintTop_toBottomOf="@+id/Preferences" />
@@ -130,6 +150,7 @@
                                     android:layout_marginStart="32dp"
                                     android:layout_marginTop="24dp"
                                     android:text="Gender"
+                                    android:textSize="17sp"
                                     android:textStyle="bold"
                                     app:layout_constraintStart_toStartOf="parent"
                                     app:layout_constraintTop_toBottomOf="@+id/RelationshipPrefDropdown" />
@@ -151,6 +172,7 @@
                                     android:layout_marginStart="32dp"
                                     android:layout_marginTop="24dp"
                                     android:text="Date Location"
+                                    android:textSize="17sp"
                                     android:textStyle="bold"
                                     app:layout_constraintStart_toStartOf="parent"
                                     app:layout_constraintTop_toBottomOf="@+id/GenderPrefDropdown" />
@@ -216,7 +238,7 @@
                 <com.google.android.material.navigation.NavigationView
                     android:id="@+id/NameView"
                     android:layout_width="0dp"
-                    android:layout_height="220dp"
+                    android:layout_height="230dp"
                     android:layout_marginTop="24dp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
@@ -234,7 +256,7 @@
                             android:layout_marginStart="32dp"
                             android:layout_marginTop="20dp"
                             android:text="Username"
-                            android:textSize="20sp"
+                            android:textSize="25sp"
                             android:textStyle="bold"
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toTopOf="parent" />
@@ -247,7 +269,7 @@
                             android:layout_marginTop="8dp"
                             android:ems="10"
                             android:inputType="textPersonName"
-                            android:text="Name"
+                            android:hint="Name"
                             android:textSize="15sp"
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toBottomOf="@+id/Username" />
@@ -259,7 +281,7 @@
                             android:layout_marginStart="32dp"
                             android:layout_marginTop="16dp"
                             android:text="Gender"
-                            android:textSize="17sp"
+                            android:textSize="20sp"
                             android:textStyle="bold"
                             app:layout_constraintEnd_toStartOf="@+id/Age"
                             app:layout_constraintHorizontal_bias="0.5"
@@ -294,7 +316,7 @@
                             android:layout_marginTop="16dp"
                             android:layout_marginEnd="175dp"
                             android:text="Age"
-                            android:textSize="17sp"
+                            android:textSize="20sp"
                             android:textStyle="bold"
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintHorizontal_bias="0.5"
@@ -308,7 +330,7 @@
                 <com.google.android.material.navigation.NavigationView
                     android:id="@+id/InterestView"
                     android:layout_width="0dp"
-                    android:layout_height="190dp"
+                    android:layout_height="220dp"
                     android:layout_marginTop="24dp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
@@ -326,7 +348,7 @@
                             android:layout_marginStart="32dp"
                             android:layout_marginTop="8dp"
                             android:text="Interests"
-                            android:textSize="20sp"
+                            android:textSize="25sp"
                             android:textStyle="bold"
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toTopOf="parent" />
