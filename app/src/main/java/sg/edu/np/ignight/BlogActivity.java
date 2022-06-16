@@ -31,7 +31,6 @@ public class BlogActivity extends AppCompatActivity {
         BlogAdapter adapter = new BlogAdapter(BlogActivity.this, data);
         LinearLayoutManager layout = new LinearLayoutManager(this);
         layout.setOrientation(LinearLayoutManager.VERTICAL);
-
         rv.setAdapter(adapter);
         rv.setLayoutManager(layout);
     }
