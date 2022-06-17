@@ -9,21 +9,18 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 public class BlogViewHolder extends RecyclerView.ViewHolder {
-    TextView username;
     TextView desc;
     TextView device;
     TextView likes;
     TextView location;
     TextView comments;
     ImageView blogImg;
-    ImageView profilePic;
     ImageView commentButton;
     ImageView likesButton;
     View viewItem;
 
     public BlogViewHolder(View item){
         super(item);
-        username = item.findViewById(R.id.blogUsername);
         desc = item.findViewById(R.id.blogDesc);
         device = item.findViewById(R.id.device);
         likes = item.findViewById(R.id.likesCount);
@@ -31,7 +28,6 @@ public class BlogViewHolder extends RecyclerView.ViewHolder {
         location = item.findViewById(R.id.location);
 
         blogImg = item.findViewById(R.id.blogImg);
-        profilePic = item.findViewById(R.id.profilePic);
         commentButton = item.findViewById(R.id.commentButton);
         likesButton = item.findViewById(R.id.likeButton);
         viewItem = item;

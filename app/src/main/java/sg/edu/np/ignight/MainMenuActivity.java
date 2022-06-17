@@ -13,6 +13,7 @@ import java.util.ArrayList;
 
 public class MainMenuActivity extends AppCompatActivity {
 
+    // Edit profile, Logout, about page, stage 2: map, paywalls, terms & conditions??
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

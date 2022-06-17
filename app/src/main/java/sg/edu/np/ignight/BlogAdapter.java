@@ -43,14 +43,12 @@ public class BlogAdapter extends RecyclerView.Adapter<BlogViewHolder> {
         setupImageLoader();
         Blog blog = data.get(position);
 
-        String username = blog.username;
         String description = blog.description;
         String device = blog.device;
         String location = blog.location;
         int likes = blog.likes;
         int comments = blog.comments;
 
-        holder.username.setText(username);
         holder.desc.setText(description);
         holder.device.setText("Sent via " + device);
         holder.location.setText("@" + location);
@@ -58,17 +56,8 @@ public class BlogAdapter extends RecyclerView.Adapter<BlogViewHolder> {
         holder.comments.setText(String.valueOf(comments));
 
         ImageView blogImage = holder.blogImg; //add fullscreen function
-        ImageView profilePic = holder.profilePic; //view profile
         ImageView likebutton = holder.likesButton; //add fullscreen function
         ImageView commentButton = holder.commentButton; //view profile
-
-        profilePic.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                //find user
-
-            }
-        });
 
         blogImage.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -92,7 +81,6 @@ public class BlogAdapter extends RecyclerView.Adapter<BlogViewHolder> {
         });
 
         int defaultImage = c.getResources().getIdentifier("@drawables/failed.jpg", null, c.getPackageName());
-        int defaultImage2 = c.getResources().getIdentifier("@drawables/failed.jpg", null, c.getPackageName());
 
         ImageLoader imageLoader = ImageLoader.getInstance();
         DisplayImageOptions options = new DisplayImageOptions.Builder().cacheInMemory(true)
@@ -102,7 +90,6 @@ public class BlogAdapter extends RecyclerView.Adapter<BlogViewHolder> {
                 .showImageOnLoading(defaultImage).build();
 
         imageLoader.displayImage(blog.imgUrl, blogImage, options);
-        imageLoader.displayImage(blog.profileUrl, profilePic, options);
     }
 
     @Override

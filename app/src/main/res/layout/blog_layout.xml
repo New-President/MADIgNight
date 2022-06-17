@@ -16,29 +16,17 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <ImageView
-        android:id="@+id/profilePic"
-        android:layout_width="51dp"
-        android:layout_height="48dp"
-        android:layout_marginStart="32dp"
-        android:layout_marginTop="16dp"
-        android:scaleType="centerCrop"
-        app:layout_constraintHorizontal_chainStyle="spread"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:srcCompat="@drawable/my_face" />
-
-    <ImageView
         android:id="@+id/blogImg"
         android:layout_width="0dp"
         android:layout_height="310dp"
         android:layout_marginStart="32dp"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="16dp"
         android:layout_marginEnd="32dp"
         android:scaleType="centerCrop"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/profilePic"
+        app:layout_constraintTop_toBottomOf="@+id/location"
         app:srcCompat="@drawable/via" />
 
     <TextView
@@ -105,13 +93,4 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/blogDesc" />
 
-    <TextView
-        android:id="@+id/blogUsername"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="32dp"
-        android:text="username"
-        app:layout_constraintStart_toEndOf="@+id/profilePic"
-        app:layout_constraintTop_toTopOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>

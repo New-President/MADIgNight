@@ -12,14 +12,16 @@ public class Blog {
     public String imgUrl;
     public String profileUrl;
 
-    public Blog(String u, String desc, String dev, String loc, int likes, int com, String iUrl, String pUrl){
-        username = u;
-        description = desc;
-        device = dev;
-        location = loc;
+    public Blog(String username, String description, String device, String location, int likes, int comments, String imgUrl, String profileUrl){
+        this.username = username;
+        this.description = description;
+        this.device = device;
+        this.location = location;
         this.likes = likes;
-        comments = com;
-        imgUrl = iUrl;
-        profileUrl = pUrl;
+        this.comments = comments;
+        this.imgUrl = imgUrl;
+        this.profileUrl = profileUrl;
     }
+
+    public Blog(){ }
 }

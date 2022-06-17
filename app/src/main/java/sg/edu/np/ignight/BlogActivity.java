@@ -4,7 +4,13 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
+import android.widget.ImageButton;
+
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
@@ -33,6 +39,22 @@ public class BlogActivity extends AppCompatActivity {
         layout.setOrientation(LinearLayoutManager.VERTICAL);
         rv.setAdapter(adapter);
         rv.setLayoutManager(layout);
+
+
+        ImageButton backBtn = findViewById(R.id.backButton);
+        FloatingActionButton createBlogBtn = findViewById(R.id.createBlogBtn);
+        backBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                finish();
+            }
+        });
+        createBlogBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent createBlogPage = new Intent(BlogActivity.this, CreateBlogActivity.class);
+            }
+        });
     }
 
 
