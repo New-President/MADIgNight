@@ -13,9 +13,6 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.IgNight">
         <activity
-            android:name=".Homepage_fragment"
-            android:exported="false" />
-        <activity
             android:name=".CreateBlogActivity"
             android:exported="false"></activity>
         <activity
