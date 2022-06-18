@@ -1,27 +1,54 @@
 package sg.edu.np.ignight;
 
-import android.widget.ImageButton;
+import java.util.ArrayList;
 
 public class Blog {
-    public String username;
     public String description;
-    public String device;
     public String location;
     public int likes;
     public int comments;
-    public String imgUrl;
-    public String profileUrl;
+    public ArrayList<String> commentsList;
+    public String imgUri;
 
-    public Blog(String username, String description, String device, String location, int likes, int comments, String imgUrl, String profileUrl){
-        this.username = username;
+    public Blog(String description, String location, String imgUrl){
         this.description = description;
-        this.device = device;
         this.location = location;
-        this.likes = likes;
-        this.comments = comments;
-        this.imgUrl = imgUrl;
-        this.profileUrl = profileUrl;
+        this.imgUri = imgUrl;
+        this.likes = 0;
+        this.comments = 0;
     }
 
     public Blog(){ }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public String getLocation() {
+        return location;
+    }
+
+    public void setLocation(String location) {
+        this.location = location;
+    }
+
+    public String getImgUri() {
+        return imgUri;
+    }
+
+    public void setImgUri(String imgUri) {
+        this.imgUri = imgUri;
+    }
+
+    public ArrayList<String> getCommentsList() {
+        return commentsList;
+    }
+
+    public void setCommentsList(ArrayList<String> commentsList) {
+        this.commentsList = commentsList;
+    }
 }

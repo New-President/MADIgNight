@@ -10,7 +10,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 public class BlogViewHolder extends RecyclerView.ViewHolder {
     TextView desc;
-    TextView device;
     TextView likes;
     TextView location;
     TextView comments;
@@ -22,7 +21,6 @@ public class BlogViewHolder extends RecyclerView.ViewHolder {
     public BlogViewHolder(View item){
         super(item);
         desc = item.findViewById(R.id.blogDesc);
-        device = item.findViewById(R.id.device);
         likes = item.findViewById(R.id.likesCount);
         comments = item.findViewById(R.id.commentsCount);
         location = item.findViewById(R.id.location);
