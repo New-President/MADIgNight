@@ -1,11 +1,9 @@
 package sg.edu.np.ignight;
 
 import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
@@ -44,13 +42,11 @@ public class BlogAdapter extends RecyclerView.Adapter<BlogViewHolder> {
         Blog blog = data.get(position);
 
         String description = blog.description;
-        String device = blog.device;
         String location = blog.location;
         int likes = blog.likes;
         int comments = blog.comments;
 
         holder.desc.setText(description);
-        holder.device.setText("Sent via " + device);
         holder.location.setText("@" + location);
         holder.likes.setText(String.valueOf(likes));
         holder.comments.setText(String.valueOf(comments));
@@ -89,7 +85,7 @@ public class BlogAdapter extends RecyclerView.Adapter<BlogViewHolder> {
                 .showImageOnFail(defaultImage)
                 .showImageOnLoading(defaultImage).build();
 
-        imageLoader.displayImage(blog.imgUrl, blogImage, options);
+        imageLoader.displayImage(blog.imgUri, blogImage, options);
     }
 
     @Override
