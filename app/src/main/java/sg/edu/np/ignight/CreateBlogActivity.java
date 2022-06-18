@@ -1,10 +1,12 @@
 package sg.edu.np.ignight;
 
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
@@ -16,8 +18,13 @@ import android.widget.ImageView;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
+import java.util.Random;
 
 public class CreateBlogActivity extends AppCompatActivity {
 
@@ -25,18 +32,16 @@ public class CreateBlogActivity extends AppCompatActivity {
     private ImageView blogImg;
     private Uri imgUri;
     private Button uploadBtn;
-    String uid;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_blog);
 
-        FirebaseDatabase database = FirebaseDatabase.getInstance("https://madignight-default-rtdb.asia-southeast1.firebasedatabase.app");
+        FirebaseDatabase database = FirebaseDatabase.getInstance("https://madignight-default-rtdb.asia-southeast1.firebasedatabase.app/");
         FirebaseAuth auth = FirebaseAuth.getInstance();
         FirebaseUser user = auth.getCurrentUser();
-
-        DatabaseReference myRef = database.getReference("user").child("test").child("blogs");
+        DatabaseReference databaseReference = database.getReference("user").child("SqDiaNh7KGhYd09lWeVpVrRTSKc2").child("blog");
 
         ImageButton backBtn = findViewById(R.id.backButton);
         blogImg = findViewById(R.id.createBlogImg);
@@ -63,6 +68,7 @@ public class CreateBlogActivity extends AppCompatActivity {
         });
 
         postBtn.setOnClickListener(new View.OnClickListener() {
+            @RequiresApi(api = Build.VERSION_CODES.N)
             @Override
             public void onClick(View view) {
 
@@ -71,12 +77,26 @@ public class CreateBlogActivity extends AppCompatActivity {
                 if(blogDesc.length() >= 5 && !TextUtils.isEmpty(blogLoc)){
 
                     Blog newBlog = new Blog(blogDesc, blogLoc, imgUri.toString());
-
+                    Log.d("img", imgUri.toString());
                     // Store in firebase under Users
-                    myRef.setValue(newBlog);
-                    myRef.push();
+                    databaseReference.child(givenUsingJava8_whenGeneratingRandomAlphanumericString_thenCorrect()).setValue(newBlog);
                     finish();
                 }
+            }
+        });
+
+        databaseReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                // This method is called once with the initial value and again
+                // whenever data at this location is updated.
+                Log.d("TAG", "onDataChange: Added information to database \n " + dataSnapshot.getValue());
+            }
+
+            @Override
+            public void onCancelled(DatabaseError error) {
+                // Failed to read value
+                Log.w("ValueFail", "Failed to read value.", error.toException());
             }
         });
     }
@@ -91,5 +111,18 @@ public class CreateBlogActivity extends AppCompatActivity {
             uploadBtn.setText("Change");
         }
 
+    }
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    public String givenUsingJava8_whenGeneratingRandomAlphanumericString_thenCorrect() {
+        int leftLimit = 48; // numeral '0'
+        int rightLimit = 122; // letter 'z'
+        int targetStringLength = 28;
+        Random random = new Random();
+
+        return random.ints(leftLimit, rightLimit + 1)
+                .filter(i -> (i <= 57 || i >= 65) && (i <= 90 || i >= 97))
+                .limit(targetStringLength)
+                .collect(StringBuilder::new, StringBuilder::appendCodePoint, StringBuilder::append)
+                .toString();
     }
 }

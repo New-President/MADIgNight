@@ -16,6 +16,7 @@ public class Blog {
         this.imgUri = imgUrl;
         this.likes = 0;
         this.comments = 0;
+        this.commentsList = new ArrayList<>();
     }
 
     public Blog(){ }
