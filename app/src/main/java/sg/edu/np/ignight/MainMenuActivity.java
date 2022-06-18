@@ -1,6 +1,7 @@
 package sg.edu.np.ignight;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -19,21 +20,25 @@ public class MainMenuActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_menu);
 
-        Button home = findViewById(R.id.home_menu);
+        Button home = findViewById(R.id.home_menu);// go back to home menu
         home.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+                ft.replace(R.id.frameLayout_menu, new Homepage_fragment());
+                ft.commit();
             }
         });
-        Button chat = findViewById(R.id.chat_menu);
+        Button chat = findViewById(R.id.chat_menu);// list of chats with other people (Use fragment view)
         chat.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                //FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+                //ft.replace(R.id. , new ());
+                //ft.commit();
             }
         });
-        ImageView profile = findViewById(R.id.ownerprofile_menu);
+        ImageView profile = findViewById(R.id.ownerprofile_menu); //display slide menu
         profile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
