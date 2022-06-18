@@ -1,10 +1,15 @@
 package sg.edu.np.ignight;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.util.Patterns;
 import android.view.View;
+import android.view.translation.ViewTranslationCallback;
+import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -18,7 +23,7 @@ import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.Objects;
 
-public class RegistrationActivity extends AppCompatActivity implements View.OnClickListener{
+public class RegistrationActivity extends AppCompatActivity{
 
     private EditText numberInput, usernameInput, passwordInput, confirmPasswordInput, emailInput;
     private ProgressBar progressBar2;
@@ -26,6 +31,8 @@ public class RegistrationActivity extends AppCompatActivity implements View.OnCl
     private FirebaseDatabase database;
     private Task<Void> myRef;
     private FirebaseAuth mAuth;
+    private Button createButton;
+    private ImageButton backButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,13 +51,23 @@ public class RegistrationActivity extends AppCompatActivity implements View.OnCl
         textView2 = findViewById(R.id.textView2);
         emailInput = findViewById(R.id.editEmailAddress);
         progressBar2 = findViewById(R.id.progressBar2);
-    }
 
-    @Override
-    public void onClick(View view){
-        if (view.getId() == R.id.createButton) { // When the user clicks on createButton, register the user
-            registerUser();
-        }
+        createButton = findViewById(R.id.createButton);
+        createButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                registerUser();
+            }
+        });
+
+        backButton = findViewById(R.id.BackButton);
+        backButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent toLogin = new Intent(getApplicationContext(), LoginActivity.class);
+                startActivity(toLogin);
+            }
+        });
     }
 
     // PERFORM SEPARATION
@@ -136,6 +153,9 @@ public class RegistrationActivity extends AppCompatActivity implements View.OnCl
                             // if registration is successful and data has been written to database
                             if(task1.isSuccessful()){
                                 textView2.setText("Be Ready To IgNight!");
+                                // moves to profile creation activity
+                                Intent toProfileCreation = new Intent(this, ProfileCreationActivity.class);
+                                startActivity(toProfileCreation);
                             }
                             else{ // registration unsuccessful
                                 Toast.makeText(getApplicationContext(),
