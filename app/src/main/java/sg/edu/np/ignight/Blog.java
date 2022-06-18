@@ -52,4 +52,5 @@ public class Blog {
     public void setCommentsList(ArrayList<String> commentsList) {
         this.commentsList = commentsList;
     }
+
 }
