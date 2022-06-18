@@ -1,9 +1,12 @@
 package sg.edu.np.ignight;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
@@ -15,7 +18,12 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
+import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -23,8 +31,12 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
 import java.util.Random;
+import java.util.UUID;
 
 public class CreateBlogActivity extends AppCompatActivity {
 
@@ -38,11 +50,14 @@ public class CreateBlogActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_blog);
 
+        Context c = this;
         FirebaseDatabase database = FirebaseDatabase.getInstance("https://madignight-default-rtdb.asia-southeast1.firebasedatabase.app/");
         FirebaseAuth auth = FirebaseAuth.getInstance();
         FirebaseUser user = auth.getCurrentUser();
         DatabaseReference databaseReference = database.getReference("user").child("SqDiaNh7KGhYd09lWeVpVrRTSKc2").child("blog");
 
+
+        ProgressDialog pd = new ProgressDialog(this);
         ImageButton backBtn = findViewById(R.id.backButton);
         blogImg = findViewById(R.id.createBlogImg);
         uploadBtn = findViewById(R.id.uploadBtn);
@@ -68,7 +83,6 @@ public class CreateBlogActivity extends AppCompatActivity {
         });
 
         postBtn.setOnClickListener(new View.OnClickListener() {
-            @RequiresApi(api = Build.VERSION_CODES.N)
             @Override
             public void onClick(View view) {
 
@@ -77,9 +91,12 @@ public class CreateBlogActivity extends AppCompatActivity {
                 if(blogDesc.length() >= 5 && !TextUtils.isEmpty(blogLoc)){
 
                     Blog newBlog = new Blog(blogDesc, blogLoc, imgUri.toString());
-                    Log.d("img", imgUri.toString());
                     // Store in firebase under Users
-                    databaseReference.child(givenUsingJava8_whenGeneratingRandomAlphanumericString_thenCorrect()).setValue(newBlog);
+                    DatabaseReference uploadBlog = databaseReference.push();
+                    uploadBlog.setValue(newBlog);
+                    pd.setMessage("Posting Blog..");
+                    pd.show();
+                    uploadImage(view, c);
                     finish();
                 }
             }
@@ -112,17 +129,26 @@ public class CreateBlogActivity extends AppCompatActivity {
         }
 
     }
-    @RequiresApi(api = Build.VERSION_CODES.N)
-    public String givenUsingJava8_whenGeneratingRandomAlphanumericString_thenCorrect() {
-        int leftLimit = 48; // numeral '0'
-        int rightLimit = 122; // letter 'z'
-        int targetStringLength = 28;
-        Random random = new Random();
 
-        return random.ints(leftLimit, rightLimit + 1)
-                .filter(i -> (i <= 57 || i >= 65) && (i <= 90 || i >= 97))
-                .limit(targetStringLength)
-                .collect(StringBuilder::new, StringBuilder::appendCodePoint, StringBuilder::append)
-                .toString();
+    public void uploadImage(View view, Context c){
+        final String randomKey = UUID.randomUUID().toString();
+        FirebaseStorage storage = FirebaseStorage.getInstance("gs://madignight.appspot.com");
+        StorageReference storageReference = storage.getReference().child("blog/" + "\n" +
+                "SqDiaNh7KGhYd09lWeVpVrRTSKc2").child(randomKey);
+
+        storageReference.putFile(imgUri)
+                .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                    @Override
+                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                        Snackbar.make(view, "Image Uploaded", Snackbar.LENGTH_LONG).show();
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Toast.makeText(c, "Failed to upload", Toast.LENGTH_LONG).show();
+                    }
+                });
+
     }
 }
