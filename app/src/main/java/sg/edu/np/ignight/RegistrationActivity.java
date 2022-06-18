@@ -1,35 +1,26 @@
 package sg.edu.np.ignight;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-
-import android.content.Intent;
+import android.annotation.SuppressLint;
 import android.os.Bundle;
-import android.util.Log;
 import android.util.Patterns;
 import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.gms.tasks.OnCompleteListener;
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 
-import org.w3c.dom.Text;
+import java.util.Objects;
 
 public class RegistrationActivity extends AppCompatActivity implements View.OnClickListener{
 
     private EditText numberInput, usernameInput, passwordInput, confirmPasswordInput, emailInput;
-    private Button createButton;
     private ProgressBar progressBar2;
     private TextView textView2;
     private FirebaseDatabase database;
@@ -46,31 +37,27 @@ public class RegistrationActivity extends AppCompatActivity implements View.OnCl
         DatabaseReference myRef = database.getReference("user");
         mAuth = FirebaseAuth.getInstance();
 
-        numberInput = (EditText) findViewById(R.id.editTextPhone);
-        usernameInput = (EditText) findViewById(R.id.newUsernameInput);
-        passwordInput = (EditText) findViewById(R.id.editTextTextPassword);
-        confirmPasswordInput = (EditText) findViewById(R.id.editTextTextPassword2);
-        createButton = (Button) findViewById(R.id.createButton);
-        textView2 = (TextView) findViewById(R.id.textView2);
-        emailInput = (EditText) findViewById(R.id.editEmailAddress);
-        progressBar2 = (ProgressBar) findViewById(R.id.progressBar2);
-
-
-
+        numberInput = findViewById(R.id.editTextPhone);
+        usernameInput = findViewById(R.id.newUsernameInput);
+        passwordInput = findViewById(R.id.editTextTextPassword);
+        confirmPasswordInput = findViewById(R.id.editTextTextPassword2);
+        textView2 = findViewById(R.id.textView2);
+        emailInput = findViewById(R.id.editEmailAddress);
+        progressBar2 = findViewById(R.id.progressBar2);
     }
 
     @Override
     public void onClick(View view){
-        switch (view.getId()){
-            case R.id.createButton: // When the user clicks on createButton, register the user
-                registerUser();
-                break;
+        if (view.getId() == R.id.createButton) { // When the user clicks on createButton, register the user
+            registerUser();
         }
     }
 
     // PERFORM SEPARATION
 
+    // -- NOT WORKING YET DUE TO DATABASE RULES --
 
+    @SuppressLint("SetTextI18n")
     private void registerUser() {
         // Conversion to string and trimming of input to get "correct" ones
         String newEmail = emailInput.getText().toString().trim();
@@ -135,48 +122,37 @@ public class RegistrationActivity extends AppCompatActivity implements View.OnCl
         progressBar2.setVisibility(View.VISIBLE);
 
         // FireBase login handling
-        mAuth.createUserWithEmailAndPassword(newEmail, newPassword).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-            @Override
-            public void onComplete(@NonNull Task<AuthResult> task) {
-                // Check if the registration is complete and successful
-                if(task.isSuccessful()){
-                    UserAccount user = new UserAccount(newEmail, newNumber, newUsername);
-                    // Sends user info to RealTime database
+        mAuth.createUserWithEmailAndPassword(newEmail, newPassword).addOnCompleteListener(task -> {
+            // Check if the registration is complete and successful
+            if(task.isSuccessful()){
+                UserAccount user = new UserAccount(newEmail, newNumber, newUsername);
+                // Sends user info to RealTime database
 
-                    database = FirebaseDatabase.getInstance("https://madignight-default-rtdb.asia-southeast1.firebasedatabase.app");
-                    myRef = database
-                            .getReference("user")
-                            .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
-                            .setValue(user).addOnCompleteListener(new OnCompleteListener<Void>() {
-                                @Override
-                                public void onComplete(@NonNull Task<Void> task) {
-                                    // if registration is successful and data has been written to database
-                                    if(task.isSuccessful()){
-                                        textView2.setText("Be Ready To IgNight!");
-                                    }
-                                    else{ // registration unsuccessful
-                                        Toast.makeText(getApplicationContext(),
-                                                "Registration unsuccessful. Please try again later.",
-                                                Toast.LENGTH_LONG);
-                                    }
-                                    progressBar2.setVisibility(View.GONE);
-                                }
-                            });
-                }
-                else{ // registration unsuccessful
-                    Toast.makeText(getApplicationContext(),
-                            "Registration unsuccessful. Please try again later.",
-                            Toast.LENGTH_LONG);
-                    progressBar2.setVisibility(View.GONE);
-                }
+                database = FirebaseDatabase.getInstance("https://madignight-default-rtdb.asia-southeast1.firebasedatabase.app");
+                myRef = database
+                        .getReference("user")
+                        .child(Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid())
+                        .setValue(user).addOnCompleteListener(task1 -> {
+                            // if registration is successful and data has been written to database
+                            if(task1.isSuccessful()){
+                                textView2.setText("Be Ready To IgNight!");
+                            }
+                            else{ // registration unsuccessful
+                                Toast.makeText(getApplicationContext(),
+                                        "Registration unsuccessful. Please try again later.",
+                                        Toast.LENGTH_LONG).show();
+                            }
+                            progressBar2.setVisibility(View.GONE);
+                        });
+            }
+            else{ // registration unsuccessful
+                Toast.makeText(getApplicationContext(),
+                        "Registration unsuccessful. Please try again later.",
+                        Toast.LENGTH_LONG).show();
+                progressBar2.setVisibility(View.GONE);
             }
         });
     }
-
-
-
-
-
         // Reading the user account data inside the database
 
         // Use cases:
