@@ -11,6 +11,7 @@ import android.widget.Button;
 import android.widget.ImageButton;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.firebase.auth.FirebaseAuth;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
@@ -22,8 +23,8 @@ public class BlogActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_blog);
 
-        ArrayList<Blog> data = new ArrayList<>();
 
+        ArrayList<Blog> data = new ArrayList<>();
 //
 //        data.add(new Blog("john", "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.", "android", "singapore", 1000, 2000,
 //                "https://images.unsplash.com/photo-1508964942454-1a56651d54ac?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=435&q=80"));
@@ -45,12 +46,16 @@ public class BlogActivity extends AppCompatActivity {
 
         ImageButton backBtn = findViewById(R.id.backButton);
         FloatingActionButton createBlogBtn = findViewById(R.id.createBlogBtn);
+
+
+
         backBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 finish();
             }
         });
+
         createBlogBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

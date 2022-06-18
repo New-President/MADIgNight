@@ -8,6 +8,7 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -29,6 +30,14 @@ public class ProfileCreationActivity extends AppCompatActivity {
         setContentView(R.layout.activity_profile_creation);
 
         InitDropdown();
+
+        ImageButton backBtn = findViewById(R.id.BackButton);
+        backBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                finish();
+            }
+        });
 
         String[] interests = {"Running", "Cooking", "Gaming", "Swimming", "Reading", "Shopping", "Others"};
         Button interestButton = findViewById(R.id.InterestButton);
