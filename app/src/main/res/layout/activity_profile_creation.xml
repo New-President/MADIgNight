@@ -268,8 +268,8 @@
                             android:layout_marginStart="32dp"
                             android:layout_marginTop="8dp"
                             android:ems="10"
-                            android:hint="Name"
                             android:inputType="textPersonName"
+                            android:hint="Name"
                             android:textSize="15sp"
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toBottomOf="@+id/Username" />
@@ -299,16 +299,6 @@
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toBottomOf="@+id/Gender" />
 
-                        <Spinner
-                            android:id="@+id/AgeDropdown"
-                            android:layout_width="115dp"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="8dp"
-                            android:layout_marginEnd="90dp"
-                            android:spinnerMode="dropdown"
-                            app:layout_constraintEnd_toEndOf="parent"
-                            app:layout_constraintTop_toBottomOf="@+id/Age" />
-
                         <TextView
                             android:id="@+id/Age"
                             android:layout_width="wrap_content"
@@ -322,6 +312,17 @@
                             app:layout_constraintHorizontal_bias="0.5"
                             app:layout_constraintStart_toEndOf="@+id/Gender"
                             app:layout_constraintTop_toBottomOf="@+id/InputName" />
+
+                        <EditText
+                            android:id="@+id/AgeInput"
+                            android:layout_width="115dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="8dp"
+                            android:layout_marginEnd="95dp"
+                            android:ems="10"
+                            android:inputType="number"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintTop_toBottomOf="@+id/Age" />
 
                     </androidx.constraintlayout.widget.ConstraintLayout>
 

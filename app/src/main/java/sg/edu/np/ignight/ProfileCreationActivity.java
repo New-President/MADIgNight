@@ -17,12 +17,17 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+
 import java.util.ArrayList;
 import java.util.Collections;
 
 public class ProfileCreationActivity extends AppCompatActivity {
 
     ArrayList<String> data = new ArrayList<>();
+    ArrayList<String> dateLocList = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -131,6 +136,69 @@ public class ProfileCreationActivity extends AppCompatActivity {
         });
 
 
+        // Saving to Firebase
+        FirebaseDatabase database = FirebaseDatabase.getInstance("https://madignight-default-rtdb.asia-southeast1.firebasedatabase.app/");
+        DatabaseReference myRef = database.getReference("User");
+
+
+        Button saveChanges = findViewById(R.id.SaveChanges);
+        saveChanges.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                DatabaseReference nested = myRef.child(FirebaseAuth.getInstance().getUid());
+                /*DatabaseReference nested = myRef.child(FirebaseAuth.getInstance().getUid());*/
+
+
+                // Username
+                EditText inputName = findViewById(R.id.InputName);
+                String username = inputName.getText().toString();
+                nested.child("username").setValue(username);
+
+                //Gender
+                Spinner GenderDropdown = findViewById(R.id.GenderDropdown);
+                String gender = GenderDropdown.getSelectedItem().toString();
+                nested.child("Gender").setValue(gender);
+
+
+                // Age
+                EditText inputAge = findViewById(R.id.AgeInput);
+                String tempAge = inputAge.getText().toString();
+                int age = Integer.parseInt(tempAge);
+                nested.child("Age").setValue(age);
+
+                // About me
+                EditText inputAboutMe = findViewById(R.id.AboutMeInput);
+                String aboutMe = inputAboutMe.getText().toString();
+                nested.child("About Me").setValue(aboutMe);
+
+                // Interest
+                DatabaseReference nestedInterest = nested.child("Interest");
+                for(int i = 0; i < data.size(); i++){
+                    String interest = data.get(i);
+                    nestedInterest.child("Interest" + i+1).setValue(interest);
+                }
+
+                // Relationship Preference
+                Spinner RelationshipPrefDropdown = findViewById(R.id.RelationshipPrefDropdown);
+                String RelationshipPref = RelationshipPrefDropdown.getSelectedItem().toString();
+                nested.child("Relationship Preference").setValue(RelationshipPref);
+
+                // Gender Preference
+                Spinner GenderPrefdropdown = findViewById(R.id.GenderPrefDropdown);
+                String GenderPref = GenderPrefdropdown.getSelectedItem().toString();
+                nested.child("Gender Preference").setValue(GenderPref);
+
+                // Date Location
+                DatabaseReference nestedDateLoc = nested.child("Date Location");
+                for(int i = 0; i < dateLocList.size(); i++){
+                    String dateLoc = dateLocList.get(i);
+                    nestedDateLoc.child("Date Location" + i+1).setValue(dateLoc);
+                }
+            }
+        });
+
+
     }
 
     public void InitDropdown(){
@@ -139,12 +207,6 @@ public class ProfileCreationActivity extends AppCompatActivity {
         String[] gender = new String[]{"Male", "Female"};
         ArrayAdapter<String> genderAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, gender);
         Genderdropdown.setAdapter(genderAdapter);
-
-        //Age
-        Spinner Agedropdown = findViewById(R.id.AgeDropdown);
-        String[] age = new String[]{"21-30", "31-40", "41-50", "51-60", "61-70", "71-80", "81 & above"};
-        ArrayAdapter<String> ageAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, age);
-        Agedropdown.setAdapter(ageAdapter);
 
         //Relationship Preference
         Spinner Relationsshipdropdown = findViewById(R.id.RelationshipPrefDropdown);
@@ -191,9 +253,10 @@ public class ProfileCreationActivity extends AppCompatActivity {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                         StringBuilder stringBuilder = new StringBuilder();
-
+                        dateLocList.removeAll(dateLocList);
                         for (int j = 0; j < checkedList.size(); j++){
                             stringBuilder.append(locations[checkedList.get(j)]);
+                            dateLocList.add(locations[checkedList.get(j)]);
                             if (j != checkedList.size() - 1){
                                 stringBuilder.append(", ");
                             }
@@ -216,6 +279,7 @@ public class ProfileCreationActivity extends AppCompatActivity {
                         for (int j = 0; j < selectedLocation.length; j++){
                             selectedLocation[j] = false;
                             checkedList.clear();
+                            dateLocList.removeAll(dateLocList);
                             LocationPref.setText("Date Location");
                         }
                     }

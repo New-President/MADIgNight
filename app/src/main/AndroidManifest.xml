@@ -38,7 +38,7 @@
             android:exported="false" />
         <activity
             android:name=".ProfileCreationActivity"
-            android:exported="false" />
+            android:exported="true" />
     </application>
 
 </manifest>
