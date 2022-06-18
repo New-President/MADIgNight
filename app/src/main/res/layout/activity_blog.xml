@@ -36,6 +36,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="46dp"
                 android:layout_marginTop="16dp"
+                android:layout_marginEnd="16dp"
                 android:text="Blog Posts"
                 android:textSize="20sp"
                 app:layout_constraintEnd_toEndOf="parent"

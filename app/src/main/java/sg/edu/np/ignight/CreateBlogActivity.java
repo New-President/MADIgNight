@@ -20,6 +20,8 @@ public class CreateBlogActivity extends AppCompatActivity {
     private static final int GALLERY_REQUEST = 1;
     private ImageView blogImg;
     private Uri imgUri;
+    private Button uploadBtn;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -32,7 +34,7 @@ public class CreateBlogActivity extends AppCompatActivity {
 
         blogImg = findViewById(R.id.createBlogImg);
 
-        Button uploadBtn = findViewById(R.id.uploadBtn);
+        uploadBtn = findViewById(R.id.uploadBtn);
 
         uploadBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -51,10 +53,17 @@ public class CreateBlogActivity extends AppCompatActivity {
         String blogDesc = editDesc.getText().toString().trim();
         String blogLoc = editLocation.getText().toString().trim();
 
-        Blog newBlog = new Blog(blogDesc, blogLoc, imgUri.toString());
+        postBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
 
-        // Store in firebase under Users
-        myRef.child("").setValue(newBlog);
+                Blog newBlog = new Blog(blogDesc, blogLoc, imgUri.toString());
+
+                // Store in firebase under Users
+                myRef.child("").setValue(newBlog);
+                finish();
+            }
+        });
     }
 
     @Override
@@ -63,12 +72,9 @@ public class CreateBlogActivity extends AppCompatActivity {
 
         if(requestCode == GALLERY_REQUEST && resultCode == RESULT_OK){
             imgUri = data.getData();
-
             blogImg.setImageURI(imgUri);
+            uploadBtn.setText("Change");
         }
-
-
-
 
     }
 }

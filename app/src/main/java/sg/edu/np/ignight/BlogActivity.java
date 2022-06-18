@@ -55,6 +55,7 @@ public class BlogActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent createBlogPage = new Intent(BlogActivity.this, CreateBlogActivity.class);
+                startActivity(createBlogPage);
             }
         });
     }
