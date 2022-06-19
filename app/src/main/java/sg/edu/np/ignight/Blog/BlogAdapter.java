@@ -76,8 +76,14 @@ public class BlogAdapter extends RecyclerView.Adapter<BlogViewHolder> {
         likebutton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                blog.likes += 1;
-                blog.liked = true;
+                if(blog.liked){
+                    blog.likes -= 1;
+                    blog.liked = false;
+                }
+                else {
+                    blog.likes += 1;
+                    blog.liked = true;
+                }
             }
         });
 
@@ -98,6 +104,7 @@ public class BlogAdapter extends RecyclerView.Adapter<BlogViewHolder> {
                 public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
                     Bitmap bitmap = BitmapFactory.decodeFile(localfile.getAbsolutePath());
                     blogImage.setImageBitmap(bitmap);
+
                 }
             }).addOnFailureListener(new OnFailureListener() {
                 @Override
@@ -109,17 +116,6 @@ public class BlogAdapter extends RecyclerView.Adapter<BlogViewHolder> {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
-//        int defaultImage = c.getResources().getIdentifier("@drawables/failed.jpg", null, c.getPackageName());
-//
-//        ImageLoader imageLoader = ImageLoader.getInstance();
-//        DisplayImageOptions options = new DisplayImageOptions.Builder().cacheInMemory(true)
-//                .cacheOnDisc(true).resetViewBeforeLoading(true)
-//                .showImageForEmptyUri(defaultImage)
-//                .showImageOnFail(defaultImage)
-//                .showImageOnLoading(defaultImage).build();
-//
-//        imageLoader.displayImage(String.valueOf(imgUri), blogImage, options);
 
     }
 

@@ -5,6 +5,7 @@ import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
@@ -18,7 +19,9 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnFailureListener;
@@ -54,11 +57,11 @@ public class CreateBlogActivity extends AppCompatActivity {
         setContentView(R.layout.activity_create_blog);
         FirebaseAuth auth = FirebaseAuth.getInstance();
         FirebaseUser user = auth.getCurrentUser();
-        assert user != null;
-        uid = user.getUid();
+//        assert user != null;
+//        uid = user.getUid();
         Context c = this;
         FirebaseDatabase database = FirebaseDatabase.getInstance("https://madignight-default-rtdb.asia-southeast1.firebasedatabase.app");
-        DatabaseReference databaseReference = database.getReference("user").child(uid).child("blog");
+        DatabaseReference databaseReference = database.getReference("user").child("SqDiaNh7KGhYd09lWeVpVrRTSKc2").child("blog");
 
 
         ProgressDialog pd = new ProgressDialog(this);
@@ -68,7 +71,7 @@ public class CreateBlogActivity extends AppCompatActivity {
         Button postBtn = findViewById(R.id.postBtn);
         EditText editDesc = findViewById(R.id.editBlogDesc);
         EditText editLocation = findViewById(R.id.editBlogLocation);
-
+        TextView errorMsg = findViewById(R.id.errorMsg);
 
         backBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -87,13 +90,26 @@ public class CreateBlogActivity extends AppCompatActivity {
         });
 
         postBtn.setOnClickListener(new View.OnClickListener() {
+            @SuppressLint("SetTextI18n")
             @RequiresApi(api = Build.VERSION_CODES.N)
             @Override
             public void onClick(View view) {
 
                 String blogDesc = editDesc.getText().toString().trim();
                 String blogLoc = editLocation.getText().toString().trim();
-                if(blogDesc.length() >= 5 && !TextUtils.isEmpty(blogLoc)){
+
+
+                if (imgUri == null) {
+                    errorMsg.setText("Upload an image before posting!");
+                }
+                if(blogDesc.length() <= 5) {
+                    errorMsg.setText("Give your blog more information");
+                }
+                else if (TextUtils.isEmpty(blogLoc)) {
+                    errorMsg.setText("Enter a location");
+                }
+                else{
+
                     pd.setMessage("Posting Blog..");
                     pd.show();
                     BlogObject newBlog = new BlogObject(blogDesc, blogLoc, uploadImage(c));
@@ -128,6 +144,7 @@ public class CreateBlogActivity extends AppCompatActivity {
         if(requestCode == GALLERY_REQUEST && resultCode == RESULT_OK){
             imgUri = data.getData();
             blogImg.setImageURI(imgUri);
+            blogImg.setPadding(0,0,0,0);
             uploadBtn.setText("Change");
         }
 
@@ -137,7 +154,7 @@ public class CreateBlogActivity extends AppCompatActivity {
     public String uploadImage(Context c){
         final String randomKey = UUID.randomUUID().toString();
         FirebaseStorage storage = FirebaseStorage.getInstance("gs://madignight.appspot.com");
-        StorageReference storageReference = storage.getReference().child("blog/" + uid).child(randomKey);
+        StorageReference storageReference = storage.getReference().child("blog/" + "SqDiaNh7KGhYd09lWeVpVrRTSKc2").child(randomKey);
 
         storageReference.putFile(imgUri)
                 .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {

@@ -30,16 +30,21 @@ import sg.edu.np.ignight.Blog.BlogAdapter;
 public class BlogActivity extends AppCompatActivity {
     private ArrayList<BlogObject> blogsList;
     private Context context;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_blog);
         context = this;
         blogsList = new ArrayList<>();
-        FirebaseDatabase database = FirebaseDatabase.getInstance("https://madignight-default-rtdb.asia-southeast1.firebasedatabase.app/");
-        DatabaseReference databaseReference = database.getReference("user").child("SqDiaNh7KGhYd09lWeVpVrRTSKc2").child("blog");
         FirebaseAuth auth = FirebaseAuth.getInstance();
         FirebaseUser user = auth.getCurrentUser();
+//        assert user != null;
+//        String uid = user.getUid();
+
+        FirebaseDatabase database = FirebaseDatabase.getInstance("https://madignight-default-rtdb.asia-southeast1.firebasedatabase.app/");
+        DatabaseReference databaseReference = database.getReference("user").child("SqDiaNh7KGhYd09lWeVpVrRTSKc2").child("blog");
+
 
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
@@ -70,7 +75,12 @@ public class BlogActivity extends AppCompatActivity {
         });
 
         ImageButton backBtn = findViewById(R.id.backButton);
+
         FloatingActionButton createBlogBtn = findViewById(R.id.createBlogBtn);
+
+//        if(!getIntent().getStringExtra("UID").equals("SqDiaNh7KGhYd09lWeVpVrRTSKc2")){
+//            createBlogBtn.setVisibility(View.GONE);
+//        }
 
         backBtn.setOnClickListener(new View.OnClickListener() {
             @Override
