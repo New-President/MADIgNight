@@ -121,7 +121,7 @@ public class ProfileViewActivity extends AppCompatActivity {
 
 
         // add intents for bottom buttons here
-        backButton = findViewById(R.id.BackButton);
+        backButton = findViewById(R.id.profileViewBackButton);
         backButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -134,11 +134,11 @@ public class ProfileViewActivity extends AppCompatActivity {
         ignightButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent startChat = new Intent(getApplicationContext(), ChatListFragment.class);
+                Intent startChat = new Intent(getApplicationContext(), ChatActivity.class);
                 startActivity(startChat);
             }
         });
-        RecyclerView rv = (RecyclerView) findViewById(R.id.InterestsRecyclerView);
+        RecyclerView rv = findViewById(R.id.InterestsRecyclerView);
         ProfileViewInterestsAdapter adapter = new ProfileViewInterestsAdapter(ProfileViewActivity.this, interestsDisplay);
         LinearLayoutManager layout = new LinearLayoutManager(this);
         layout.setOrientation(LinearLayoutManager.HORIZONTAL);
