@@ -17,7 +17,6 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -49,7 +48,7 @@ public class MainMenuAdapter extends RecyclerView.Adapter<MainMenuViewHolder>{
     @Override
     public void onBindViewHolder(@NonNull MainMenuViewHolder holder, int position) {
         UserObject user = data.get(position);
-        holder.Name.setText(user.Username);
+        holder.Name.setText(user.getUsername());
         Button next = holder.Reject;
         Button ignight = holder.Accept;
         ImageView profile = holder.ProfilePic_menu;
@@ -100,7 +99,7 @@ public class MainMenuAdapter extends RecyclerView.Adapter<MainMenuViewHolder>{
                                         Intent intent = new Intent(view.getContext(), ChatActivity.class);
                                         Bundle bundle = new Bundle();
                                         bundle.putString("chatID", newChatID);
-                                        bundle.putString("chatName", user.Username);
+                                        bundle.putString("chatName", user.getUsername());
                                         bundle.putString("targetUserID", targetUserUID);
                                         intent.putExtras(bundle);
                                         view.getContext().startActivity(intent);

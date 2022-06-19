@@ -4,10 +4,12 @@ import static android.content.ContentValues.TAG;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -37,6 +39,20 @@ public class MainMenuActivity extends AppCompatActivity {
 
         updateConnection();
 
+        Intent intent = getIntent();
+        String intentExtra = intent.getStringExtra("showFrag");
+
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+
+        if (intentExtra != null && intentExtra.equals("chatlist")) {
+            ft.replace(R.id.frameLayout_menu, new ChatListFragment());
+        }
+        else {
+            ft.replace(R.id.frameLayout_menu, new Homepage_fragment());
+        }
+        ft.commit();
+
+
         Button home = findViewById(R.id.home_menu);// go back to home menu
         home.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -46,31 +62,19 @@ public class MainMenuActivity extends AppCompatActivity {
                 ft.commit();
             }
         });
+
         Button chat = findViewById(R.id.chat_menu);// list of chats with other people (Use fragment view)
         chat.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-                ft.replace(R.id.frameLayout_menu , new ChatListFragment());
+                ft.replace(R.id.frameLayout_menu, new ChatListFragment());
                 ft.commit();
             }
         });
-        ImageView profile = findViewById(R.id.ownerprofile_menu); //display slide menu
-        profile.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
 
-            }
-        });
-        ArrayList<UserObject> data = new ArrayList<>();
 
-        RecyclerView rv = findViewById(R.id.recyclerView2);
-        MainMenuAdapter adapter = new MainMenuAdapter(MainMenuActivity.this, data);
-        LinearLayoutManager layout = new LinearLayoutManager(this);
-        layout.setOrientation(LinearLayoutManager.VERTICAL);
 
-        rv.setAdapter(adapter);
-        rv.setLayoutManager(layout);
     }
 
     private void updateConnection() {
