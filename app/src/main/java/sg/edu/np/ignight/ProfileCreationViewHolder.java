@@ -11,6 +11,6 @@ public class ProfileCreationViewHolder extends RecyclerView.ViewHolder {
     public ProfileCreationViewHolder(View item){
         super(item);
 
-        interest = item.findViewById(R.id.interestButton);
+        interest = item.findViewById(R.id.InterestButton);
     }
 }
