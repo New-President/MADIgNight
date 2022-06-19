@@ -38,6 +38,8 @@ import com.google.firebase.storage.UploadTask;
 import java.util.Random;
 import java.util.UUID;
 
+import sg.edu.np.ignight.Blog.BlogObject;
+
 public class CreateBlogActivity extends AppCompatActivity {
 
     private static final int GALLERY_REQUEST = 1;
@@ -94,7 +96,7 @@ public class CreateBlogActivity extends AppCompatActivity {
                 if(blogDesc.length() >= 5 && !TextUtils.isEmpty(blogLoc)){
                     pd.setMessage("Posting Blog..");
                     pd.show();
-                    Blog newBlog = new Blog(blogDesc, blogLoc, uploadImage(c));
+                    BlogObject newBlog = new BlogObject(blogDesc, blogLoc, uploadImage(c));
                     // Store in firebase under Users
                     databaseReference.child(givenUsingJava8_whenGeneratingRandomAlphanumericString_thenCorrect()).setValue(newBlog);
                     finish();

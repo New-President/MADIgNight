@@ -10,7 +10,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageButton;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -22,12 +21,14 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 
+import sg.edu.np.ignight.Blog.BlogObject;
+import sg.edu.np.ignight.Blog.BlogAdapter;
+
 public class BlogActivity extends AppCompatActivity {
-    private ArrayList<Blog> blogsList;
+    private ArrayList<BlogObject> blogsList;
     private Context context;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,7 +49,7 @@ public class BlogActivity extends AppCompatActivity {
                 for(DataSnapshot keyNode : snapshot.getChildren()){
                     keys.add(keyNode.getKey());
                     Log.d("key", keyNode.getKey());
-                    Blog blog = keyNode.getValue(Blog.class);
+                    BlogObject blog = keyNode.getValue(BlogObject.class);
                     blogsList.add(blog);
                 }
 

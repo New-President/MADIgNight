@@ -14,6 +14,12 @@
         android:theme="@style/Theme.IgNight">
         <activity
             android:name=".CreateBlogActivity"
+            android:exported="false"/>
+        <activity
+            android:name=".ChatActivity"
+            android:exported="false" />
+        <activity
+            android:name=".BlogActivity"
             android:exported="false" />
         <activity
             android:name=".LoginActivity"
@@ -25,17 +31,11 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".BlogActivity"
-            android:exported="false"/>
-        <activity
             android:name=".MainMenuActivity"
             android:exported="false" />
         <activity
-            android:name=".ChatListActivity"
-            android:exported="false" />
-        <activity
             android:name=".ProfileCreationActivity"
-            android:exported="true" />
+            android:exported="false" />
     </application>
 
 </manifest>

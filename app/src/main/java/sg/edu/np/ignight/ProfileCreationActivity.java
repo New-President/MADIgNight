@@ -36,7 +36,7 @@ public class ProfileCreationActivity extends AppCompatActivity {
 
         InitDropdown();
 
-        ImageButton backBtn = findViewById(R.id.BackButton);
+        ImageButton backBtn = findViewById(R.id.profileViewBackButton);
         backBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -138,7 +138,7 @@ public class ProfileCreationActivity extends AppCompatActivity {
 
         // Saving to Firebase
         FirebaseDatabase database = FirebaseDatabase.getInstance("https://madignight-default-rtdb.asia-southeast1.firebasedatabase.app/");
-        DatabaseReference myRef = database.getReference("User");
+        DatabaseReference myRef = database.getReference("user");
 
 
         Button saveChanges = findViewById(R.id.SaveChanges);
@@ -146,55 +146,118 @@ public class ProfileCreationActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
-                DatabaseReference nested = myRef.child(FirebaseAuth.getInstance().getUid());
+                DatabaseReference nested = myRef.child("Testing");
                 /*DatabaseReference nested = myRef.child(FirebaseAuth.getInstance().getUid());*/
-
 
                 // Username
                 EditText inputName = findViewById(R.id.InputName);
                 String username = inputName.getText().toString();
-                nested.child("username").setValue(username);
 
                 //Gender
                 Spinner GenderDropdown = findViewById(R.id.GenderDropdown);
                 String gender = GenderDropdown.getSelectedItem().toString();
-                nested.child("Gender").setValue(gender);
-
 
                 // Age
                 EditText inputAge = findViewById(R.id.AgeInput);
                 String tempAge = inputAge.getText().toString();
-                int age = Integer.parseInt(tempAge);
-                nested.child("Age").setValue(age);
 
                 // About me
                 EditText inputAboutMe = findViewById(R.id.AboutMeInput);
                 String aboutMe = inputAboutMe.getText().toString();
-                nested.child("About Me").setValue(aboutMe);
 
                 // Interest
-                DatabaseReference nestedInterest = nested.child("Interest");
-                for(int i = 0; i < data.size(); i++){
-                    String interest = data.get(i);
-                    nestedInterest.child("Interest" + i+1).setValue(interest);
-                }
+                int interestSize = data.size();
 
                 // Relationship Preference
                 Spinner RelationshipPrefDropdown = findViewById(R.id.RelationshipPrefDropdown);
                 String RelationshipPref = RelationshipPrefDropdown.getSelectedItem().toString();
-                nested.child("Relationship Preference").setValue(RelationshipPref);
 
                 // Gender Preference
                 Spinner GenderPrefdropdown = findViewById(R.id.GenderPrefDropdown);
                 String GenderPref = GenderPrefdropdown.getSelectedItem().toString();
-                nested.child("Gender Preference").setValue(GenderPref);
 
                 // Date Location
-                DatabaseReference nestedDateLoc = nested.child("Date Location");
-                for(int i = 0; i < dateLocList.size(); i++){
-                    String dateLoc = dateLocList.get(i);
-                    nestedDateLoc.child("Date Location" + i+1).setValue(dateLoc);
+                int dateLocSize = dateLocList.size();
+
+                ArrayList<String> missingList = new ArrayList<>();
+                // Checking for missing inputs
+                if(IncompleteActions()){
+                    // Insert into database
+                    // Username
+                    nested.child("username").setValue(username);
+
+                    //Gender
+                    nested.child("Gender").setValue(gender);
+
+                    // Age
+                    int age = Integer.parseInt(tempAge);
+                    nested.child("Age").setValue(age);
+
+                    // About me
+                    nested.child("About Me").setValue(aboutMe);
+
+                    // Interest
+                    DatabaseReference nestedInterest = nested.child("Interest");
+                    for(int i = 0; i < interestSize; i++){
+                        String interest = data.get(i);
+                        nestedInterest.child("Interest" + i+1).setValue(interest);
+                    }
+
+                    // Relationship Preference
+                    nested.child("Relationship Preference").setValue(RelationshipPref);
+
+                    // Gender Preference
+                    nested.child("Gender Preference").setValue(GenderPref);
+
+                    // Date Location
+                    DatabaseReference nestedDateLoc = nested.child("Date Location");
+                    for(int i = 0; i < dateLocSize; i++){
+                        String dateLoc = dateLocList.get(i);
+                        nestedDateLoc.child("Date Location" + i+1).setValue(dateLoc);
+                    }
                 }
+                else{
+                    if(username.equals("")){
+                        missingList.add("Username");
+                    }
+                    if(tempAge.equals("")){
+                        missingList.add("Age");
+                    }
+                    else if (Integer.parseInt(tempAge) < 18){
+                        missingList.add("Invalid Age");
+                    }
+                    if(aboutMe.equals("")){
+                        missingList.add("About Me");
+                    }
+                    if(interestSize == 0){
+                        missingList.add("Interest");
+                    }
+                    if(dateLocSize == 0){
+                        missingList.add("Preferred Date Location");
+                    }
+
+                    AlertDialog.Builder alert = new AlertDialog.Builder(ProfileCreationActivity.this);
+                    alert.setTitle("Invalid Inputs");
+                    String message = "";
+                    for (int i = 0; i < missingList.size(); i++){
+                        if (i>0){
+                            message = message + ", " + missingList.get(i);
+                        }
+                        else{
+                            message = missingList.get(i);
+                        }
+                    }
+                    alert.setMessage(message);
+                    alert.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+
+                        }
+                    });
+                    alert.show();
+                }
+
+
             }
         });
 
@@ -298,5 +361,52 @@ public class ProfileCreationActivity extends AppCompatActivity {
 
         rv.setAdapter(adapter);
         rv.setLayoutManager(layout);
+    }
+
+    // Check for incomplete fields
+    public Boolean IncompleteActions(){
+
+        //username
+        EditText inputUsername = findViewById(R.id.InputName);
+        String username = inputUsername.getText().toString();
+
+        //Gender
+        Spinner GenderDropdown = findViewById(R.id.GenderDropdown);
+        String gender = GenderDropdown.getSelectedItem().toString();
+
+        //Age
+        EditText inputAge = findViewById(R.id.AgeInput);
+        String age = inputAge.getText().toString();
+
+        //About me
+        EditText inputAboutMe = findViewById(R.id.AboutMeInput);
+        String aboutMe = inputAboutMe.getText().toString();
+
+        //Interest
+        int interestSize = data.size();
+
+        //Relationship Preference
+        Spinner RelationshipPrefDropdown = findViewById(R.id.RelationshipPrefDropdown);
+        String RelationshipPref = RelationshipPrefDropdown.getSelectedItem().toString();
+
+        // Gender Preference
+        Spinner GenderPrefdropdown = findViewById(R.id.GenderPrefDropdown);
+        String GenderPref = GenderPrefdropdown.getSelectedItem().toString();
+
+        // Date Location
+        int dateLocSize = dateLocList.size();
+
+        // Checking if there are any missing inputs
+        if (username.equals("") || gender.equals("") || age.equals("") || aboutMe.equals("") || interestSize == 0 || RelationshipPref.equals("") || GenderPref.equals("") || dateLocSize == 0){
+            return false;
+        }
+        else{
+            int checkAge = Integer.parseInt(age);
+            if(checkAge < 18){
+                return false;
+            }
+        }
+
+        return true;
     }
 }
