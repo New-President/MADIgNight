@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/gradient_background"
     tools:context=".LoginActivity">
 
 
@@ -11,13 +12,13 @@
         android:id="@+id/phoneNumberInputContainer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="50dp"
-        android:layout_marginTop="100dp"
-        android:layout_marginRight="50dp"
         android:orientation="horizontal"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginTop="100dp"
+        android:layout_marginLeft="50dp"
+        android:layout_marginRight="50dp">
 
         <TextView
             android:id="@+id/phonePrefix"
@@ -41,13 +42,13 @@
         android:id="@+id/OTPInputContainer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="50dp"
-        android:layout_marginTop="20dp"
-        android:layout_marginRight="50dp"
         android:orientation="horizontal"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/phoneNumberInputContainer">
+        app:layout_constraintTop_toBottomOf="@+id/phoneNumberInputContainer"
+        android:layout_marginLeft="50dp"
+        android:layout_marginRight="50dp"
+        android:layout_marginTop="20dp">
 
         <EditText
             android:id="@+id/OTPInput"
@@ -62,32 +63,36 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="0.3"
+            android:background="#FFFFFF"
             android:enabled="false"
-            android:text="send OTP" />
+            android:text="send OTP"
+            android:textColor="#000000" />
     </LinearLayout>
 
     <TextView
         android:id="@+id/loginErrorMessage"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Oops! An error occurred, please try again"
         android:textColor="#FF0000"
-        android:visibility="gone"
+        android:text="Oops! An error occurred, please try again"
         app:layout_constraintBottom_toTopOf="@+id/loginButton"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/OTPInputContainer" />
+        app:layout_constraintTop_toBottomOf="@+id/OTPInputContainer"
+        android:visibility="gone"/>
 
     <Button
         android:id="@+id/loginButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="152dp"
-        android:enabled="false"
+        android:background="#FFFFFF"
         android:text="login"
+        android:textColor="#000000"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/OTPInputContainer" />
+        app:layout_constraintTop_toBottomOf="@+id/OTPInputContainer"
+        android:enabled="false"/>
 
     <LinearLayout
         android:layout_width="wrap_content"
@@ -116,6 +121,19 @@
             android:textColor="#FF0000"
             android:textSize="12sp" />
     </LinearLayout>
+
+    <ImageView
+        android:id="@+id/IgNightLogo"
+        android:layout_width="280dp"
+        android:layout_height="280dp"
+        android:layout_marginTop="32dp"
+        android:cropToPadding="false"
+        android:scaleType="centerCrop"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/IgnightLogo" />
+
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

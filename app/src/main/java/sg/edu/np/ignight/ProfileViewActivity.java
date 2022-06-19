@@ -89,7 +89,7 @@ public class ProfileViewActivity extends AppCompatActivity {
         backButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent backToMainMenu = new Intent(getApplicationContext(), MainMenuActivity.this);
+                Intent backToMainMenu = new Intent(getApplicationContext(), MainMenuActivity.class);
 
             }
         });
@@ -98,7 +98,7 @@ public class ProfileViewActivity extends AppCompatActivity {
         friendButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                registerUser();
+                //registerUser();
             }
         });
 
@@ -106,7 +106,7 @@ public class ProfileViewActivity extends AppCompatActivity {
         ignightButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                registerUser();
+                //registerUser();
             }
         });
     }
