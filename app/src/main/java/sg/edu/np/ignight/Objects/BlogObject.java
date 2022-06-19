@@ -1,4 +1,4 @@
-package sg.edu.np.ignight.Blog;
+package sg.edu.np.ignight.Objects;
 
 import java.util.ArrayList;
 

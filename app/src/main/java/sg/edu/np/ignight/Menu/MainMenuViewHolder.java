@@ -1,4 +1,4 @@
-package sg.edu.np.ignight;
+package sg.edu.np.ignight.Menu;
 
 import android.view.View;
 import android.widget.Button;
@@ -6,6 +6,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.recyclerview.widget.RecyclerView;
+
+import sg.edu.np.ignight.R;
 
 public class MainMenuViewHolder extends RecyclerView.ViewHolder{
     ImageView ProfilePic_menu;

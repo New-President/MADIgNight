@@ -1,14 +1,14 @@
-package sg.edu.np.ignight;
+package sg.edu.np.ignight.Objects;
 
 import java.util.Date;
 
 public class Comment {
-    private final UserAccount user;
+    private final UserObject user;
     private final String comment;
     private final Date timestamp;
     private int likes;
 
-    public UserAccount getUser() {
+    public UserObject getUser() {
         return user;
     }
 
@@ -28,7 +28,7 @@ public class Comment {
         this.likes = likes;
     }
 
-    public Comment(UserAccount user, String comment, Date timestamp, int likes){
+    public Comment(UserObject user, String comment, Date timestamp, int likes){
         this.user = user;
         this.comment = comment;
         this.timestamp = timestamp;

@@ -1,4 +1,4 @@
-package sg.edu.np.ignight;
+package sg.edu.np.ignight.ProfileCreation;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -10,6 +10,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
 
+import sg.edu.np.ignight.R;
+
 public class ProfileCreationAdapter extends RecyclerView.Adapter<ProfileCreationViewHolder> {
 
     public static ArrayList<String> data;
@@ -18,7 +20,6 @@ public class ProfileCreationAdapter extends RecyclerView.Adapter<ProfileCreation
         this.c =c;
         this.data = data;
     }
-
 
     @NonNull
     @Override
