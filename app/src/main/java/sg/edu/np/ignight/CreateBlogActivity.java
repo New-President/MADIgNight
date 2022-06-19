@@ -19,14 +19,11 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -41,7 +38,7 @@ import com.google.firebase.storage.UploadTask;
 import java.util.Random;
 import java.util.UUID;
 
-import sg.edu.np.ignight.Blog.BlogObject;
+import sg.edu.np.ignight.Objects.BlogObject;
 
 public class CreateBlogActivity extends AppCompatActivity {
 
@@ -65,7 +62,7 @@ public class CreateBlogActivity extends AppCompatActivity {
 
 
         ProgressDialog pd = new ProgressDialog(this);
-        ImageButton backBtn = findViewById(R.id.backButton);
+        ImageButton backBtn = findViewById(R.id.createBlogBackButton);
         blogImg = findViewById(R.id.createBlogImg);
         uploadBtn = findViewById(R.id.uploadBtn);
         Button postBtn = findViewById(R.id.postBtn);

@@ -28,6 +28,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+import sg.edu.np.ignight.ProfileView.ProfileViewInterestsAdapter;
+
 public class ProfileViewActivity extends AppCompatActivity {
     private String username;
     private String aboutMe;

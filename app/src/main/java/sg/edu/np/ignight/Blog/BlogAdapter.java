@@ -28,6 +28,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 
+import sg.edu.np.ignight.Objects.BlogObject;
 import sg.edu.np.ignight.R;
 
 public class BlogAdapter extends RecyclerView.Adapter<BlogViewHolder> {

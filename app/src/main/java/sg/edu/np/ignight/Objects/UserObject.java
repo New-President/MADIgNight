@@ -1,4 +1,4 @@
-package sg.edu.np.ignight;
+package sg.edu.np.ignight.Objects;
 
 import java.io.Serializable;
 import java.util.ArrayList;

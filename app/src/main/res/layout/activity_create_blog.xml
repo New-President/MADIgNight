@@ -37,23 +37,22 @@
                         android:layout_height="725dp">
 
                         <ImageButton
-                            android:id="@+id/backButton"
+                            android:id="@+id/createBlogBackButton"
                             android:layout_width="48dp"
-                            android:layout_height="48dp"
+                            android:layout_height="0dp"
                             android:layout_marginStart="16dp"
                             android:layout_marginTop="10dp"
                             android:background="#00FFFFFF"
                             android:minHeight="48dp"
+                            android:src="@drawable/ic_baseline_arrow_back_24"
                             app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toTopOf="parent"
-                            app:srcCompat="@drawable/ic_baseline_arrow_back_24" />
+                            app:layout_constraintTop_toTopOf="parent" />
 
                         <TextView
                             android:id="@+id/blogHeader"
                             android:layout_width="wrap_content"
                             android:layout_height="46dp"
                             android:layout_marginTop="16dp"
-                            android:layout_marginEnd="24dp"
                             android:elevation="5dp"
                             android:fontFamily="@font/amaranth_bold"
                             android:text="Creating Blog"
@@ -61,7 +60,7 @@
                             android:textSize="24sp"
                             android:textStyle="bold"
                             app:layout_constraintEnd_toEndOf="parent"
-                            app:layout_constraintStart_toEndOf="@+id/backButton"
+                            app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toTopOf="parent" />
 
                     </androidx.constraintlayout.widget.ConstraintLayout>
@@ -100,7 +99,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="32dp"
-                            android:layout_marginEnd="32dp"
+                            android:layout_marginEnd="24dp"
                             android:ems="10"
                             android:hint="Description"
                             android:inputType="textPersonName"
@@ -135,7 +134,7 @@
                             android:id="@+id/createBlogDesc"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="34dp"
+                            android:layout_marginTop="36dp"
                             android:layout_marginEnd="16dp"
                             android:background="@drawable/gradient_background"
                             android:elevation="5dp"
@@ -149,7 +148,7 @@
                             android:id="@+id/editBlogLocation"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginEnd="32dp"
+                            android:layout_marginEnd="24dp"
                             android:ems="10"
                             android:hint="Location"
                             android:inputType="textPersonName"

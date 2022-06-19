@@ -1,4 +1,4 @@
-package sg.edu.np.ignight;
+package sg.edu.np.ignight.Menu;
 
 import static android.content.ContentValues.TAG;
 
@@ -28,6 +28,11 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+
+import sg.edu.np.ignight.ChatActivity;
+import sg.edu.np.ignight.ProfileViewActivity;
+import sg.edu.np.ignight.R;
+import sg.edu.np.ignight.Objects.UserObject;
 
 public class MainMenuAdapter extends RecyclerView.Adapter<MainMenuViewHolder>{
     public static ArrayList<UserObject> data;

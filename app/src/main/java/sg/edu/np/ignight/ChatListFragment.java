@@ -2,11 +2,9 @@ package sg.edu.np.ignight;
 
 import static android.content.ContentValues.TAG;
 
-import android.content.Context;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -27,7 +25,7 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 
 import sg.edu.np.ignight.Chat.ChatListAdapter;
-import sg.edu.np.ignight.Chat.ChatObject;
+import sg.edu.np.ignight.Objects.ChatObject;
 
 public class ChatListFragment extends Fragment {
 

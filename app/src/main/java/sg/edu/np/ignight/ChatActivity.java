@@ -45,7 +45,7 @@ import java.util.Map;
 import sg.edu.np.ignight.Chat.MediaAdapter;
 import sg.edu.np.ignight.Chat.MessageAdapter;
 import sg.edu.np.ignight.Chat.MessageObject;
-import sg.edu.np.ignight.Timestamp.TimestampObject;
+import sg.edu.np.ignight.Objects.TimestampObject;
 
 public class ChatActivity extends AppCompatActivity {
 
