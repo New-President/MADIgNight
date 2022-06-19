@@ -23,7 +23,7 @@ Lee Wee Kang -
 
 Lim Long Teck -
 
-Han XiHe - 
+Han Xihe - 
 
 Keefe Cheong Wenkai -
 
