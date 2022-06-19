@@ -7,6 +7,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.Manifest;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.CountDownTimer;
@@ -38,6 +39,7 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
 // To authenticate user (phone number authentication with Firebase) and continue to app
@@ -53,25 +55,38 @@ public class LoginActivity extends AppCompatActivity {
 
     private String verificationId;
 
+    private CountDownLatch countDownLatch;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
+        FirebaseAuth.getInstance().signOut();
+
         getPermission();
 
+        countDownLatch = new CountDownLatch(1);
+
         userIsLoggedIn();
+
+        try {
+            countDownLatch.await();
+        }
+        catch (InterruptedException e) {
+            e.printStackTrace();
+        }
 
         // initialize various fields
         phoneNumberInput = findViewById(R.id.phoneNumberInput);  // EditText field for phone number
         codeInput = findViewById(R.id.OTPInput);  // EditText field for OTP
         sendOTPButton = findViewById(R.id.sendOTPButton);  // Button for sending OTP
         loginButton = findViewById(R.id.loginButton);  // Button for verification and login
-        //resetLoginFieldsButton = findViewById(R.id.resetLoginFields);  // Button to reset fields to default
+        resetLoginFieldsButton = findViewById(R.id.resetLoginFields);  // Button to reset fields to default
         errorMessage = findViewById(R.id.loginErrorMessage);  // TextView to show error in logging in
         phonePrefix = findViewById(R.id.phonePrefix);  // TextView with phone number prefix (set to +65)
-        //loginSuccessImage = findViewById(R.id.loginSuccessImage);
-        //loginProgressBar = findViewById(R.id.loginProgressBar);
+        loginSuccessImage = findViewById(R.id.loginSuccessImage);
+        loginProgressBar = findViewById(R.id.loginProgressBar);
 
         // turn off phone auth app verification
         FirebaseAuth.getInstance().getFirebaseAuthSettings().setAppVerificationDisabledForTesting(true);
@@ -111,7 +126,12 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
                 String phoneNumber = phoneNumberInput.getText().toString();
-                sendOTPButton.setEnabled(phoneNumber.length() == 8);
+                if (phoneNumber.length() == 8) {
+                    enableButton(sendOTPButton);
+                }
+                else {
+                    disableButton(sendOTPButton);
+                }
             }
 
             @Override
@@ -126,7 +146,12 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
                 String code = codeInput.getText().toString();
-                loginButton.setEnabled(code.length() == 6);
+                if (code.length() == 6) {
+                    enableButton(loginButton);
+                }
+                else {
+                    disableButton(loginButton);
+                }
             }
 
             @Override
@@ -141,7 +166,7 @@ public class LoginActivity extends AppCompatActivity {
             public void onClick(View view) {
                 toggleEditText(codeInput, true);
                 toggleEditText(phoneNumberInput, false);
-                sendOTPButton.setEnabled(false);
+                disableButton(sendOTPButton);
                 errorMessage.setVisibility(View.GONE);
                 allowResendOTP();
                 startPhoneNumberVerification();
@@ -154,7 +179,7 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 toggleEditText(codeInput, false);
-                loginButton.setEnabled(false);
+                disableButton(loginButton);
                 if (countDownTimer != null) {
                     countDownTimer.cancel();
                     sendOTPButton.setText("send OTP");
@@ -177,6 +202,16 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
 
+    }
+
+    private void enableButton(Button button) {
+        button.setEnabled(true);
+        button.setTextColor(Color.parseColor("#000000"));
+    }
+
+    private void disableButton(Button button) {
+        button.setEnabled(false);
+        button.setTextColor(Color.parseColor("#666666"));
     }
 
     private void showProgressBar() {
@@ -220,6 +255,7 @@ public class LoginActivity extends AppCompatActivity {
                                 if (!snapshot.exists()) {
                                     Map<String, Object> userMap = new HashMap<>();
                                     userMap.put("phone", user.getPhoneNumber());
+                                    userMap.put("profileCreated", false);
                                     userDB.updateChildren(userMap);
                                 }
 
@@ -250,19 +286,36 @@ public class LoginActivity extends AppCompatActivity {
                 Handler handler = new Handler();
                 loginProgressBar.setVisibility(View.GONE);
                 loginSuccessImage.setVisibility(View.VISIBLE);
-                handler.postDelayed(new Runnable() {
+
+                DatabaseReference userDB = FirebaseDatabase.getInstance("https://madignight-default-rtdb.asia-southeast1.firebasedatabase.app/").getReference().child("user").child(user.getUid());
+
+                userDB.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
-                    public void run() {
-                        startActivity(new Intent(getApplicationContext(), ProfileCreationActivity.class));
-                        finish();
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        boolean profileCreated = snapshot.child("profileCreated").getValue().toString().equals("true");
+
+                        handler.postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                startActivity(new Intent(getApplicationContext(), profileCreated?MainMenuActivity.class:ProfileCreationActivity.class));
+                                finish();
+                            }
+                        }, 1000);
                     }
-                }, 1000);
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+                        Log.e(TAG, "onCancelled: " + error.getMessage());
+                    }
+                });
             }
             else {
                 startActivity(new Intent(getApplicationContext(), MainMenuActivity.class));
                 finish();
             }
         }
+
+        countDownLatch.countDown();
     }
 
     // reset fields to default
@@ -275,8 +328,8 @@ public class LoginActivity extends AppCompatActivity {
         toggleEditText(phoneNumberInput, true);
         codeInput.setText("");
         toggleEditText(codeInput, false);
-        sendOTPButton.setEnabled(false);
-        loginButton.setEnabled(false);
+        disableButton(sendOTPButton);
+        disableButton(loginButton);
         loginSuccessImage.setVisibility(View.GONE);
         loginButton.setVisibility(View.VISIBLE);
     }
@@ -306,7 +359,7 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onFinish() {
                 sendOTPButton.setText("send OTP");
-                sendOTPButton.setEnabled(true);
+                enableButton(sendOTPButton);
             }
         };
         countDownTimer.start();

@@ -62,9 +62,14 @@ public class Homepage_fragment extends Fragment {
 
     private void initRecyclerView(View view) {
         userRV = view.findViewById(R.id.mainMenuUserList);
-        userListAdapter = new MainMenuAdapter(getActivity().getApplicationContext(), userList);
-        userLayoutManager = new LinearLayoutManager(getActivity().getApplicationContext());
+        userLayoutManager = new LinearLayoutManager(getActivity().getApplicationContext()) {
+            @Override
+            public boolean canScrollVertically() {
+                return false;
+            }
+        };
         userLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+        userListAdapter = new MainMenuAdapter(getActivity().getApplicationContext(), userList, userLayoutManager);
 
         userRV.setAdapter(userListAdapter);
         userRV.setLayoutManager(userLayoutManager);

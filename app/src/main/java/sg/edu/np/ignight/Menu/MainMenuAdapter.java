@@ -14,6 +14,7 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -35,12 +36,14 @@ import sg.edu.np.ignight.R;
 import sg.edu.np.ignight.Objects.UserObject;
 
 public class MainMenuAdapter extends RecyclerView.Adapter<MainMenuViewHolder>{
-    public static ArrayList<UserObject> data;
-    Context c;
+    private ArrayList<UserObject> data;
+    private Context c;
+    private LinearLayoutManager layoutManager;
 
-    public MainMenuAdapter(Context c, ArrayList<UserObject> data){
+    public MainMenuAdapter(Context c, ArrayList<UserObject> data, LinearLayoutManager layoutManager){
         this.c =c;
         this.data = data;
+        this.layoutManager = layoutManager;
     }
 
     @NonNull
@@ -61,6 +64,13 @@ public class MainMenuAdapter extends RecyclerView.Adapter<MainMenuViewHolder>{
         next.setOnClickListener(new View.OnClickListener() {// need algo to do
             @Override
             public void onClick(View view) {
+                if (holder.getAdapterPosition() != data.size() - 1) {
+                    layoutManager.scrollToPosition(holder.getAdapterPosition() + 1);
+                }
+                else {
+                    layoutManager.scrollToPosition(0);
+                }
+
                 Toast.makeText(c,"Thank you for your feedback! we will try not to recommend you this type of people next time!",Toast.LENGTH_SHORT ).show();
             }
         });

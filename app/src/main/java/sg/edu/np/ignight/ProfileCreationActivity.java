@@ -216,6 +216,9 @@ public class ProfileCreationActivity extends AppCompatActivity {
                         String dateLoc = dateLocList.get(i);
                         nestedDateLoc.child("Date Location" + i+1).setValue(dateLoc);
                     }
+
+                    // set profileCreated to true
+                    nested.child("profileCreated").setValue(true);
                 }
                 else{
                     if(username.equals("")){
