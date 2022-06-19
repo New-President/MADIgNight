@@ -29,7 +29,7 @@
                 <com.google.android.material.navigation.NavigationView
                     android:id="@+id/AboutView"
                     android:layout_width="0dp"
-                    android:layout_height="230dp"
+                    android:layout_height="250dp"
                     android:layout_marginTop="24dp"
                     android:background="#FFE3BA"
                     app:layout_constraintEnd_toEndOf="parent"
@@ -47,7 +47,7 @@
                             android:layout_marginStart="32dp"
                             android:layout_marginTop="16dp"
                             android:text="About Me"
-                            android:textSize="25sp"
+                            android:textSize="30sp"
                             android:textStyle="bold"
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toTopOf="parent" />
@@ -89,7 +89,7 @@
                 <com.google.android.material.navigation.NavigationView
                     android:id="@+id/PreferencesView"
                     android:layout_width="0dp"
-                    android:layout_height="400dp"
+                    android:layout_height="420dp"
                     android:layout_marginTop="24dp"
                     android:background="#FFE3BA"
                     app:layout_constraintEnd_toEndOf="parent"
@@ -116,7 +116,7 @@
                                     android:layout_marginStart="32dp"
                                     android:layout_marginTop="16dp"
                                     android:text="Preferences"
-                                    android:textSize="25sp"
+                                    android:textSize="30sp"
                                     android:textStyle="bold"
                                     app:layout_constraintStart_toStartOf="parent"
                                     app:layout_constraintTop_toTopOf="parent" />
@@ -128,15 +128,15 @@
                                     android:layout_marginStart="32dp"
                                     android:layout_marginTop="24dp"
                                     android:text="Relationship Preferences"
-                                    android:textSize="17sp"
+                                    android:textSize="20sp"
                                     android:textStyle="bold"
                                     app:layout_constraintStart_toStartOf="parent"
                                     app:layout_constraintTop_toBottomOf="@+id/Preferences" />
 
                                 <Spinner
                                     android:id="@+id/RelationshipPrefDropdown"
-                                    android:layout_width="0dp"
-                                    android:layout_height="wrap_content"
+                                    android:layout_width="125dp"
+                                    android:layout_height="50dp"
                                     android:layout_marginStart="32dp"
                                     android:layout_marginTop="8dp"
                                     android:spinnerMode="dropdown"
@@ -150,15 +150,15 @@
                                     android:layout_marginStart="32dp"
                                     android:layout_marginTop="24dp"
                                     android:text="Gender"
-                                    android:textSize="17sp"
+                                    android:textSize="20sp"
                                     android:textStyle="bold"
                                     app:layout_constraintStart_toStartOf="parent"
                                     app:layout_constraintTop_toBottomOf="@+id/RelationshipPrefDropdown" />
 
                                 <Spinner
                                     android:id="@+id/GenderPrefDropdown"
-                                    android:layout_width="0dp"
-                                    android:layout_height="wrap_content"
+                                    android:layout_width="125dp"
+                                    android:layout_height="50dp"
                                     android:layout_marginStart="32dp"
                                     android:layout_marginTop="8dp"
                                     android:spinnerMode="dropdown"
@@ -172,7 +172,7 @@
                                     android:layout_marginStart="32dp"
                                     android:layout_marginTop="24dp"
                                     android:text="Date Location"
-                                    android:textSize="17sp"
+                                    android:textSize="20sp"
                                     android:textStyle="bold"
                                     app:layout_constraintStart_toStartOf="parent"
                                     app:layout_constraintTop_toBottomOf="@+id/GenderPrefDropdown" />
@@ -238,7 +238,7 @@
                 <com.google.android.material.navigation.NavigationView
                     android:id="@+id/NameView"
                     android:layout_width="0dp"
-                    android:layout_height="230dp"
+                    android:layout_height="250dp"
                     android:layout_marginTop="24dp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
@@ -256,7 +256,7 @@
                             android:layout_marginStart="32dp"
                             android:layout_marginTop="20dp"
                             android:text="Username"
-                            android:textSize="25sp"
+                            android:textSize="30sp"
                             android:textStyle="bold"
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toTopOf="parent" />
@@ -264,12 +264,12 @@
                         <EditText
                             android:id="@+id/InputName"
                             android:layout_width="wrap_content"
-                            android:layout_height="38dp"
+                            android:layout_height="48dp"
                             android:layout_marginStart="32dp"
                             android:layout_marginTop="8dp"
                             android:ems="10"
-                            android:inputType="textPersonName"
                             android:hint="Name"
+                            android:inputType="textPersonName"
                             android:textSize="15sp"
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toBottomOf="@+id/Username" />
@@ -281,7 +281,7 @@
                             android:layout_marginStart="32dp"
                             android:layout_marginTop="16dp"
                             android:text="Gender"
-                            android:textSize="20sp"
+                            android:textSize="23sp"
                             android:textStyle="bold"
                             app:layout_constraintEnd_toStartOf="@+id/Age"
                             app:layout_constraintHorizontal_bias="0.5"
@@ -291,8 +291,8 @@
 
                         <Spinner
                             android:id="@+id/GenderDropdown"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
+                            android:layout_width="130dp"
+                            android:layout_height="60dp"
                             android:layout_marginStart="32dp"
                             android:layout_marginTop="8dp"
                             android:spinnerMode="dropdown"
@@ -306,7 +306,7 @@
                             android:layout_marginTop="16dp"
                             android:layout_marginEnd="175dp"
                             android:text="Age"
-                            android:textSize="20sp"
+                            android:textSize="23sp"
                             android:textStyle="bold"
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintHorizontal_bias="0.5"
@@ -316,7 +316,7 @@
                         <EditText
                             android:id="@+id/AgeInput"
                             android:layout_width="115dp"
-                            android:layout_height="wrap_content"
+                            android:layout_height="60dp"
                             android:layout_marginTop="8dp"
                             android:layout_marginEnd="95dp"
                             android:ems="10"
@@ -331,7 +331,7 @@
                 <com.google.android.material.navigation.NavigationView
                     android:id="@+id/InterestView"
                     android:layout_width="0dp"
-                    android:layout_height="220dp"
+                    android:layout_height="240dp"
                     android:layout_marginTop="24dp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
@@ -349,7 +349,7 @@
                             android:layout_marginStart="32dp"
                             android:layout_marginTop="8dp"
                             android:text="Interests"
-                            android:textSize="25sp"
+                            android:textSize="30sp"
                             android:textStyle="bold"
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toTopOf="parent" />
@@ -366,7 +366,7 @@
                         <Button
                             android:id="@+id/InterestButton"
                             android:layout_width="150dp"
-                            android:layout_height="40dp"
+                            android:layout_height="48dp"
                             android:layout_marginStart="32dp"
                             android:layout_marginTop="16dp"
                             android:background="#FF9900"
