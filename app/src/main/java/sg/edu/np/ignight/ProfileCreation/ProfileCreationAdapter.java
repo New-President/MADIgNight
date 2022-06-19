@@ -25,7 +25,7 @@ public class ProfileCreationAdapter extends RecyclerView.Adapter<ProfileCreation
     @Override
     public ProfileCreationViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View item = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.interest_layout, parent, false );
+                .inflate(R.layout.profile_creation_interest_layout, parent, false );
 
         return new ProfileCreationViewHolder(item);
     }

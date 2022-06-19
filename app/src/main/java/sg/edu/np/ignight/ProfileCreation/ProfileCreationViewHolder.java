@@ -2,6 +2,7 @@ package sg.edu.np.ignight.ProfileCreation;
 
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -13,6 +14,6 @@ public class ProfileCreationViewHolder extends RecyclerView.ViewHolder {
     public ProfileCreationViewHolder(View item){
         super(item);
 
-        interest = item.findViewById(R.id.InterestButton);
+        interest = item.findViewById(R.id.Interest);
     }
 }
