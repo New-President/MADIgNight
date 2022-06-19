@@ -134,7 +134,7 @@ public class ProfileViewActivity extends AppCompatActivity {
         ignightButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent startChat = new Intent(getApplicationContext(), ChatListActivity.class);
+                Intent startChat = new Intent(getApplicationContext(), ChatListFragment.class);
                 startActivity(startChat);
             }
         });
