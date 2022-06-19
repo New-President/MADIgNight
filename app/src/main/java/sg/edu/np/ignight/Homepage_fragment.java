@@ -48,15 +48,6 @@ public class Homepage_fragment extends Fragment {
 
         getUserList();
         initRecyclerView(view);
-
-        ImageView profile = view.findViewById(R.id.ownerprofile_menu); //display slide menu
-        profile.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-            }
-        });
-
         return view;
     }
 
