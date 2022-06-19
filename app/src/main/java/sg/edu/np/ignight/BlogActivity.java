@@ -64,16 +64,12 @@ public class BlogActivity extends AppCompatActivity {
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
-
+                Log.d("Cancelled", error.toString());
             }
         });
 
-
-
         ImageButton backBtn = findViewById(R.id.backButton);
         FloatingActionButton createBlogBtn = findViewById(R.id.createBlogBtn);
-
-
 
         backBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -81,6 +77,7 @@ public class BlogActivity extends AppCompatActivity {
                 finish();
             }
         });
+
 
         createBlogBtn.setOnClickListener(new View.OnClickListener() {
             @Override

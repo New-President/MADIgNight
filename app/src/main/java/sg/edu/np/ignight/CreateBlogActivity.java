@@ -44,16 +44,18 @@ public class CreateBlogActivity extends AppCompatActivity {
     private ImageView blogImg;
     private Uri imgUri;
     private Button uploadBtn;
+    private String uid;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_blog);
-
-        Context c = this;
-        FirebaseDatabase database = FirebaseDatabase.getInstance("https://madignight-default-rtdb.asia-southeast1.firebasedatabase.app/");
         FirebaseAuth auth = FirebaseAuth.getInstance();
         FirebaseUser user = auth.getCurrentUser();
+//        assert user != null;
+//        uid = user.getUid();
+        Context c = this;
+        FirebaseDatabase database = FirebaseDatabase.getInstance("https://madignight-default-rtdb.asia-southeast1.firebasedatabase.app");
         DatabaseReference databaseReference = database.getReference("user").child("SqDiaNh7KGhYd09lWeVpVrRTSKc2").child("blog");
 
 
@@ -83,21 +85,20 @@ public class CreateBlogActivity extends AppCompatActivity {
         });
 
         postBtn.setOnClickListener(new View.OnClickListener() {
+            @RequiresApi(api = Build.VERSION_CODES.N)
             @Override
             public void onClick(View view) {
 
                 String blogDesc = editDesc.getText().toString().trim();
                 String blogLoc = editLocation.getText().toString().trim();
                 if(blogDesc.length() >= 5 && !TextUtils.isEmpty(blogLoc)){
-
-                    Blog newBlog = new Blog(blogDesc, blogLoc, imgUri.toString());
-                    // Store in firebase under Users
-                    DatabaseReference uploadBlog = databaseReference.push();
-                    uploadBlog.setValue(newBlog);
                     pd.setMessage("Posting Blog..");
                     pd.show();
-                    uploadImage(view, c);
+                    Blog newBlog = new Blog(blogDesc, blogLoc, uploadImage(view, c));
+                    // Store in firebase under Users
+                    databaseReference.child(givenUsingJava8_whenGeneratingRandomAlphanumericString_thenCorrect()).setValue(newBlog);
                     finish();
+                    pd.dismiss();
                 }
             }
         });
@@ -130,11 +131,11 @@ public class CreateBlogActivity extends AppCompatActivity {
 
     }
 
-    public void uploadImage(View view, Context c){
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    public String uploadImage(View view, Context c){
         final String randomKey = UUID.randomUUID().toString();
         FirebaseStorage storage = FirebaseStorage.getInstance("gs://madignight.appspot.com");
-        StorageReference storageReference = storage.getReference().child("blog/" + "\n" +
-                "SqDiaNh7KGhYd09lWeVpVrRTSKc2").child(randomKey);
+        StorageReference storageReference = storage.getReference().child("blog/" + "SqDiaNh7KGhYd09lWeVpVrRTSKc2").child(randomKey);
 
         storageReference.putFile(imgUri)
                 .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
@@ -149,6 +150,23 @@ public class CreateBlogActivity extends AppCompatActivity {
                         Toast.makeText(c, "Failed to upload", Toast.LENGTH_LONG).show();
                     }
                 });
-
+        return randomKey;
     }
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    public String givenUsingJava8_whenGeneratingRandomAlphanumericString_thenCorrect() {
+        int leftLimit = 48; // numeral '0'
+        int rightLimit = 122; // letter 'z'
+        int targetStringLength = 28;
+        Random random = new Random();
+
+        String generatedString = random.ints(leftLimit, rightLimit + 1)
+                .filter(i -> (i <= 57 || i >= 65) && (i <= 90 || i >= 97))
+                .limit(targetStringLength)
+                .collect(StringBuilder::new, StringBuilder::appendCodePoint, StringBuilder::append)
+                .toString();
+
+        return generatedString;
+    }
+
+
 }

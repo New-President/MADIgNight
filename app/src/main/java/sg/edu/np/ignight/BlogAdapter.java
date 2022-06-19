@@ -1,6 +1,8 @@
 package sg.edu.np.ignight;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,10 +12,15 @@ import android.widget.ImageView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.storage.FileDownloadTask;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 import com.nostra13.universalimageloader.cache.memory.impl.WeakMemoryCache;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
@@ -22,6 +29,8 @@ import com.nostra13.universalimageloader.core.assist.ImageScaleType;
 import com.nostra13.universalimageloader.core.display.FadeInBitmapDisplayer;
 import com.squareup.picasso.Picasso;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 
 public class BlogAdapter extends RecyclerView.Adapter<BlogViewHolder> {
@@ -63,13 +72,15 @@ public class BlogAdapter extends RecyclerView.Adapter<BlogViewHolder> {
         blogImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                //fullscreen
             }
         });
 
         likebutton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                blog.likes += 1;
+                blog.liked = true;
             }
         });
 
@@ -80,9 +91,28 @@ public class BlogAdapter extends RecyclerView.Adapter<BlogViewHolder> {
             }
         });
 
+        FirebaseStorage storage = FirebaseStorage.getInstance();
+        StorageReference storageReference = storage.getReference("blog").child(blog.imgID);
 
-        Uri imgUri = Uri.parse(blog.imgUri);
-        Picasso.with(c).load(imgUri).into(blogImage);
+        try{
+            File localfile = File.createTempFile("tempfile", ".jpg");
+            storageReference.getFile(localfile).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
+                @Override
+                public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
+                    Bitmap bitmap = BitmapFactory.decodeFile(localfile.getAbsolutePath());
+                    blogImage.setImageBitmap(bitmap);
+                }
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+
+                }
+            });
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
 //        int defaultImage = c.getResources().getIdentifier("@drawables/failed.jpg", null, c.getPackageName());
 //
 //        ImageLoader imageLoader = ImageLoader.getInstance();

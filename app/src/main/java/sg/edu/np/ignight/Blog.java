@@ -7,15 +7,17 @@ public class Blog {
     public String location;
     public int likes;
     public int comments;
+    public boolean liked;
     public ArrayList<String> commentsList;
-    public String imgUri;
+    public String imgID;
 
-    public Blog(String description, String location, String imgUrl){
+    public Blog(String description, String location, String imgID){
         this.description = description;
         this.location = location;
-        this.imgUri = imgUrl;
+        this.imgID = imgID;
         this.likes = 0;
         this.comments = 0;
+        this.liked = false;
         this.commentsList = new ArrayList<>();
     }
 
@@ -38,11 +40,11 @@ public class Blog {
     }
 
     public String getImgUri() {
-        return imgUri;
+        return imgID;
     }
 
     public void setImgUri(String imgUri) {
-        this.imgUri = imgUri;
+        this.imgID = imgUri;
     }
 
     public ArrayList<String> getCommentsList() {
