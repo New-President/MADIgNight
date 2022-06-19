@@ -4,148 +4,106 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/gradient_background"
     tools:context=".LoginActivity">
 
-    <androidx.constraintlayout.widget.Guideline
-        android:layout_width="wrap_content"
+
+    <LinearLayout
+        android:id="@+id/phoneNumberInputContainer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="50dp"
+        android:layout_marginTop="368dp"
+        android:layout_marginRight="50dp"
+        android:orientation="horizontal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.494"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <TextView
+            android:id="@+id/phonePrefix"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.2"
+            android:text="+65"
+            android:textAlignment="center"
+            android:textSize="18sp" />
+
+        <EditText
+            android:id="@+id/phoneNumberInput"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.8"
+            android:hint="Enter Phone Number" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/OTPInputContainer"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.1"
-        android:id="@+id/enterPhoneTopGuideline"/>
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/phoneNumberInputContainer"
+        android:layout_marginLeft="50dp"
+        android:layout_marginRight="50dp"
+        android:layout_marginTop="20dp">
 
-    <androidx.constraintlayout.widget.Guideline
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        app:layout_constraintGuide_percent="0.15"
-        android:id="@+id/enterPhoneStartGuideline"/>
+        <EditText
+            android:id="@+id/OTPInput"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="0.7"
+            android:hint="Enter Code" />
 
-    <androidx.constraintlayout.widget.Guideline
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        app:layout_constraintGuide_percent="0.85"
-        android:id="@+id/enterPhoneEndGuideline"/>
-
-    <TextView
-        android:id="@+id/phonePrefix"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="+65"
-        android:textAlignment="center"
-        android:textSize="18sp"
-        app:layout_constraintStart_toStartOf="@id/enterPhoneStartGuideline"
-        app:layout_constraintTop_toTopOf="@+id/phoneNumberInput"
-        app:layout_constraintBottom_toBottomOf="@id/phoneNumberInput"/>
-
-    <EditText
-        android:id="@+id/phoneNumberInput"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:hint="Enter Phone Number"
-        android:digits="0123456789"
-        app:layout_constraintTop_toBottomOf="@id/enterPhoneTopGuideline"
-        app:layout_constraintStart_toEndOf="@id/phonePrefix"
-        app:layout_constraintEnd_toStartOf="@id/enterPhoneEndGuideline"
-        android:layout_marginTop="5dp"
-        android:layout_marginStart="5dp"/>
-
-    <EditText
-        android:id="@+id/OTPInput"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:hint="Enter Code"
-        android:digits="0123456789"
-        app:layout_constraintStart_toEndOf="@id/enterPhoneStartGuideline"
-        app:layout_constraintTop_toBottomOf="@id/phoneNumberInput"
-        app:layout_constraintEnd_toStartOf="@id/sendOTPButton"
-        android:layout_marginTop="10dp"/>
-
-    <Button
-        android:id="@+id/sendOTPButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:enabled="false"
-        android:text="send OTP"
-        app:layout_constraintEnd_toEndOf="@id/enterPhoneEndGuideline"
-        app:layout_constraintTop_toTopOf="@id/OTPInput"
-        app:layout_constraintBottom_toBottomOf="@id/OTPInput"/>
+        <Button
+            android:id="@+id/sendOTPButton"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.3"
+            android:background="#FFFFFF"
+            android:enabled="false"
+            android:text="send OTP"
+            android:textColor="#000000" />
+    </LinearLayout>
 
     <TextView
         android:id="@+id/loginErrorMessage"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Oops! An error occurred, please try again"
         android:textColor="#FF0000"
-        android:visibility="gone"
-        app:layout_constraintBottom_toTopOf="@id/loginButtonContainer"
+        android:text="Oops! An error occurred, please try again"
+        app:layout_constraintBottom_toTopOf="@+id/loginButton"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/OTPInput" />
-
-    <RelativeLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/loginButtonContainer"
-        app:layout_constraintStart_toEndOf="@id/enterPhoneStartGuideline"
-        app:layout_constraintEnd_toStartOf="@id/enterPhoneEndGuideline"
-        app:layout_constraintTop_toBottomOf="@+id/OTPInput"
-        android:layout_marginTop="150dp">
-
-        <Button
-            android:id="@+id/loginButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:enabled="false"
-            android:text="login"/>
-
-        <ProgressBar
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:id="@+id/loginProgressBar"
-            android:indeterminate="true"
-            android:indeterminateTint="#000000"
-            android:indeterminateTintMode="src_atop"
-            android:visibility="gone"/>
-
-        <ImageView
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:layout_centerInParent="true"
-            android:id="@+id/loginSuccessImage"
-            android:src="@drawable/ic_baseline_check_circle_24"
-            app:tint="#4bb543"
-            android:visibility="gone" />
-
-    </RelativeLayout>
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Wrong Number?"
-        android:textAlignment="center"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/loginButtonContainer"
-        android:layout_marginTop="50dp"
-        android:id="@+id/loginActivityWrongNumberTxt"/>
+        app:layout_constraintTop_toBottomOf="@+id/OTPInputContainer"
+        android:visibility="gone"/>
 
     <Button
-        android:id="@+id/resetLoginFields"
+        android:id="@+id/loginButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:backgroundTint="#ffffff"
-        android:minWidth="0dp"
-        android:minHeight="0dp"
-        android:text="reset"
-        android:textColor="#FF0000"
-        android:textSize="12sp"
-        app:layout_constraintTop_toBottomOf="@+id/loginActivityWrongNumberTxt"
-        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginTop="152dp"
+        android:background="#FFFFFF"
+        android:enabled="false"
+        android:text="login"
+        android:textColor="#000000"
         app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="5dp"/>
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/OTPInputContainer" />
+
+    <ImageView
+        android:id="@+id/IgNightLogo"
+        android:layout_width="280dp"
+        android:layout_height="280dp"
+        android:layout_marginTop="32dp"
+        android:cropToPadding="false"
+        android:scaleType="centerCrop"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/ignight_logo" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

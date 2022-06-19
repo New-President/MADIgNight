@@ -67,11 +67,11 @@ public class LoginActivity extends AppCompatActivity {
         codeInput = findViewById(R.id.OTPInput);  // EditText field for OTP
         sendOTPButton = findViewById(R.id.sendOTPButton);  // Button for sending OTP
         loginButton = findViewById(R.id.loginButton);  // Button for verification and login
-        resetLoginFieldsButton = findViewById(R.id.resetLoginFields);  // Button to reset fields to default
+        //resetLoginFieldsButton = findViewById(R.id.resetLoginFields);  // Button to reset fields to default
         errorMessage = findViewById(R.id.loginErrorMessage);  // TextView to show error in logging in
         phonePrefix = findViewById(R.id.phonePrefix);  // TextView with phone number prefix (set to +65)
-        loginSuccessImage = findViewById(R.id.loginSuccessImage);
-        loginProgressBar = findViewById(R.id.loginProgressBar);
+        //loginSuccessImage = findViewById(R.id.loginSuccessImage);
+        //loginProgressBar = findViewById(R.id.loginProgressBar);
 
         // turn off phone auth app verification
         FirebaseAuth.getInstance().getFirebaseAuthSettings().setAppVerificationDisabledForTesting(true);

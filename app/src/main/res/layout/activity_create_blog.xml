@@ -38,24 +38,28 @@
 
                         <ImageButton
                             android:id="@+id/backButton"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
+                            android:layout_width="48dp"
+                            android:layout_height="48dp"
                             android:layout_marginStart="16dp"
                             android:layout_marginTop="10dp"
+                            android:background="#00FFFFFF"
                             android:minHeight="48dp"
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toTopOf="parent"
-                            app:srcCompat="?attr/actionModeCloseDrawable" />
+                            app:srcCompat="@drawable/ic_baseline_arrow_back_24" />
 
                         <TextView
                             android:id="@+id/blogHeader"
-                            android:elevation="5dp"
                             android:layout_width="wrap_content"
                             android:layout_height="46dp"
                             android:layout_marginTop="16dp"
-                            android:layout_marginEnd="16dp"
+                            android:layout_marginEnd="24dp"
+                            android:elevation="5dp"
+                            android:fontFamily="@font/amaranth_bold"
                             android:text="Creating Blog"
-                            android:textSize="20sp"
+                            android:textColor="#FFFFFF"
+                            android:textSize="24sp"
+                            android:textStyle="bold"
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintStart_toEndOf="@+id/backButton"
                             app:layout_constraintTop_toTopOf="parent" />
@@ -80,11 +84,11 @@
                             android:id="@+id/createBlogLocation"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="8dp"
+                            android:layout_marginTop="16dp"
                             android:layout_marginEnd="16dp"
                             android:background="@drawable/gradient_background"
-                            android:padding="5dp"
                             android:elevation="5dp"
+                            android:padding="5dp"
                             android:text="Add a location: "
                             android:textStyle="bold"
                             app:layout_constraintEnd_toStartOf="@+id/editBlogLocation"
@@ -108,6 +112,8 @@
                             android:layout_width="360dp"
                             android:layout_height="360dp"
                             android:layout_marginTop="32dp"
+                            android:cropToPadding="true"
+                            android:padding="100dp"
                             android:scaleType="centerCrop"
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintStart_toStartOf="parent"
@@ -129,7 +135,7 @@
                             android:id="@+id/createBlogDesc"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="32dp"
+                            android:layout_marginTop="34dp"
                             android:layout_marginEnd="16dp"
                             android:background="@drawable/gradient_background"
                             android:elevation="5dp"
@@ -149,6 +155,18 @@
                             android:inputType="textPersonName"
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintTop_toBottomOf="@+id/editBlogDesc" />
+
+                        <TextView
+                            android:id="@+id/errorMsg"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="8dp"
+                            android:fontFamily="@font/amaranth_bold"
+                            android:textColor="#FF0000"
+                            android:textSize="16sp"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@+id/editBlogLocation" />
 
                         <Button
                             android:id="@+id/postBtn"

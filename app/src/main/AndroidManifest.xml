@@ -14,32 +14,37 @@
         android:theme="@style/Theme.IgNight">
         <activity
             android:name=".CreateBlogActivity"
-            android:exported="false"></activity>
+            android:exported="false"/>
         <activity
-            android:name=".LoginActivity"
-            android:exported="false"></activity>
+            android:name=".ChatActivity"
+            android:exported="false" />
         <activity
             android:name=".BlogActivity"
-            android:exported="true">
+            android:exported="true" >
+
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <activity
+            android:name=".LoginActivity"
+            android:exported="false">
+        </activity>
         <activity
             android:name=".MainMenuActivity"
-            android:exported="true" /> // Change export status for testing. original status was false
-        <activity
-            android:name=".ChatListActivity"
-            android:exported="false" />
+            android:exported="false" >
+
+        </activity>
         <activity
             android:name=".ProfileCreationActivity"
-            android:exported="true" />
-        <activity
-            android:name=".ProfileViewActivity"
-            android:exported="true" /> // Change export status for testing. original status was false
+            android:exported="false" />
 
+        <meta-data
+            android:name="preloaded_fonts"
+            android:resource="@array/preloaded_fonts" />
     </application>
 
 </manifest>
