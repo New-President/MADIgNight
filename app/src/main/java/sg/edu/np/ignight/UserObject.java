@@ -1,6 +1,7 @@
 package sg.edu.np.ignight;
 
-public class User {
+public class UserObject {
+    String uid;
     String Email;
     String Phone;
     String Username;
@@ -11,11 +12,12 @@ public class User {
     String Gender_pref;
     String Date_location;
     String ProfilePicUrl;
-    Integer Age;
+    int Age;
 
-    public User() {}
+    public UserObject() {}
 
-    public User(String email, String phone, String username, String gender, String aboutme, String interest, String relationship_pref, String gender_pref, String date_location, String profilepic, Integer age) {
+    public UserObject(String uid, String email, String phone, String username, String gender, String aboutme, String interest, String relationship_pref, String gender_pref, String date_location, String profilepic, int age) {
+        this.uid = uid;
         this.Email = email;
         this.Phone = phone;
         this.Username = username;
@@ -27,5 +29,9 @@ public class User {
         this.Date_location = date_location;
         this.ProfilePicUrl = profilepic;
         this.Age = age;
+    }
+
+    public String getUid() {
+        return uid;
     }
 }

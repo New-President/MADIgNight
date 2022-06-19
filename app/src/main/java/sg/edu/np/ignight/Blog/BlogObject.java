@@ -1,8 +1,8 @@
-package sg.edu.np.ignight;
+package sg.edu.np.ignight.Blog;
 
 import java.util.ArrayList;
 
-public class Blog {
+public class BlogObject {
     public String description;
     public String location;
     public int likes;
@@ -11,7 +11,7 @@ public class Blog {
     public ArrayList<String> commentsList;
     public String imgID;
 
-    public Blog(String description, String location, String imgID){
+    public BlogObject(String description, String location, String imgID){
         this.description = description;
         this.location = location;
         this.imgID = imgID;
@@ -21,7 +21,7 @@ public class Blog {
         this.commentsList = new ArrayList<>();
     }
 
-    public Blog(){ }
+    public BlogObject(){ }
 
     public String getDescription() {
         return description;

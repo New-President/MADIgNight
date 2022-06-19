@@ -1,5 +1,7 @@
 package sg.edu.np.ignight;
 
+import static android.content.ContentValues.TAG;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -13,6 +15,7 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -20,6 +23,8 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 public class ProfileViewActivity extends AppCompatActivity {
     private String username, aboutMe, whatImLookingFor, uid;
@@ -27,7 +32,7 @@ public class ProfileViewActivity extends AppCompatActivity {
     private ArrayList interests;
     private FirebaseDatabase database;
     private DatabaseReference myRef;
-    private User userData;
+    private UserObject userData;
     private Button friendButton, ignightButton;
     private ImageButton backButton;
 
@@ -43,7 +48,7 @@ public class ProfileViewActivity extends AppCompatActivity {
         // User profile data from the database will be extracted for display
         // Interests are stored as children
         // UID here will be extracted from the profile as a string
-        userData = new User();
+        userData = new UserObject();
         interests = new ArrayList();
 
         myRef.addValueEventListener(new ValueEventListener() {
@@ -85,7 +90,7 @@ public class ProfileViewActivity extends AppCompatActivity {
         rv.setLayoutManager(layout);
 
         // add intents for bottom buttons here
-        backButton = findViewById(R.id.BackButton);
+        backButton = findViewById(R.id.profileViewBackButton);
         backButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -102,12 +107,14 @@ public class ProfileViewActivity extends AppCompatActivity {
             }
         });
 
-        ignightButton = findViewById(R.id.createButton);
+        ignightButton = findViewById(R.id.button4);
         ignightButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //registerUser();
+
             }
         });
     }
+
+
 }

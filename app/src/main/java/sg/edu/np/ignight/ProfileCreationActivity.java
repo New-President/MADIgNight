@@ -36,7 +36,7 @@ public class ProfileCreationActivity extends AppCompatActivity {
 
         InitDropdown();
 
-        ImageButton backBtn = findViewById(R.id.BackButton);
+        ImageButton backBtn = findViewById(R.id.profileViewBackButton);
         backBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

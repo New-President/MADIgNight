@@ -1,17 +1,24 @@
 package sg.edu.np.ignight;
 
+import static android.content.ContentValues.TAG;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.Manifest;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.CountDownTimer;
+import android.os.Handler;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -39,15 +46,19 @@ public class LoginActivity extends AppCompatActivity {
     private EditText phoneNumberInput, codeInput;
     private Button loginButton, sendOTPButton, resetLoginFieldsButton;
     private TextView errorMessage, phonePrefix;
+    private ImageView loginSuccessImage;
+    private ProgressBar loginProgressBar;
 
     private PhoneAuthProvider.OnVerificationStateChangedCallbacks callbacks;
 
-    String verificationId;
+    private String verificationId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+
+        getPermission();
 
         userIsLoggedIn();
 
@@ -59,6 +70,8 @@ public class LoginActivity extends AppCompatActivity {
         resetLoginFieldsButton = findViewById(R.id.resetLoginFields);  // Button to reset fields to default
         errorMessage = findViewById(R.id.loginErrorMessage);  // TextView to show error in logging in
         phonePrefix = findViewById(R.id.phonePrefix);  // TextView with phone number prefix (set to +65)
+        loginSuccessImage = findViewById(R.id.loginSuccessImage);
+        loginProgressBar = findViewById(R.id.loginProgressBar);
 
         // turn off phone auth app verification
         FirebaseAuth.getInstance().getFirebaseAuthSettings().setAppVerificationDisabledForTesting(true);
@@ -146,6 +159,7 @@ public class LoginActivity extends AppCompatActivity {
                     countDownTimer.cancel();
                     sendOTPButton.setText("send OTP");
                 }
+                showProgressBar();
                 verifyPhoneNumberWithCode();
             }
         });
@@ -163,6 +177,11 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
 
+    }
+
+    private void showProgressBar() {
+        loginButton.setVisibility(View.GONE);
+        loginProgressBar.setVisibility(View.VISIBLE);
     }
 
     // start to verify phone number (send otp to the retrieved phone number)
@@ -209,6 +228,7 @@ public class LoginActivity extends AppCompatActivity {
 
                             @Override
                             public void onCancelled(@NonNull DatabaseError error) {
+                                Log.e(TAG, "onCancelled: " + error.getMessage());
                                 setDefaultFields(true);
                             }
                         });
@@ -221,18 +241,35 @@ public class LoginActivity extends AppCompatActivity {
         });
     }
 
-    // check if there is an authenticated user and direct to ChatListActivity
+    // check if there is an authenticated user and direct to ProfileCreationActivity
     private void userIsLoggedIn() {
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         if (user != null) {
-            startActivity(new Intent(getApplicationContext(), ChatListActivity.class));
-            finish();
+
+            if (loginProgressBar != null && loginSuccessImage != null) {
+                Handler handler = new Handler();
+                loginProgressBar.setVisibility(View.GONE);
+                loginSuccessImage.setVisibility(View.VISIBLE);
+                handler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        startActivity(new Intent(getApplicationContext(), ProfileCreationActivity.class));
+                        finish();
+                    }
+                }, 1000);
+            }
+            else {
+                startActivity(new Intent(getApplicationContext(), MainMenuActivity.class));
+                finish();
+            }
         }
     }
 
     // reset fields to default
     // clear verification id / reset input fields / disable buttons / show error message if showErrorMessage is true
     private void setDefaultFields(boolean showErrorMessage) {
+        loginProgressBar.setVisibility(View.GONE);
+        errorMessage.setVisibility(showErrorMessage?View.VISIBLE:View.GONE);
         verificationId = null;
         phoneNumberInput.setText("");
         toggleEditText(phoneNumberInput, true);
@@ -240,7 +277,8 @@ public class LoginActivity extends AppCompatActivity {
         toggleEditText(codeInput, false);
         sendOTPButton.setEnabled(false);
         loginButton.setEnabled(false);
-        errorMessage.setVisibility((showErrorMessage)?View.VISIBLE:View.GONE);
+        loginSuccessImage.setVisibility(View.GONE);
+        loginButton.setVisibility(View.VISIBLE);
     }
 
     // to disable/enable EditText field - set toEnable to false to disable/true to enable
@@ -255,7 +293,7 @@ public class LoginActivity extends AppCompatActivity {
         editText.setCursorVisible(toEnable);
     }
 
-    CountDownTimer countDownTimer;
+    private CountDownTimer countDownTimer;
 
     // use countdown timer to change sendOTPButton text and enable the button to allow resending the OTP after one minute
     private void allowResendOTP() {
@@ -272,5 +310,11 @@ public class LoginActivity extends AppCompatActivity {
             }
         };
         countDownTimer.start();
+    }
+
+    private void getPermission() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            requestPermissions(new String[] {Manifest.permission.INTERNET}, 1);
+        }
     }
 }

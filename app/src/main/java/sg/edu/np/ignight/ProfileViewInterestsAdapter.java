@@ -10,9 +10,9 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.ArrayList;
 
 public class ProfileViewInterestsAdapter extends RecyclerView.Adapter<ProfileViewInterestsViewHolder> {
-    ArrayList<User> data;
+    ArrayList<UserObject> data;
     // takes in stored data. only the interests will be extracted from the class
-    public ProfileViewInterestsAdapter(ArrayList<User> data) { this.data = data;}
+    public ProfileViewInterestsAdapter(ArrayList<UserObject> data) { this.data = data;}
 
     @NonNull
     @Override
@@ -24,7 +24,7 @@ public class ProfileViewInterestsAdapter extends RecyclerView.Adapter<ProfileVie
 
     @Override
     public void onBindViewHolder(@NonNull ProfileViewInterestsViewHolder holder, int position) {
-        User content = data.get(position);
+        UserObject content = data.get(position);
         holder.interestButton.setText(content.Interest);
 
     }
