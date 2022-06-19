@@ -33,21 +33,13 @@ public class ChatListFragment extends Fragment {
 
 
     private RecyclerView chatListRV;
-    private RecyclerView.Adapter chatListAdapter;
-    private RecyclerView.LayoutManager chatListLayoutManager;
+    private ChatListAdapter chatListAdapter;
+    private LinearLayoutManager chatListLayoutManager;
 
     private ArrayList<ChatObject> chatList;
 
     public ChatListFragment() {
         // Required empty public constructor
-    }
-
-    @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
-
-
     }
 
     @Override
