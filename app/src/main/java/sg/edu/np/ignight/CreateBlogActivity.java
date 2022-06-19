@@ -38,6 +38,8 @@ import com.google.firebase.storage.UploadTask;
 import java.util.Random;
 import java.util.UUID;
 
+import sg.edu.np.ignight.Blog.BlogObject;
+
 public class CreateBlogActivity extends AppCompatActivity {
 
     private static final int GALLERY_REQUEST = 1;
@@ -52,11 +54,11 @@ public class CreateBlogActivity extends AppCompatActivity {
         setContentView(R.layout.activity_create_blog);
         FirebaseAuth auth = FirebaseAuth.getInstance();
         FirebaseUser user = auth.getCurrentUser();
-//        assert user != null;
-//        uid = user.getUid();
+        assert user != null;
+        uid = user.getUid();
         Context c = this;
         FirebaseDatabase database = FirebaseDatabase.getInstance("https://madignight-default-rtdb.asia-southeast1.firebasedatabase.app");
-        DatabaseReference databaseReference = database.getReference("user").child("SqDiaNh7KGhYd09lWeVpVrRTSKc2").child("blog");
+        DatabaseReference databaseReference = database.getReference("user").child(uid).child("blog");
 
 
         ProgressDialog pd = new ProgressDialog(this);
@@ -94,7 +96,7 @@ public class CreateBlogActivity extends AppCompatActivity {
                 if(blogDesc.length() >= 5 && !TextUtils.isEmpty(blogLoc)){
                     pd.setMessage("Posting Blog..");
                     pd.show();
-                    Blog newBlog = new Blog(blogDesc, blogLoc, uploadImage(view, c));
+                    BlogObject newBlog = new BlogObject(blogDesc, blogLoc, uploadImage(c));
                     // Store in firebase under Users
                     databaseReference.child(givenUsingJava8_whenGeneratingRandomAlphanumericString_thenCorrect()).setValue(newBlog);
                     finish();
@@ -132,16 +134,17 @@ public class CreateBlogActivity extends AppCompatActivity {
     }
 
     @RequiresApi(api = Build.VERSION_CODES.N)
-    public String uploadImage(View view, Context c){
+    public String uploadImage(Context c){
         final String randomKey = UUID.randomUUID().toString();
         FirebaseStorage storage = FirebaseStorage.getInstance("gs://madignight.appspot.com");
-        StorageReference storageReference = storage.getReference().child("blog/" + "SqDiaNh7KGhYd09lWeVpVrRTSKc2").child(randomKey);
+        StorageReference storageReference = storage.getReference().child("blog/" + uid).child(randomKey);
 
         storageReference.putFile(imgUri)
                 .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                     @Override
                     public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                        Snackbar.make(view, "Image Uploaded", Snackbar.LENGTH_LONG).show();
+                        //Snackbar.make(view, "Image Uploaded", Snackbar.LENGTH_LONG).show();
+                        Toast.makeText(c, "Image uploaded", Toast.LENGTH_LONG).show();
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
@@ -159,13 +162,11 @@ public class CreateBlogActivity extends AppCompatActivity {
         int targetStringLength = 28;
         Random random = new Random();
 
-        String generatedString = random.ints(leftLimit, rightLimit + 1)
+        return random.ints(leftLimit, rightLimit + 1)
                 .filter(i -> (i <= 57 || i >= 65) && (i <= 90 || i >= 97))
                 .limit(targetStringLength)
                 .collect(StringBuilder::new, StringBuilder::appendCodePoint, StringBuilder::append)
                 .toString();
-
-        return generatedString;
     }
 
 

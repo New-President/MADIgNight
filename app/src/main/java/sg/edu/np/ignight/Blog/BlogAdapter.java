@@ -1,23 +1,19 @@
-package sg.edu.np.ignight;
+package sg.edu.np.ignight.Blog;
 
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FileDownloadTask;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
@@ -27,18 +23,19 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.nostra13.universalimageloader.core.assist.ImageScaleType;
 import com.nostra13.universalimageloader.core.display.FadeInBitmapDisplayer;
-import com.squareup.picasso.Picasso;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 
+import sg.edu.np.ignight.R;
+
 public class BlogAdapter extends RecyclerView.Adapter<BlogViewHolder> {
 
-    private ArrayList<Blog> data;
+    private ArrayList<BlogObject> data;
     private Context c;
 
-    public BlogAdapter(Context c, ArrayList<Blog> data){
+    public BlogAdapter(Context c, ArrayList<BlogObject> data){
         this.c = c;
         this.data = data;
     }
@@ -53,7 +50,7 @@ public class BlogAdapter extends RecyclerView.Adapter<BlogViewHolder> {
 
     @Override
     public void onBindViewHolder(@NonNull BlogViewHolder holder, int position) {
-        Blog blog = data.get(position);
+        BlogObject blog = data.get(position);
 
         String description = blog.description;
         String location = blog.location;
@@ -105,7 +102,7 @@ public class BlogAdapter extends RecyclerView.Adapter<BlogViewHolder> {
             }).addOnFailureListener(new OnFailureListener() {
                 @Override
                 public void onFailure(@NonNull Exception e) {
-
+                    Toast.makeText(c, "Failed to retrieve blogs", Toast.LENGTH_LONG).show();
                 }
             });
 
