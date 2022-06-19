@@ -123,10 +123,11 @@
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/InterestsRecyclerView"
-        android:layout_width="323dp"
-        android:layout_height="315dp"
-        android:layout_marginTop="28dp"
+        android:layout_width="382dp"
+        android:layout_height="148dp"
+        android:layout_marginTop="12dp"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.517"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/imageView" />
 

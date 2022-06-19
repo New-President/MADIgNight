@@ -24,10 +24,15 @@
         <entry key="..\:/AndroidStudioProjects/MADIgNight2/app/src/main/res/layout/activity_login.xml" value="0.2109375" />
         <entry key="..\:/AndroidStudioProjects/MADIgNight2/app/src/main/res/layout/activity_main_menu.xml" value="0.2109375" />
         <entry key="..\:/AndroidStudioProjects/MADIgNight2/app/src/main/res/layout/activity_profile_creation.xml" value="0.2109375" />
-        <entry key="..\:/AndroidStudioProjects/MADIgNight2/app/src/main/res/layout/activity_profile_view.xml" value="0.264" />
+        <entry key="..\:/AndroidStudioProjects/MADIgNight2/app/src/main/res/layout/activity_profile_view.xml" value="0.4" />
         <entry key="..\:/AndroidStudioProjects/MADIgNight2/app/src/main/res/layout/activity_registration.xml" value="0.4" />
         <entry key="..\:/AndroidStudioProjects/MADIgNight2/app/src/main/res/layout/blog_layout.xml" value="0.2109375" />
-        <entry key="..\:/AndroidStudioProjects/MADIgNight2/app/src/main/res/layout/interest_layout.xml" value="0.264" />
+        <entry key="..\:/AndroidStudioProjects/MADIgNight2/app/src/main/res/layout/fragment_chat_list.xml" value="0.17844202898550723" />
+        <entry key="..\:/AndroidStudioProjects/MADIgNight2/app/src/main/res/layout/interest_layout.xml" value="0.72" />
+        <entry key="..\:/AndroidStudioProjects/MADIgNight2/app/src/main/res/layout/item_chat.xml" value="0.21041666666666667" />
+        <entry key="..\:/AndroidStudioProjects/MADIgNight2/app/src/main/res/layout/item_media.xml" value="0.21041666666666667" />
+        <entry key="..\:/AndroidStudioProjects/MADIgNight2/app/src/main/res/layout/item_message_by_you.xml" value="0.17844202898550723" />
+        <entry key="..\:/AndroidStudioProjects/MADIgNight2/app/src/main/res/layout/item_message_to_you.xml" value="0.17844202898550723" />
         <entry key="..\:/AndroidStudioProjects/MADIgNight2/app/src/main/res/layout/main_menu_layout.xml" value="0.1" />
         <entry key="..\:/AndroidStudioProjects/MADIgNight2/app/src/main/res/layout/profile_view_recycler_layout.xml" value="0.6" />
         <entry key="..\:/Users/jason/Desktop/Y2/Sem1/MAD/App/ASG/IgNight/app/src/main/res/layout/activity_login_test.xml" value="0.22826086956521738" />
