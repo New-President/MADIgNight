@@ -1,4 +1,4 @@
-package sg.edu.np.ignight.Timestamp;
+package sg.edu.np.ignight.Objects;
 
 import java.text.DateFormat;
 import java.text.ParseException;

@@ -62,7 +62,7 @@ public class CreateBlogActivity extends AppCompatActivity {
 
 
         ProgressDialog pd = new ProgressDialog(this);
-        ImageButton backBtn = findViewById(R.id.backButton);
+        ImageButton backBtn = findViewById(R.id.createBlogBackButton);
         blogImg = findViewById(R.id.createBlogImg);
         uploadBtn = findViewById(R.id.uploadBtn);
         Button postBtn = findViewById(R.id.postBtn);

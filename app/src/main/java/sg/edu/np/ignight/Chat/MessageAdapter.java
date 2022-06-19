@@ -15,8 +15,6 @@ import com.bumptech.glide.Glide;
 import com.facebook.drawee.drawable.ProgressBarDrawable;
 import com.facebook.drawee.generic.GenericDraweeHierarchyBuilder;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 import com.stfalcon.frescoimageviewer.ImageViewer;
 
 import java.text.ParseException;
@@ -24,7 +22,7 @@ import java.util.ArrayList;
 import java.util.Date;
 
 import sg.edu.np.ignight.R;
-import sg.edu.np.ignight.Timestamp.TimestampObject;
+import sg.edu.np.ignight.Objects.TimestampObject;
 
 public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageViewHolder> {
 

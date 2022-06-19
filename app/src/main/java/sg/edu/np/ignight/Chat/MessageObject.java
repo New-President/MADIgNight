@@ -1,13 +1,12 @@
 package sg.edu.np.ignight.Chat;
 
-import com.bumptech.glide.disklrucache.DiskLruCache;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
 
 import java.text.ParseException;
 import java.util.ArrayList;
 
-import sg.edu.np.ignight.Timestamp.TimestampObject;
+import sg.edu.np.ignight.Objects.TimestampObject;
 
 public class MessageObject {
     private String chatId;

@@ -74,7 +74,7 @@ public class BlogActivity extends AppCompatActivity {
             }
         });
 
-        ImageButton backBtn = findViewById(R.id.backButton);
+        ImageButton backBtn = findViewById(R.id.BlogBackButton);
 
         FloatingActionButton createBlogBtn = findViewById(R.id.createBlogBtn);
 
