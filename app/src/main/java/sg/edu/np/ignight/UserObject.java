@@ -1,8 +1,9 @@
 package sg.edu.np.ignight;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class UserObject {
+public class UserObject implements Serializable {
     private String uid;
     private String email;
     private String phone;
