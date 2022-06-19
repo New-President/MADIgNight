@@ -35,7 +35,6 @@ public class ProfileViewActivity extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 for(DataSnapshot dataSnapshot : snapshot.getChildren()){
-                    if(dataSnapshot.child("email").getValue().equal)
                 }
             }
 
