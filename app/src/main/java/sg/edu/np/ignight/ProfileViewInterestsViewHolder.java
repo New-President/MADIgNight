@@ -1,16 +1,17 @@
 package sg.edu.np.ignight;
 
 import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 public class ProfileViewInterestsViewHolder extends RecyclerView.ViewHolder {
-    TextView interestButton;
-    public ProfileViewInterestsViewHolder(@NonNull View itemView) {
-        super(itemView);
+    TextView textView3;
+    public ProfileViewInterestsViewHolder(View item) {
+        super(item);
 
-        interestButton = itemView.findViewById(R.id.interestButton);
+        textView3 = (TextView) item.findViewById(R.id.textView3);
     }
 }

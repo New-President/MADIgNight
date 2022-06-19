@@ -29,13 +29,17 @@
         </activity>
         <activity
             android:name=".MainMenuActivity"
-            android:exported="false" />
+            android:exported="true" /> // Change export status for testing. original status was false
         <activity
             android:name=".ChatListActivity"
             android:exported="false" />
         <activity
             android:name=".ProfileCreationActivity"
             android:exported="true" />
+        <activity
+            android:name=".ProfileViewActivity"
+            android:exported="true" /> // Change export status for testing. original status was false
+
     </application>
 
 </manifest>
