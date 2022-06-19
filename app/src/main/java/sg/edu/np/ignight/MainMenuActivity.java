@@ -33,9 +33,9 @@ public class MainMenuActivity extends AppCompatActivity {
         chat.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-                //ft.replace(R.id. , new ());
-                //ft.commit();
+                FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+                //ft.replace(R.id.frameLayout_menu , new ());
+                ft.commit();
             }
         });
         ImageView profile = findViewById(R.id.ownerprofile_menu); //display slide menu
