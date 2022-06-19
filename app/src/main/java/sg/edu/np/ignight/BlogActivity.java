@@ -24,7 +24,7 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 import java.util.List;
 
-import sg.edu.np.ignight.Blog.BlogObject;
+import sg.edu.np.ignight.Objects.BlogObject;
 import sg.edu.np.ignight.Blog.BlogAdapter;
 
 public class BlogActivity extends AppCompatActivity {

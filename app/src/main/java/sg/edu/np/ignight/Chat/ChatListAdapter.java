@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.ArrayList;
 
 import sg.edu.np.ignight.ChatActivity;
+import sg.edu.np.ignight.Objects.ChatObject;
 import sg.edu.np.ignight.R;
 
 public class ChatListAdapter extends RecyclerView.Adapter<ChatListAdapter.ChatListViewHolder> {

@@ -1,4 +1,4 @@
-package sg.edu.np.ignight;
+package sg.edu.np.ignight.ProfileView;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -9,6 +9,8 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
+
+import sg.edu.np.ignight.R;
 
 public class ProfileViewInterestsAdapter
         extends RecyclerView.Adapter<ProfileViewInterestsViewHolder> {

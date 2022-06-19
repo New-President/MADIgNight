@@ -1,4 +1,4 @@
-package sg.edu.np.ignight.Chat;
+package sg.edu.np.ignight.Objects;
 
 public class ChatObject {
     private String chatId;

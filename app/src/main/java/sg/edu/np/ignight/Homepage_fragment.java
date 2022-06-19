@@ -3,7 +3,6 @@ package sg.edu.np.ignight;
 import static android.content.ContentValues.TAG;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -23,6 +22,9 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+
+import sg.edu.np.ignight.Menu.MainMenuAdapter;
+import sg.edu.np.ignight.Objects.UserObject;
 
 public class Homepage_fragment extends Fragment {
 
