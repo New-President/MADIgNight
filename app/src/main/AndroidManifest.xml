@@ -14,15 +14,12 @@
         android:theme="@style/Theme.IgNight">
         <activity
             android:name=".CreateBlogActivity"
-            android:exported="false"></activity>
+            android:exported="false" />
         <activity
             android:name=".RegistrationActivity"
             android:exported="true" />
         <activity
             android:name=".LoginActivity"
-            android:exported="false"></activity>
-        <activity
-            android:name=".BlogActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -30,6 +27,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".BlogActivity"
+            android:exported="false"/>
         <activity
             android:name=".MainMenuActivity"
             android:exported="false" />

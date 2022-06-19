@@ -3,25 +3,31 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
-        <entry key="..\:/AndroidStudioProjects/MADIgNight/app/src/main/res/layout/activity_blog.xml" value="0.1" />
-        <entry key="..\:/AndroidStudioProjects/MADIgNight/app/src/main/res/layout/activity_chat_list.xml" value="0.1" />
-        <entry key="..\:/AndroidStudioProjects/MADIgNight/app/src/main/res/layout/activity_create_blog.xml" value="0.3591485507246377" />
-        <entry key="..\:/AndroidStudioProjects/MADIgNight/app/src/main/res/layout/activity_homepage_fragment.xml" value="0.21041666666666667" />
-        <entry key="..\:/AndroidStudioProjects/MADIgNight/app/src/main/res/layout/activity_login.xml" value="0.2" />
-        <entry key="..\:/AndroidStudioProjects/MADIgNight/app/src/main/res/layout/activity_main_menu.xml" value="0.1" />
-        <entry key="..\:/AndroidStudioProjects/MADIgNight/app/src/main/res/layout/activity_profile_creation.xml" value="0.19427558257345492" />
-        <entry key="..\:/AndroidStudioProjects/MADIgNight/app/src/main/res/layout/activity_profile_view.xml" value="0.4" />
-        <entry key="..\:/AndroidStudioProjects/MADIgNight/app/src/main/res/layout/activity_registration.xml" value="0.3770491803278688" />
-        <entry key="..\:/AndroidStudioProjects/MADIgNight/app/src/main/res/layout/activity_view_profile.xml" value="0.1" />
-        <entry key="..\:/AndroidStudioProjects/MADIgNight/app/src/main/res/layout/blog_layout.xml" value="0.264" />
-        <entry key="..\:/AndroidStudioProjects/MADIgNight/app/src/main/res/layout/interest_layout.xml" value="0.3591485507246377" />
-        <entry key="..\:/AndroidStudioProjects/MADIgNight/app/src/main/res/layout/main_menu_layout.xml" value="0.3591485507246377" />
-        <entry key="..\:/AndroidStudioProjects/MADIgNight/app/src/main/res/layout/profile_view_recycler_layout.xml" value="0.6081871345029239" />
+        <entry key="..\:/Users/jason/Desktop/Y2/Sem1/MAD/App/ASG/IgNight/app/src/main/res/drawable-v24/ic_launcher_foreground.xml" value="0.1" />
+        <entry key="..\:/Users/jason/Desktop/Y2/Sem1/MAD/App/ASG/IgNight/app/src/main/res/drawable/btn_bg.xml" value="0.18" />
+        <entry key="..\:/Users/jason/Desktop/Y2/Sem1/MAD/App/ASG/IgNight/app/src/main/res/drawable/gradient_background.xml" value="0.1255" />
+        <entry key="..\:/Users/jason/Desktop/Y2/Sem1/MAD/App/ASG/IgNight/app/src/main/res/drawable/ic_launcher_background.xml" value="0.1" />
+        <entry key="..\:/Users/jason/Desktop/Y2/Sem1/MAD/App/ASG/IgNight/app/src/main/res/drawable/ignight_btn.xml" value="0.1" />
+        <entry key="..\:/Users/jason/Desktop/Y2/Sem1/MAD/App/ASG/IgNight/app/src/main/res/drawable/interest_btn.xml" value="0.1845" />
+        <entry key="..\:/Users/jason/Desktop/Y2/Sem1/MAD/App/ASG/IgNight/app/src/main/res/drawable/next_btn_bg.xml" value="0.1" />
+        <entry key="..\:/Users/jason/Desktop/Y2/Sem1/MAD/App/ASG/IgNight/app/src/main/res/layout/activity_blog.xml" value="0.2" />
+        <entry key="..\:/Users/jason/Desktop/Y2/Sem1/MAD/App/ASG/IgNight/app/src/main/res/layout/activity_chat_list.xml" value="0.25" />
+        <entry key="..\:/Users/jason/Desktop/Y2/Sem1/MAD/App/ASG/IgNight/app/src/main/res/layout/activity_create_blog.xml" value="0.2" />
+        <entry key="..\:/Users/jason/Desktop/Y2/Sem1/MAD/App/ASG/IgNight/app/src/main/res/layout/activity_edit_blog.xml" value="0.25" />
+        <entry key="..\:/Users/jason/Desktop/Y2/Sem1/MAD/App/ASG/IgNight/app/src/main/res/layout/activity_friend_list.xml" value="0.25" />
+        <entry key="..\:/Users/jason/Desktop/Y2/Sem1/MAD/App/ASG/IgNight/app/src/main/res/layout/activity_login.xml" value="0.264" />
         <entry key="..\:/Users/jason/Desktop/Y2/Sem1/MAD/App/ASG/IgNight/app/src/main/res/layout/activity_login_test.xml" value="0.22826086956521738" />
-        <entry key="..\:/Users/limlo/Downloads/MAD/Assignment/Assignment/app/src/main/res/layout/activity_profile_creation.xml" value="0.2246376811594203" />
-        <entry key="..\:/keefe/Desktop/school/2.1/mobile applications development/asg/MADIgNight/app/src/main/res/layout/activity_chat_list.xml" value="0.3416666666666667" />
-        <entry key="..\:/keefe/Desktop/school/2.1/mobile applications development/asg/MADIgNight/app/src/main/res/layout/activity_login.xml" value="0.3416666666666667" />
-        <entry key="..\:/keefe/Desktop/school/2.1/mobile applications development/asg/MADIgNight/app/src/main/res/layout/activity_main.xml" value="0.3416666666666667" />
+        <entry key="..\:/Users/jason/Desktop/Y2/Sem1/MAD/App/ASG/IgNight/app/src/main/res/layout/activity_main_menu.xml" value="0.264" />
+        <entry key="..\:/Users/jason/Desktop/Y2/Sem1/MAD/App/ASG/IgNight/app/src/main/res/layout/activity_my_profile.xml" value="0.25" />
+        <entry key="..\:/Users/jason/Desktop/Y2/Sem1/MAD/App/ASG/IgNight/app/src/main/res/layout/activity_profile_creation.xml" value="0.264" />
+        <entry key="..\:/Users/jason/Desktop/Y2/Sem1/MAD/App/ASG/IgNight/app/src/main/res/layout/activity_registration.xml" value="0.264" />
+        <entry key="..\:/Users/jason/Desktop/Y2/Sem1/MAD/App/ASG/IgNight/app/src/main/res/layout/activity_view_profile.xml" value="0.22826086956521738" />
+        <entry key="..\:/Users/jason/Desktop/Y2/Sem1/MAD/App/ASG/IgNight/app/src/main/res/layout/blog_layout.xml" value="0.264" />
+        <entry key="..\:/Users/jason/Desktop/Y2/Sem1/MAD/App/ASG/IgNight/app/src/main/res/layout/friendlist_layout.xml" value="0.25" />
+        <entry key="..\:/Users/jason/Desktop/Y2/Sem1/MAD/App/ASG/IgNight/app/src/main/res/layout/hamburger.xml" value="0.21965579710144928" />
+        <entry key="..\:/Users/jason/Desktop/Y2/Sem1/MAD/App/ASG/IgNight/app/src/main/res/layout/interest_layout.xml" value="0.25" />
+        <entry key="..\:/Users/jason/Desktop/Y2/Sem1/MAD/App/ASG/IgNight/app/src/main/res/layout/main_menu_layout.xml" value="0.2" />
+        <entry key="..\:/Users/jason/Desktop/Y2/Sem1/MAD/App/ASG/IgNight/app/src/main/res/layout/profile_view_recycler_layout.xml" value="0.22239583333333332" />
       </map>
     </option>
   </component>
