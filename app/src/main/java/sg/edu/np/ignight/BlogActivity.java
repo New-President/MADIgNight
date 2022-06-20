@@ -66,14 +66,10 @@ public class BlogActivity extends AppCompatActivity {
                     //Log.d("key", keyNode.getKey());
                     BlogObject blog = keyNode.getValue(BlogObject.class);
                     blogsList.add(blog);
-
                 }
 
                 BlogAdapter adapter = new BlogAdapter(BlogActivity.this, blogsList);
                 rv.setAdapter(adapter);
-                LinearLayoutManager layout = new LinearLayoutManager(context);
-                layout.setOrientation(LinearLayoutManager.VERTICAL);
-                rv.setLayoutManager(layout);
             }
 
             @Override
@@ -111,8 +107,9 @@ public class BlogActivity extends AppCompatActivity {
             }
         });
 
+        LinearLayoutManager layout = new LinearLayoutManager(context);
+        layout.setOrientation(LinearLayoutManager.VERTICAL);
+        rv.setLayoutManager(layout);
     }
-
-
 
 }

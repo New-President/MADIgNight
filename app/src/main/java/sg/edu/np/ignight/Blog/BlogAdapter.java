@@ -83,6 +83,13 @@ public class BlogAdapter extends RecyclerView.Adapter<BlogViewHolder> {
         ImageView likebutton = holder.likesButton; //add fullscreen function
         ImageView commentButton = holder.commentButton; //view profile
 
+        if (blog.liked){
+            likebutton.setBackgroundResource(R.drawable.heart);
+        }
+        else{
+            likebutton.setBackgroundResource(R.drawable.heartwithhole);
+        }
+
         int likes = blog.likes;
         int comments = blog.comments;
         holder.likes.setText(String.valueOf(likes));
@@ -100,12 +107,14 @@ public class BlogAdapter extends RecyclerView.Adapter<BlogViewHolder> {
                     }
                     blog.liked = false;
                     databaseReference.child("liked").setValue(false);
+                    likebutton.setBackgroundResource(R.drawable.heartwithhole);
                 }
                 else {
                     databaseReference.child("likes").setValue(blog.likes += 1);
                     blog.liked = true;
                     databaseReference.child("liked").setValue(true);
                     holder.likes.setText(String.valueOf(likes + 1));
+                    likebutton.setBackgroundResource(R.drawable.heart);
                 }
             }
         });
