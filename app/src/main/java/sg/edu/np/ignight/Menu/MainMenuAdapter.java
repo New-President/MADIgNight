@@ -68,7 +68,7 @@ public class MainMenuAdapter extends RecyclerView.Adapter<MainMenuViewHolder>{
         Button ignight = holder.Accept;
         ImageView profile = holder.ProfilePic_menu;
 
-        next.setOnClickListener(new View.OnClickListener() {// need algo to do
+        next.setOnClickListener(new View.OnClickListener() {  // goes to the next user in the list or first user (if currently showing user is the last user)
             @Override
             public void onClick(View view) {
                 if (holder.getAdapterPosition() != data.size() - 1) {
@@ -82,7 +82,7 @@ public class MainMenuAdapter extends RecyclerView.Adapter<MainMenuViewHolder>{
             }
         });
 
-        ignight.setOnClickListener(new View.OnClickListener() { // go to messaging directly
+        ignight.setOnClickListener(new View.OnClickListener() { // start chat with the target user
             @Override
             public void onClick(View view) {
 

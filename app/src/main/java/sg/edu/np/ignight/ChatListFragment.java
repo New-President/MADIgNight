@@ -55,6 +55,7 @@ public class ChatListFragment extends Fragment {
         return view;
     }
 
+    // get list of chats of current user
     private void getChatList() {
 
         ArrayList<String> chatIdList = new ArrayList<>();

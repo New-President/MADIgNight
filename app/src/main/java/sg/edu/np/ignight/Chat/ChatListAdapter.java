@@ -35,7 +35,9 @@ public class ChatListAdapter extends RecyclerView.Adapter<ChatListAdapter.ChatLi
 
     @Override
     public void onBindViewHolder(@NonNull ChatListViewHolder holder, int position) {
+        // set chat name of the chat
         holder.chatTitle.setText(chatList.get(position).getChatName());
+        // goes to the chat activity for the selected chat
         holder.chatLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
