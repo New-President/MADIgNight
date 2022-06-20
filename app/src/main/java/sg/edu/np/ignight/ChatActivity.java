@@ -50,6 +50,7 @@ import sg.edu.np.ignight.Chat.MediaAdapter;
 import sg.edu.np.ignight.Chat.MessageAdapter;
 import sg.edu.np.ignight.Chat.MessageObject;
 import sg.edu.np.ignight.Objects.TimestampObject;
+import sg.edu.np.ignight.Objects.UserObject;
 
 public class ChatActivity extends AppCompatActivity {
 
@@ -76,6 +77,7 @@ public class ChatActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat);
 
+        // initialize Fresco (library to view images full screen)
         Fresco.initialize(this);
 
         Bundle bundle = getIntent().getExtras();
@@ -106,6 +108,7 @@ public class ChatActivity extends AppCompatActivity {
         initializeMessage();
         initializeMedia();
 
+        // send message
         sendMessageButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -113,6 +116,7 @@ public class ChatActivity extends AppCompatActivity {
             }
         });
 
+        // add media
         addMediaButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -120,6 +124,7 @@ public class ChatActivity extends AppCompatActivity {
             }
         });
 
+        // go back to MainMenuActivity
         backButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -131,6 +136,7 @@ public class ChatActivity extends AppCompatActivity {
             }
         });
 
+        // remove media
         removeMediaButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -138,6 +144,7 @@ public class ChatActivity extends AppCompatActivity {
             }
         });
 
+        // scroll to the bottom of the messages
         scrollToChatBottomButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -146,13 +153,29 @@ public class ChatActivity extends AppCompatActivity {
             }
         });
 
+        // view profile of user
         messageLayoutHeaderUserInfo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivity(new Intent(getApplicationContext(), ProfileViewActivity.class));
+                Intent intent = new Intent(getApplicationContext(), ProfileViewActivity.class);
+                DatabaseReference targetUserRef = rootDB.child("user").child(targetUserID);
+                targetUserRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        UserObject targetUser = snapshot.getValue(UserObject.class);
+                        intent.putExtra("user", targetUser);
+                        startActivity(intent);
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+                        Log.e(TAG, "onCancelled: " + error.getMessage());
+                    }
+                });
             }
         });
 
+        // show button to scroll to bottom of chat when the recyclerview is scrolled
         messageRV.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
@@ -166,6 +189,7 @@ public class ChatActivity extends AppCompatActivity {
 
     }
 
+    // update status of other user
     private void showTargetUserStatus() {
         DatabaseReference userPresenceDB = rootDB.child("presence").child(targetUserID);
 
@@ -211,12 +235,13 @@ public class ChatActivity extends AppCompatActivity {
         });
     }
 
-
+    // show/hide button to scroll to bottom of chat
     private void enableScrollToChatBottomButton(boolean toEnable) {
         scrollToChatBottomButton.setVisibility((toEnable)?View.VISIBLE: View.GONE);
         scrollToChatBottomButton.setClickable(toEnable);
     }
 
+    // get list of chat messages
     private void getChatMessages() {
         chatDB.child("messages").addChildEventListener(new ChildEventListener() {
             @Override
@@ -304,11 +329,13 @@ public class ChatActivity extends AppCompatActivity {
         });
     }
 
+    // show loading progress bar for sending messages
     private void showSendMessageProgressBar(boolean show) {
         sendMessageButton.setVisibility(show?View.GONE:View.VISIBLE);
         sendMessageProgressBar.setVisibility(show?View.VISIBLE:View.GONE);
     }
 
+    // send message
     private void sendMessage() {
 
         String messageText = messageInput.getText().toString().trim();
@@ -380,6 +407,7 @@ public class ChatActivity extends AppCompatActivity {
         }
     }
 
+    // update database with new message (from sendMessage())
     private void updateDatabaseWithNewMessage(DatabaseReference newMessageDb, Map newMessageMap) {
         newMessageDb.updateChildren(newMessageMap).addOnCompleteListener(new OnCompleteListener() {
             @Override
@@ -389,6 +417,7 @@ public class ChatActivity extends AppCompatActivity {
         });
     }
 
+    // open gallery to add pictures
     private void openGallery() {
         Intent intent = new Intent();
         intent.setType("image/*");
@@ -397,6 +426,7 @@ public class ChatActivity extends AppCompatActivity {
         startActivityForResult(Intent.createChooser(intent, "Select Picture(s)"), PICK_IMAGE_INTENT);
     }
 
+    // process the pictures received
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -423,12 +453,14 @@ public class ChatActivity extends AppCompatActivity {
         }
     }
 
+    // clear pictures selected
     private void removeMedia() {
         mediaUriList.clear();
         hideSendMediaLayout();
         mediaAdapter.notifyDataSetChanged();
     }
 
+    // hide layout of pictures selected
     private void hideSendMediaLayout() {
         Transition transition = new Slide(Gravity.BOTTOM);
         transition.addTarget(mediaRV);
@@ -439,6 +471,7 @@ public class ChatActivity extends AppCompatActivity {
         addMediaButton.setEnabled(true);
     }
 
+    // show layout of pictures selected
     private void showSendMediaLayout() {
         Transition transition = new Slide(Gravity.BOTTOM);
         transition.addTarget(mediaRV);
@@ -449,6 +482,7 @@ public class ChatActivity extends AppCompatActivity {
         addMediaButton.setEnabled(false);
     }
 
+    // initialize media recyclerview
     private void initializeMedia() {
         mediaUriList = new ArrayList<>();
         mediaRV = findViewById(R.id.mediaRV);
@@ -460,6 +494,7 @@ public class ChatActivity extends AppCompatActivity {
         mediaRV.setItemAnimator(new DefaultItemAnimator());
     }
 
+    // initialize messages recyclerview
     private void initializeMessage() {
         messageList = new ArrayList<>();
         messageRV = findViewById(R.id.messageRV);
@@ -472,6 +507,4 @@ public class ChatActivity extends AppCompatActivity {
         messageRV.setAdapter(messageAdapter);
         messageRV.setItemAnimator(new DefaultItemAnimator());
     }
-
-
 }

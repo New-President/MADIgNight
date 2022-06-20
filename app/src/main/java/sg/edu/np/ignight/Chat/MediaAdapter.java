@@ -17,6 +17,7 @@ import java.util.ArrayList;
 
 import sg.edu.np.ignight.R;
 
+// to show selected media in chat activity
 public class MediaAdapter extends RecyclerView.Adapter<MediaAdapter.MediaViewHolder> {
 
     private Context context;
@@ -37,6 +38,7 @@ public class MediaAdapter extends RecyclerView.Adapter<MediaAdapter.MediaViewHol
 
     @Override
     public void onBindViewHolder(@NonNull MediaViewHolder holder, int position) {
+        // put the picture into ImageView
         Glide.with(context)
                 .load(Uri.parse(mediaUriList.get(position)))
                 .placeholder(R.drawable.ic_baseline_image_24)
