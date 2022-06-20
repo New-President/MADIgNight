@@ -77,14 +77,13 @@ public class ProfileViewActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile_view);
 
-        // Get user from main menu
+        // Get userObject from main menu
         UserObject user = (UserObject) getIntent().getSerializableExtra("user");
+        // pass in userObject via putExtra intent here
+        UserObject userObject = (UserObject) getIntent().getSerializableExtra("key");
 
         /*
-        // pass in userObject via putExtra intent here
-        UserObject userObject = (UserObject) getIntent().getSerializableExtra("key"); */
-
-        // FOR TESTING. not final
+        // for testing when there is no userObject. do not remove.
 
         UserObject userObject = new UserObject();
         userObject.setUsername("test");
@@ -96,6 +95,8 @@ public class ProfileViewActivity extends AppCompatActivity {
         interestsDisplayTest.add("test2");
         userObject.setInterestList(interestsDisplayTest);
         userObject.setProfilePicUrl("https://m-cdn.phonearena.com/images/review/5269-wide_1200/Google-Pixel-6-review-big-brain-small-price.jpg");
+
+         */
 
         db = FirebaseDatabase.getInstance("https://madignight-default-rtdb.asia-southeast1.firebasedatabase.app/");
         myRef = db.getReference().child("chat");
@@ -187,6 +188,7 @@ public class ProfileViewActivity extends AppCompatActivity {
     }
 
     public void ShowInformation(UserObject userObject){
+        // inits and sets profileView details to be displayed
         username = (String) userObject.getUsername();
         aboutMe = (String) userObject.getAboutMe();
         whatImLookingFor = (String) userObject.getRelationshipPref();
@@ -205,8 +207,19 @@ public class ProfileViewActivity extends AppCompatActivity {
         profilePicture = (ImageView) findViewById(R.id.imageView);
 
         // Gets the image url for the profile picture file
-        profilePictureUrl = userObject.getProfilePicUrl();
+        //profilePictureUrl = userObject.getProfilePicUrl(); to be implemented in the future
 
-        Glide.with(this).load(profilePictureUrl).into(profilePicture);
+        // code for retrieving profile picture url when getProfileUrl is not being used
+        // Reference to an image file in cloud storage
+        StorageReference storageReference = FirebaseStorage.
+                getInstance().
+                getReference("profilePicture/" +
+                        userObject.getUid() +
+                        "/" +
+                        userObject.getUid() +
+                        ".png");
+        Glide.with(this)
+                .load(storageReference)
+                .into(profilePicture);
     }
 }
