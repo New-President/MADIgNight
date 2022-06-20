@@ -39,7 +39,9 @@ public class side_menu extends Activity {
         editprofile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                Intent editProfile = new Intent(side_menu.this, ProfileCreationActivity.class);
+                editProfile.putExtra("ProfileCreated", true);
+                startActivity(editProfile);
             }
         });
 
