@@ -26,6 +26,8 @@ public class side_menu extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_side_menu2);
+
+        // Side menu layout
         DisplayMetrics dm = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(dm);
         int width = dm.widthPixels;
@@ -39,6 +41,7 @@ public class side_menu extends Activity {
         params.y = 0;
         getWindow().setAttributes(params);
 
+        // Toast Message
         LayoutInflater inflater = getLayoutInflater();
         View customtoast = inflater.inflate(R.layout.toast_message_bg, findViewById(R.id.toast_message));
         TextView txtMessage = customtoast.findViewById(R.id.toast_message);
@@ -86,7 +89,8 @@ public class side_menu extends Activity {
         TandC.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mToast.show();
+                Intent main_to_tnc = new Intent(side_menu.this, TNC.class);
+                startActivity(main_to_tnc);
             }
         });
 

@@ -51,7 +51,6 @@ public class ProfileViewActivity extends AppCompatActivity {
     private Integer age;
     private String nameAndAge1;
     private String currentUserUID, targetUserUID;
-    private String profilePictureUrl;
 
     private TextView nameAndAge, textView8, textView9;
 
@@ -62,15 +61,9 @@ public class ProfileViewActivity extends AppCompatActivity {
 
     public ArrayList<String> interestsDisplay;
 
-    private DatabaseReference myRef;
+    private DatabaseReference myRef, myRef2;
     private FirebaseDatabase db;
     private Map userMap;
-    private FirebaseAuth mAuth;
-
-    private Uri imageUri;
-    private String myUri = "";
-    private StorageReference storageProfilePic;
-    private UploadTask uploadTask;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -82,10 +75,10 @@ public class ProfileViewActivity extends AppCompatActivity {
         // pass in userObject via putExtra intent here
         UserObject userObject = (UserObject) getIntent().getSerializableExtra("key");
 
-        /*
-        // for testing when there is no userObject. do not remove.
 
-        UserObject userObject = new UserObject();
+        // for testing when there is no userObject. do not remove.
+        /*
+        userObject = new UserObject();
         userObject.setUsername("test");
         userObject.setAboutMe("test2");
         userObject.setAge(123);
@@ -95,10 +88,11 @@ public class ProfileViewActivity extends AppCompatActivity {
         interestsDisplayTest.add("test2");
         userObject.setInterestList(interestsDisplayTest);
         userObject.setProfilePicUrl("https://m-cdn.phonearena.com/images/review/5269-wide_1200/Google-Pixel-6-review-big-brain-small-price.jpg");
+        */
 
-         */
 
         db = FirebaseDatabase.getInstance("https://madignight-default-rtdb.asia-southeast1.firebasedatabase.app/");
+        myRef2 = db.getReference("user");
         myRef = db.getReference().child("chat");
 
         currentUserUID = FirebaseAuth.getInstance().getUid();
@@ -131,6 +125,7 @@ public class ProfileViewActivity extends AppCompatActivity {
 
 
         ignightButton = findViewById(R.id.button4);
+        UserObject finalUserObject = userObject;
         ignightButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -161,7 +156,7 @@ public class ProfileViewActivity extends AppCompatActivity {
                                         Intent intent = new Intent(view.getContext(), ChatActivity.class);
                                         Bundle bundle = new Bundle();
                                         bundle.putString("chatID", newChatID);
-                                        bundle.putString("chatName", userObject.getUsername());
+                                        bundle.putString("chatName", finalUserObject.getUsername());
                                         bundle.putString("targetUserID", targetUserUID);
                                         intent.putExtras(bundle);
                                         view.getContext().startActivity(intent);
@@ -211,15 +206,33 @@ public class ProfileViewActivity extends AppCompatActivity {
 
         // code for retrieving profile picture url when getProfileUrl is not being used
         // Reference to an image file in cloud storage
-        StorageReference storageReference = FirebaseStorage.
-                getInstance().
-                getReference("profilePicture/" +
-                        userObject.getUid() +
-                        "/" +
-                        userObject.getUid() +
-                        ".png");
-        Glide.with(this)
-                .load(storageReference)
-                .into(profilePicture);
+
+        // extract user child to get profile picture name
+        myRef2.child(userObject.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                // get profile picture file name
+                String profilePictureName = snapshot.child("Profile Picture").getValue().toString();
+                StorageReference storageReference = FirebaseStorage.
+                        getInstance().
+                        getReference("profilePicture/" +
+                                userObject.getUid() +
+                                "/" +
+                                profilePictureName);
+                Glide.with(getApplicationContext())
+                        .load(storageReference)
+                        .into(profilePicture);
+                Log.d("test2", profilePictureName);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                // if there is an error retrieving profile pics, show toast
+                Log.d("testError", "testing");
+                Toast.makeText(getApplicationContext(),
+                        "Error retrieving profile photo. Please try again later.",
+                        Toast.LENGTH_LONG).show();
+            }
+        });
     }
 }

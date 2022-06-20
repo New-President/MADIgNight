@@ -54,6 +54,8 @@ public class LoginActivity extends AppCompatActivity {
     private ProgressBar loginProgressBar;
 
     private PhoneAuthProvider.OnVerificationStateChangedCallbacks callbacks;
+    private PhoneAuthProvider.ForceResendingToken resendingToken;
+    private boolean initialVerificationSent;
 
     private String verificationId;
 
@@ -64,6 +66,7 @@ public class LoginActivity extends AppCompatActivity {
 
         getPermission();
 
+        // initialize Firebase
         FirebaseApp.initializeApp(this);
         FirebaseAppCheck firebaseAppCheck = FirebaseAppCheck.getInstance();
         firebaseAppCheck.installAppCheckProviderFactory(SafetyNetAppCheckProviderFactory.getInstance());
@@ -76,8 +79,8 @@ public class LoginActivity extends AppCompatActivity {
         resetLoginFieldsButton = findViewById(R.id.resetLoginFields);  // Button to reset fields to default
         errorMessage = findViewById(R.id.loginErrorMessage);  // TextView to show error in logging in
         phonePrefix = findViewById(R.id.phonePrefix);  // TextView with phone number prefix (set to +65)
-        loginSuccessImage = findViewById(R.id.loginSuccessImage);
-        loginProgressBar = findViewById(R.id.loginProgressBar);
+        loginSuccessImage = findViewById(R.id.loginSuccessImage);  // ImageView to show login success
+        loginProgressBar = findViewById(R.id.loginProgressBar);  // ProgressBar to show login loading
 
         // turn off phone auth app verification (for testing with numbers in firebase console) - remove for real numbers
         FirebaseAuth.getInstance().getFirebaseAuthSettings().setAppVerificationDisabledForTesting(true);
@@ -85,6 +88,7 @@ public class LoginActivity extends AppCompatActivity {
         // set default fields first
         setDefaultFields(false);
 
+        // check if user is already logged in
         userIsLoggedIn(true);
 
         // callbacks to be used in startPhoneNumberVerification()
@@ -96,12 +100,14 @@ public class LoginActivity extends AppCompatActivity {
                 signInWithPhoneAuthCredential(phoneAuthCredential);
             }
 
-            // OTP sent -> store verification id
+            // OTP sent -> store verification id and resending token, start timer for OTP resend
             @Override
             public void onCodeSent(@NonNull String s, @NonNull PhoneAuthProvider.ForceResendingToken forceResendingToken) {
                 super.onCodeSent(s, forceResendingToken);
 
                 verificationId = s;
+                initialVerificationSent = true;
+                resendingToken = forceResendingToken;
                 allowResendOTP();
             }
 
@@ -155,7 +161,7 @@ public class LoginActivity extends AppCompatActivity {
 
         // enable codeInput and disable phoneNumberInput and sendOTPButton
         // hide the error message in case it is visible
-        // start countDownTimer and send OTP
+        // start verification or resend verification (if initialVerificationSent is true)
         sendOTPButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -163,11 +169,17 @@ public class LoginActivity extends AppCompatActivity {
                 toggleEditText(phoneNumberInput, false);
                 disableButton(sendOTPButton);
                 errorMessage.setVisibility(View.GONE);
-                startPhoneNumberVerification();
+
+                if (initialVerificationSent) {
+                    resendVerificationCode();
+                }
+                else {
+                    startPhoneNumberVerification();
+                }
             }
         });
 
-        // verify phone number with verification code and disable codeInput and loginButton
+        // verify phone number with verification code, disable codeInput and show progress bar
         // stop countDownTimer if it is active and reset sendOTPButton text
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -198,16 +210,19 @@ public class LoginActivity extends AppCompatActivity {
 
     }
 
+    // enable a button and change its text color to black
     private void enableButton(Button button) {
         button.setEnabled(true);
         button.setTextColor(Color.parseColor("#000000"));
     }
 
+    // disable a button and change its text color to gray
     private void disableButton(Button button) {
         button.setEnabled(false);
         button.setTextColor(Color.parseColor("#666666"));
     }
 
+    // shows the progress bar and hides the login button
     private void showProgressBar() {
         loginButton.setVisibility(View.GONE);
         loginProgressBar.setVisibility(View.VISIBLE);
@@ -220,6 +235,18 @@ public class LoginActivity extends AppCompatActivity {
                 .setTimeout(60L, TimeUnit.SECONDS)
                 .setActivity(this)
                 .setCallbacks(callbacks)
+                .build();
+        PhoneAuthProvider.verifyPhoneNumber(options);
+    }
+
+    // resend otp
+    private void resendVerificationCode() {
+        PhoneAuthOptions options = PhoneAuthOptions.newBuilder()
+                .setPhoneNumber(phonePrefix.getText().toString() + phoneNumberInput.getText().toString())
+                .setTimeout(60L, TimeUnit.SECONDS)
+                .setActivity(this)
+                .setCallbacks(callbacks)
+                .setForceResendingToken(resendingToken)
                 .build();
         PhoneAuthProvider.verifyPhoneNumber(options);
     }
@@ -241,16 +268,16 @@ public class LoginActivity extends AppCompatActivity {
                     FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
 
                     if (user != null) {
-                        final DatabaseReference userDB = FirebaseDatabase.getInstance("https://madignight-default-rtdb.asia-southeast1.firebasedatabase.app/").getReference().child("user").child(user.getUid());
+                        DatabaseReference userDB = FirebaseDatabase.getInstance("https://madignight-default-rtdb.asia-southeast1.firebasedatabase.app/").getReference().child("user");
 
                         userDB.addListenerForSingleValueEvent(new ValueEventListener() {
                             @Override
                             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                if (!snapshot.exists()) {
+                                if (!snapshot.child(user.getUid()).exists()) {
                                     Map<String, Object> userMap = new HashMap<>();
                                     userMap.put("phone", user.getPhoneNumber());
                                     userMap.put("profileCreated", false);
-                                    userDB.updateChildren(userMap).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                    userDB.child(user.getUid()).updateChildren(userMap).addOnCompleteListener(new OnCompleteListener<Void>() {
                                         @Override
                                         public void onComplete(@NonNull Task<Void> task) {
                                             userIsLoggedIn(false);
@@ -277,7 +304,9 @@ public class LoginActivity extends AppCompatActivity {
         });
     }
 
-    // check if there is an authenticated user and direct to ProfileCreationActivity
+    // check if there is an authenticated user
+    // go to MainMenuActivity if user is already authenticated before (initialCall is true)
+    // otherwise, go to MainMenuActivity if user already created profile or go to ProfileCreationActivity if user hasn't created profile
     private void userIsLoggedIn(boolean initialCall) {
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         if (user != null) {
@@ -325,11 +354,12 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     // reset fields to default
-    // clear verification id / reset input fields / disable buttons / show error message if showErrorMessage is true
     private void setDefaultFields(boolean showErrorMessage) {
         loginProgressBar.setVisibility(View.GONE);
         errorMessage.setVisibility(showErrorMessage?View.VISIBLE:View.GONE);
         verificationId = null;
+        resendingToken = null;
+        initialVerificationSent = false;
         phoneNumberInput.setText("");
         toggleEditText(phoneNumberInput, true);
         codeInput.setText("");
@@ -371,9 +401,10 @@ public class LoginActivity extends AppCompatActivity {
         countDownTimer.start();
     }
 
+    // request permissions
     private void getPermission() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            requestPermissions(new String[] {Manifest.permission.INTERNET}, 1);
+            requestPermissions(new String[] {Manifest.permission.INTERNET, Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
         }
     }
 }

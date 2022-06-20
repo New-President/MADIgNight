@@ -85,7 +85,7 @@ public class Homepage_fragment extends Fragment {
                                 }
                             }
 
-                            if (exists) {
+                            if (exists || childSnapshot.child("profileCreated").getValue().toString().equals("false")) {
                                 continue;
                             }
 

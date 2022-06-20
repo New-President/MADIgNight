@@ -60,6 +60,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
 
         holder.messageLayout.setClipToOutline(true);
 
+        // set date header for the first messages
         if (thisMessage.isFirstMessage()) {
             String date = thisMessage.getTimestamp().getDate();
             String today = null;
@@ -78,6 +79,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
             holder.messageDate.setVisibility(View.GONE);
         }
 
+        // set text if there is text sent
         if (!thisMessage.getMessage().equals("")) {
             holder.messageText.setText(thisMessage.getMessage());
             holder.messageText.setVisibility(View.VISIBLE);
@@ -86,10 +88,12 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
             holder.messageText.setVisibility(View.GONE);
         }
 
+        // set timestamp of message
         holder.messageTime.setText(thisMessage.getTimestamp().getTime());
 
         ArrayList<String> mediaUrlList = thisMessage.getMediaUrlList();
 
+        // show first picture in mediaUrlList
         if (mediaUrlList.isEmpty()) {
             holder.mediaHolder.setVisibility(View.GONE);
             holder.mediaCount.setVisibility(View.GONE);
@@ -107,6 +111,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
             }
         }
 
+        // show pictures in full screen when user clicks on the picture
         holder.mediaHolder.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -126,6 +131,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
             }
         });
 
+        // update icon of seen status of the message (for messages sent by you)
         if (getItemViewType(position) == 1) {
             if (thisMessage.isSent() && !thisMessage.isSeen()) {
                 holder.messageStatus.setImageResource(R.drawable.ic_baseline_sent_icon_24);
@@ -135,6 +141,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
             }
         }
         else {
+            // update seen status of messages received
             if (!thisMessage.isSeen()) {
                 thisMessage.getDbRef().setValue(true);
                 thisMessage.getDbRef().removeEventListener(thisMessage.getListener());
