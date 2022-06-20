@@ -1,7 +1,10 @@
 package sg.edu.np.ignight;
 
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
@@ -9,9 +12,12 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -20,6 +26,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import java.io.FileNotFoundException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collections;
 
@@ -29,6 +37,10 @@ public class ProfileCreationActivity extends AppCompatActivity {
 
     ArrayList<String> data = new ArrayList<>();
     ArrayList<String> dateLocList = new ArrayList<>();
+
+    private final int Gallery_Request = 1;
+    ImageView imgGallery;
+    Uri imageUri;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,6 +54,18 @@ public class ProfileCreationActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 finish();
+            }
+        });
+
+        imgGallery = findViewById(R.id.ProfileCreationImage);
+        Button uploadButton = findViewById(R.id.ProfilePicUpload);
+
+        uploadButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent gallery = new Intent(Intent.ACTION_PICK);
+                gallery.setData(MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                startActivityForResult(gallery, Gallery_Request);
             }
         });
 
@@ -105,13 +129,7 @@ public class ProfileCreationActivity extends AppCompatActivity {
             }
         });
 
-        /*RecyclerView rv = findViewById(R.id.interestRecyclerView);
-        ProfileCreationAdapter adapter = new ProfileCreationAdapter(MainActivity.this, data);
-        LinearLayoutManager layout = new LinearLayoutManager(this);
-        layout.setOrientation(LinearLayoutManager.HORIZONTAL);
 
-        rv.setAdapter(adapter);
-        rv.setLayoutManager(layout);*/
 
         EditText aboutMeInput = findViewById(R.id.AboutMeInput);
         TextView aboutMeView = findViewById(R.id.AboutMeTextView);
@@ -238,6 +256,9 @@ public class ProfileCreationActivity extends AppCompatActivity {
                     }
                     if(dateLocSize == 0){
                         missingList.add("Preferred Date Location");
+                    }
+                    if(imageUri == null){
+                        missingList.add("No Profile Picture");
                     }
 
                     AlertDialog.Builder alert = new AlertDialog.Builder(ProfileCreationActivity.this);
@@ -401,7 +422,7 @@ public class ProfileCreationActivity extends AppCompatActivity {
         int dateLocSize = dateLocList.size();
 
         // Checking if there are any missing inputs
-        if (username.equals("") || gender.equals("") || age.equals("") || aboutMe.equals("") || interestSize == 0 || RelationshipPref.equals("") || GenderPref.equals("") || dateLocSize == 0){
+        if (username.equals("") || gender.equals("") || age.equals("") || aboutMe.equals("") || interestSize == 0 || RelationshipPref.equals("") || GenderPref.equals("") || dateLocSize == 0 || imageUri == null){
             return false;
         }
         else{
@@ -412,5 +433,31 @@ public class ProfileCreationActivity extends AppCompatActivity {
         }
 
         return true;
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if(resultCode == RESULT_OK){
+            // if everything processed successfully
+            if (requestCode==Gallery_Request){
+                // get Uri
+                imageUri = data.getData();
+
+                InputStream inputStream;
+
+                try {
+                    inputStream = getContentResolver().openInputStream(imageUri);
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
+                    //show message to user indicating that the image is unavailable
+                    Toast.makeText(this, "Unable to open image", Toast.LENGTH_SHORT).show();
+                }
+
+                //for Gallery
+                imgGallery.setImageURI(imageUri);
+            }
+        }
     }
 }
