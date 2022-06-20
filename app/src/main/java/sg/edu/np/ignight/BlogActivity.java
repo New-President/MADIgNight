@@ -26,10 +26,13 @@ import java.util.List;
 
 import sg.edu.np.ignight.Objects.BlogObject;
 import sg.edu.np.ignight.Blog.BlogAdapter;
+import sg.edu.np.ignight.Objects.UserObject;
 
 public class BlogActivity extends AppCompatActivity {
     private ArrayList<BlogObject> blogsList;
     private Context context;
+    private DatabaseReference databaseReference;
+    private FirebaseDatabase database;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,12 +42,18 @@ public class BlogActivity extends AppCompatActivity {
         blogsList = new ArrayList<>();
         FirebaseAuth auth = FirebaseAuth.getInstance();
         FirebaseUser user = auth.getCurrentUser();
-        assert user != null;
+        // For viewing own profile
         String uid = user.getUid();
 
-        FirebaseDatabase database = FirebaseDatabase.getInstance("https://madignight-default-rtdb.asia-southeast1.firebasedatabase.app/");
-        DatabaseReference databaseReference = database.getReference("user");
+        database = FirebaseDatabase.getInstance("https://madignight-default-rtdb.asia-southeast1.firebasedatabase.app/");
+        UserObject userObject = (UserObject) getIntent().getSerializableExtra("user");
 
+        if (userObject == null){
+            databaseReference = database.getReference("user").child(uid).child("blog");
+        }
+        else{
+            databaseReference = database.getReference("user").child(userObject.getUid()).child("blog");
+        }
 
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override

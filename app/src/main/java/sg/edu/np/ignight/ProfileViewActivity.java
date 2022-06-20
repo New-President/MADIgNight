@@ -78,7 +78,7 @@ public class ProfileViewActivity extends AppCompatActivity {
         setContentView(R.layout.activity_profile_view);
 
         // Get user from main menu
-        UserObject user = getIntent().getExtras("user");
+        UserObject user = (UserObject) getIntent().getSerializableExtra("user");
 
         /*
         // pass in userObject via putExtra intent here
