@@ -24,7 +24,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/location"
-        app:srcCompat="@drawable/failed" />
+        app:srcCompat="@drawable/btn_bg" />
 
     <TextView
         android:id="@+id/likesCount"
