@@ -76,6 +76,8 @@ public class MessageObject {
     public void setSeen(boolean seen) {
         isSeen = seen;
     }
+
+    // determine if this message is the first message sent on that day
     public void setFirstMessage(ArrayList<MessageObject> messageList) {
         String messageDate = this.getTimestamp().getDate();
 
