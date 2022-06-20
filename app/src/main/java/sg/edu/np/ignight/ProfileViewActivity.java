@@ -8,7 +8,6 @@ import android.graphics.BitmapFactory;
 import android.media.Image;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -36,9 +35,8 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+import com.bumptech.glide.Glide;
 
-import java.io.File;
-import java.io.FileOutputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -53,6 +51,7 @@ public class ProfileViewActivity extends AppCompatActivity {
     private Integer age;
     private String nameAndAge1;
     private String currentUserUID, targetUserUID;
+    private String profilePictureUrl;
 
     private TextView nameAndAge, textView8, textView9;
 
@@ -82,6 +81,8 @@ public class ProfileViewActivity extends AppCompatActivity {
         // pass in userObject via putExtra intent here
         UserObject userObject = (UserObject) getIntent().getSerializableExtra("key"); */
 
+        // FOR TESTING. not final
+
         UserObject userObject = new UserObject();
         userObject.setUsername("test");
         userObject.setAboutMe("test2");
@@ -91,10 +92,10 @@ public class ProfileViewActivity extends AppCompatActivity {
         interestsDisplayTest.add("test1");
         interestsDisplayTest.add("test2");
         userObject.setInterestList(interestsDisplayTest);
+        userObject.setProfilePicUrl("https://m-cdn.phonearena.com/images/review/5269-wide_1200/Google-Pixel-6-review-big-brain-small-price.jpg");
 
         db = FirebaseDatabase.getInstance("https://madignight-default-rtdb.asia-southeast1.firebasedatabase.app/");
         myRef = db.getReference().child("chat");
-        storageProfilePic = FirebaseStorage.getInstance().getReference().child("profilePicture").child(userObject.getUid());
 
         currentUserUID = FirebaseAuth.getInstance().getUid();
         targetUserUID = userObject.getUid();
@@ -131,7 +132,6 @@ public class ProfileViewActivity extends AppCompatActivity {
                                 break;
                             }
                         }
-
                         if (!chatExists) {
                             String newChatID = myRef.push().getKey();
                             userMap = new HashMap<>();
@@ -161,7 +161,6 @@ public class ProfileViewActivity extends AppCompatActivity {
                 });
             }
         });
-
         RecyclerView rv = findViewById(R.id.InterestsRecyclerView);
         ProfileViewInterestsAdapter adapter = new ProfileViewInterestsAdapter(ProfileViewActivity.this, interestsDisplay);
         LinearLayoutManager layout = new LinearLayoutManager(this);
@@ -185,26 +184,14 @@ public class ProfileViewActivity extends AppCompatActivity {
         textView8.setText(aboutMe);
         textView9 = (TextView) findViewById(R.id.textView9);
         textView9.setText(whatImLookingFor);
-
-
     }
 
     public void setProfilePicture(UserObject userObject){
         profilePicture = (ImageView) findViewById(R.id.imageView);
-        final long img_bytes = 1024 * 1024 * 3;
-        storageProfilePic.getBytes(img_bytes).addOnSuccessListener(new OnSuccessListener<byte[]>() {
-            @Override
-            public void onSuccess(byte[] bytes) {
-                Bitmap bmp = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
-                profilePicture.setImageBitmap(bmp);
-            }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception exception) {
-                Toast.makeText(getApplicationContext(),
-                        "Error retrieving posts",
-                        Toast.LENGTH_LONG).show();
-            }
-        });
+
+        // Gets the image url for the profile picture file
+        profilePictureUrl = userObject.getProfilePicUrl();
+
+        Glide.with(this).load(profilePictureUrl).into(profilePicture);
     }
 }
