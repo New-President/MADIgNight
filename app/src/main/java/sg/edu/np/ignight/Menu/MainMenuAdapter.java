@@ -17,6 +17,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
@@ -25,6 +26,8 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -39,6 +42,8 @@ public class MainMenuAdapter extends RecyclerView.Adapter<MainMenuViewHolder>{
     private ArrayList<UserObject> data;
     private Context c;
     private LinearLayoutManager layoutManager;
+    private DatabaseReference myRef2;
+    private FirebaseDatabase db;
 
     public MainMenuAdapter(Context c, ArrayList<UserObject> data, LinearLayoutManager layoutManager){
         this.c =c;
@@ -56,9 +61,8 @@ public class MainMenuAdapter extends RecyclerView.Adapter<MainMenuViewHolder>{
     @Override
     public void onBindViewHolder(@NonNull MainMenuViewHolder holder, int position) {
         UserObject user = data.get(position);
-
-        Log.d("menuuusername", user.getUsername());
-        Log.d("menuuid", user.toString());
+        db = FirebaseDatabase.getInstance("https://madignight-default-rtdb.asia-southeast1.firebasedatabase.app/");
+        myRef2 = db.getReference("user");
         holder.Name.setText(user.getUsername());
         Button next = holder.Reject;
         Button ignight = holder.Accept;
@@ -139,8 +143,8 @@ public class MainMenuAdapter extends RecyclerView.Adapter<MainMenuViewHolder>{
             @Override
             public void onClick(View view) {
                 Intent mainmenu_to_profileview = new Intent(c , ProfileViewActivity.class);
+                mainmenu_to_profileview.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 mainmenu_to_profileview.putExtra("user", user);
-                mainmenu_to_profileview.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 c.startActivity(mainmenu_to_profileview);
             }
         });
@@ -150,5 +154,4 @@ public class MainMenuAdapter extends RecyclerView.Adapter<MainMenuViewHolder>{
     public int getItemCount() {
         return data.size();
     }
-
 }

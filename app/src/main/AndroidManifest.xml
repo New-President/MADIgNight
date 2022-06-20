@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    package="sg.edu.np.ignight">
+    package="sg.edu.np.ignight" >
 
     <uses-permission
         android:name="android.permission.WRITE_EXTERNAL_STORAGE"
@@ -14,13 +14,13 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.IgNight">
+        android:theme="@style/Theme.IgNight" >
         <activity
             android:name=".AboutUsActivity"
             android:exported="false" />
         <activity
             android:name=".TNC"
-            android:exported="false">
+            android:exported="false" >
         </activity>
         <activity
             android:name=".side_menu"
@@ -34,15 +34,14 @@
             android:exported="false" />
         <activity
             android:name=".BlogActivity"
-            android:exported="true" />
+            android:exported="false" />
         <activity
             android:name=".MainMenuActivity"
             android:exported="false" />
         <activity
             android:name=".LoginActivity"
             android:exported="true"
-            android:screenOrientation="portrait">
-
+            android:screenOrientation="portrait" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
