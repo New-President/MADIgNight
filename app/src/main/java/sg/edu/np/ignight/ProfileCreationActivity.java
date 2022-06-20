@@ -1,5 +1,6 @@
 package sg.edu.np.ignight;
 
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
@@ -13,24 +14,38 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.OnProgressListener;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.UUID;
 
 import sg.edu.np.ignight.ProfileCreation.ProfileCreationAdapter;
 
@@ -48,10 +63,14 @@ public class ProfileCreationActivity extends AppCompatActivity {
     private RecyclerView interestRV;
 
     private boolean fromLogin;
+    private boolean fromMenu;
 
     private final int Gallery_Request = 1;
     private ImageView imgGallery;
     private Uri imageUri;
+
+    private FirebaseStorage storage;
+    private StorageReference storageReference;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,10 +90,11 @@ public class ProfileCreationActivity extends AppCompatActivity {
         relationshipPrefDropdown = findViewById(R.id.RelationshipPrefDropdown);
         interestRV = findViewById(R.id.interestRecyclerView);
 
-        InitDropdown();
+        InitInputs();
 
         Intent receiveIntent = getIntent();
         fromLogin = receiveIntent.getBooleanExtra("fromLogin", false);
+        fromMenu = receiveIntent.getBooleanExtra("ProfileCreated", false);
 
         backButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -98,98 +118,64 @@ public class ProfileCreationActivity extends AppCompatActivity {
         uploadButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent gallery = new Intent(Intent.ACTION_PICK);
+                choosePicture();
+                /*Intent gallery = new Intent(Intent.ACTION_PICK);
                 gallery.setData(MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                startActivityForResult(gallery, Gallery_Request);
+                startActivityForResult(gallery, Gallery_Request);*/
             }
         });
-
-        String[] interests = {"Running", "Cooking", "Gaming", "Swimming", "Reading", "Shopping", "Others"};
-        boolean[] selectedInterest = new boolean[interests.length];
-        ArrayList<Integer> checkedList = new ArrayList<>();
-
-        interestButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                AlertDialog.Builder builder = new AlertDialog.Builder(ProfileCreationActivity.this);
-                builder.setTitle("Select your Interests");
-                builder.setCancelable(false);    //set dialog non cancelable
-
-                builder.setMultiChoiceItems(interests, selectedInterest, new DialogInterface.OnMultiChoiceClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i, boolean b) {
-                        if (b){
-                            //when checkbox is selected, add position into list
-                            checkedList.add(i);
-                            Collections.sort(checkedList);
-                        }
-                        else{
-                            //when checkbox is not selected, remove position from list
-                            checkedList.remove(Integer.valueOf(i));
-                        }
-                    }
-                });
-
-                builder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        interestList.removeAll(interestList);
-                        for (int j = 0; j < checkedList.size(); j++){
-                            interestList.add(interests[checkedList.get(j)]);
-                        }
-                        InitRecyclerView();
-                    }
-                });
-
-                builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        dialogInterface.dismiss();
-                    }
-                });
-
-                builder.setNeutralButton("Clear All", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        for (int j = 0; j < selectedInterest.length; j++){
-                            selectedInterest[j] = false;
-                            checkedList.clear();
-                            interestList.removeAll(interestList);
-                        }
-                        InitRecyclerView();
-                    }
-                });
-                builder.show();
-            }
-        });
-
-
-
-        aboutMeInput.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                aboutMeTextview.setText(charSequence.toString());
-                float size = aboutMeTextview.getTextSize();
-                size = size/3;
-                aboutMeInput.setTextSize((int)size);
-            }
-
-            @Override
-            public void afterTextChanged(Editable editable) {
-
-            }
-        });
-
 
         // Saving to Firebase
         FirebaseDatabase database = FirebaseDatabase.getInstance("https://madignight-default-rtdb.asia-southeast1.firebasedatabase.app/");
         DatabaseReference myRef = database.getReference("user");
 
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        String Uid = user.getUid();
+
+        storage = FirebaseStorage.getInstance();
+        storageReference = storage.getReference();
+
+        if (fromMenu){
+            myRef.child(Uid).addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    String existUsername = snapshot.child("username").getValue(String.class);
+                    String existGender = snapshot.child("Gender").getValue(String.class);
+                    Integer existAge = snapshot.child("Age").getValue(Integer.class);
+                    String existAboutMe = snapshot.child("About Me").getValue(String.class);
+                    String existRelationshipPref = snapshot.child("Relationship Preference").getValue(String.class);
+                    String existGenderPref = snapshot.child("Gender Preference").getValue(String.class);
+
+                    Integer totalInterest = (int)snapshot.child("Interest").getChildrenCount();
+                    for(int i = 0; i < totalInterest; i++){
+                        String existingInterest = snapshot.child("Interest").child("Interest" + i).getValue(String.class);
+                        interestList.add(existingInterest);
+                    }
+
+                    Integer totalDateLoc = (int)snapshot.child("Date Location").getChildrenCount();
+                    for(int i = 0; i < totalDateLoc; i++){
+                        String existingDateLoc = snapshot.child("Date Location").child("Date Location" + i).getValue(String.class);
+                        dateLocList.add(existingDateLoc);
+                    }
+
+                    nameInput.setText(existUsername);
+                    ageInput.setText(existAge.toString());
+
+                    aboutMeInput.setText(existAboutMe);
+
+                    selectSpinnerValue(genderDropdown, existGender);
+                    selectSpinnerValue(relationshipPrefDropdown, existRelationshipPref);
+                    selectSpinnerValue(genderPrefDropdown, existGenderPref);
+
+
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+
+                }
+            });
+        }
 
         saveChangesButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -279,7 +265,7 @@ public class ProfileCreationActivity extends AppCompatActivity {
         });
     }
 
-    private void InitDropdown(){
+    private void InitInputs(){
         //Gender
         String[] gender = new String[]{"Male", "Female"};
         ArrayAdapter<String> genderAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, gender);
@@ -295,11 +281,92 @@ public class ProfileCreationActivity extends AppCompatActivity {
         ArrayAdapter<String> genderPrefAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, genderPref);
         genderPrefDropdown.setAdapter(genderPrefAdapter);
 
+        // Interest
+        String[] interests = {"Running", "Cooking", "Gaming", "Swimming", "Reading", "Shopping", "Others"};
+        boolean[] selectedInterest = new boolean[interests.length];
+        ArrayList<Integer> interestCheckedList = new ArrayList<>();
+
+        interestButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(ProfileCreationActivity.this);
+                builder.setTitle("Select your Interests");
+                builder.setCancelable(false);    //set dialog non cancelable
+
+                builder.setMultiChoiceItems(interests, selectedInterest, new DialogInterface.OnMultiChoiceClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i, boolean b) {
+                        if (b){
+                            //when checkbox is selected, add position into list
+                            interestCheckedList.add(i);
+                            Collections.sort(interestCheckedList);
+                        }
+                        else{
+                            //when checkbox is not selected, remove position from list
+                            interestCheckedList.remove(Integer.valueOf(i));
+                        }
+                    }
+                });
+
+                builder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        interestList.removeAll(interestList);
+                        for (int j = 0; j < interestCheckedList.size(); j++){
+                            interestList.add(interests[interestCheckedList.get(j)]);
+                        }
+                        InitRecyclerView();
+                    }
+                });
+
+                builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        dialogInterface.dismiss();
+                    }
+                });
+
+                builder.setNeutralButton("Clear All", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        for (int j = 0; j < selectedInterest.length; j++){
+                            selectedInterest[j] = false;
+                            interestCheckedList.clear();
+                            interestList.removeAll(interestList);
+                        }
+                        InitRecyclerView();
+                    }
+                });
+                builder.show();
+            }
+        });
+
+        // About Me
+        aboutMeInput.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                aboutMeTextview.setText(charSequence.toString());
+                float size = aboutMeTextview.getTextSize();
+                size = size/3;
+                aboutMeInput.setTextSize((int)size);
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+            }
+        });
+
 
         //Preferred Locations
         String[] locations = {"Restaurant", "Arcade", "Cafe", "Amusement Park", "Shopping", "Mall", "Hotel", "Home"};
         boolean[] selectedLocation = new boolean[locations.length];
-        ArrayList<Integer> checkedList = new ArrayList<>();
+        ArrayList<Integer> locationCheckedList = new ArrayList<>();
 
         locationPref.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -313,12 +380,12 @@ public class ProfileCreationActivity extends AppCompatActivity {
                     public void onClick(DialogInterface dialogInterface, int i, boolean b) {
                         if (b){
                             //when checkbox is selected, add position into list
-                            checkedList.add(i);
-                            Collections.sort(checkedList);
+                            locationCheckedList.add(i);
+                            Collections.sort(locationCheckedList);
                         }
                         else{
                             //when checkbox is not selected, remove position from list
-                            checkedList.remove(Integer.valueOf(i));
+                            locationCheckedList.remove(Integer.valueOf(i));
                         }
                     }
                 });
@@ -328,10 +395,10 @@ public class ProfileCreationActivity extends AppCompatActivity {
                     public void onClick(DialogInterface dialogInterface, int i) {
                         StringBuilder stringBuilder = new StringBuilder();
                         dateLocList.removeAll(dateLocList);
-                        for (int j = 0; j < checkedList.size(); j++){
-                            stringBuilder.append(locations[checkedList.get(j)]);
-                            dateLocList.add(locations[checkedList.get(j)]);
-                            if (j != checkedList.size() - 1){
+                        for (int j = 0; j < locationCheckedList.size(); j++){
+                            stringBuilder.append(locations[locationCheckedList.get(j)]);
+                            dateLocList.add(locations[locationCheckedList.get(j)]);
+                            if (j != locationCheckedList.size() - 1){
                                 stringBuilder.append(", ");
                             }
                         }
@@ -352,7 +419,7 @@ public class ProfileCreationActivity extends AppCompatActivity {
                     public void onClick(DialogInterface dialogInterface, int i) {
                         for (int j = 0; j < selectedLocation.length; j++){
                             selectedLocation[j] = false;
-                            checkedList.clear();
+                            locationCheckedList.clear();
                             dateLocList.removeAll(dateLocList);
                             locationPref.setText("Date Location");
                         }
@@ -447,6 +514,24 @@ public class ProfileCreationActivity extends AppCompatActivity {
         return (invalidFieldCount == 0);
     }
 
+    private void selectSpinnerValue(Spinner spinner, String myString)
+    {
+        int index = 0;
+        for(int i = 0; i < spinner.getCount(); i++){
+            if(spinner.getItemAtPosition(i).toString().equals(myString)){
+                spinner.setSelection(i);
+                break;
+            }
+        }
+    }
+
+    public void choosePicture(){
+        Intent intent = new Intent();
+        intent.setType("image/*");
+        intent.setAction(Intent.ACTION_GET_CONTENT);
+        startActivityForResult(intent, Gallery_Request);
+    }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -471,5 +556,39 @@ public class ProfileCreationActivity extends AppCompatActivity {
                 imgGallery.setImageURI(imageUri);
             }
         }
+    }
+
+    public void uploadPicture(){
+
+        final ProgressDialog pd = new ProgressDialog(this);
+        pd.setTitle("Uploading Image...");
+        pd.show();
+
+        final String randomKey = UUID.randomUUID().toString();
+        StorageReference riverRef = storageReference.child("images/" + randomKey);
+
+        riverRef.putFile(imageUri)
+                .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                    @Override
+                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                        pd.dismiss();
+                        // Get a URL to the uploaded contetnt
+                        Snackbar.make(findViewById(android.R.id.content), "Image uploaded", Snackbar.LENGTH_SHORT).show();
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        pd.dismiss();
+                        Toast.makeText(getApplicationContext(), "Failed to Upload", Toast.LENGTH_SHORT).show();
+                    }
+                })
+                .addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
+                    @Override
+                    public void onProgress(@NonNull UploadTask.TaskSnapshot snapshot) {
+                        double progressPercent = (100.00 * snapshot.getBytesTransferred() / snapshot.getTotalByteCount());
+                        pd.setMessage("Percentage: " + (int)progressPercent + "%");
+                    }
+                });
     }
 }

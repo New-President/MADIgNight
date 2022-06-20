@@ -54,11 +54,11 @@ public class CreateBlogActivity extends AppCompatActivity {
         setContentView(R.layout.activity_create_blog);
         FirebaseAuth auth = FirebaseAuth.getInstance();
         FirebaseUser user = auth.getCurrentUser();
-//        assert user != null;
-//        uid = user.getUid();
+        assert user != null;
+        uid = user.getUid();
         Context c = this;
         FirebaseDatabase database = FirebaseDatabase.getInstance("https://madignight-default-rtdb.asia-southeast1.firebasedatabase.app");
-        DatabaseReference databaseReference = database.getReference("user").child("SqDiaNh7KGhYd09lWeVpVrRTSKc2").child("blog");
+        DatabaseReference databaseReference = database.getReference("user").child(uid).child("blog");
 
 
         ProgressDialog pd = new ProgressDialog(this);
@@ -151,7 +151,7 @@ public class CreateBlogActivity extends AppCompatActivity {
     public String uploadImage(Context c){
         final String randomKey = UUID.randomUUID().toString();
         FirebaseStorage storage = FirebaseStorage.getInstance("gs://madignight.appspot.com");
-        StorageReference storageReference = storage.getReference().child("blog/" + "SqDiaNh7KGhYd09lWeVpVrRTSKc2").child(randomKey);
+        StorageReference storageReference = storage.getReference().child("blog/" + uid).child(randomKey);
 
         storageReference.putFile(imgUri)
                 .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {

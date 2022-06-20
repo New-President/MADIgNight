@@ -4,14 +4,18 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.FirebaseDatabase;
@@ -35,11 +39,22 @@ public class side_menu extends Activity {
         params.y = 0;
         getWindow().setAttributes(params);
 
+        LayoutInflater inflater = getLayoutInflater();
+        View customtoast = inflater.inflate(R.layout.toast_message_bg, findViewById(R.id.toast_message));
+        TextView txtMessage = customtoast.findViewById(R.id.toast_message);
+        txtMessage.setText("Thanks for smashing this button! unfortunately we do not have this feature yet, we will try to get it out by Stage 2!!!");
+        txtMessage.setTextColor(Color.RED);
+        Toast mToast = new Toast(getApplicationContext());
+        mToast.setDuration(Toast.LENGTH_LONG);
+        mToast.setView(customtoast);
+
         TextView editprofile = findViewById(R.id.editprofile_sidemenu);
         editprofile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                Intent editProfile = new Intent(side_menu.this, ProfileCreationActivity.class);
+                editProfile.putExtra("ProfileCreated", true);
+                startActivity(editProfile);
             }
         });
 
@@ -47,7 +62,7 @@ public class side_menu extends Activity {
         aboutus.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                mToast.show();
             }
         });
 
@@ -55,7 +70,7 @@ public class side_menu extends Activity {
         premium.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                mToast.show();
             }
         });
 
@@ -63,7 +78,7 @@ public class side_menu extends Activity {
         map.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                mToast.show();
             }
         });
 
@@ -71,7 +86,7 @@ public class side_menu extends Activity {
         TandC.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                mToast.show();
             }
         });
 
@@ -88,7 +103,7 @@ public class side_menu extends Activity {
             }
         });
 
-        Button createBlogBtn = findViewById(R.id.menuCreateBlogBtn);
+        TextView createBlogBtn = findViewById(R.id.menuCreateBlogBtn);
         createBlogBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

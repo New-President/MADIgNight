@@ -77,6 +77,9 @@ public class ProfileViewActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile_view);
 
+        // Get user from main menu
+        UserObject user = (UserObject) getIntent().getSerializableExtra("user");
+
         /*
         // pass in userObject via putExtra intent here
         UserObject userObject = (UserObject) getIntent().getSerializableExtra("key"); */
@@ -120,6 +123,7 @@ public class ProfileViewActivity extends AppCompatActivity {
             public void onClick(View view) {
                 Intent blogPage = new Intent(ProfileViewActivity.this, BlogActivity.class);
                 blogPage.putExtra("canEdit", false);
+                blogPage.putExtra("user", user);
                 startActivity(blogPage);
             }
         });
