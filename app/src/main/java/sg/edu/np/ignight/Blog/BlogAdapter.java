@@ -133,8 +133,6 @@ public class BlogAdapter extends RecyclerView.Adapter<BlogViewHolder> {
 
         try{
             StorageReference storageReference = storage.getReference("blog").child(uid).child(blog.imgID);
-            Log.d("imgid", blog.imgID);
-            Log.d("uid", uid);
             File localfile = File.createTempFile("tempfile", ".png");
             storageReference.getFile(localfile).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
                 @Override

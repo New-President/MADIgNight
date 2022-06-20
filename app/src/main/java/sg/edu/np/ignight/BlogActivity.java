@@ -51,11 +51,9 @@ public class BlogActivity extends AppCompatActivity {
 
         if (userObject == null){
             databaseReference = database.getReference("user").child(uid).child("blog");
-            Log.d("uidblog1", uid);
         }
         else{
             databaseReference = database.getReference("user").child(userObject.getUid()).child("blog");
-            Log.d("uidblog2", userObject.getUid());
         }
 
         RecyclerView rv = findViewById(R.id.blogRecycler);
@@ -89,7 +87,6 @@ public class BlogActivity extends AppCompatActivity {
         FloatingActionButton createBlogBtn = findViewById(R.id.createBlogBtn);
 
         Boolean canEdit = getIntent().getBooleanExtra("canEdit", false);
-        Log.d("canedit", canEdit.toString());
         if(!canEdit){
             createBlogBtn.setVisibility(View.GONE);
         }
