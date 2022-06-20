@@ -26,6 +26,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 import java.io.FileNotFoundException;
 import java.io.InputStream;
@@ -52,6 +54,9 @@ public class ProfileCreationActivity extends AppCompatActivity {
     private final int Gallery_Request = 1;
     private ImageView imgGallery;
     private Uri imageUri;
+
+    private FirebaseStorage storage;
+    private StorageReference storageReference;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -98,9 +103,10 @@ public class ProfileCreationActivity extends AppCompatActivity {
         uploadButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent gallery = new Intent(Intent.ACTION_PICK);
+                choosePicture();
+                /*Intent gallery = new Intent(Intent.ACTION_PICK);
                 gallery.setData(MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                startActivityForResult(gallery, Gallery_Request);
+                startActivityForResult(gallery, Gallery_Request);*/
             }
         });
 
@@ -190,6 +196,8 @@ public class ProfileCreationActivity extends AppCompatActivity {
         FirebaseDatabase database = FirebaseDatabase.getInstance("https://madignight-default-rtdb.asia-southeast1.firebasedatabase.app/");
         DatabaseReference myRef = database.getReference("user");
 
+        storage = FirebaseStorage.getInstance();
+        storageReference = storage.getReference();
 
         saveChangesButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -447,6 +455,13 @@ public class ProfileCreationActivity extends AppCompatActivity {
         return (invalidFieldCount == 0);
     }
 
+    public void choosePicture(){
+        Intent intent = new Intent();
+        intent.setType("image/*");
+        intent.setAction(Intent.ACTION_GET_CONTENT);
+        startActivityForResult(intent, Gallery_Request);
+    }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -471,5 +486,9 @@ public class ProfileCreationActivity extends AppCompatActivity {
                 imgGallery.setImageURI(imageUri);
             }
         }
+    }
+
+    public void uploadPicture(){
+
     }
 }
