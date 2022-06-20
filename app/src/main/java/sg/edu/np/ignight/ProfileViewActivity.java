@@ -230,7 +230,7 @@ public class ProfileViewActivity extends AppCompatActivity {
                 // if there is an error retrieving profile pics, show toast
                 Log.d("testError", "testing");
                 Toast.makeText(getApplicationContext(),
-                        "Error retrieving profile photo. Please try later.",
+                        "Error retrieving profile photo. Please try again later.",
                         Toast.LENGTH_LONG).show();
             }
         });
