@@ -68,7 +68,7 @@ public class ProfileViewActivity extends AppCompatActivity {
     private FirebaseAuth mAuth;
 
     private Uri imageUri;
-    private String myUri = "";
+    private String myUri;
     private StorageReference storageProfilePic;
     private UploadTask uploadTask;
 
@@ -79,9 +79,8 @@ public class ProfileViewActivity extends AppCompatActivity {
 
         // Get userObject from main menu
         UserObject user = (UserObject) getIntent().getSerializableExtra("user");
-        // pass in userObject via putExtra intent here
-        UserObject userObject = (UserObject) getIntent().getSerializableExtra("key");
 
+        Log.d("viewprofileuid", user.getUid());
         /*
         // for testing when there is no userObject. do not remove.
 
@@ -95,18 +94,17 @@ public class ProfileViewActivity extends AppCompatActivity {
         interestsDisplayTest.add("test2");
         userObject.setInterestList(interestsDisplayTest);
         userObject.setProfilePicUrl("https://m-cdn.phonearena.com/images/review/5269-wide_1200/Google-Pixel-6-review-big-brain-small-price.jpg");
-
          */
 
         db = FirebaseDatabase.getInstance("https://madignight-default-rtdb.asia-southeast1.firebasedatabase.app/");
         myRef = db.getReference().child("chat");
 
         currentUserUID = FirebaseAuth.getInstance().getUid();
-        targetUserUID = userObject.getUid();
+        targetUserUID = user.getUid();
         interestsDisplay = new ArrayList<>();
-        interestsDisplay = userObject.getInterestList();
-        ShowInformation(userObject);
-        setProfilePicture(userObject);
+        interestsDisplay = user.getInterestList();
+        ShowInformation(user);
+        setProfilePicture(user);
 
         // add intents for bottom buttons here
         backButton = findViewById(R.id.profileViewBackButton);
@@ -161,7 +159,7 @@ public class ProfileViewActivity extends AppCompatActivity {
                                         Intent intent = new Intent(view.getContext(), ChatActivity.class);
                                         Bundle bundle = new Bundle();
                                         bundle.putString("chatID", newChatID);
-                                        bundle.putString("chatName", userObject.getUsername());
+                                        bundle.putString("chatName", user.getUsername());
                                         bundle.putString("targetUserID", targetUserUID);
                                         intent.putExtras(bundle);
                                         view.getContext().startActivity(intent);

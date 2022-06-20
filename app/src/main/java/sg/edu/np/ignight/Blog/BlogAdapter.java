@@ -34,16 +34,18 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 import sg.edu.np.ignight.Objects.BlogObject;
+import sg.edu.np.ignight.Objects.UserObject;
 import sg.edu.np.ignight.R;
 
 public class BlogAdapter extends RecyclerView.Adapter<BlogViewHolder> {
 
     private ArrayList<BlogObject> data;
     private Context c;
-
-    public BlogAdapter(Context c, ArrayList<BlogObject> data){
+    private UserObject userObject;
+    public BlogAdapter(Context c, ArrayList<BlogObject> data, UserObject userObject){
         this.c = c;
         this.data = data;
+        this.userObject = userObject;
     }
 
     @NonNull
@@ -58,8 +60,6 @@ public class BlogAdapter extends RecyclerView.Adapter<BlogViewHolder> {
     @Override
     public void onBindViewHolder(@NonNull BlogViewHolder holder, int position) {
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-        assert user != null;
-        String uid = user.getUid();
         FirebaseDatabase database = FirebaseDatabase.getInstance("https://madignight-default-rtdb.asia-southeast1.firebasedatabase.app/");
         FirebaseStorage storage = FirebaseStorage.getInstance();
 
@@ -95,7 +95,15 @@ public class BlogAdapter extends RecyclerView.Adapter<BlogViewHolder> {
         holder.likes.setText(String.valueOf(likes));
         holder.comments.setText(String.valueOf(comments));
 
-
+        String uid ;
+        if (userObject == null){
+            uid = user.getUid(); // gets Firebase user uid
+            Log.d("uid", uid);
+        }
+        else{
+            uid = userObject.getUid();
+            Log.d("uid2", uid);
+        }
         likebutton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -126,8 +134,8 @@ public class BlogAdapter extends RecyclerView.Adapter<BlogViewHolder> {
             }
         });
 
-        StorageReference storageReference = storage.getReference("blog").child(uid).child(blog.imgID);
         try{
+            StorageReference storageReference = storage.getReference("blog").child(uid).child(blog.imgID);
             File localfile = File.createTempFile("tempfile", ".png");
             storageReference.getFile(localfile).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
                 @Override
@@ -145,6 +153,10 @@ public class BlogAdapter extends RecyclerView.Adapter<BlogViewHolder> {
         } catch (IOException e) {
             e.printStackTrace();
         }
+        catch (Exception ex){
+            Log.d("Load Image Error", "Failed to load image");
+        }
+
 
     }
 
