@@ -94,8 +94,6 @@ public class BlogActivity extends AppCompatActivity {
         }
         else{
             createBlogBtn.setVisibility(View.VISIBLE);
-
-            databaseReference.child(uid).child("blog");
         }
 
         backBtn.setOnClickListener(new View.OnClickListener() {

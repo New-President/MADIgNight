@@ -79,10 +79,12 @@ public class BlogAdapter extends RecyclerView.Adapter<BlogViewHolder> {
             public void onClick(View view) {
                 if(blog.liked){
                     blog.likes -= 1;
+                    holder.likes.setText(String.valueOf(likes - 1));
                     blog.liked = false;
                 }
                 else {
                     blog.likes += 1;
+                    holder.likes.setText(String.valueOf(likes + 1));
                     blog.liked = true;
                 }
             }
