@@ -34,6 +34,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import sg.edu.np.ignight.ChatActivity;
+import sg.edu.np.ignight.MainMenuActivity;
 import sg.edu.np.ignight.ProfileViewActivity;
 import sg.edu.np.ignight.R;
 import sg.edu.np.ignight.Objects.UserObject;
@@ -46,7 +47,7 @@ public class MainMenuAdapter extends RecyclerView.Adapter<MainMenuViewHolder>{
     private FirebaseDatabase db;
 
     public MainMenuAdapter(Context c, ArrayList<UserObject> data, LinearLayoutManager layoutManager){
-        this.c =c;
+        this.c = c;
         this.data = data;
         this.layoutManager = layoutManager;
     }
@@ -67,6 +68,33 @@ public class MainMenuAdapter extends RecyclerView.Adapter<MainMenuViewHolder>{
         Button next = holder.Reject;
         Button ignight = holder.Accept;
         ImageView profile = holder.ProfilePic_menu;
+
+        myRef2.child(user.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                // get profile picture file name
+                String profilePictureName = snapshot.child("Profile Picture").getValue().toString();
+                StorageReference storageReference = FirebaseStorage.
+                        getInstance().
+                        getReference("profilePicture/" +
+                                user.getUid() +
+                                "/" +
+                                profilePictureName);
+                Glide.with(c.getApplicationContext())
+                        .load(storageReference)
+                        .into(profile);
+                Log.d("test2", profilePictureName);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                // if there is an error retrieving profile pics, show toast
+                Log.d("testError", "testing");
+                Toast.makeText(c.getApplicationContext(),
+                        "Error retrieving profile photo. Please try again later.",
+                        Toast.LENGTH_LONG).show();
+            }
+        });
 
         next.setOnClickListener(new View.OnClickListener() {  // goes to the next user in the list or first user (if currently showing user is the last user)
             @Override
@@ -143,7 +171,6 @@ public class MainMenuAdapter extends RecyclerView.Adapter<MainMenuViewHolder>{
             @Override
             public void onClick(View view) {
                 Intent mainmenu_to_profileview = new Intent(c , ProfileViewActivity.class);
-                mainmenu_to_profileview.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 mainmenu_to_profileview.putExtra("user", user);
                 c.startActivity(mainmenu_to_profileview);
             }

@@ -74,7 +74,7 @@ public class ProfileViewActivity extends AppCompatActivity {
         UserObject user = (UserObject) getIntent().getSerializableExtra("user");
         // pass in userObject via putExtra intent here
         UserObject userObject = (UserObject) getIntent().getSerializableExtra("key");
-
+        Log.d("user",user.getUsername());
 
         // for testing when there is no userObject. do not remove.
         /*
