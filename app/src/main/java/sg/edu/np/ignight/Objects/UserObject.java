@@ -33,7 +33,10 @@ public class UserObject implements Serializable {
         this.profilePicUrl = profilePicUrl;
         this.age = age;
     }
-
+    @Override
+    public String toString(){
+        return "uid: " + uid + "username: " + username;
+    }
     public String getUid() {
         return uid;
     }

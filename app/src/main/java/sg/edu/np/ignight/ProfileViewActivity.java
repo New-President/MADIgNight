@@ -51,6 +51,7 @@ public class ProfileViewActivity extends AppCompatActivity {
     private Integer age;
     private String nameAndAge1;
     private String currentUserUID, targetUserUID;
+    private String profilePictureUrl;
 
     private TextView nameAndAge, textView8, textView9;
 
@@ -64,6 +65,12 @@ public class ProfileViewActivity extends AppCompatActivity {
     private DatabaseReference myRef, myRef2;
     private FirebaseDatabase db;
     private Map userMap;
+    private FirebaseAuth mAuth;
+
+    private Uri imageUri;
+    private String myUri;
+    private StorageReference storageProfilePic;
+    private UploadTask uploadTask;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,10 +79,9 @@ public class ProfileViewActivity extends AppCompatActivity {
 
         // Get userObject from main menu
         UserObject user = (UserObject) getIntent().getSerializableExtra("user");
-        // pass in userObject via putExtra intent here
-        UserObject userObject = (UserObject) getIntent().getSerializableExtra("key");
-        Log.d("user",user.getUsername());
 
+        Log.d("viewprofileuid", user.getUid());
+        /*
         // for testing when there is no userObject. do not remove.
         /*
         userObject = new UserObject();
@@ -96,11 +102,11 @@ public class ProfileViewActivity extends AppCompatActivity {
         myRef = db.getReference().child("chat");
 
         currentUserUID = FirebaseAuth.getInstance().getUid();
-        targetUserUID = userObject.getUid();
+        targetUserUID = user.getUid();
         interestsDisplay = new ArrayList<>();
-        interestsDisplay = userObject.getInterestList();
-        ShowInformation(userObject);
-        setProfilePicture(userObject);
+        interestsDisplay = user.getInterestList();
+        ShowInformation(user);
+        setProfilePicture(user);
 
         // add intents for bottom buttons here
         backButton = findViewById(R.id.profileViewBackButton);
@@ -125,7 +131,7 @@ public class ProfileViewActivity extends AppCompatActivity {
 
 
         ignightButton = findViewById(R.id.button4);
-        UserObject finalUserObject = userObject;
+        UserObject finalUserObject = user;
         ignightButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -212,17 +218,17 @@ public class ProfileViewActivity extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 // get profile picture file name
-                String profilePictureName = snapshot.child("Profile Picture").getValue().toString();
-                StorageReference storageReference = FirebaseStorage.
-                        getInstance().
-                        getReference("profilePicture/" +
-                                userObject.getUid() +
-                                "/" +
-                                profilePictureName);
-                Glide.with(getApplicationContext())
-                        .load(storageReference)
-                        .into(profilePicture);
-                Log.d("test2", profilePictureName);
+//                String profilePictureName = snapshot.child("Profile Picture").getValue().toString();
+//                StorageReference storageReference = FirebaseStorage.
+//                        getInstance().
+//                        getReference("profilePicture/" +
+//                                userObject.getUid() +
+//                                "/" +
+//                                profilePictureName);
+//                Glide.with(getApplicationContext())
+//                        .load(storageReference)
+//                        .into(profilePicture);
+//                Log.d("test2", profilePictureName);
             }
 
             @Override
