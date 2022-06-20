@@ -32,11 +32,12 @@
             android:id="@+id/PersonalInfo"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
+            android:layout_marginTop="24dp"
             android:layout_marginEnd="40dp"
             android:text="Profile"
             android:textSize="20sp"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.494"
             app:layout_constraintStart_toEndOf="@+id/profileViewBackButton"
             app:layout_constraintTop_toTopOf="parent" />
     </androidx.constraintlayout.widget.ConstraintLayout>
@@ -88,6 +89,18 @@
         app:layout_constraintTop_toBottomOf="@+id/NameAndAgeTextView" />
 
     <TextView
+        android:id="@+id/textView"
+        android:layout_width="157dp"
+        android:layout_height="30dp"
+        android:layout_marginTop="232dp"
+        android:text="My Interests..."
+        android:textSize="24sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.129"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/NameAndAgeTextView" />
+
+    <TextView
         android:id="@+id/textView10"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -105,6 +118,7 @@
         android:layout_height="48dp"
         android:layout_marginTop="4dp"
         android:text="TextView"
+        android:textSize="20sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.367"
         app:layout_constraintStart_toStartOf="parent"
@@ -116,6 +130,7 @@
         android:layout_height="58dp"
         android:layout_marginTop="4dp"
         android:text="TextView"
+        android:textSize="20sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.383"
         app:layout_constraintStart_toStartOf="parent"
@@ -123,11 +138,11 @@
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/InterestsRecyclerView"
-        android:layout_width="382dp"
-        android:layout_height="148dp"
-        android:layout_marginTop="12dp"
+        android:layout_width="348dp"
+        android:layout_height="35dp"
+        android:layout_marginTop="116dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.517"
+        app:layout_constraintHorizontal_bias="0.523"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/imageView" />
 
