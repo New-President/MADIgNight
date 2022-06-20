@@ -50,9 +50,11 @@ public class BlogActivity extends AppCompatActivity {
 
         if (userObject == null){
             databaseReference = database.getReference("user").child(uid).child("blog");
+            Log.d("uidblog", uid);
         }
         else{
             databaseReference = database.getReference("user").child(userObject.getUid()).child("blog");
+            Log.d("uidblog2", userObject.getUid());
         }
 
         RecyclerView rv = findViewById(R.id.blogRecycler);
@@ -68,7 +70,7 @@ public class BlogActivity extends AppCompatActivity {
                     blogsList.add(blog);
                 }
 
-                BlogAdapter adapter = new BlogAdapter(BlogActivity.this, blogsList);
+                BlogAdapter adapter = new BlogAdapter(BlogActivity.this, blogsList, userObject);
                 rv.setAdapter(adapter);
             }
 
