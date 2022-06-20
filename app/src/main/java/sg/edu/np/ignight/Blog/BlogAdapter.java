@@ -44,7 +44,7 @@ public class BlogAdapter extends RecyclerView.Adapter<BlogViewHolder> {
     @NonNull
     @Override
     public BlogViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        setupImageLoader();
+
         View item = LayoutInflater.from(parent.getContext()).inflate(R.layout.blog_layout, parent, false);
         return new BlogViewHolder(item);
     }
@@ -105,7 +105,6 @@ public class BlogAdapter extends RecyclerView.Adapter<BlogViewHolder> {
                 public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
                     Bitmap bitmap = BitmapFactory.decodeFile(localfile.getAbsolutePath());
                     blogImage.setImageBitmap(bitmap);
-
                 }
             }).addOnFailureListener(new OnFailureListener() {
                 @Override
@@ -125,18 +124,4 @@ public class BlogAdapter extends RecyclerView.Adapter<BlogViewHolder> {
         return data.size();
     }
 
-    private void setupImageLoader(){
-        DisplayImageOptions defaultOptions = new DisplayImageOptions.Builder()
-                .cacheOnDisc(true).cacheInMemory(true)
-                .imageScaleType(ImageScaleType.EXACTLY)
-                .displayer(new FadeInBitmapDisplayer(300)).build();
-
-        ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(
-                c)
-                .defaultDisplayImageOptions(defaultOptions)
-                .memoryCache(new WeakMemoryCache())
-                .discCacheSize(100 * 1024 * 1024).build();
-
-        ImageLoader.getInstance().init(config);
-    }
 }

@@ -136,6 +136,7 @@ public class MainMenuAdapter extends RecyclerView.Adapter<MainMenuViewHolder>{
             @Override
             public void onClick(View view) {
                 Intent mainmenu_to_profileview = new Intent(c , ProfileViewActivity.class);
+                mainmenu_to_profileview.putExtra("user", user);
                 c.startActivity(mainmenu_to_profileview);
             }
         });

@@ -39,11 +39,11 @@ public class BlogActivity extends AppCompatActivity {
         blogsList = new ArrayList<>();
         FirebaseAuth auth = FirebaseAuth.getInstance();
         FirebaseUser user = auth.getCurrentUser();
-//        assert user != null;
-//        String uid = user.getUid();
+        assert user != null;
+        String uid = user.getUid();
 
         FirebaseDatabase database = FirebaseDatabase.getInstance("https://madignight-default-rtdb.asia-southeast1.firebasedatabase.app/");
-        DatabaseReference databaseReference = database.getReference("user").child("SqDiaNh7KGhYd09lWeVpVrRTSKc2").child("blog");
+        DatabaseReference databaseReference = database.getReference("user");
 
 
         databaseReference.addValueEventListener(new ValueEventListener() {
@@ -85,6 +85,8 @@ public class BlogActivity extends AppCompatActivity {
         }
         else{
             createBlogBtn.setVisibility(View.VISIBLE);
+
+            databaseReference.child(uid).child("blog");
         }
 
         backBtn.setOnClickListener(new View.OnClickListener() {
