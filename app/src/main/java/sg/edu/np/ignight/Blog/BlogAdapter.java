@@ -98,11 +98,9 @@ public class BlogAdapter extends RecyclerView.Adapter<BlogViewHolder> {
         String uid ;
         if (userObject == null){
             uid = user.getUid(); // gets Firebase user uid
-            Log.d("uid", uid);
         }
         else{
             uid = userObject.getUid();
-            Log.d("uid2", uid);
         }
         likebutton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -136,6 +134,8 @@ public class BlogAdapter extends RecyclerView.Adapter<BlogViewHolder> {
 
         try{
             StorageReference storageReference = storage.getReference("blog").child(uid).child(blog.imgID);
+            Log.d("imgid", blog.imgID);
+            Log.d("uid", uid);
             File localfile = File.createTempFile("tempfile", ".png");
             storageReference.getFile(localfile).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
                 @Override
@@ -156,8 +156,6 @@ public class BlogAdapter extends RecyclerView.Adapter<BlogViewHolder> {
         catch (Exception ex){
             Log.d("Load Image Error", "Failed to load image");
         }
-
-
     }
 
     @Override

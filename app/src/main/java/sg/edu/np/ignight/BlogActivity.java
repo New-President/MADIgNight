@@ -50,11 +50,9 @@ public class BlogActivity extends AppCompatActivity {
 
         if (userObject == null){
             databaseReference = database.getReference("user").child(uid).child("blog");
-            Log.d("uidblog", uid);
         }
         else{
             databaseReference = database.getReference("user").child(userObject.getUid()).child("blog");
-            Log.d("uidblog2", userObject.getUid());
         }
 
         RecyclerView rv = findViewById(R.id.blogRecycler);
@@ -72,6 +70,9 @@ public class BlogActivity extends AppCompatActivity {
 
                 BlogAdapter adapter = new BlogAdapter(BlogActivity.this, blogsList, userObject);
                 rv.setAdapter(adapter);
+                LinearLayoutManager layout = new LinearLayoutManager(context);
+                layout.setOrientation(LinearLayoutManager.VERTICAL);
+                rv.setLayoutManager(layout);
             }
 
             @Override
@@ -109,9 +110,6 @@ public class BlogActivity extends AppCompatActivity {
             }
         });
 
-        LinearLayoutManager layout = new LinearLayoutManager(context);
-        layout.setOrientation(LinearLayoutManager.VERTICAL);
-        rv.setLayoutManager(layout);
     }
 
 }

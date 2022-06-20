@@ -209,15 +209,31 @@ public class ProfileViewActivity extends AppCompatActivity {
 
         // code for retrieving profile picture url when getProfileUrl is not being used
         // Reference to an image file in cloud storage
-        StorageReference storageReference = FirebaseStorage.
-                getInstance().
-                getReference("profilePicture/" +
-                        userObject.getUid() +
-                        "/" +
-                        userObject.getUid() +
-                        ".png");
-        Glide.with(this)
-                .load(storageReference)
-                .into(profilePicture);
+//        myRef2.child(userObject.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
+//            @Override
+//            public void onDataChange(@NonNull DataSnapshot snapshot) {
+//                // get profile picture file name
+//                String profilePictureName = snapshot.child("Profile Picture").getValue().toString();
+//                StorageReference storageReference = FirebaseStorage.
+//                        getInstance().
+//                        getReference("profilePicture/" +
+//                                userObject.getUid() +
+//                                "/" +
+//                                profilePictureName);
+//                Glide.with(getApplicationContext())
+//                        .load(storageReference)
+//                        .into(profilePicture);
+//                Log.d("test2", profilePictureName);
+//            }
+//
+//            @Override
+//            public void onCancelled(@NonNull DatabaseError error) {
+//                // if there is an error retrieving profile pics, show toast
+//                Log.d("testError", "testing");
+//                Toast.makeText(getApplicationContext(),
+//                        "Error retrieving profile photo. Please try later.",
+//                        Toast.LENGTH_LONG).show();
+//            }
+//        });
     }
 }
