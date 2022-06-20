@@ -3,13 +3,16 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/School/Y2S1/MAD/ASG/MADIgNight/app/src/main/res/drawable/toast_bg.xml" value="0.2265" />
         <entry key="..\:/School/Y2S1/MAD/ASG/MADIgNight/app/src/main/res/layout/activity_main_menu.xml" value="0.22826086956521738" />
-        <entry key="..\:/School/Y2S1/MAD/ASG/MADIgNight/app/src/main/res/layout/activity_side_menu2.xml" value="0.4" />
+        <entry key="..\:/School/Y2S1/MAD/ASG/MADIgNight/app/src/main/res/layout/activity_side_menu2.xml" value="0.264" />
         <entry key="..\:/School/Y2S1/MAD/ASG/MADIgNight/app/src/main/res/layout/item_chat.xml" value="0.22826086956521738" />
         <entry key="..\:/School/Y2S1/MAD/ASG/MADIgNight/app/src/main/res/layout/item_media.xml" value="0.22826086956521738" />
         <entry key="..\:/School/Y2S1/MAD/ASG/MADIgNight/app/src/main/res/layout/main_menu_layout.xml" value="0.22826086956521738" />
         <entry key="..\:/School/Y2S1/MAD/ASG/MADIgNight/app/src/main/res/layout/profile_creation_interest_layout.xml" value="0.22826086956521738" />
         <entry key="..\:/School/Y2S1/MAD/ASG/MADIgNight/app/src/main/res/layout/profile_view_recycler_layout.xml" value="0.22826086956521738" />
+        <entry key="..\:/School/Y2S1/MAD/ASG/MADIgNight/app/src/main/res/layout/toast_message.xml" value="0.22826086956521738" />
+        <entry key="..\:/School/Y2S1/MAD/ASG/MADIgNight/app/src/main/res/layout/toast_message_bg.xml" value="0.22826086956521738" />
         <entry key="..\:/Users/jason/Desktop/Y2/Sem1/MAD/App/ASG/IgNight/app/src/main/res/layout/activity_login_test.xml" value="0.22826086956521738" />
         <entry key="..\:/Users/ziren/Desktop/MADIgNight/app/src/main/res/layout/activity_side_menu2.xml" value="0.22826086956521738" />
         <entry key="..\:/keefe/Desktop/school/2.1/mobile applications development/asg/MADIgNight/app/src/main/res/drawable/btn_bg.xml" value="0.3385" />
