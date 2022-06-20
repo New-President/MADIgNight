@@ -21,7 +21,7 @@
             android:theme="@style/Theme_side_menu"/>
         <activity
             android:name=".CreateBlogActivity"
-            android:exported="false" />
+            android:exported="true" />
         <activity
             android:name=".ChatActivity"
             android:exported="false" />
@@ -43,7 +43,7 @@
         </activity>
         <activity
             android:name=".ProfileCreationActivity"
-            android:exported="false" />
+            android:exported="true" />
         <activity
             android:name=".ProfileViewActivity"
             android:exported="true" />
