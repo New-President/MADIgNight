@@ -109,11 +109,12 @@ public class CreateBlogActivity extends AppCompatActivity {
 
                     pd.setMessage("Posting Blog..");
                     pd.show();
-                    BlogObject newBlog = new BlogObject(blogDesc, blogLoc, uploadImage(c));
+                    String blogID = givenUsingJava8_whenGeneratingRandomAlphanumericString_thenCorrect();
+                    BlogObject newBlog = new BlogObject(blogDesc, blogLoc, uploadImage(c), blogID);
                     // Store in firebase under Users
-                    databaseReference.child(givenUsingJava8_whenGeneratingRandomAlphanumericString_thenCorrect()).setValue(newBlog);
-                    finish();
+                    databaseReference.child(blogID).setValue(newBlog);
                     pd.dismiss();
+                    finish();
                 }
             }
         });
@@ -158,7 +159,7 @@ public class CreateBlogActivity extends AppCompatActivity {
                     @Override
                     public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                         //Snackbar.make(view, "Image Uploaded", Snackbar.LENGTH_LONG).show();
-                        Toast.makeText(c, "Image uploaded", Toast.LENGTH_LONG).show();
+                        Toast.makeText(c, "Blog uploaded", Toast.LENGTH_LONG).show();
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
