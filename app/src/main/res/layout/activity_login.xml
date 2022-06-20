@@ -53,13 +53,13 @@
         android:id="@+id/phoneNumberInput"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:hint="Enter Phone Number"
+        android:layout_marginStart="5dp"
+        android:layout_marginTop="48dp"
         android:digits="0123456789"
-        app:layout_constraintTop_toBottomOf="@+id/loginIgnightLogo"
-        app:layout_constraintStart_toEndOf="@+id/phonePrefix"
+        android:hint="Enter Phone Number"
         app:layout_constraintEnd_toStartOf="@+id/enterPhoneEndGuideline"
-        android:layout_marginTop="5dp"
-        android:layout_marginStart="5dp"/>
+        app:layout_constraintStart_toEndOf="@+id/phonePrefix"
+        app:layout_constraintTop_toBottomOf="@+id/loginIgnightLogo" />
 
     <EditText
         android:id="@+id/OTPInput"

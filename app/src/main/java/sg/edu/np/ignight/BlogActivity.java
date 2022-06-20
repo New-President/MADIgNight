@@ -78,9 +78,14 @@ public class BlogActivity extends AppCompatActivity {
 
         FloatingActionButton createBlogBtn = findViewById(R.id.createBlogBtn);
 
-//        if(!getIntent().getStringExtra("UID").equals("SqDiaNh7KGhYd09lWeVpVrRTSKc2")){
-//            createBlogBtn.setVisibility(View.GONE);
-//        }
+        Boolean canEdit = getIntent().getBooleanExtra("canEdit", false);
+        Log.d("canedit", canEdit.toString());
+        if(!canEdit){
+            createBlogBtn.setVisibility(View.GONE);
+        }
+        else{
+            createBlogBtn.setVisibility(View.VISIBLE);
+        }
 
         backBtn.setOnClickListener(new View.OnClickListener() {
             @Override

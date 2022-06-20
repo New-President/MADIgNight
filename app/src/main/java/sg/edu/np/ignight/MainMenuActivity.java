@@ -78,7 +78,6 @@ public class MainMenuActivity extends AppCompatActivity {
         });
 
 
-
     }
 
     private void updateConnection() {

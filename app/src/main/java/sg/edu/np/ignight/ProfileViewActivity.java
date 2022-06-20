@@ -55,7 +55,7 @@ public class ProfileViewActivity extends AppCompatActivity {
 
     private TextView nameAndAge, textView8, textView9;
 
-    private Button ignightButton;
+    private Button ignightButton, viewBlogsButton;
     private ImageButton backButton;
 
     private ImageView profilePicture;
@@ -113,6 +113,17 @@ public class ProfileViewActivity extends AppCompatActivity {
                 startActivity(backToMainMenu);
             }
         });
+
+        viewBlogsButton = findViewById(R.id.ViewBlogsBtn);
+        viewBlogsButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent blogPage = new Intent(ProfileViewActivity.this, BlogActivity.class);
+                blogPage.putExtra("canEdit", false);
+                startActivity(blogPage);
+            }
+        });
+
 
         ignightButton = findViewById(R.id.button4);
         ignightButton.setOnClickListener(new View.OnClickListener() {

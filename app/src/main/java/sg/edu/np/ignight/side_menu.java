@@ -3,11 +3,14 @@ package sg.edu.np.ignight;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.Button;
 import android.widget.TextView;
 
 public class side_menu extends Activity {
@@ -74,6 +77,16 @@ public class side_menu extends Activity {
             @Override
             public void onClick(View view) {
 
+            }
+        });
+
+        Button createBlogBtn = findViewById(R.id.menuCreateBlogBtn);
+        createBlogBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent createBlog = new Intent(side_menu.this, BlogActivity.class);
+                createBlog.putExtra("canEdit", true);
+                startActivity(createBlog);
             }
         });
     }
