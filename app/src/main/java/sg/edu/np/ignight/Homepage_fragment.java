@@ -74,10 +74,9 @@ public class Homepage_fragment extends Fragment {
                 if (snapshot.exists()) {
                     for (DataSnapshot childSnapshot : snapshot.getChildren()) {
 
-                        String uid = FirebaseAuth.getInstance().getUid();
                         boolean exists = false;
 
-                        if (!childSnapshot.getKey().equals(uid)) {
+                        if (!childSnapshot.getKey().equals(FirebaseAuth.getInstance().getUid())) {
 
                             for (UserObject existingUser : userList) {
                                 if (childSnapshot.getKey().equals(existingUser.getUid())) {
@@ -86,7 +85,7 @@ public class Homepage_fragment extends Fragment {
                                 }
                             }
 
-                            if (exists) {
+                            if (exists || childSnapshot.child("profileCreated").getValue().toString().equals("false")) {
                                 continue;
                             }
 
@@ -140,7 +139,7 @@ public class Homepage_fragment extends Fragment {
                                 }
                             }
 
-                            UserObject user = new UserObject(uid, email, phone, username, gender, aboutMe, interestList, relationshipPref, genderPref, dateLocList, profilePicUrl, age);
+                            UserObject user = new UserObject(childSnapshot.getKey(), email, phone, username, gender, aboutMe, interestList, relationshipPref, genderPref, dateLocList, profilePicUrl, age);
 
                             userList.add(user);
                             userListAdapter.notifyDataSetChanged();
