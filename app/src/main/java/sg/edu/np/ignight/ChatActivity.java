@@ -12,7 +12,10 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.transition.Slide;
+import android.transition.Transition;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -20,6 +23,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -396,22 +400,26 @@ public class ChatActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode == RESULT_OK) {
-            if (requestCode == PICK_IMAGE_INTENT) {
-                if (data.getClipData() == null) {
-                    mediaUriList.add(data.getData().toString());
-                }
-                else {
-                    for (int i = 0; i < data.getClipData().getItemCount(); i++) {
-                        mediaUriList.add(data.getClipData().getItemAt(i).getUri().toString());
+        try {
+            if (resultCode == RESULT_OK) {
+                if (requestCode == PICK_IMAGE_INTENT) {
+                    if (data.getClipData() == null) {
+                        mediaUriList.add(data.getData().toString());
                     }
+                    else {
+                        for (int i = 0; i < data.getClipData().getItemCount(); i++) {
+                            mediaUriList.add(data.getClipData().getItemAt(i).getUri().toString());
+                        }
+                    }
+
+                    showSendMediaLayout();
+
+                    mediaAdapter.notifyDataSetChanged();
                 }
-
-                showSendMediaLayout();
-
-                mediaAdapter.notifyDataSetChanged();
-
             }
+        }
+        catch (Exception e) {
+            Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -422,6 +430,9 @@ public class ChatActivity extends AppCompatActivity {
     }
 
     private void hideSendMediaLayout() {
+        Transition transition = new Slide(Gravity.BOTTOM);
+        transition.addTarget(mediaRV);
+
         removeMediaButton.setVisibility(View.GONE);
         mediaRV.setVisibility(View.GONE);
         mediaRV.setPadding(0, 0, 0, 0);
@@ -429,6 +440,9 @@ public class ChatActivity extends AppCompatActivity {
     }
 
     private void showSendMediaLayout() {
+        Transition transition = new Slide(Gravity.BOTTOM);
+        transition.addTarget(mediaRV);
+
         removeMediaButton.setVisibility(View.VISIBLE);
         mediaRV.setVisibility(View.VISIBLE);
         mediaRV.setPadding(0, 10, 0, 10);

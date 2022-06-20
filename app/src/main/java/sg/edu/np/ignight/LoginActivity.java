@@ -62,8 +62,6 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        FirebaseAuth.getInstance().signOut();
-
         getPermission();
 
         countDownLatch = new CountDownLatch(1);
@@ -256,10 +254,16 @@ public class LoginActivity extends AppCompatActivity {
                                     Map<String, Object> userMap = new HashMap<>();
                                     userMap.put("phone", user.getPhoneNumber());
                                     userMap.put("profileCreated", false);
-                                    userDB.updateChildren(userMap);
+                                    userDB.updateChildren(userMap).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                        @Override
+                                        public void onComplete(@NonNull Task<Void> task) {
+                                            userIsLoggedIn();
+                                        }
+                                    });
                                 }
-
-                                userIsLoggedIn();
+                                else {
+                                    userIsLoggedIn();
+                                }
                             }
 
                             @Override
@@ -281,13 +285,12 @@ public class LoginActivity extends AppCompatActivity {
     private void userIsLoggedIn() {
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         if (user != null) {
+            DatabaseReference userDB = FirebaseDatabase.getInstance("https://madignight-default-rtdb.asia-southeast1.firebasedatabase.app/").getReference().child("user").child(user.getUid());
 
             if (loginProgressBar != null && loginSuccessImage != null) {
                 Handler handler = new Handler();
                 loginProgressBar.setVisibility(View.GONE);
                 loginSuccessImage.setVisibility(View.VISIBLE);
-
-                DatabaseReference userDB = FirebaseDatabase.getInstance("https://madignight-default-rtdb.asia-southeast1.firebasedatabase.app/").getReference().child("user").child(user.getUid());
 
                 userDB.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
@@ -297,7 +300,16 @@ public class LoginActivity extends AppCompatActivity {
                         handler.postDelayed(new Runnable() {
                             @Override
                             public void run() {
-                                startActivity(new Intent(getApplicationContext(), profileCreated?MainMenuActivity.class:ProfileCreationActivity.class));
+                                Intent intent;
+                                if (profileCreated) {
+                                    intent = new Intent(getApplicationContext(), MainMenuActivity.class);
+                                }
+                                else {
+                                    intent = new Intent(getApplicationContext(), ProfileCreationActivity.class);
+                                    intent.putExtra("fromLogin", true);
+                                }
+
+                                startActivity(intent);
                                 finish();
                             }
                         }, 1000);

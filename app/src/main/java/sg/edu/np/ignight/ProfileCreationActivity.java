@@ -23,6 +23,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
@@ -37,12 +38,22 @@ import sg.edu.np.ignight.ProfileCreation.ProfileCreationAdapter;
 
 public class ProfileCreationActivity extends AppCompatActivity {
 
-    ArrayList<String> data = new ArrayList<>();
-    ArrayList<String> dateLocList = new ArrayList<>();
+    private ArrayList<String> interestList = new ArrayList<>();
+    private ArrayList<String> dateLocList = new ArrayList<>();
+    private ArrayList<String> invalidList = new ArrayList<>();
+
+    private ImageButton backButton;
+    private Button interestButton, saveChangesButton;
+    private TextView aboutMeTextview, locationPref;
+    private EditText aboutMeInput, nameInput, ageInput;
+    private Spinner genderDropdown, genderPrefDropdown, relationshipPrefDropdown;
+    private RecyclerView interestRV;
+
+    private boolean fromLogin;
 
     private final int Gallery_Request = 1;
-    ImageView imgGallery;
-    Uri imageUri;
+    private ImageView imgGallery;
+    private Uri imageUri;
 
     private FirebaseStorage storage;
     private StorageReference storageReference;
@@ -52,13 +63,37 @@ public class ProfileCreationActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile_creation);
 
+        backButton = findViewById(R.id.profileCreationBackButton);
+        interestButton = findViewById(R.id.InterestButton);
+        saveChangesButton = findViewById(R.id.SaveChanges);
+        aboutMeTextview = findViewById(R.id.AboutMeTextView);
+        locationPref = findViewById(R.id.DateLocDropdown);
+        aboutMeInput = findViewById(R.id.AboutMeInput);
+        nameInput = findViewById(R.id.InputName);
+        ageInput = findViewById(R.id.AgeInput);
+        genderDropdown = findViewById(R.id.GenderDropdown);
+        genderPrefDropdown = findViewById(R.id.GenderPrefDropdown);
+        relationshipPrefDropdown = findViewById(R.id.RelationshipPrefDropdown);
+        interestRV = findViewById(R.id.interestRecyclerView);
+
         InitDropdown();
 
-        ImageButton backBtn = findViewById(R.id.profileViewBackButton);
-        backBtn.setOnClickListener(new View.OnClickListener() {
+        Intent receiveIntent = getIntent();
+        fromLogin = receiveIntent.getBooleanExtra("fromLogin", false);
+
+        backButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                finish();
+                if (fromLogin) {
+                    FirebaseAuth.getInstance().signOut();
+                    Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    startActivity(intent);
+                    finish();
+                }
+                else {
+                    finish();
+                }
             }
         });
 
@@ -76,7 +111,6 @@ public class ProfileCreationActivity extends AppCompatActivity {
         });
 
         String[] interests = {"Running", "Cooking", "Gaming", "Swimming", "Reading", "Shopping", "Others"};
-        Button interestButton = findViewById(R.id.InterestButton);
         boolean[] selectedInterest = new boolean[interests.length];
         ArrayList<Integer> checkedList = new ArrayList<>();
 
@@ -105,9 +139,9 @@ public class ProfileCreationActivity extends AppCompatActivity {
                 builder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-                        data.removeAll(data);
+                        interestList.removeAll(interestList);
                         for (int j = 0; j < checkedList.size(); j++){
-                            data.add(interests[checkedList.get(j)]);
+                            interestList.add(interests[checkedList.get(j)]);
                         }
                         InitRecyclerView();
                     }
@@ -126,7 +160,7 @@ public class ProfileCreationActivity extends AppCompatActivity {
                         for (int j = 0; j < selectedInterest.length; j++){
                             selectedInterest[j] = false;
                             checkedList.clear();
-                            data.removeAll(data);
+                            interestList.removeAll(interestList);
                         }
                         InitRecyclerView();
                     }
@@ -137,9 +171,6 @@ public class ProfileCreationActivity extends AppCompatActivity {
 
 
 
-        EditText aboutMeInput = findViewById(R.id.AboutMeInput);
-        TextView aboutMeView = findViewById(R.id.AboutMeTextView);
-
         aboutMeInput.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
@@ -148,8 +179,8 @@ public class ProfileCreationActivity extends AppCompatActivity {
 
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                aboutMeView.setText(charSequence.toString());
-                float size = aboutMeView.getTextSize();
+                aboutMeTextview.setText(charSequence.toString());
+                float size = aboutMeTextview.getTextSize();
                 size = size/3;
                 aboutMeInput.setTextSize((int)size);
             }
@@ -168,116 +199,77 @@ public class ProfileCreationActivity extends AppCompatActivity {
         storage = FirebaseStorage.getInstance();
         storageReference = storage.getReference();
 
-        Button saveChanges = findViewById(R.id.SaveChanges);
-        saveChanges.setOnClickListener(new View.OnClickListener() {
+        saveChangesButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
-                DatabaseReference nested = myRef.child("Testing");
-                /*DatabaseReference nested = myRef.child(FirebaseAuth.getInstance().getUid());*/
+                DatabaseReference nested = myRef.child(FirebaseAuth.getInstance().getUid());
 
-                // Username
-                EditText inputName = findViewById(R.id.InputName);
-                String username = inputName.getText().toString();
-
-                //Gender
-                Spinner GenderDropdown = findViewById(R.id.GenderDropdown);
-                String gender = GenderDropdown.getSelectedItem().toString();
-
-                // Age
-                EditText inputAge = findViewById(R.id.AgeInput);
-                String tempAge = inputAge.getText().toString();
-
-                // About me
-                EditText inputAboutMe = findViewById(R.id.AboutMeInput);
-                String aboutMe = inputAboutMe.getText().toString();
-
-                // Interest
-                int interestSize = data.size();
-
-                // Relationship Preference
-                Spinner RelationshipPrefDropdown = findViewById(R.id.RelationshipPrefDropdown);
-                String RelationshipPref = RelationshipPrefDropdown.getSelectedItem().toString();
-
-                // Gender Preference
-                Spinner GenderPrefdropdown = findViewById(R.id.GenderPrefDropdown);
-                String GenderPref = GenderPrefdropdown.getSelectedItem().toString();
-
-                // Date Location
-                int dateLocSize = dateLocList.size();
-
-                ArrayList<String> missingList = new ArrayList<>();
                 // Checking for missing inputs
-                if(IncompleteActions()){
+                if(validFields()){
                     // Insert into database
                     // Username
+                    String username = nameInput.getText().toString();
                     nested.child("username").setValue(username);
 
                     //Gender
+                    String gender = genderDropdown.getSelectedItem().toString();
                     nested.child("Gender").setValue(gender);
 
                     // Age
-                    int age = Integer.parseInt(tempAge);
+                    int age = Integer.parseInt(ageInput.getText().toString());
                     nested.child("Age").setValue(age);
 
                     // About me
+                    String aboutMe = aboutMeInput.getText().toString();
                     nested.child("About Me").setValue(aboutMe);
 
                     // Interest
+                    int interestSize = interestList.size();
                     DatabaseReference nestedInterest = nested.child("Interest");
                     for(int i = 0; i < interestSize; i++){
-                        String interest = data.get(i);
-                        nestedInterest.child("Interest" + i+1).setValue(interest);
+                        String interest = interestList.get(i);
+                        nestedInterest.child("Interest" + (i + 1)).setValue(interest);
                     }
 
                     // Relationship Preference
+                    String RelationshipPref = relationshipPrefDropdown.getSelectedItem().toString();
                     nested.child("Relationship Preference").setValue(RelationshipPref);
 
                     // Gender Preference
+                    String GenderPref = genderPrefDropdown.getSelectedItem().toString();
                     nested.child("Gender Preference").setValue(GenderPref);
 
                     // Date Location
+                    int dateLocSize = dateLocList.size();
                     DatabaseReference nestedDateLoc = nested.child("Date Location");
                     for(int i = 0; i < dateLocSize; i++){
                         String dateLoc = dateLocList.get(i);
-                        nestedDateLoc.child("Date Location" + i+1).setValue(dateLoc);
+                        nestedDateLoc.child("Date Location" + (i + 1)).setValue(dateLoc);
                     }
 
                     // set profileCreated to true
                     nested.child("profileCreated").setValue(true);
+
+                    if (fromLogin) {
+                        Intent intent = new Intent(getApplicationContext(), MainMenuActivity.class);
+                        startActivity(intent);
+                        finish();
+                    }
+                    else {
+                        finish();
+                    }
                 }
                 else{
-                    if(username.equals("")){
-                        missingList.add("Username");
-                    }
-                    if(tempAge.equals("")){
-                        missingList.add("Age");
-                    }
-                    else if (Integer.parseInt(tempAge) < 18){
-                        missingList.add("Invalid Age");
-                    }
-                    if(aboutMe.equals("")){
-                        missingList.add("About Me");
-                    }
-                    if(interestSize == 0){
-                        missingList.add("Interest");
-                    }
-                    if(dateLocSize == 0){
-                        missingList.add("Preferred Date Location");
-                    }
-                    if(imageUri == null){
-                        missingList.add("No Profile Picture");
-                    }
-
                     AlertDialog.Builder alert = new AlertDialog.Builder(ProfileCreationActivity.this);
                     alert.setTitle("Invalid Inputs");
                     String message = "";
-                    for (int i = 0; i < missingList.size(); i++){
-                        if (i>0){
-                            message = message + ", " + missingList.get(i);
+                    for (int i = 0; i < invalidList.size(); i++){
+                        if (i > 0){
+                            message = message + ", " + invalidList.get(i);
                         }
                         else{
-                            message = missingList.get(i);
+                            message = invalidList.get(i);
                         }
                     }
                     alert.setMessage(message);
@@ -288,42 +280,36 @@ public class ProfileCreationActivity extends AppCompatActivity {
                         }
                     });
                     alert.show();
+
+                    invalidList.clear();
                 }
-
-
             }
         });
-
-
     }
 
-    public void InitDropdown(){
+    private void InitDropdown(){
         //Gender
-        Spinner Genderdropdown = findViewById(R.id.GenderDropdown);
         String[] gender = new String[]{"Male", "Female"};
         ArrayAdapter<String> genderAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, gender);
-        Genderdropdown.setAdapter(genderAdapter);
+        genderDropdown.setAdapter(genderAdapter);
 
         //Relationship Preference
-        Spinner Relationsshipdropdown = findViewById(R.id.RelationshipPrefDropdown);
         String[] relationshipPref = new String[]{"Serious", "Casual", "Friends"};
         ArrayAdapter<String> relationshipPrefAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, relationshipPref);
-        Relationsshipdropdown.setAdapter(relationshipPrefAdapter);
+        relationshipPrefDropdown.setAdapter(relationshipPrefAdapter);
 
         // Gender Preference
-        Spinner GenderPrefdropdown = findViewById(R.id.GenderPrefDropdown);
         String[] genderPref = new String[]{"Male", "Female", "Others"};
         ArrayAdapter<String> genderPrefAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, genderPref);
-        GenderPrefdropdown.setAdapter(genderPrefAdapter);
+        genderPrefDropdown.setAdapter(genderPrefAdapter);
 
 
         //Preferred Locations
         String[] locations = {"Restaurant", "Arcade", "Cafe", "Amusement Park", "Shopping", "Mall", "Hotel", "Home"};
-        TextView LocationPref = findViewById(R.id.DateLocDropdown);
         boolean[] selectedLocation = new boolean[locations.length];
         ArrayList<Integer> checkedList = new ArrayList<>();
 
-        LocationPref.setOnClickListener(new View.OnClickListener() {
+        locationPref.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 AlertDialog.Builder builder = new AlertDialog.Builder(ProfileCreationActivity.this);
@@ -358,7 +344,7 @@ public class ProfileCreationActivity extends AppCompatActivity {
                             }
                         }
 
-                        LocationPref.setText(stringBuilder.toString());
+                        locationPref.setText(stringBuilder.toString());
                     }
                 });
 
@@ -376,7 +362,7 @@ public class ProfileCreationActivity extends AppCompatActivity {
                             selectedLocation[j] = false;
                             checkedList.clear();
                             dateLocList.removeAll(dateLocList);
-                            LocationPref.setText("Date Location");
+                            locationPref.setText("Date Location");
                         }
                     }
                 });
@@ -386,61 +372,87 @@ public class ProfileCreationActivity extends AppCompatActivity {
     }
 
     //Init recyclerview
-    public void InitRecyclerView(){
-        RecyclerView rv = findViewById(R.id.interestRecyclerView);
-        ProfileCreationAdapter adapter = new ProfileCreationAdapter(ProfileCreationActivity.this, data);
+    private void InitRecyclerView(){
+        ProfileCreationAdapter adapter = new ProfileCreationAdapter(ProfileCreationActivity.this, interestList);
         LinearLayoutManager layout = new LinearLayoutManager(this);
         layout.setOrientation(LinearLayoutManager.HORIZONTAL);
 
-        rv.setAdapter(adapter);
-        rv.setLayoutManager(layout);
+        interestRV.setAdapter(adapter);
+        interestRV.setLayoutManager(layout);
     }
 
     // Check for incomplete fields
-    public Boolean IncompleteActions(){
+    private Boolean validFields(){
 
         //username
-        EditText inputUsername = findViewById(R.id.InputName);
-        String username = inputUsername.getText().toString();
+        String username = nameInput.getText().toString();
 
         //Gender
-        Spinner GenderDropdown = findViewById(R.id.GenderDropdown);
-        String gender = GenderDropdown.getSelectedItem().toString();
+        String gender = genderDropdown.getSelectedItem().toString();
 
         //Age
-        EditText inputAge = findViewById(R.id.AgeInput);
-        String age = inputAge.getText().toString();
+        String age = ageInput.getText().toString();
 
         //About me
-        EditText inputAboutMe = findViewById(R.id.AboutMeInput);
-        String aboutMe = inputAboutMe.getText().toString();
+        String aboutMe = aboutMeInput.getText().toString();
 
         //Interest
-        int interestSize = data.size();
+        int interestSize = interestList.size();
 
         //Relationship Preference
-        Spinner RelationshipPrefDropdown = findViewById(R.id.RelationshipPrefDropdown);
-        String RelationshipPref = RelationshipPrefDropdown.getSelectedItem().toString();
+        String RelationshipPref = relationshipPrefDropdown.getSelectedItem().toString();
 
         // Gender Preference
-        Spinner GenderPrefdropdown = findViewById(R.id.GenderPrefDropdown);
-        String GenderPref = GenderPrefdropdown.getSelectedItem().toString();
+        String GenderPref = genderPrefDropdown.getSelectedItem().toString();
 
         // Date Location
         int dateLocSize = dateLocList.size();
 
         // Checking if there are any missing inputs
-        if (username.equals("") || gender.equals("") || age.equals("") || aboutMe.equals("") || interestSize == 0 || RelationshipPref.equals("") || GenderPref.equals("") || dateLocSize == 0 || imageUri == null){
-            return false;
+
+        int invalidFieldCount = 0;
+
+        if(username.equals("")){
+            invalidList.add("Username");
+            invalidFieldCount++;
         }
-        else{
-            int checkAge = Integer.parseInt(age);
-            if(checkAge < 18){
-                return false;
-            }
+        if (gender.equals("")) {
+            invalidList.add("Gender");
+            invalidFieldCount++;
+        }
+        if(age.equals("")){
+            invalidList.add("Age");
+            invalidFieldCount++;
+        }
+        else if (Integer.parseInt(age) < 18){
+            invalidList.add("Invalid Age");
+            invalidFieldCount++;
+        }
+        if(aboutMe.equals("")){
+            invalidList.add("About Me");
+            invalidFieldCount++;
+        }
+        if(interestSize == 0){
+            invalidList.add("Interest");
+            invalidFieldCount++;
+        }
+        if (RelationshipPref.equals("")) {
+            invalidList.add("Relationship Preference");
+            invalidFieldCount++;
+        }
+        if (GenderPref.equals("")) {
+            invalidList.add("Gender Preference");
+            invalidFieldCount++;
+        }
+        if(dateLocSize == 0){
+            invalidList.add("Date Location Preference");
+            invalidFieldCount++;
+        }
+        if (imageUri == null) {
+            invalidList.add("No Profile Picture");
         }
 
-        return true;
+        return (invalidFieldCount == 0);
     }
 
     public void choosePicture(){
