@@ -55,6 +55,7 @@ public class BlogActivity extends AppCompatActivity {
             databaseReference = database.getReference("user").child(userObject.getUid()).child("blog");
         }
 
+        RecyclerView rv = findViewById(R.id.blogRecycler);
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -62,19 +63,17 @@ public class BlogActivity extends AppCompatActivity {
                 List<String> keys = new ArrayList<>();
                 for(DataSnapshot keyNode : snapshot.getChildren()){
                     keys.add(keyNode.getKey());
-                    Log.d("key", keyNode.getKey());
+                    //Log.d("key", keyNode.getKey());
                     BlogObject blog = keyNode.getValue(BlogObject.class);
                     blogsList.add(blog);
+
                 }
 
-
                 BlogAdapter adapter = new BlogAdapter(BlogActivity.this, blogsList);
-                RecyclerView rv = findViewById(R.id.blogRecycler);
+                rv.setAdapter(adapter);
                 LinearLayoutManager layout = new LinearLayoutManager(context);
                 layout.setOrientation(LinearLayoutManager.VERTICAL);
-                rv.setAdapter(adapter);
                 rv.setLayoutManager(layout);
-
             }
 
             @Override
@@ -111,6 +110,7 @@ public class BlogActivity extends AppCompatActivity {
                 startActivity(createBlogPage);
             }
         });
+
     }
 
 
