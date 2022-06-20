@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.FirebaseDatabase;
@@ -55,7 +56,7 @@ public class side_menu extends Activity {
         premium.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                Toast.makeText(side_menu.this,"Thanks for smashing this button, unfortunately we ",Toast.LENGTH_SHORT ).show();
             }
         });
 
