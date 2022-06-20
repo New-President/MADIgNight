@@ -12,22 +12,20 @@ import sg.edu.np.ignight.R;
 
 public class BlogViewHolder extends RecyclerView.ViewHolder {
     TextView desc;
-    TextView likes;
     TextView location;
-    TextView comments;
     ImageView blogImg;
+    View viewItem;
+    TextView likes;
+    TextView comments;
     ImageView commentButton;
     ImageView likesButton;
-    View viewItem;
-
     public BlogViewHolder(View item){
         super(item);
         desc = item.findViewById(R.id.blogDesc);
+        location = item.findViewById(R.id.location);
+        blogImg = item.findViewById(R.id.blogImg);
         likes = item.findViewById(R.id.likesCount);
         comments = item.findViewById(R.id.commentsCount);
-        location = item.findViewById(R.id.location);
-
-        blogImg = item.findViewById(R.id.blogImg);
         commentButton = item.findViewById(R.id.commentButton);
         likesButton = item.findViewById(R.id.likeButton);
         viewItem = item;
