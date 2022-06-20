@@ -89,7 +89,7 @@ public class side_menu extends Activity {
             }
         });
 
-        Button createBlogBtn = findViewById(R.id.menuCreateBlogBtn);
+        TextView createBlogBtn = findViewById(R.id.menuCreateBlogBtn);
         createBlogBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
