@@ -3,6 +3,8 @@ package sg.edu.np.ignight;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -36,15 +38,20 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FileDownloadTask;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
+import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Dictionary;
+import java.util.Hashtable;
 import java.util.UUID;
 
 import sg.edu.np.ignight.ProfileCreation.ProfileCreationAdapter;
@@ -71,6 +78,9 @@ public class ProfileCreationActivity extends AppCompatActivity {
 
     private FirebaseStorage storage;
     private StorageReference storageReference;
+
+    FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+    String Uid = user.getUid();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -119,9 +129,6 @@ public class ProfileCreationActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 choosePicture();
-                /*Intent gallery = new Intent(Intent.ACTION_PICK);
-                gallery.setData(MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                startActivityForResult(gallery, Gallery_Request);*/
             }
         });
 
@@ -129,11 +136,8 @@ public class ProfileCreationActivity extends AppCompatActivity {
         FirebaseDatabase database = FirebaseDatabase.getInstance("https://madignight-default-rtdb.asia-southeast1.firebasedatabase.app/");
         DatabaseReference myRef = database.getReference("user");
 
-        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-        String Uid = user.getUid();
+        storage = FirebaseStorage.getInstance("gs://madignight.appspot.com");
 
-        storage = FirebaseStorage.getInstance();
-        storageReference = storage.getReference();
 
         if (fromMenu){
             myRef.child(Uid).addListenerForSingleValueEvent(new ValueEventListener() {
@@ -145,6 +149,7 @@ public class ProfileCreationActivity extends AppCompatActivity {
                     String existAboutMe = snapshot.child("About Me").getValue(String.class);
                     String existRelationshipPref = snapshot.child("Relationship Preference").getValue(String.class);
                     String existGenderPref = snapshot.child("Gender Preference").getValue(String.class);
+                    String existProfilePic = snapshot.child("Profile Picture").getValue(String.class);
 
                     Integer totalInterest = (int)snapshot.child("Interest").getChildrenCount();
                     for(int i = 0; i < totalInterest; i++){
@@ -167,6 +172,39 @@ public class ProfileCreationActivity extends AppCompatActivity {
                     selectSpinnerValue(relationshipPrefDropdown, existRelationshipPref);
                     selectSpinnerValue(genderPrefDropdown, existGenderPref);
 
+                    storageReference = storage.getReference().child("profilePicture/" + Uid + "/" + existProfilePic);
+
+                    try {
+                        final File localFile = File.createTempFile(existProfilePic, existProfilePic);
+                        storageReference.getFile(localFile)
+                                .addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
+                                    @Override
+                                    public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
+                                        Toast.makeText(ProfileCreationActivity.this, "Picture Retrieved", Toast.LENGTH_SHORT).show();
+                                        Bitmap bitmap = BitmapFactory.decodeFile(localFile.getAbsolutePath());
+                                        imgGallery.setImageBitmap(bitmap);
+                                    }
+                                })
+                                .addOnFailureListener(new OnFailureListener() {
+                                    @Override
+                                    public void onFailure(@NonNull Exception e) {
+                                        Toast.makeText(ProfileCreationActivity.this, "Error Occured", Toast.LENGTH_SHORT).show();
+                                    }
+                                });
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+
+                    InitRecyclerView();
+
+                    Dictionary interestDict = new Hashtable();
+                    interestDict.put(0, "Running");
+                    interestDict.put(1, "Cooking");
+                    interestDict.put(2, "Gaming");
+                    interestDict.put(3, "Swimming");
+                    interestDict.put(4, "Reading");
+                    interestDict.put(5, "Shopping");
+                    interestDict.put(6, "Others");
 
                 }
 
@@ -225,6 +263,10 @@ public class ProfileCreationActivity extends AppCompatActivity {
                         String dateLoc = dateLocList.get(i);
                         nestedDateLoc.child("Date Location" + (i + 1)).setValue(dateLoc);
                     }
+
+                    String imageKey = uploadPicture();
+                    nested.child("Profile Picture").setValue(imageKey);
+
 
                     // set profileCreated to true
                     nested.child("profileCreated").setValue(true);
@@ -527,7 +569,7 @@ public class ProfileCreationActivity extends AppCompatActivity {
 
     public void choosePicture(){
         Intent intent = new Intent();
-        intent.setType("image/*");
+        intent.setType("image/png");
         intent.setAction(Intent.ACTION_GET_CONTENT);
         startActivityForResult(intent, Gallery_Request);
     }
@@ -558,37 +600,26 @@ public class ProfileCreationActivity extends AppCompatActivity {
         }
     }
 
-    public void uploadPicture(){
-
-        final ProgressDialog pd = new ProgressDialog(this);
-        pd.setTitle("Uploading Image...");
-        pd.show();
+    public String uploadPicture(){
 
         final String randomKey = UUID.randomUUID().toString();
-        StorageReference riverRef = storageReference.child("images/" + randomKey);
+        storage = FirebaseStorage.getInstance("gs://madignight.appspot.com");
+        storageReference = storage.getReference().child("profilePicture/" + Uid).child(randomKey);
 
-        riverRef.putFile(imageUri)
+        storageReference.putFile(imageUri)
                 .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                     @Override
                     public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                        pd.dismiss();
-                        // Get a URL to the uploaded contetnt
-                        Snackbar.make(findViewById(android.R.id.content), "Image uploaded", Snackbar.LENGTH_SHORT).show();
+                        // Get a URL to the uploaded content
+                        Toast.makeText(getApplicationContext(), "Image uploaded", Toast.LENGTH_SHORT).show();
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
-                        pd.dismiss();
                         Toast.makeText(getApplicationContext(), "Failed to Upload", Toast.LENGTH_SHORT).show();
                     }
-                })
-                .addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
-                    @Override
-                    public void onProgress(@NonNull UploadTask.TaskSnapshot snapshot) {
-                        double progressPercent = (100.00 * snapshot.getBytesTransferred() / snapshot.getTotalByteCount());
-                        pd.setMessage("Percentage: " + (int)progressPercent + "%");
-                    }
                 });
+        return randomKey;
     }
 }
