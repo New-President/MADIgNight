@@ -55,25 +55,12 @@ public class LoginActivity extends AppCompatActivity {
 
     private String verificationId;
 
-    private CountDownLatch countDownLatch;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
         getPermission();
-
-        countDownLatch = new CountDownLatch(1);
-
-        userIsLoggedIn();
-
-        try {
-            countDownLatch.await();
-        }
-        catch (InterruptedException e) {
-            e.printStackTrace();
-        }
 
         // initialize various fields
         phoneNumberInput = findViewById(R.id.phoneNumberInput);  // EditText field for phone number
@@ -91,6 +78,8 @@ public class LoginActivity extends AppCompatActivity {
 
         // set default fields first
         setDefaultFields(false);
+
+        userIsLoggedIn(true);
 
         // callbacks to be used in startPhoneNumberVerification()
         callbacks = new PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
@@ -257,12 +246,12 @@ public class LoginActivity extends AppCompatActivity {
                                     userDB.updateChildren(userMap).addOnCompleteListener(new OnCompleteListener<Void>() {
                                         @Override
                                         public void onComplete(@NonNull Task<Void> task) {
-                                            userIsLoggedIn();
+                                            userIsLoggedIn(false);
                                         }
                                     });
                                 }
                                 else {
-                                    userIsLoggedIn();
+                                    userIsLoggedIn(false);
                                 }
                             }
 
@@ -282,12 +271,12 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     // check if there is an authenticated user and direct to ProfileCreationActivity
-    private void userIsLoggedIn() {
+    private void userIsLoggedIn(boolean initialCall) {
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         if (user != null) {
             DatabaseReference userDB = FirebaseDatabase.getInstance("https://madignight-default-rtdb.asia-southeast1.firebasedatabase.app/").getReference().child("user").child(user.getUid());
 
-            if (loginProgressBar != null && loginSuccessImage != null) {
+            if (!initialCall) {
                 Handler handler = new Handler();
                 loginProgressBar.setVisibility(View.GONE);
                 loginSuccessImage.setVisibility(View.VISIBLE);
@@ -326,8 +315,6 @@ public class LoginActivity extends AppCompatActivity {
                 finish();
             }
         }
-
-        countDownLatch.countDown();
     }
 
     // reset fields to default
