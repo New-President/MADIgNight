@@ -1,22 +1,20 @@
 package sg.edu.np.ignight;
 
-import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
-import android.provider.MediaStore;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -30,7 +28,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -40,7 +37,6 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FileDownloadTask;
 import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
@@ -50,8 +46,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Dictionary;
-import java.util.Hashtable;
 import java.util.UUID;
 
 import sg.edu.np.ignight.ProfileCreation.ProfileCreationAdapter;
@@ -100,7 +94,9 @@ public class ProfileCreationActivity extends AppCompatActivity {
         relationshipPrefDropdown = findViewById(R.id.RelationshipPrefDropdown);
         interestRV = findViewById(R.id.interestRecyclerView);
 
+
         InitInputs();
+
 
         Intent receiveIntent = getIntent();
         fromLogin = receiveIntent.getBooleanExtra("fromLogin", false);
@@ -115,8 +111,7 @@ public class ProfileCreationActivity extends AppCompatActivity {
                     intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                     startActivity(intent);
                     finish();
-                }
-                else {
+                } else {
                     finish();
                 }
             }
@@ -139,7 +134,7 @@ public class ProfileCreationActivity extends AppCompatActivity {
         storage = FirebaseStorage.getInstance("gs://madignight.appspot.com");
 
 
-        if (fromMenu){
+        if (fromMenu) {
             myRef.child(Uid).addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -151,14 +146,15 @@ public class ProfileCreationActivity extends AppCompatActivity {
                     String existGenderPref = snapshot.child("Gender Preference").getValue(String.class);
                     String existProfilePic = snapshot.child("Profile Picture").getValue(String.class);
 
-                    Integer totalInterest = (int)snapshot.child("Interest").getChildrenCount();
-                    for(int i = 0; i < totalInterest; i++){
+                    Integer totalInterest = (int) snapshot.child("Interest").getChildrenCount();
+                    for (int i = 1; i <= totalInterest; i++) {
                         String existingInterest = snapshot.child("Interest").child("Interest" + i).getValue(String.class);
                         interestList.add(existingInterest);
+                        InitRecyclerView();
                     }
 
-                    Integer totalDateLoc = (int)snapshot.child("Date Location").getChildrenCount();
-                    for(int i = 0; i < totalDateLoc; i++){
+                    Integer totalDateLoc = (int) snapshot.child("Date Location").getChildrenCount();
+                    for (int i = 1; i <= totalDateLoc; i++) {
                         String existingDateLoc = snapshot.child("Date Location").child("Date Location" + i).getValue(String.class);
                         dateLocList.add(existingDateLoc);
                     }
@@ -171,6 +167,15 @@ public class ProfileCreationActivity extends AppCompatActivity {
                     selectSpinnerValue(genderDropdown, existGender);
                     selectSpinnerValue(relationshipPrefDropdown, existRelationshipPref);
                     selectSpinnerValue(genderPrefDropdown, existGenderPref);
+
+                    StringBuilder stringBuilder = new StringBuilder();
+                    for (int i = 0; i < totalDateLoc; i++) {
+                        stringBuilder.append(dateLocList.get(i));
+                        if (totalDateLoc > 1) {
+                            stringBuilder.append(", ");
+                        }
+                    }
+                    locationPref.setText(stringBuilder.toString());
 
                     storageReference = storage.getReference().child("profilePicture/" + Uid + "/" + existProfilePic);
 
@@ -195,17 +200,6 @@ public class ProfileCreationActivity extends AppCompatActivity {
                         e.printStackTrace();
                     }
 
-                    InitRecyclerView();
-
-                    Dictionary interestDict = new Hashtable();
-                    interestDict.put(0, "Running");
-                    interestDict.put(1, "Cooking");
-                    interestDict.put(2, "Gaming");
-                    interestDict.put(3, "Swimming");
-                    interestDict.put(4, "Reading");
-                    interestDict.put(5, "Shopping");
-                    interestDict.put(6, "Others");
-
                 }
 
                 @Override
@@ -222,7 +216,7 @@ public class ProfileCreationActivity extends AppCompatActivity {
                 DatabaseReference nested = myRef.child(FirebaseAuth.getInstance().getUid());
 
                 // Checking for missing inputs
-                if(validFields()){
+                if (validFields()) {
                     // Insert into database
                     // Username
                     String username = nameInput.getText().toString();
@@ -243,7 +237,7 @@ public class ProfileCreationActivity extends AppCompatActivity {
                     // Interest
                     int interestSize = interestList.size();
                     DatabaseReference nestedInterest = nested.child("Interest");
-                    for(int i = 0; i < interestSize; i++){
+                    for (int i = 0; i < interestSize; i++) {
                         String interest = interestList.get(i);
                         nestedInterest.child("Interest" + (i + 1)).setValue(interest);
                     }
@@ -259,14 +253,14 @@ public class ProfileCreationActivity extends AppCompatActivity {
                     // Date Location
                     int dateLocSize = dateLocList.size();
                     DatabaseReference nestedDateLoc = nested.child("Date Location");
-                    for(int i = 0; i < dateLocSize; i++){
+                    for (int i = 0; i < dateLocSize; i++) {
                         String dateLoc = dateLocList.get(i);
                         nestedDateLoc.child("Date Location" + (i + 1)).setValue(dateLoc);
                     }
 
+                    // Profile Picture
                     String imageKey = uploadPicture();
                     nested.child("Profile Picture").setValue(imageKey);
-
 
                     // set profileCreated to true
                     nested.child("profileCreated").setValue(true);
@@ -275,20 +269,17 @@ public class ProfileCreationActivity extends AppCompatActivity {
                         Intent intent = new Intent(getApplicationContext(), MainMenuActivity.class);
                         startActivity(intent);
                         finish();
-                    }
-                    else {
+                    } else {
                         finish();
                     }
-                }
-                else{
+                } else {
                     AlertDialog.Builder alert = new AlertDialog.Builder(ProfileCreationActivity.this);
                     alert.setTitle("Invalid Inputs");
                     String message = "";
-                    for (int i = 0; i < invalidList.size(); i++){
-                        if (i > 0){
+                    for (int i = 0; i < invalidList.size(); i++) {
+                        if (i > 0) {
                             message = message + ", " + invalidList.get(i);
-                        }
-                        else{
+                        } else {
                             message = invalidList.get(i);
                         }
                     }
@@ -307,7 +298,7 @@ public class ProfileCreationActivity extends AppCompatActivity {
         });
     }
 
-    private void InitInputs(){
+    private void InitInputs() {
         //Gender
         String[] gender = new String[]{"Male", "Female"};
         ArrayAdapter<String> genderAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, gender);
@@ -394,8 +385,8 @@ public class ProfileCreationActivity extends AppCompatActivity {
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
                 aboutMeTextview.setText(charSequence.toString());
                 float size = aboutMeTextview.getTextSize();
-                size = size/3;
-                aboutMeInput.setTextSize((int)size);
+                size = size / 3;
+                aboutMeInput.setTextSize((int) size);
             }
 
             @Override
@@ -420,12 +411,11 @@ public class ProfileCreationActivity extends AppCompatActivity {
                 builder.setMultiChoiceItems(locations, selectedLocation, new DialogInterface.OnMultiChoiceClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i, boolean b) {
-                        if (b){
+                        if (b) {
                             //when checkbox is selected, add position into list
                             locationCheckedList.add(i);
                             Collections.sort(locationCheckedList);
-                        }
-                        else{
+                        } else {
                             //when checkbox is not selected, remove position from list
                             locationCheckedList.remove(Integer.valueOf(i));
                         }
@@ -437,10 +427,10 @@ public class ProfileCreationActivity extends AppCompatActivity {
                     public void onClick(DialogInterface dialogInterface, int i) {
                         StringBuilder stringBuilder = new StringBuilder();
                         dateLocList.removeAll(dateLocList);
-                        for (int j = 0; j < locationCheckedList.size(); j++){
+                        for (int j = 0; j < locationCheckedList.size(); j++) {
                             stringBuilder.append(locations[locationCheckedList.get(j)]);
                             dateLocList.add(locations[locationCheckedList.get(j)]);
-                            if (j != locationCheckedList.size() - 1){
+                            if (j != locationCheckedList.size() - 1) {
                                 stringBuilder.append(", ");
                             }
                         }
@@ -459,7 +449,7 @@ public class ProfileCreationActivity extends AppCompatActivity {
                 builder.setNeutralButton("Clear All", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-                        for (int j = 0; j < selectedLocation.length; j++){
+                        for (int j = 0; j < selectedLocation.length; j++) {
                             selectedLocation[j] = false;
                             locationCheckedList.clear();
                             dateLocList.removeAll(dateLocList);
@@ -473,7 +463,7 @@ public class ProfileCreationActivity extends AppCompatActivity {
     }
 
     //Init recyclerview
-    private void InitRecyclerView(){
+    private void InitRecyclerView() {
         ProfileCreationAdapter adapter = new ProfileCreationAdapter(ProfileCreationActivity.this, interestList);
         LinearLayoutManager layout = new LinearLayoutManager(this);
         layout.setOrientation(LinearLayoutManager.HORIZONTAL);
@@ -483,7 +473,7 @@ public class ProfileCreationActivity extends AppCompatActivity {
     }
 
     // Check for incomplete fields
-    private Boolean validFields(){
+    private Boolean validFields() {
 
         //username
         String username = nameInput.getText().toString();
@@ -513,7 +503,7 @@ public class ProfileCreationActivity extends AppCompatActivity {
 
         int invalidFieldCount = 0;
 
-        if(username.equals("")){
+        if (username.equals("")) {
             invalidList.add("Username");
             invalidFieldCount++;
         }
@@ -521,19 +511,18 @@ public class ProfileCreationActivity extends AppCompatActivity {
             invalidList.add("Gender");
             invalidFieldCount++;
         }
-        if(age.equals("")){
+        if (age.equals("")) {
             invalidList.add("Age");
             invalidFieldCount++;
-        }
-        else if (Integer.parseInt(age) < 18){
+        } else if (Integer.parseInt(age) < 18) {
             invalidList.add("Invalid Age");
             invalidFieldCount++;
         }
-        if(aboutMe.equals("")){
+        if (aboutMe.equals("")) {
             invalidList.add("About Me");
             invalidFieldCount++;
         }
-        if(interestSize == 0){
+        if (interestSize == 0) {
             invalidList.add("Interest");
             invalidFieldCount++;
         }
@@ -545,7 +534,7 @@ public class ProfileCreationActivity extends AppCompatActivity {
             invalidList.add("Gender Preference");
             invalidFieldCount++;
         }
-        if(dateLocSize == 0){
+        if (dateLocSize == 0) {
             invalidList.add("Date Location Preference");
             invalidFieldCount++;
         }
@@ -556,18 +545,17 @@ public class ProfileCreationActivity extends AppCompatActivity {
         return (invalidFieldCount == 0);
     }
 
-    private void selectSpinnerValue(Spinner spinner, String myString)
-    {
+    private void selectSpinnerValue(Spinner spinner, String myString) {
         int index = 0;
-        for(int i = 0; i < spinner.getCount(); i++){
-            if(spinner.getItemAtPosition(i).toString().equals(myString)){
+        for (int i = 0; i < spinner.getCount(); i++) {
+            if (spinner.getItemAtPosition(i).toString().equals(myString)) {
                 spinner.setSelection(i);
                 break;
             }
         }
     }
 
-    public void choosePicture(){
+    public void choosePicture() {
         Intent intent = new Intent();
         intent.setType("image/png");
         intent.setAction(Intent.ACTION_GET_CONTENT);
@@ -578,9 +566,9 @@ public class ProfileCreationActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if(resultCode == RESULT_OK){
+        if (resultCode == RESULT_OK) {
             // if everything processed successfully
-            if (requestCode==Gallery_Request){
+            if (requestCode == Gallery_Request) {
                 // get Uri
                 imageUri = data.getData();
 
@@ -600,7 +588,7 @@ public class ProfileCreationActivity extends AppCompatActivity {
         }
     }
 
-    public String uploadPicture(){
+    public String uploadPicture() {
 
         final String randomKey = UUID.randomUUID().toString();
         storage = FirebaseStorage.getInstance("gs://madignight.appspot.com");
