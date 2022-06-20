@@ -20,12 +20,7 @@
             android:exported="false" />
         <activity
             android:name=".TNC"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
+            android:exported="false">
         </activity>
         <activity
             android:name=".side_menu"
@@ -39,14 +34,21 @@
             android:exported="false" />
         <activity
             android:name=".BlogActivity"
-            android:exported="false" />
+            android:exported="true" />
         <activity
             android:name=".MainMenuActivity"
             android:exported="false" />
         <activity
             android:name=".LoginActivity"
-            android:exported="false"
-            android:screenOrientation="portrait"></activity>
+            android:exported="true"
+            android:screenOrientation="portrait">
+
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
         <activity
             android:name=".ProfileCreationActivity"
             android:exported="false" />

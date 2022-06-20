@@ -218,17 +218,17 @@ public class ProfileViewActivity extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 // get profile picture file name
-                String profilePictureName = snapshot.child("Profile Picture").getValue().toString();
-                StorageReference storageReference = FirebaseStorage.
-                        getInstance().
-                        getReference("profilePicture/" +
-                                userObject.getUid() +
-                                "/" +
-                                profilePictureName);
-                Glide.with(getApplicationContext())
-                        .load(storageReference)
-                        .into(profilePicture);
-                Log.d("test2", profilePictureName);
+//                String profilePictureName = snapshot.child("Profile Picture").getValue().toString();
+//                StorageReference storageReference = FirebaseStorage.
+//                        getInstance().
+//                        getReference("profilePicture/" +
+//                                userObject.getUid() +
+//                                "/" +
+//                                profilePictureName);
+//                Glide.with(getApplicationContext())
+//                        .load(storageReference)
+//                        .into(profilePicture);
+//                Log.d("test2", profilePictureName);
             }
 
             @Override
