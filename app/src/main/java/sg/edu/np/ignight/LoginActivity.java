@@ -28,6 +28,7 @@ import com.google.firebase.FirebaseApp;
 import com.google.firebase.FirebaseException;
 import com.google.firebase.appcheck.FirebaseAppCheck;
 import com.google.firebase.appcheck.safetynet.SafetyNetAppCheckProviderFactory;
+import com.google.firebase.appcheck.safetynet.internal.SafetyNetAppCheckProvider;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -42,6 +43,7 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
 // To authenticate user (phone number authentication with Firebase) and continue to app
@@ -102,7 +104,6 @@ public class LoginActivity extends AppCompatActivity {
                 super.onCodeSent(s, forceResendingToken);
 
                 verificationId = s;
-                allowResendOTP();
             }
 
             // verification failed -> call setDefaultFields()
@@ -163,6 +164,7 @@ public class LoginActivity extends AppCompatActivity {
                 toggleEditText(phoneNumberInput, false);
                 disableButton(sendOTPButton);
                 errorMessage.setVisibility(View.GONE);
+                allowResendOTP();
                 startPhoneNumberVerification();
             }
         });
