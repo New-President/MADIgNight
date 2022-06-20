@@ -7,25 +7,41 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentTransaction;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FileDownloadTask;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
+import java.io.File;
+import java.io.IOException;
 import java.text.ParseException;
 import java.util.Date;
 
 import sg.edu.np.ignight.Objects.TimestampObject;
 
 public class MainMenuActivity extends AppCompatActivity {
+    private FirebaseStorage storage;
+    private StorageReference storageReference;
+
+    FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+    String Uid = user.getUid();
 
     // Edit profile, Logout, about page, stage 2: map, paywalls, terms & conditions??
     @Override
@@ -76,8 +92,46 @@ public class MainMenuActivity extends AppCompatActivity {
                 ft.commit();
             }
         });
+        ImageView ownerProfilePic = findViewById(R.id.ownerprofile_menu);
 
+        FirebaseDatabase database = FirebaseDatabase.getInstance("https://madignight-default-rtdb.asia-southeast1.firebasedatabase.app/");
+        DatabaseReference myRef = database.getReference("user");
+        storage = FirebaseStorage.getInstance("gs://madignight.appspot.com");
 
+        myRef.child(Uid).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                String existProfilePic = snapshot.child("Profile Picture").getValue(String.class);
+                Log.d("Hello",existProfilePic);
+                storageReference = storage.getReference().child("profilePicture/" + Uid + "/" + existProfilePic);
+
+                try {
+                    final File localFile = File.createTempFile(existProfilePic, existProfilePic);
+                    storageReference.getFile(localFile)
+                            .addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
+                                @Override
+                                public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
+                                    Toast.makeText(MainMenuActivity.this, "Picture Retrieved", Toast.LENGTH_SHORT).show();
+                                    Bitmap bitmap = BitmapFactory.decodeFile(localFile.getAbsolutePath());
+                                    ownerProfilePic.setImageBitmap(bitmap);
+                                }
+                            })
+                            .addOnFailureListener(new OnFailureListener() {
+                                @Override
+                                public void onFailure(@NonNull Exception e) {
+                                    Toast.makeText(MainMenuActivity.this, "Error Occurred", Toast.LENGTH_SHORT).show();
+                                }
+                            });
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
     }
 
     private void updateConnection() {

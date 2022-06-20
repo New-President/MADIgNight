@@ -193,7 +193,7 @@ public class ProfileCreationActivity extends AppCompatActivity {
                                 .addOnFailureListener(new OnFailureListener() {
                                     @Override
                                     public void onFailure(@NonNull Exception e) {
-                                        Toast.makeText(ProfileCreationActivity.this, "Error Occured", Toast.LENGTH_SHORT).show();
+                                        Toast.makeText(ProfileCreationActivity.this, "Error Occurred", Toast.LENGTH_SHORT).show();
                                     }
                                 });
                     } catch (IOException e) {
