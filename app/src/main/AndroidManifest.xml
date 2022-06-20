@@ -16,9 +16,21 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.IgNight">
         <activity
+            android:name=".AboutUsActivity"
+            android:exported="false" />
+        <activity
+            android:name=".TNC"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
             android:name=".side_menu"
             android:exported="false"
-            android:theme="@style/Theme_side_menu"/>
+            android:theme="@style/Theme_side_menu" />
         <activity
             android:name=".CreateBlogActivity"
             android:exported="false" />
@@ -27,21 +39,14 @@
             android:exported="false" />
         <activity
             android:name=".BlogActivity"
-            android:exported="false"/>
+            android:exported="false" />
         <activity
             android:name=".MainMenuActivity"
-            android:exported="false">
-        </activity>
+            android:exported="false" />
         <activity
             android:name=".LoginActivity"
-            android:exported="true"
-            android:screenOrientation="portrait">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
+            android:exported="false"
+            android:screenOrientation="portrait"></activity>
         <activity
             android:name=".ProfileCreationActivity"
             android:exported="false" />
