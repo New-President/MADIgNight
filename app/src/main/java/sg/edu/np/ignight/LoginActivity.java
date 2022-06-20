@@ -24,7 +24,11 @@ import android.widget.TextView;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.FirebaseApp;
 import com.google.firebase.FirebaseException;
+import com.google.firebase.appcheck.FirebaseAppCheck;
+import com.google.firebase.appcheck.safetynet.SafetyNetAppCheckProviderFactory;
+import com.google.firebase.appcheck.safetynet.internal.SafetyNetAppCheckProvider;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -62,6 +66,10 @@ public class LoginActivity extends AppCompatActivity {
 
         getPermission();
 
+        FirebaseApp.initializeApp(this);
+        FirebaseAppCheck firebaseAppCheck = FirebaseAppCheck.getInstance();
+        firebaseAppCheck.installAppCheckProviderFactory(SafetyNetAppCheckProviderFactory.getInstance());
+
         // initialize various fields
         phoneNumberInput = findViewById(R.id.phoneNumberInput);  // EditText field for phone number
         codeInput = findViewById(R.id.OTPInput);  // EditText field for OTP
@@ -73,7 +81,7 @@ public class LoginActivity extends AppCompatActivity {
         loginSuccessImage = findViewById(R.id.loginSuccessImage);
         loginProgressBar = findViewById(R.id.loginProgressBar);
 
-        // turn off phone auth app verification
+        // turn off phone auth app verification (for testing with numbers in firebase console) - remove for real numbers
         FirebaseAuth.getInstance().getFirebaseAuthSettings().setAppVerificationDisabledForTesting(true);
 
         // set default fields first
@@ -101,6 +109,7 @@ public class LoginActivity extends AppCompatActivity {
             // verification failed -> call setDefaultFields()
             @Override
             public void onVerificationFailed(@NonNull FirebaseException e) {
+                e.printStackTrace();
                 setDefaultFields(true);
             }
         };

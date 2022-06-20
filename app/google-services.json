@@ -1,6 +1,7 @@
 {
   "project_info": {
     "project_number": "901719946261",
+    "firebase_url": "https://madignight-default-rtdb.asia-southeast1.firebasedatabase.app",
     "project_id": "madignight",
     "storage_bucket": "madignight.appspot.com"
   },
@@ -13,6 +14,14 @@
         }
       },
       "oauth_client": [
+        {
+          "client_id": "901719946261-2kv9o68ke1n1lhgunm956ot57marsn6q.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "sg.edu.np.ignight",
+            "certificate_hash": "494e11ea9db1b751926c29b2daf2a2bf9fe81dde"
+          }
+        },
         {
           "client_id": "901719946261-lrub5rlr5ielmgrorvbhbq3i1gljen2q.apps.googleusercontent.com",
           "client_type": 3
