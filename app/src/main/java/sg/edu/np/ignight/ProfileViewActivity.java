@@ -131,7 +131,6 @@ public class ProfileViewActivity extends AppCompatActivity {
 
 
         ignightButton = findViewById(R.id.button4);
-        UserObject finalUserObject = user;
         ignightButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -139,19 +138,25 @@ public class ProfileViewActivity extends AppCompatActivity {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
                         boolean chatExists = false;
-                        ArrayList<String> usersInChat = new ArrayList<>();
+                        String existingChatID = "";
+
                         for (DataSnapshot chatIdSnapshot : snapshot.getChildren()) {
+                            ArrayList<String> usersInChat = new ArrayList<>();
+
                             for (DataSnapshot userIdSnapshot : chatIdSnapshot.child("users").getChildren()) {
                                 usersInChat.add(userIdSnapshot.getKey());
                             }
-                            if (usersInChat.contains(getApplicationContext()) && usersInChat.contains(targetUserUID)) {
+
+                            if (usersInChat.contains(currentUserUID) && usersInChat.contains(targetUserUID)) {
                                 chatExists = true;
+                                existingChatID = chatIdSnapshot.getKey();
                                 break;
                             }
                         }
+
                         if (!chatExists) {
                             String newChatID = myRef.push().getKey();
-                            userMap = new HashMap<>();
+                            Map userMap = new HashMap<>();
                             userMap.put(currentUserUID, true);
                             userMap.put(targetUserUID, true);
 
@@ -162,13 +167,25 @@ public class ProfileViewActivity extends AppCompatActivity {
                                         Intent intent = new Intent(view.getContext(), ChatActivity.class);
                                         Bundle bundle = new Bundle();
                                         bundle.putString("chatID", newChatID);
-                                        bundle.putString("chatName", finalUserObject.getUsername());
+                                        bundle.putString("chatName", user.getUsername());
                                         bundle.putString("targetUserID", targetUserUID);
                                         intent.putExtras(bundle);
                                         view.getContext().startActivity(intent);
                                     }
+                                    else {
+                                        task.getException().printStackTrace();
+                                    }
                                 }
                             });
+                        }
+                        else {
+                            Intent intent = new Intent(view.getContext(), ChatActivity.class);
+                            Bundle bundle = new Bundle();
+                            bundle.putString("chatID", existingChatID);
+                            bundle.putString("chatName", user.getUsername());
+                            bundle.putString("targetUserID", targetUserUID);
+                            intent.putExtras(bundle);
+                            view.getContext().startActivity(intent);
                         }
                     }
                     @Override

@@ -123,15 +123,18 @@ public class MainMenuAdapter extends RecyclerView.Adapter<MainMenuViewHolder>{
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
                         boolean chatExists = false;
-                        ArrayList<String> usersInChat = new ArrayList<>();
+                        String existingChatID = "";
 
                         for (DataSnapshot chatIdSnapshot : snapshot.getChildren()) {
+                            ArrayList<String> usersInChat = new ArrayList<>();
+
                             for (DataSnapshot userIdSnapshot : chatIdSnapshot.child("users").getChildren()) {
                                 usersInChat.add(userIdSnapshot.getKey());
                             }
 
                             if (usersInChat.contains(currentUserUID) && usersInChat.contains(targetUserUID)) {
                                 chatExists = true;
+                                existingChatID = chatIdSnapshot.getKey();
                                 break;
                             }
                         }
@@ -154,8 +157,20 @@ public class MainMenuAdapter extends RecyclerView.Adapter<MainMenuViewHolder>{
                                         intent.putExtras(bundle);
                                         view.getContext().startActivity(intent);
                                     }
+                                    else {
+                                        task.getException().printStackTrace();
+                                    }
                                 }
                             });
+                        }
+                        else {
+                            Intent intent = new Intent(view.getContext(), ChatActivity.class);
+                            Bundle bundle = new Bundle();
+                            bundle.putString("chatID", existingChatID);
+                            bundle.putString("chatName", user.getUsername());
+                            bundle.putString("targetUserID", targetUserUID);
+                            intent.putExtras(bundle);
+                            view.getContext().startActivity(intent);
                         }
                     }
 
