@@ -102,7 +102,6 @@ public class MainMenuActivity extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 String existProfilePic = snapshot.child("Profile Picture").getValue(String.class);
-                Log.d("Hello",existProfilePic);
                 storageReference = storage.getReference().child("profilePicture/" + Uid + "/" + existProfilePic);
 
                 try {
@@ -136,8 +135,6 @@ public class MainMenuActivity extends AppCompatActivity {
 
     private void updateConnection() {
         FirebaseDatabase db = FirebaseDatabase.getInstance("https://madignight-default-rtdb.asia-southeast1.firebasedatabase.app/");
-
-        db.goOnline();
 
         DatabaseReference userPresenceRef = db.getReference("presence/" + FirebaseAuth.getInstance().getUid());
 
