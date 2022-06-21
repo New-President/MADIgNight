@@ -115,6 +115,7 @@ public class ProfileViewActivity extends AppCompatActivity {
             public void onClick(View view) {
                 Intent backToMainMenu = new Intent(getApplicationContext(), MainMenuActivity.class);
                 startActivity(backToMainMenu);
+                finish();
             }
         });
 
@@ -170,7 +171,9 @@ public class ProfileViewActivity extends AppCompatActivity {
                                         bundle.putString("chatName", user.getUsername());
                                         bundle.putString("targetUserID", targetUserUID);
                                         intent.putExtras(bundle);
+                                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                                         view.getContext().startActivity(intent);
+                                        finish();
                                     }
                                     else {
                                         task.getException().printStackTrace();
@@ -185,7 +188,9 @@ public class ProfileViewActivity extends AppCompatActivity {
                             bundle.putString("chatName", user.getUsername());
                             bundle.putString("targetUserID", targetUserUID);
                             intent.putExtras(bundle);
+                            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                             view.getContext().startActivity(intent);
+                            finish();
                         }
                     }
                     @Override

@@ -89,57 +89,28 @@ public class Homepage_fragment extends Fragment {
                                 continue;
                             }
 
-                            String phone = "";
-                            String email = "";
-                            String aboutMe = "";
-                            String gender = "";
-                            String genderPref = "";
-                            String profilePicUrl = "";
-                            String relationshipPref = "";
-                            String username = "";
-                            int age = 0;
+                            String uid = childSnapshot.getKey();
                             ArrayList<String> dateLocList = new ArrayList<>();
                             ArrayList<String> interestList = new ArrayList<>();
 
-                            if (childSnapshot.child("phone").getValue() != null) {
-                                phone = childSnapshot.child("phone").getValue().toString();
+                            String phone = childSnapshot.child("phone").getValue().toString();
+                            String aboutMe = childSnapshot.child("About Me").getValue().toString();
+                            String gender = childSnapshot.child("Gender").getValue().toString();
+                            String genderPref = childSnapshot.child("Gender Preference").getValue().toString();
+                            String profilePicUrl = childSnapshot.child("Profile Picture").getValue().toString();
+                            String relationshipPref = childSnapshot.child("Relationship Preference").getValue().toString();
+                            String username = childSnapshot.child("username").getValue().toString();
+                            String profileCreated = childSnapshot.child("profileCreated").getValue().toString();
+                            int age = Integer.parseInt(childSnapshot.child("Age").getValue().toString());
+
+                            for (DataSnapshot dateLocSnapshot : childSnapshot.child("Date Location").getChildren()) {
+                                dateLocList.add(dateLocSnapshot.getKey());
                             }
-                            if (childSnapshot.child("email").getValue() != null) {
-                                email = childSnapshot.child("email").getValue().toString();
-                            }
-                            if (childSnapshot.child("About Me").getValue() != null) {
-                                aboutMe = childSnapshot.child("About Me").getValue().toString();
-                            }
-                            if (childSnapshot.child("Gender").getValue() != null) {
-                                gender = childSnapshot.child("Gender").getValue().toString();
-                            }
-                            if (childSnapshot.child("Gender Preference").getValue() != null) {
-                                genderPref = childSnapshot.child("Gender Preference").getValue().toString();
-                            }
-                            if (childSnapshot.child("Profile Picture").getValue() != null) {
-                                profilePicUrl = childSnapshot.child("Profile Picture").getValue().toString();
-                            }
-                            if (childSnapshot.child("Relationship Preference").getValue() != null) {
-                                relationshipPref = childSnapshot.child("Relationship Preference").getValue().toString();
-                            }
-                            if (childSnapshot.child("username").getValue() != null) {
-                                username = childSnapshot.child("username").getValue().toString();
-                            }
-                            if (childSnapshot.child("Age").getValue() != null) {
-                                age = Integer.parseInt(childSnapshot.child("Age").getValue().toString());
-                            }
-                            if (childSnapshot.child("Date Location").hasChildren()) {
-                                for (DataSnapshot dateLocSnapshot : childSnapshot.child("Date Location").getChildren()) {
-                                    dateLocList.add(dateLocSnapshot.getKey());
-                                }
-                            }
-                            if (childSnapshot.child("Interest").hasChildren()) {
-                                for (DataSnapshot interestSnapshot : childSnapshot.child("Interest").getChildren()) {
-                                    interestList.add(interestSnapshot.getKey());
-                                }
+                            for (DataSnapshot interestSnapshot : childSnapshot.child("Interest").getChildren()) {
+                                interestList.add(interestSnapshot.getKey());
                             }
 
-                            UserObject user = new UserObject(childSnapshot.getKey(), email, phone, username, gender, aboutMe, interestList, relationshipPref, genderPref, dateLocList, profilePicUrl, age);
+                            UserObject user = new UserObject(uid, aboutMe, age, dateLocList, gender, genderPref, interestList, profilePicUrl, relationshipPref, phone, profileCreated, username);
 
                             userList.add(user);
                             userListAdapter.notifyDataSetChanged();

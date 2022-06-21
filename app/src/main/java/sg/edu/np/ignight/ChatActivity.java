@@ -158,12 +158,34 @@ public class ChatActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(getApplicationContext(), ProfileViewActivity.class);
-                DatabaseReference targetUserRef = rootDB.child("user").child(targetUserID);
-                targetUserRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                DatabaseReference targetUserDB = FirebaseDatabase.getInstance("https://madignight-default-rtdb.asia-southeast1.firebasedatabase.app/").getReference().child("user").child(targetUserID);
+                targetUserDB.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        UserObject targetUser = snapshot.getValue(UserObject.class);
-                        intent.putExtra("user", targetUser);
+                        String uid = targetUserID;
+                        ArrayList<String> dateLocList = new ArrayList<>();
+                        ArrayList<String> interestList = new ArrayList<>();
+
+                        String phone = snapshot.child("phone").getValue().toString();
+                        String aboutMe = snapshot.child("About Me").getValue().toString();
+                        String gender = snapshot.child("Gender").getValue().toString();
+                        String genderPref = snapshot.child("Gender Preference").getValue().toString();
+                        String profilePicUrl = snapshot.child("Profile Picture").getValue().toString();
+                        String relationshipPref = snapshot.child("Relationship Preference").getValue().toString();
+                        String username = snapshot.child("username").getValue().toString();
+                        String profileCreated = snapshot.child("profileCreated").getValue().toString();
+                        int age = Integer.parseInt(snapshot.child("Age").getValue().toString());
+
+                        for (DataSnapshot dateLocSnapshot : snapshot.child("Date Location").getChildren()) {
+                            dateLocList.add(dateLocSnapshot.getKey());
+                        }
+                        for (DataSnapshot interestSnapshot : snapshot.child("Interest").getChildren()) {
+                            interestList.add(interestSnapshot.getKey());
+                        }
+
+                        UserObject user = new UserObject(uid, aboutMe, age, dateLocList, gender, genderPref, interestList, profilePicUrl, relationshipPref, phone, profileCreated, username);
+
+                        intent.putExtra("user", user);
                         startActivity(intent);
                     }
 

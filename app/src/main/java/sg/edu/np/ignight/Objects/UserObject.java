@@ -5,7 +5,6 @@ import java.util.ArrayList;
 
 public class UserObject implements Serializable {
     private String uid;
-    private String email;
     private String phone;
     private String username;
     private String gender;
@@ -16,32 +15,31 @@ public class UserObject implements Serializable {
     private ArrayList<String> dateLocList;
     private String profilePicUrl;
     private int age;
+    private String profileCreated;
 
     public UserObject() {}
 
-    public UserObject(String uid, String email, String phone, String username, String gender, String aboutMe, ArrayList<String> interestList, String relationshipPref, String genderPref, ArrayList<String> dateLocList, String profilePicUrl, int age) {
+    public UserObject(String uid, String aboutMe, int age, ArrayList<String> dateLocList, String gender, String genderPref, ArrayList<String> interestList, String profilePicUrl, String relationshipPref, String phone, String profileCreated, String username) {
         this.uid = uid;
-        this.email = email;
-        this.phone = phone;
-        this.username = username;
-        this.gender = gender;
         this.aboutMe = aboutMe;
-        this.interestList = interestList;
-        this.relationshipPref = relationshipPref;
-        this.genderPref = genderPref;
-        this.dateLocList = dateLocList;
-        this.profilePicUrl = profilePicUrl;
         this.age = age;
+        this.dateLocList = dateLocList;
+        this.gender = gender;
+        this.genderPref = genderPref;
+        this.interestList = interestList;
+        this.profilePicUrl = profilePicUrl;
+        this.relationshipPref = relationshipPref;
+        this.phone = phone;
+        this.profileCreated = profileCreated;
+        this.username = username;
     }
+
     @Override
     public String toString(){
         return "uid: " + uid + "username: " + username;
     }
     public String getUid() {
         return uid;
-    }
-    public String getEmail() {
-        return email;
     }
     public String getPhone() {
         return phone;
@@ -74,8 +72,8 @@ public class UserObject implements Serializable {
         return age;
     }
 
-    public void setEmail(String email) {
-        this.email = email;
+    public void setUid(String uid) {
+        this.uid = uid;
     }
     public void setPhone(String phone) {
         this.phone = phone;
