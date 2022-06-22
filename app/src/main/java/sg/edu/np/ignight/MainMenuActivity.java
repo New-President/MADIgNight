@@ -97,7 +97,6 @@ public class MainMenuActivity extends AppCompatActivity {
         FirebaseDatabase database = FirebaseDatabase.getInstance("https://madignight-default-rtdb.asia-southeast1.firebasedatabase.app/");
         DatabaseReference myRef = database.getReference("user");
         storage = FirebaseStorage.getInstance("gs://madignight.appspot.com");
-
         myRef.child(Uid).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -131,6 +130,7 @@ public class MainMenuActivity extends AppCompatActivity {
 
             }
         });
+
     }
 
     private void updateConnection() {
@@ -168,4 +168,10 @@ public class MainMenuActivity extends AppCompatActivity {
             }
         });
     }
+
+    public void Refresh(){
+        Intent refresh = new Intent(this, MainMenuActivity.class);
+        startActivity(refresh);
+    }
+
 }

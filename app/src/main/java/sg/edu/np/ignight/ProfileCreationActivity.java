@@ -171,7 +171,7 @@ public class ProfileCreationActivity extends AppCompatActivity {
                     StringBuilder stringBuilder = new StringBuilder();
                     for (int i = 0; i < totalDateLoc; i++) {
                         stringBuilder.append(dateLocList.get(i));
-                        if (totalDateLoc > 1) {
+                        if (i != totalDateLoc - 1) {
                             stringBuilder.append(", ");
                         }
                     }
@@ -259,8 +259,10 @@ public class ProfileCreationActivity extends AppCompatActivity {
                     }
 
                     // Profile Picture
-                    String imageKey = uploadPicture();
-                    nested.child("Profile Picture").setValue(imageKey);
+                    if(imageUri != null){
+                        String imageKey = uploadPicture();
+                        nested.child("Profile Picture").setValue(imageKey);
+                    }
 
                     // set profileCreated to true
                     nested.child("profileCreated").setValue(true);
