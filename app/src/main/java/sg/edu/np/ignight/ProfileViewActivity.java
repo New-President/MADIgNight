@@ -77,7 +77,7 @@ public class ProfileViewActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile_view);
 
-        // Get userObject from main menu
+        // Get userObject from main menu to obtain user info
         UserObject user = (UserObject) getIntent().getSerializableExtra("user");
 
         Log.d("viewprofileuid", user.getUid());
@@ -96,19 +96,23 @@ public class ProfileViewActivity extends AppCompatActivity {
         userObject.setProfilePicUrl("https://m-cdn.phonearena.com/images/review/5269-wide_1200/Google-Pixel-6-review-big-brain-small-price.jpg");
         */
 
-
+        // Firebase and database init
         db = FirebaseDatabase.getInstance("https://madignight-default-rtdb.asia-southeast1.firebasedatabase.app/");
         myRef2 = db.getReference("user");
         myRef = db.getReference().child("chat");
 
+        // obtain user info and init
         currentUserUID = FirebaseAuth.getInstance().getUid();
         targetUserUID = user.getUid();
         interestsDisplay = new ArrayList<>();
         interestsDisplay = user.getInterestList();
+
+        // Show user information and display their profile picture
         ShowInformation(user);
         setProfilePicture(user);
 
-        // add intents for bottom buttons here
+        // Intents for buttons
+        // Return back to main menu
         backButton = findViewById(R.id.profileViewBackButton);
         backButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -119,10 +123,12 @@ public class ProfileViewActivity extends AppCompatActivity {
             }
         });
 
+        // View the profile's blogs
         viewBlogsButton = findViewById(R.id.ViewBlogsBtn);
         viewBlogsButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                // Pass user object to blog for blog to retrieve user info
                 Intent blogPage = new Intent(ProfileViewActivity.this, BlogActivity.class);
                 blogPage.putExtra("canEdit", false);
                 blogPage.putExtra("user", user);
@@ -130,7 +136,7 @@ public class ProfileViewActivity extends AppCompatActivity {
             }
         });
 
-
+        // IgNight with the user (starts a chat with them)
         ignightButton = findViewById(R.id.button4);
         ignightButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -138,29 +144,27 @@ public class ProfileViewActivity extends AppCompatActivity {
                 myRef.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        // Passes relevant info to chat based on whether the chat exists or not
                         boolean chatExists = false;
                         String existingChatID = "";
-
+                        // Check if the chat with the target IgNighted user already exists
                         for (DataSnapshot chatIdSnapshot : snapshot.getChildren()) {
                             ArrayList<String> usersInChat = new ArrayList<>();
-
                             for (DataSnapshot userIdSnapshot : chatIdSnapshot.child("users").getChildren()) {
                                 usersInChat.add(userIdSnapshot.getKey());
                             }
-
                             if (usersInChat.contains(currentUserUID) && usersInChat.contains(targetUserUID)) {
                                 chatExists = true;
                                 existingChatID = chatIdSnapshot.getKey();
                                 break;
                             }
                         }
-
+                        // Passes relevant info to the chat if the chat does not exist
                         if (!chatExists) {
                             String newChatID = myRef.push().getKey();
                             Map userMap = new HashMap<>();
                             userMap.put(currentUserUID, true);
                             userMap.put(targetUserUID, true);
-
                             myRef.child(newChatID).child("users").updateChildren(userMap).addOnCompleteListener(new OnCompleteListener() {
                                 @Override
                                 public void onComplete(@NonNull Task task) {
@@ -200,6 +204,8 @@ public class ProfileViewActivity extends AppCompatActivity {
                 });
             }
         });
+
+        // RecyclerView for interests
         RecyclerView rv = findViewById(R.id.InterestsRecyclerView);
         ProfileViewInterestsAdapter adapter = new ProfileViewInterestsAdapter(ProfileViewActivity.this, interestsDisplay);
         LinearLayoutManager layout = new LinearLayoutManager(this);
@@ -210,8 +216,9 @@ public class ProfileViewActivity extends AppCompatActivity {
         rv.setLayoutManager(layout);
     }
 
+    // Show information related to the user
     public void ShowInformation(UserObject userObject){
-        // inits and sets profileView details to be displayed
+        // Init and sets profileView details to be displayed
         username = (String) userObject.getUsername();
         aboutMe = (String) userObject.getAboutMe();
         whatImLookingFor = (String) userObject.getRelationshipPref();
@@ -226,20 +233,15 @@ public class ProfileViewActivity extends AppCompatActivity {
         textView9.setText(whatImLookingFor);
     }
 
+    // Retrieves profile picture from Firebase Storage and sets it as profile picture
     public void setProfilePicture(UserObject userObject){
         profilePicture = (ImageView) findViewById(R.id.imageView);
 
-        // Gets the image url for the profile picture file
-        //profilePictureUrl = userObject.getProfilePicUrl(); to be implemented in the future
-
-        // code for retrieving profile picture url when getProfileUrl is not being used
-        // Reference to an image file in cloud storage
-
-        // extract user child to get profile picture name
+        // Extract user child to get profile picture name
         myRef2.child(userObject.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                // get profile picture file name
+                // Get profile picture file name
                 String profilePictureName = snapshot.child("Profile Picture").getValue().toString();
                 StorageReference storageReference = FirebaseStorage.
                         getInstance().
@@ -247,6 +249,7 @@ public class ProfileViewActivity extends AppCompatActivity {
                                 userObject.getUid() +
                                 "/" +
                                 profilePictureName);
+                // Set profile picture using Glide
                 Glide.with(getApplicationContext())
                         .load(storageReference)
                        .into(profilePicture);
@@ -255,7 +258,7 @@ public class ProfileViewActivity extends AppCompatActivity {
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
-                // if there is an error retrieving profile pics, show toast
+                // If there is an error retrieving profile pics, show toast
                 Log.d("testError", "testing");
                 Toast.makeText(getApplicationContext(),
                         "Error retrieving profile photo. Please try again later.",
