@@ -57,7 +57,7 @@ public class ProfileCreationActivity extends AppCompatActivity {
     private ArrayList<String> invalidList = new ArrayList<>();
 
     private ImageButton backButton;
-    private Button interestButton, saveChangesButton;
+    private Button interestButton, saveChangesButton, uploadButton;
     private TextView aboutMeTextview, locationPref;
     private EditText aboutMeInput, nameInput, ageInput;
     private Spinner genderDropdown, genderPrefDropdown, relationshipPrefDropdown;
@@ -73,7 +73,9 @@ public class ProfileCreationActivity extends AppCompatActivity {
     private FirebaseStorage storage;
     private StorageReference storageReference;
 
+    // Get the current user
     FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+    //get the current user's UID
     String Uid = user.getUid();
 
     @Override
@@ -81,6 +83,7 @@ public class ProfileCreationActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile_creation);
 
+        //Get the buttons, Spinners, TextInput and TextView
         backButton = findViewById(R.id.profileCreationBackButton);
         interestButton = findViewById(R.id.InterestButton);
         saveChangesButton = findViewById(R.id.SaveChanges);
@@ -92,16 +95,21 @@ public class ProfileCreationActivity extends AppCompatActivity {
         genderDropdown = findViewById(R.id.GenderDropdown);
         genderPrefDropdown = findViewById(R.id.GenderPrefDropdown);
         relationshipPrefDropdown = findViewById(R.id.RelationshipPrefDropdown);
+        imgGallery = findViewById(R.id.ProfileCreationImage);
+        uploadButton = findViewById(R.id.ProfilePicUpload);
         interestRV = findViewById(R.id.interestRecyclerView);
 
-
+        // Initialise the input for users
         InitInputs();
 
 
         Intent receiveIntent = getIntent();
+        // receive the intent from LoginActivity to see if profile has been created
         fromLogin = receiveIntent.getBooleanExtra("fromLogin", false);
+        // receive intent from MainMenuActivity to see if user click to ProfileCreationActivity from the MainMenu
         fromMenu = receiveIntent.getBooleanExtra("ProfileCreated", false);
 
+        // Back button to go back to Login Activity when clicked
         backButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -117,9 +125,8 @@ public class ProfileCreationActivity extends AppCompatActivity {
             }
         });
 
-        imgGallery = findViewById(R.id.ProfileCreationImage);
-        Button uploadButton = findViewById(R.id.ProfilePicUpload);
 
+        // Upload the button from their gallery onto the app
         uploadButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -127,72 +134,105 @@ public class ProfileCreationActivity extends AppCompatActivity {
             }
         });
 
-        // Saving to Firebase
+        // Saving to Firebase database
         FirebaseDatabase database = FirebaseDatabase.getInstance("https://madignight-default-rtdb.asia-southeast1.firebasedatabase.app/");
+        // getting the child user
         DatabaseReference myRef = database.getReference("user");
-
+        // Saving to Firebase storage
         storage = FirebaseStorage.getInstance("gs://madignight.appspot.com");
 
-
+        // if the intent from Main Menu is ture, it means that the user clicked on edit profile
+        // Load all the data from firebase that were keyed in from profile creation, into the input fields
         if (fromMenu) {
+            // getting the child (user's UID)
             myRef.child(Uid).addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    // Get the value of username
                     String existUsername = snapshot.child("username").getValue(String.class);
+                    // Get the value of the user's gender
                     String existGender = snapshot.child("Gender").getValue(String.class);
+                    // Get the user's age
                     Integer existAge = snapshot.child("Age").getValue(Integer.class);
+                    // Get the user's About Me
                     String existAboutMe = snapshot.child("About Me").getValue(String.class);
+                    // Get the user's relationship preference
                     String existRelationshipPref = snapshot.child("Relationship Preference").getValue(String.class);
+                    // Get the user's Gender preference
                     String existGenderPref = snapshot.child("Gender Preference").getValue(String.class);
+                    // Get the user's profile picture random key
                     String existProfilePic = snapshot.child("Profile Picture").getValue(String.class);
 
+                    // Get the total amount of interest the user had inputted
                     Integer totalInterest = (int) snapshot.child("Interest").getChildrenCount();
+                    // Getting the specific interests
                     for (int i = 1; i <= totalInterest; i++) {
                         String existingInterest = snapshot.child("Interest").child("Interest" + i).getValue(String.class);
+                        // Add into interestList
                         interestList.add(existingInterest);
+                        // Load recycler view to show it in View Holder
                         InitRecyclerView();
                     }
 
+                    // Get the total amount of preferred dating locations
                     Integer totalDateLoc = (int) snapshot.child("Date Location").getChildrenCount();
+                    // Getting the specific dating location
                     for (int i = 1; i <= totalDateLoc; i++) {
                         String existingDateLoc = snapshot.child("Date Location").child("Date Location" + i).getValue(String.class);
+                        // Add into dateLocList
                         dateLocList.add(existingDateLoc);
                     }
 
+                    // Set the text of input to the user's username
                     nameInput.setText(existUsername);
+                    // Set age input to user's age
                     ageInput.setText(existAge.toString());
-
+                    // Set About Me input to user's About Me
                     aboutMeInput.setText(existAboutMe);
 
+                    //  Set the gender dropdown value to user's selected gender
                     selectSpinnerValue(genderDropdown, existGender);
+                    //  Set the relationship preference dropdown value to user's selected relationship preference
                     selectSpinnerValue(relationshipPrefDropdown, existRelationshipPref);
+                    //  Set the gender preference dropdown value to user's selected preference
                     selectSpinnerValue(genderPrefDropdown, existGenderPref);
 
+
                     StringBuilder stringBuilder = new StringBuilder();
+                    // Appending the specific dating locations to a string
                     for (int i = 0; i < totalDateLoc; i++) {
                         stringBuilder.append(dateLocList.get(i));
+                        // if i is not equals to the total number of total Date Locations - 1
                         if (i != totalDateLoc - 1) {
                             stringBuilder.append(", ");
                         }
                     }
+                    // Set the text onto the Date Location drop down
                     locationPref.setText(stringBuilder.toString());
 
+                    // Navigate to the Profile picture saved by the user
                     storageReference = storage.getReference().child("profilePicture/" + Uid + "/" + existProfilePic);
 
                     try {
+                        // Get the prefix and suffix of the file
                         final File localFile = File.createTempFile(existProfilePic, existProfilePic);
                         storageReference.getFile(localFile)
+                                // when retrieved the image successfully
                                 .addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
                                     @Override
                                     public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
+                                        // Show that the Picture is retrieved in Toast
                                         Toast.makeText(ProfileCreationActivity.this, "Picture Retrieved", Toast.LENGTH_SHORT).show();
                                         Bitmap bitmap = BitmapFactory.decodeFile(localFile.getAbsolutePath());
+                                        // Display the image
                                         imgGallery.setImageBitmap(bitmap);
                                     }
                                 })
+                                // When failed to retrieve the image
                                 .addOnFailureListener(new OnFailureListener() {
                                     @Override
                                     public void onFailure(@NonNull Exception e) {
+                                        // Show that the picture failed to be retrieved in Toast
                                         Toast.makeText(ProfileCreationActivity.this, "Error Occurred", Toast.LENGTH_SHORT).show();
                                     }
                                 });
@@ -209,13 +249,15 @@ public class ProfileCreationActivity extends AppCompatActivity {
             });
         }
 
+        // When save changes button is clicked
         saveChangesButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                // Get the UID of the user in firebase database
                 DatabaseReference nested = myRef.child(FirebaseAuth.getInstance().getUid());
 
                 // Checking for missing inputs
+                // If no invalid fields
                 if (validFields()) {
                     // Insert into database
                     // Username
@@ -239,6 +281,7 @@ public class ProfileCreationActivity extends AppCompatActivity {
                     DatabaseReference nestedInterest = nested.child("Interest");
                     for (int i = 0; i < interestSize; i++) {
                         String interest = interestList.get(i);
+                        // Save the interest in ascending order from 1
                         nestedInterest.child("Interest" + (i + 1)).setValue(interest);
                     }
 
@@ -255,18 +298,21 @@ public class ProfileCreationActivity extends AppCompatActivity {
                     DatabaseReference nestedDateLoc = nested.child("Date Location");
                     for (int i = 0; i < dateLocSize; i++) {
                         String dateLoc = dateLocList.get(i);
+                        // Save the Date Location in ascending order from 1
                         nestedDateLoc.child("Date Location" + (i + 1)).setValue(dateLoc);
                     }
 
                     // Profile Picture
                     if(imageUri != null){
                         String imageKey = uploadPicture();
+                        // Save the random key of the image generated from uploadPicture()
                         nested.child("Profile Picture").setValue(imageKey);
                     }
 
                     // set profileCreated to true
                     nested.child("profileCreated").setValue(true);
 
+                    // if user just created a new profile, it will bring user back to Main Menu
                     if (fromLogin) {
                         Intent intent = new Intent(getApplicationContext(), MainMenuActivity.class);
                         startActivity(intent);
@@ -274,10 +320,13 @@ public class ProfileCreationActivity extends AppCompatActivity {
                     } else {
                         finish();
                     }
+                    // if there are invalid  fields
                 } else {
+                    // show an alert dialog
                     AlertDialog.Builder alert = new AlertDialog.Builder(ProfileCreationActivity.this);
                     alert.setTitle("Invalid Inputs");
                     String message = "";
+                    // Put the location of the invalid fields
                     for (int i = 0; i < invalidList.size(); i++) {
                         if (i > 0) {
                             message = message + ", " + invalidList.get(i);
@@ -300,23 +349,24 @@ public class ProfileCreationActivity extends AppCompatActivity {
         });
     }
 
+    // method to initialise Inputs
     private void InitInputs() {
-        //Gender
+        //Gender (Spinner, dropdown)
         String[] gender = new String[]{"Male", "Female"};
         ArrayAdapter<String> genderAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, gender);
         genderDropdown.setAdapter(genderAdapter);
 
-        //Relationship Preference
+        //Relationship Preference (Spinner, dropdown)
         String[] relationshipPref = new String[]{"Serious", "Casual", "Friends"};
         ArrayAdapter<String> relationshipPrefAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, relationshipPref);
         relationshipPrefDropdown.setAdapter(relationshipPrefAdapter);
 
-        // Gender Preference
+        // Gender Preference (Spinner, dropdown)
         String[] genderPref = new String[]{"Male", "Female", "Others"};
         ArrayAdapter<String> genderPrefAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, genderPref);
         genderPrefDropdown.setAdapter(genderPrefAdapter);
 
-        // Interest
+        // Interest (drop down button --> display output in a view holder)
         String[] interests = {"Running", "Cooking", "Gaming", "Swimming", "Reading", "Shopping", "Others"};
         boolean[] selectedInterest = new boolean[interests.length];
         ArrayList<Integer> interestCheckedList = new ArrayList<>();
@@ -346,10 +396,13 @@ public class ProfileCreationActivity extends AppCompatActivity {
                 builder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
+                        // remove existing interests from interest List
                         interestList.removeAll(interestList);
+                        // Add all the interests selected in the check box into interestList
                         for (int j = 0; j < interestCheckedList.size(); j++){
                             interestList.add(interests[interestCheckedList.get(j)]);
                         }
+                        // Initialise recycler view to display interests selected in view holder
                         InitRecyclerView();
                     }
                 });
@@ -361,14 +414,17 @@ public class ProfileCreationActivity extends AppCompatActivity {
                     }
                 });
 
+                // When clear all is selected
                 builder.setNeutralButton("Clear All", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
+                        // Remove all interests from the different list
                         for (int j = 0; j < selectedInterest.length; j++){
                             selectedInterest[j] = false;
                             interestCheckedList.clear();
                             interestList.removeAll(interestList);
                         }
+                        // Initialise recycler view again to display the changes that user had cleared all interest selected
                         InitRecyclerView();
                     }
                 });
@@ -383,6 +439,7 @@ public class ProfileCreationActivity extends AppCompatActivity {
 
             }
 
+            // Change the size of the text when the length of text increases
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
                 aboutMeTextview.setText(charSequence.toString());
@@ -428,15 +485,18 @@ public class ProfileCreationActivity extends AppCompatActivity {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                         StringBuilder stringBuilder = new StringBuilder();
+                        // Remove existing date Location list
                         dateLocList.removeAll(dateLocList);
                         for (int j = 0; j < locationCheckedList.size(); j++) {
+                            // Append location to string builder
                             stringBuilder.append(locations[locationCheckedList.get(j)]);
+                            // Add specific date location to dateLocList
                             dateLocList.add(locations[locationCheckedList.get(j)]);
                             if (j != locationCheckedList.size() - 1) {
                                 stringBuilder.append(", ");
                             }
                         }
-
+                        // Display the locations selected on the check box on the drop down button
                         locationPref.setText(stringBuilder.toString());
                     }
                 });
@@ -451,6 +511,7 @@ public class ProfileCreationActivity extends AppCompatActivity {
                 builder.setNeutralButton("Clear All", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
+                        // Remove everything from lists when clear all is selected
                         for (int j = 0; j < selectedLocation.length; j++) {
                             selectedLocation[j] = false;
                             locationCheckedList.clear();
@@ -468,6 +529,7 @@ public class ProfileCreationActivity extends AppCompatActivity {
     private void InitRecyclerView() {
         ProfileCreationAdapter adapter = new ProfileCreationAdapter(ProfileCreationActivity.this, interestList);
         LinearLayoutManager layout = new LinearLayoutManager(this);
+        // change the layout to horizontal
         layout.setOrientation(LinearLayoutManager.HORIZONTAL);
 
         interestRV.setAdapter(adapter);
@@ -547,6 +609,7 @@ public class ProfileCreationActivity extends AppCompatActivity {
         return (invalidFieldCount == 0);
     }
 
+    // Select the chosen spinner value to display when loading back user's input
     private void selectSpinnerValue(Spinner spinner, String myString) {
         int index = 0;
         for (int i = 0; i < spinner.getCount(); i++) {
@@ -557,8 +620,10 @@ public class ProfileCreationActivity extends AppCompatActivity {
         }
     }
 
+    // allowing user's to choose different pictures from their gallery
     public void choosePicture() {
         Intent intent = new Intent();
+        // Specifically upload only png images
         intent.setType("image/png");
         intent.setAction(Intent.ACTION_GET_CONTENT);
         startActivityForResult(intent, Gallery_Request);
@@ -568,10 +633,11 @@ public class ProfileCreationActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
+        // When result code is ok
         if (resultCode == RESULT_OK) {
             // if everything processed successfully
             if (requestCode == Gallery_Request) {
-                // get Uri
+                // get image Uri
                 imageUri = data.getData();
 
                 InputStream inputStream;
@@ -590,26 +656,32 @@ public class ProfileCreationActivity extends AppCompatActivity {
         }
     }
 
+    // uploading the pictures to database storage
     public String uploadPicture() {
 
         final String randomKey = UUID.randomUUID().toString();
         storage = FirebaseStorage.getInstance("gs://madignight.appspot.com");
+        // putting the images to the specific folders, their own UID
+        // the images are labelled with a random key
         storageReference = storage.getReference().child("profilePicture/" + Uid).child(randomKey);
 
         storageReference.putFile(imageUri)
                 .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                     @Override
                     public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                        // Get a URL to the uploaded content
+                        // Display image successfully uploaded with Toast
                         Toast.makeText(getApplicationContext(), "Image uploaded", Toast.LENGTH_SHORT).show();
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
+                        // Display image failed to upload with Toast
                         Toast.makeText(getApplicationContext(), "Failed to Upload", Toast.LENGTH_SHORT).show();
                     }
                 });
+        // return the random key generated so that it can be stored into firebase database
+        // When users logs in again, the firebase knows which photo to choose from firebase storage
         return randomKey;
     }
 }
