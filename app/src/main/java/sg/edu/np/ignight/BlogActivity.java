@@ -44,7 +44,7 @@ public class BlogActivity extends AppCompatActivity {
         FirebaseUser user = auth.getCurrentUser();
 
 
-        // For viewing own profile
+        // When viewing own profile, gets own UID
         String uid = user.getUid();
 
         database = FirebaseDatabase.getInstance("https://madignight-default-rtdb.asia-southeast1.firebasedatabase.app/");

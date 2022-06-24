@@ -115,6 +115,8 @@ public class CreateBlogActivity extends AppCompatActivity {
                     BlogObject newBlog = new BlogObject(blogDesc, blogLoc, uploadImage(c), blogID);
                     // Store in firebase under Users
                     databaseReference.child(blogID).setValue(newBlog);
+
+                    // Creates loading dialog with 6 seconds delay for image to upload
                     loadingBlogDialog.startLoadingDialog();
                     Handler handler = new Handler();
                     handler.postDelayed(new Runnable() {
@@ -129,6 +131,7 @@ public class CreateBlogActivity extends AppCompatActivity {
             }
         });
 
+        // Debug
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -158,6 +161,7 @@ public class CreateBlogActivity extends AppCompatActivity {
 
     }
 
+    // Upload blog image to firebase storage
     @RequiresApi(api = Build.VERSION_CODES.N)
     public String uploadImage(Context c){
         final String randomKey = UUID.randomUUID().toString();
