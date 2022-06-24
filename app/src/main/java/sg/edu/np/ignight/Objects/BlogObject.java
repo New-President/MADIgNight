@@ -20,68 +20,64 @@ public class BlogObject {
         this.commentsList = new ArrayList<>();
     }
 
+    public BlogObject(String description, String location, String imgID, String blogID, int likes, int comments, boolean liked, ArrayList<String> commentsList){
+        this.description = description;
+        this.location = location;
+        this.imgID = imgID;
+        this.blogID = blogID;
+        this.likes = likes;
+        this.comments = comments;
+        this.liked = liked;
+        this.commentsList = commentsList;
+    }
+
     public BlogObject(){ }
 
     public String getDescription() {
         return description;
     }
-
     public void setDescription(String description) {
         this.description = description;
     }
-
     public String getLocation() {
         return location;
     }
-
     public void setLocation(String location) {
         this.location = location;
     }
-
     public String getImgID() {
         return imgID;
     }
-
     public void setImgID(String imgUri) {
         this.imgID = imgUri;
     }
-
     public ArrayList<String> getCommentsList() {
         return commentsList;
     }
-
     public void setCommentsList(ArrayList<String> commentsList) {
         this.commentsList = commentsList;
     }
-
     public String getBlogID() {
         return blogID;
     }
-
     public void setBlogID(String blogID) {
         this.blogID = blogID;
     }
-
     public int getLikes() {
         return likes;
     }
-
     public void setLikes(int likes) {
         this.likes = likes;
     }
-
     public int getComments() {
         return comments;
     }
-
     public void setComments(int comments) {
         this.comments = comments;
     }
-
     public boolean isLiked() {
         return liked;
     }
-
     public void setLiked(boolean liked) {
         this.liked = liked;
     }

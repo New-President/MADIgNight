@@ -12,6 +12,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
@@ -19,6 +20,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -36,8 +38,11 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
 import java.util.Random;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.UUID;
 
+import sg.edu.np.ignight.Blog.LoadingBlogDialog;
 import sg.edu.np.ignight.Objects.BlogObject;
 
 public class CreateBlogActivity extends AppCompatActivity {
@@ -47,7 +52,7 @@ public class CreateBlogActivity extends AppCompatActivity {
     private Uri imgUri;
     private Button uploadBtn;
     private String uid;
-
+    private int counter = 0;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -60,8 +65,7 @@ public class CreateBlogActivity extends AppCompatActivity {
         FirebaseDatabase database = FirebaseDatabase.getInstance("https://madignight-default-rtdb.asia-southeast1.firebasedatabase.app");
         DatabaseReference databaseReference = database.getReference("user").child(uid).child("blog");
 
-
-        ProgressDialog pd = new ProgressDialog(this);
+        final LoadingBlogDialog loadingBlogDialog = new LoadingBlogDialog(CreateBlogActivity.this);
         ImageButton backBtn = findViewById(R.id.createBlogBackButton);
         blogImg = findViewById(R.id.createBlogImg);
         uploadBtn = findViewById(R.id.uploadBtn);
@@ -80,6 +84,7 @@ public class CreateBlogActivity extends AppCompatActivity {
         uploadBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                // Opens photo gallery and takes photo as input only
                 Intent galleryIntent = new Intent(Intent.ACTION_GET_CONTENT);
                 galleryIntent.setType("image/*");
                 startActivityForResult(galleryIntent, GALLERY_REQUEST);
@@ -91,11 +96,10 @@ public class CreateBlogActivity extends AppCompatActivity {
             @RequiresApi(api = Build.VERSION_CODES.N)
             @Override
             public void onClick(View view) {
-
                 String blogDesc = editDesc.getText().toString().trim();
                 String blogLoc = editLocation.getText().toString().trim();
 
-
+                // Input Validation for missing blog image, description and location
                 if (imgUri == null) {
                     errorMsg.setText("Upload an image before posting!");
                 }
@@ -106,19 +110,28 @@ public class CreateBlogActivity extends AppCompatActivity {
                     errorMsg.setText("Enter a location");
                 }
                 else{
-
-                    pd.setMessage("Posting Blog..");
-                    pd.show();
-                    String blogID = givenUsingJava8_whenGeneratingRandomAlphanumericString_thenCorrect();
+                    // Creates a unique ID for the blog post
+                    String blogID = databaseReference.push().getKey();
                     BlogObject newBlog = new BlogObject(blogDesc, blogLoc, uploadImage(c), blogID);
                     // Store in firebase under Users
                     databaseReference.child(blogID).setValue(newBlog);
-                    pd.dismiss();
-                    finish();
+
+                    // Creates loading dialog with 6 seconds delay for image to upload
+                    loadingBlogDialog.startLoadingDialog();
+                    Handler handler = new Handler();
+                    handler.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            loadingBlogDialog.dismissDialog();
+                            finish();
+                        }
+                    }, 6000);
+
                 }
             }
         });
 
+        // Debug
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -134,7 +147,7 @@ public class CreateBlogActivity extends AppCompatActivity {
             }
         });
     }
-
+    // Retrieves input from the gallery intent and sets image in blog
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -148,6 +161,7 @@ public class CreateBlogActivity extends AppCompatActivity {
 
     }
 
+    // Upload blog image to firebase storage
     @RequiresApi(api = Build.VERSION_CODES.N)
     public String uploadImage(Context c){
         final String randomKey = UUID.randomUUID().toString();
@@ -159,6 +173,7 @@ public class CreateBlogActivity extends AppCompatActivity {
                     @Override
                     public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                         //Snackbar.make(view, "Image Uploaded", Snackbar.LENGTH_LONG).show();
+
                         Toast.makeText(c, "Blog uploaded", Toast.LENGTH_LONG).show();
                     }
                 })
@@ -170,19 +185,4 @@ public class CreateBlogActivity extends AppCompatActivity {
                 });
         return randomKey;
     }
-    @RequiresApi(api = Build.VERSION_CODES.N)
-    public String givenUsingJava8_whenGeneratingRandomAlphanumericString_thenCorrect() {
-        int leftLimit = 48; // numeral '0'
-        int rightLimit = 122; // letter 'z'
-        int targetStringLength = 28;
-        Random random = new Random();
-
-        return random.ints(leftLimit, rightLimit + 1)
-                .filter(i -> (i <= 57 || i >= 65) && (i <= 90 || i >= 97))
-                .limit(targetStringLength)
-                .collect(StringBuilder::new, StringBuilder::appendCodePoint, StringBuilder::append)
-                .toString();
-    }
-
-
 }
