@@ -15,6 +15,7 @@ public class LoadingBlogDialog {
         activity = a;
     }
 
+    // Creates custom loading bar
     public void startLoadingDialog(){
         AlertDialog.Builder builder = new AlertDialog.Builder(activity);
 
@@ -25,6 +26,8 @@ public class LoadingBlogDialog {
         dialog.show();
 
     }
+
+    // Destroys loading bar
     public void dismissDialog(){
         dialog.dismiss();
     }
