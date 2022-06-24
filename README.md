@@ -30,11 +30,11 @@ Keefe Cheong Wenkai -
 ## Appendices (diagrams, screenshots, user guides):
 
 ### Play Store listing screenshots
-![Screenshot 2022-06-21 030244](https://user-images.githubusercontent.com/103987209/175239704-8bbb1077-39ae-4d51-84df-8a9395a6ff46.png)
-![Screenshot 2022-06-21 030326](https://user-images.githubusercontent.com/103987209/175239720-959ae8af-d0be-4c31-a1b8-8f6c4d8b7b9e.png)
-![Screenshot 2022-06-21 030346](https://user-images.githubusercontent.com/103987209/175239771-9fa8ec0a-80a0-4060-bf7a-bfb1ef4e3101.png)
-![Screenshot 2022-06-21 030403](https://user-images.githubusercontent.com/103987209/175239785-1934918d-8915-481f-9e2b-821dc0f69130.png)
-![Screenshot 2022-06-21 030416](https://user-images.githubusercontent.com/103987209/175239795-11d3c98d-3f4b-4e61-9612-20fc2ccb0f03.png)
+![Screenshot 2022-06-21 020225](https://user-images.githubusercontent.com/103987209/175459237-3f93641f-0432-4e65-a6aa-a2c41f7eab6d.png)
+![Screenshot 2022-06-21 030326](https://user-images.githubusercontent.com/103987209/175459245-9168ea27-3479-4263-be1a-deb57992567a.png)
+![Screenshot 2022-06-21 030346](https://user-images.githubusercontent.com/103987209/175459248-83e01fb2-0ecb-40b1-bae5-3d74d2c880e8.png)
+![Screenshot 2022-06-21 030403](https://user-images.githubusercontent.com/103987209/175459263-e1ea3a16-4931-47ff-a107-86392d463027.png)
+![Screenshot 2022-06-23 232659](https://user-images.githubusercontent.com/103987209/175459273-51aa8912-ff8b-4f8e-ab1e-300dbd4762ea.png)
 
 ### In-app screenshots
 
