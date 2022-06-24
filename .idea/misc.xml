@@ -13,13 +13,9 @@
         <entry key="..\:/AndroidStudioProjects/MADIgNight2/app/src/main/res/layout/item_message_to_you.xml" value="0.1945288753799392" />
         <entry key="..\:/AndroidStudioProjects/MADIgNight2/app/src/main/res/layout/main_menu_layout.xml" value="0.1945288753799392" />
         <entry key="..\:/AndroidStudioProjects/MADIgNight2/app/src/main/res/layout/profile_creation_interest_layout.xml" value="0.1945288753799392" />
-        <entry key="..\:/AndroidStudioProjects/MADIgNight6/app/src/main/res/layout/profile_view_recycler_layout.xml" value="0.4" />
-        <entry key="..\:/AndroidStudioProjects/MADIgNightFinale4/app/src/main/res/drawable/ignight_btn.xml" value="0.1" />
-        <entry key="..\:/AndroidStudioProjects/MADIgNightFinale4/app/src/main/res/drawable/interest_btn.xml" value="0.1" />
-        <entry key="..\:/AndroidStudioProjects/MADIgNightFinale4/app/src/main/res/drawable/round_rectangle.xml" value="0.1" />
-        <entry key="..\:/AndroidStudioProjects/MADIgNightFinale4/app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml" value="0.1" />
         <entry key="..\:/Users/jason/Desktop/Y2/Sem1/MAD/App/ASG/IgNight/app/src/main/res/drawable-v24/ic_launcher_foreground.xml" value="0.1" />
         <entry key="..\:/Users/jason/Desktop/Y2/Sem1/MAD/App/ASG/IgNight/app/src/main/res/drawable/btn_bg.xml" value="0.18" />
+        <entry key="..\:/Users/jason/Desktop/Y2/Sem1/MAD/App/ASG/IgNight/app/src/main/res/drawable/custom_dialog.xml" value="0.11" />
         <entry key="..\:/Users/jason/Desktop/Y2/Sem1/MAD/App/ASG/IgNight/app/src/main/res/drawable/gradient_background.xml" value="0.1255" />
         <entry key="..\:/Users/jason/Desktop/Y2/Sem1/MAD/App/ASG/IgNight/app/src/main/res/drawable/ic_launcher_background.xml" value="0.1" />
         <entry key="..\:/Users/jason/Desktop/Y2/Sem1/MAD/App/ASG/IgNight/app/src/main/res/drawable/ignight_btn.xml" value="0.1" />
@@ -42,6 +38,7 @@
         <entry key="..\:/Users/jason/Desktop/Y2/Sem1/MAD/App/ASG/IgNight/app/src/main/res/layout/activity_view_profile.xml" value="0.22826086956521738" />
         <entry key="..\:/Users/jason/Desktop/Y2/Sem1/MAD/App/ASG/IgNight/app/src/main/res/layout/blog_layout.xml" value="0.176" />
         <entry key="..\:/Users/jason/Desktop/Y2/Sem1/MAD/App/ASG/IgNight/app/src/main/res/layout/blog_likecomment_layout.xml" value="0.264" />
+        <entry key="..\:/Users/jason/Desktop/Y2/Sem1/MAD/App/ASG/IgNight/app/src/main/res/layout/custom_dialog.xml" value="0.264" />
         <entry key="..\:/Users/jason/Desktop/Y2/Sem1/MAD/App/ASG/IgNight/app/src/main/res/layout/friendlist_layout.xml" value="0.25" />
         <entry key="..\:/Users/jason/Desktop/Y2/Sem1/MAD/App/ASG/IgNight/app/src/main/res/layout/hamburger.xml" value="0.21965579710144928" />
         <entry key="..\:/Users/jason/Desktop/Y2/Sem1/MAD/App/ASG/IgNight/app/src/main/res/layout/interest_layout.xml" value="0.25" />

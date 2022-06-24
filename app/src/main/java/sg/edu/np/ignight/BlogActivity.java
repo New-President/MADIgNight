@@ -42,21 +42,25 @@ public class BlogActivity extends AppCompatActivity {
         blogsList = new ArrayList<>();
         FirebaseAuth auth = FirebaseAuth.getInstance();
         FirebaseUser user = auth.getCurrentUser();
+
+
         // For viewing own profile
         String uid = user.getUid();
-
 
         database = FirebaseDatabase.getInstance("https://madignight-default-rtdb.asia-southeast1.firebasedatabase.app/");
         UserObject userObject = (UserObject) getIntent().getSerializableExtra("user");
 
+        // Takes user's own UID to retrieve their own blogs when 'Create Blogs' is pressed in the Main Menu side menu
         if (userObject == null){
             databaseReference = database.getReference("user").child(uid).child("blog");
         }
+        // Retrieves other profiles there is retrieved userObject from ProfileActivity
         else{
             databaseReference = database.getReference("user").child(userObject.getUid()).child("blog");
         }
 
         RecyclerView rv = findViewById(R.id.blogRecycler);
+        // Updates changes to the activity when a change is made in the database
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -64,11 +68,11 @@ public class BlogActivity extends AppCompatActivity {
                 List<String> keys = new ArrayList<>();
                 for(DataSnapshot keyNode : snapshot.getChildren()){
                     keys.add(keyNode.getKey());
-                    //Log.d("key", keyNode.getKey());
                     BlogObject blog = keyNode.getValue(BlogObject.class);
                     blogsList.add(blog);
                 }
 
+                // Reloads adapter when there is a change in database
                 BlogAdapter adapter = new BlogAdapter(BlogActivity.this, blogsList, userObject);
                 rv.setAdapter(adapter);
                 LinearLayoutManager layout = new LinearLayoutManager(context);
@@ -82,10 +86,9 @@ public class BlogActivity extends AppCompatActivity {
             }
         });
 
-        ImageButton backBtn = findViewById(R.id.BlogBackButton);
 
+        // Only show the create blogs button when viewing own profile
         FloatingActionButton createBlogBtn = findViewById(R.id.createBlogBtn);
-
         Boolean canEdit = getIntent().getBooleanExtra("canEdit", false);
         if(!canEdit){
             createBlogBtn.setVisibility(View.GONE);
@@ -94,6 +97,8 @@ public class BlogActivity extends AppCompatActivity {
             createBlogBtn.setVisibility(View.VISIBLE);
         }
 
+        // Goes back to previous activity
+        ImageButton backBtn = findViewById(R.id.BlogBackButton);
         backBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -101,7 +106,7 @@ public class BlogActivity extends AppCompatActivity {
             }
         });
 
-
+        // If the create blog button is present, goes to CreateBlogActivity
         createBlogBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
