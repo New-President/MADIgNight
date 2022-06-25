@@ -8,44 +8,49 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:minHeight="55dp"
-        android:paddingStart="2dp"
-        android:background="#000000"
+        android:background="@drawable/gradient_background"
+        android:gravity="center_vertical"
+        android:minHeight="70dp"
         android:orientation="horizontal"
-        android:gravity="center_vertical">
+        android:paddingStart="2dp">
 
         <ImageButton
             android:id="@+id/messageLayoutHeaderBack"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:background="#00FFFFFF"
             android:clickable="true"
             android:focusable="true"
-            android:src="@drawable/ic_baseline_arrow_back_24"/>
+            android:paddingLeft="20dp"
+            android:src="@drawable/ic_baseline_arrow_back_24" />
 
         <LinearLayout
+            android:id="@+id/messageLayoutHeaderUserInfo"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:gravity="center_vertical"
             android:orientation="vertical"
-            android:paddingStart="5dp"
-            android:id="@+id/messageLayoutHeaderUserInfo"
-            android:gravity="center_vertical">
+            android:paddingStart="5dp">
 
             <TextView
                 android:id="@+id/messageLayoutHeaderChatName"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:fontFamily="@font/amaranth_bold"
+                android:paddingLeft="20dp"
                 android:text="Username"
                 android:textColor="#ffffff"
-                android:textSize="20sp"/>
+                android:textSize="20sp" />
 
             <TextView
+                android:id="@+id/userOnlineStatus"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/userOnlineStatus"
+                android:paddingLeft="20dp"
                 android:text="Online"
                 android:textColor="#ffffff"
                 android:textSize="14sp"
-                android:visibility="gone"/>
+                android:visibility="gone" />
 
         </LinearLayout>
 

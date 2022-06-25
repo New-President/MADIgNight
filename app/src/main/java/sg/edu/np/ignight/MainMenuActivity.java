@@ -52,7 +52,7 @@ public class MainMenuActivity extends AppCompatActivity {
         ownprofile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent mainmenu_to_sidemenu = new Intent(MainMenuActivity.this, side_menu.class);
+                Intent mainmenu_to_sidemenu = new Intent(MainMenuActivity.this, SideMenu.class);
                 startActivity(mainmenu_to_sidemenu);
                 overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_left);
             }
