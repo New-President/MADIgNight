@@ -23,7 +23,7 @@
             android:exported="false" >
         </activity>
         <activity
-            android:name=".side_menu"
+            android:name=".SideMenu"
             android:exported="false"
             android:theme="@style/Theme_side_menu" />
         <activity
@@ -37,7 +37,8 @@
             android:exported="false" />
         <activity
             android:name=".MainMenuActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".LoginActivity"
             android:exported="true"

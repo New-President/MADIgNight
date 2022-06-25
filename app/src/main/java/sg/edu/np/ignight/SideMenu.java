@@ -1,7 +1,6 @@
 package sg.edu.np.ignight;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -14,9 +13,7 @@ import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.WindowManager;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -37,7 +34,7 @@ import com.google.firebase.storage.StorageReference;
 import java.io.File;
 import java.io.IOException;
 
-public class side_menu extends Activity {
+public class SideMenu extends Activity {
 
     private FirebaseStorage storage;
     private StorageReference storageReference;
@@ -48,7 +45,7 @@ public class side_menu extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_side_menu2);
+        setContentView(R.layout.activity_side_menu);
 
         // Side menu layout
         DisplayMetrics dm = new DisplayMetrics();
@@ -56,7 +53,7 @@ public class side_menu extends Activity {
         int width = dm.widthPixels;
         int height = dm.heightPixels;
 
-        getWindow().setLayout((int)(width*.5),height);
+        getWindow().setLayout((int)(width*.7),height);
 
         WindowManager.LayoutParams params = getWindow().getAttributes();
         params.gravity = Gravity.START;
@@ -78,7 +75,7 @@ public class side_menu extends Activity {
         editprofile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent editProfile = new Intent(side_menu.this, ProfileCreationActivity.class);
+                Intent editProfile = new Intent(SideMenu.this, ProfileCreationActivity.class);
                 editProfile.putExtra("ProfileCreated", true);
                 startActivity(editProfile);
             }
@@ -112,7 +109,7 @@ public class side_menu extends Activity {
         TandC.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent main_to_tnc = new Intent(side_menu.this, TNC.class);
+                Intent main_to_tnc = new Intent(SideMenu.this, TNC.class);
                 startActivity(main_to_tnc);
             }
         });
@@ -134,7 +131,7 @@ public class side_menu extends Activity {
         createBlogBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent createBlog = new Intent(side_menu.this, BlogActivity.class);
+                Intent createBlog = new Intent(SideMenu.this, BlogActivity.class);
                 createBlog.putExtra("canEdit", true);
                 startActivity(createBlog);
             }
@@ -159,7 +156,7 @@ public class side_menu extends Activity {
                             .addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
                                 @Override
                                 public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
-                                    Toast.makeText(side_menu.this, "Picture Retrieved", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(SideMenu.this, "Picture Retrieved", Toast.LENGTH_SHORT).show();
                                     Bitmap bitmap = BitmapFactory.decodeFile(localFile.getAbsolutePath());
                                     profilePicSideMenu.setImageBitmap(bitmap);
                                 }
@@ -167,7 +164,7 @@ public class side_menu extends Activity {
                             .addOnFailureListener(new OnFailureListener() {
                                 @Override
                                 public void onFailure(@NonNull Exception e) {
-                                    Toast.makeText(side_menu.this, "Error Occurred", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(SideMenu.this, "Error Occurred", Toast.LENGTH_SHORT).show();
                                 }
                             });
                 } catch (IOException e) {

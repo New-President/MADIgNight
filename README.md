@@ -27,16 +27,78 @@ Han Xihe -
 
 Keefe Cheong Wenkai -
 
-## Appendices (diagrams, screenshots, user guides):
+## Appendices (features, screenshots, user guide):
+
+### Features
+
+* Login/Registration page
+    * Enter an existing +65 number to login 
+    * Enter a new +65 number to login
+    * Send OTP to receive an OTP for login 
+    * Wrong number reset 
+* Main menu
+    * Side menu
+        * Edit profile 
+        * About Us (to be implemented in Stage 2)
+        * Premium Service (to be implemented in Stage 2)
+        * Map (to be implemented in Stage 2)
+        * Terms and Conditions (to be implemented in Stage 2)
+        * Create Blogs 
+        * Log Out  
+    * Search for other users
+    * 'Next' button to cycle to the next user
+    * 'IgNight' button to "IgNight" with a user, which starts a chat with them
+    * 'Home' button to return to home
+* View Profile
+    * Displays profile information
+        * Username and Age
+        * RecyclerView interests
+        * About Me
+        * What I'm Looking For 
+    * 'Blog' button to open the blog for the user 
+    * 'IgNight' button to "IgNight" with a user, which starts a chat with them
+* Chat list
+    * Shows RecyclerView of all IgNighted chats 
+    * Select chats to open chat
+* Chat 
+    * Chat with an IgNighted user
+    * Send texts
+    * Send media
+    * Date log for each session
+    * Time log for each session 
+    * Time sent
+    * Last seen online date and time
+* Blogs
+    * Create posts
+    * See posts by other users
+    * Like posts 
+* Create blog posts
+    * Upload post media
+    * Set post description
+    * Set app location
+    * Create post 
+ * Create profile / Edit profile (for existing users)
+    * Create profile for new users
+    * Set username 
+    * Set gender and age
+    * Upload profile picture
+    * Set 'About Me'
+    * Add 'Interests'
+    * Set 'Preferences' for relationship type and gender 
+    * Add date location
+    * Save profile changes 
 
 ### Play Store listing screenshots
+
 ![Screenshot 2022-06-21 020225](https://user-images.githubusercontent.com/103987209/175459237-3f93641f-0432-4e65-a6aa-a2c41f7eab6d.png)
 ![Screenshot 2022-06-21 030326](https://user-images.githubusercontent.com/103987209/175459245-9168ea27-3479-4263-be1a-deb57992567a.png)
 ![Screenshot 2022-06-21 030346](https://user-images.githubusercontent.com/103987209/175459248-83e01fb2-0ecb-40b1-bae5-3d74d2c880e8.png)
 ![Screenshot 2022-06-21 030403](https://user-images.githubusercontent.com/103987209/175459263-e1ea3a16-4931-47ff-a107-86392d463027.png)
 ![Screenshot 2022-06-23 232659](https://user-images.githubusercontent.com/103987209/175459273-51aa8912-ff8b-4f8e-ab1e-300dbd4762ea.png)
 
-### In-app screenshots
-
-
 ### User guide
+
+To begin for both existing and new users, enter your eight-digit phone number and tap on the OTP button. Receive your OTP via SMS and enter it into the OTP box. Tap on tbhe Reset button for the wrong number. 
+Once logged in, tap your profile picture on the top left to view the side menu, and the Search box to search for users based on their username. Tap on the Next button to cycle through users to IgNight with, and IgNight to IgNight (Start a chat) with the target user. Tap on Chat to view all existing IgNighted chats. 
+To view the profile of each user, tap on the profile picture. Blog shows the blog posts by the user, while IgNight starts a chat with the user. 
+In chat, select the text box and the send button to write and send texts. Use the image button to send media. 
