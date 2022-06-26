@@ -17,15 +17,15 @@ A revamped dating app that incoporates blogs to express their passions for poten
 
 ## Contributions:
 
-Yong Zi Ren - 
+Yong Zi Ren - Main Menu, Side Menu
 
-Lee Wee Kang -
+Lee Wee Kang - View Blog, Create Blog
 
-Lim Long Teck -
+Lim Long Teck - Create Profile, Edit Profile
 
-Han Xihe - 
+Han Xihe - View Profile, Play Store listing
 
-Keefe Cheong Wenkai -
+Keefe Cheong Wenkai - Login, Chat List Fragment, Chat
 
 ## Appendices (features, screenshots, user guide):
 
@@ -36,6 +36,7 @@ Keefe Cheong Wenkai -
     * Enter a new +65 number to login
     * Send OTP to receive an OTP for login 
     * Wrong number reset 
+    
 * Main menu
     * Side menu
         * Edit profile 

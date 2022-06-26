@@ -13,31 +13,47 @@
         <entry key="..\:/AndroidStudioProjects/MADIgNight2/app/src/main/res/layout/item_message_to_you.xml" value="0.1945288753799392" />
         <entry key="..\:/AndroidStudioProjects/MADIgNight2/app/src/main/res/layout/main_menu_layout.xml" value="0.1945288753799392" />
         <entry key="..\:/AndroidStudioProjects/MADIgNight2/app/src/main/res/layout/profile_creation_interest_layout.xml" value="0.1945288753799392" />
+        <entry key="..\:/AndroidStudioProjects/MADIgNight6/app/src/main/res/layout/activity_about_us.xml" value="0.11398176291793313" />
+        <entry key="..\:/AndroidStudioProjects/MADIgNight6/app/src/main/res/layout/activity_blog.xml" value="0.11398176291793313" />
+        <entry key="..\:/AndroidStudioProjects/MADIgNight6/app/src/main/res/layout/activity_chat.xml" value="0.11398176291793313" />
+        <entry key="..\:/AndroidStudioProjects/MADIgNight6/app/src/main/res/layout/activity_create_blog.xml" value="0.264" />
+        <entry key="..\:/AndroidStudioProjects/MADIgNight6/app/src/main/res/layout/activity_homepage_fragment.xml" value="0.11398176291793313" />
+        <entry key="..\:/AndroidStudioProjects/MADIgNight6/app/src/main/res/layout/activity_login.xml" value="0.11398176291793313" />
+        <entry key="..\:/AndroidStudioProjects/MADIgNight6/app/src/main/res/layout/activity_main_menu.xml" value="0.11398176291793313" />
+        <entry key="..\:/AndroidStudioProjects/MADIgNight6/app/src/main/res/layout/activity_profile_creation.xml" value="0.264" />
+        <entry key="..\:/AndroidStudioProjects/MADIgNight6/app/src/main/res/layout/activity_profile_view.xml" value="0.2" />
+        <entry key="..\:/AndroidStudioProjects/MADIgNight6/app/src/main/res/layout/activity_side_menu.xml" value="0.21784420289855072" />
+        <entry key="..\:/AndroidStudioProjects/MADIgNight6/app/src/main/res/layout/activity_side_menu2.xml" value="0.11398176291793313" />
+        <entry key="..\:/AndroidStudioProjects/MADIgNight6/app/src/main/res/layout/activity_tnc.xml" value="0.11398176291793313" />
+        <entry key="..\:/AndroidStudioProjects/MADIgNight6/app/src/main/res/layout/blog_layout.xml" value="0.11398176291793313" />
+        <entry key="..\:/AndroidStudioProjects/MADIgNight6/app/src/main/res/layout/custom_dialog.xml" value="0.11398176291793313" />
+        <entry key="..\:/AndroidStudioProjects/MADIgNight6/app/src/main/res/layout/fragment_chat_list.xml" value="0.11398176291793313" />
+        <entry key="..\:/AndroidStudioProjects/MADIgNight6/app/src/main/res/layout/interest_layout.xml" value="0.11398176291793313" />
+        <entry key="..\:/AndroidStudioProjects/MADIgNight6/app/src/main/res/layout/item_chat.xml" value="0.11398176291793313" />
+        <entry key="..\:/AndroidStudioProjects/MADIgNight6/app/src/main/res/layout/item_media.xml" value="0.11398176291793313" />
+        <entry key="..\:/AndroidStudioProjects/MADIgNight6/app/src/main/res/layout/item_message_by_you.xml" value="0.11398176291793313" />
+        <entry key="..\:/AndroidStudioProjects/MADIgNight6/app/src/main/res/layout/item_message_to_you.xml" value="0.11398176291793313" />
+        <entry key="..\:/AndroidStudioProjects/MADIgNight6/app/src/main/res/layout/main_menu_layout.xml" value="0.11398176291793313" />
+        <entry key="..\:/AndroidStudioProjects/MADIgNight6/app/src/main/res/layout/profile_creation_interest_layout.xml" value="0.11398176291793313" />
+        <entry key="..\:/AndroidStudioProjects/MADIgNight6/app/src/main/res/layout/profile_view_recycler_layout.xml" value="0.11398176291793313" />
+        <entry key="..\:/AndroidStudioProjects/MADIgNight6/app/src/main/res/layout/toast_message_bg.xml" value="0.11398176291793313" />
         <entry key="..\:/Users/jason/Desktop/Y2/Sem1/MAD/App/ASG/IgNight/app/src/main/res/drawable-v24/ic_launcher_foreground.xml" value="0.1" />
-        <entry key="..\:/Users/jason/Desktop/Y2/Sem1/MAD/App/ASG/IgNight/app/src/main/res/drawable-v24/round_orange_rectangle.xml" value="0.1" />
         <entry key="..\:/Users/jason/Desktop/Y2/Sem1/MAD/App/ASG/IgNight/app/src/main/res/drawable/btn_bg.xml" value="0.18" />
         <entry key="..\:/Users/jason/Desktop/Y2/Sem1/MAD/App/ASG/IgNight/app/src/main/res/drawable/custom_dialog.xml" value="0.11" />
         <entry key="..\:/Users/jason/Desktop/Y2/Sem1/MAD/App/ASG/IgNight/app/src/main/res/drawable/gradient_background.xml" value="0.1255" />
-        <entry key="..\:/Users/jason/Desktop/Y2/Sem1/MAD/App/ASG/IgNight/app/src/main/res/drawable/ic_baseline_check_circle_24.xml" value="0.1625" />
-        <entry key="..\:/Users/jason/Desktop/Y2/Sem1/MAD/App/ASG/IgNight/app/src/main/res/drawable/ic_baseline_read_icon_24.xml" value="0.1505" />
-        <entry key="..\:/Users/jason/Desktop/Y2/Sem1/MAD/App/ASG/IgNight/app/src/main/res/drawable/ic_baseline_send_24.xml" value="0.1625" />
-        <entry key="..\:/Users/jason/Desktop/Y2/Sem1/MAD/App/ASG/IgNight/app/src/main/res/drawable/ic_baseline_sent_icon_24.xml" value="0.1625" />
         <entry key="..\:/Users/jason/Desktop/Y2/Sem1/MAD/App/ASG/IgNight/app/src/main/res/drawable/ic_launcher_background.xml" value="0.1" />
         <entry key="..\:/Users/jason/Desktop/Y2/Sem1/MAD/App/ASG/IgNight/app/src/main/res/drawable/ignight_btn.xml" value="0.1" />
         <entry key="..\:/Users/jason/Desktop/Y2/Sem1/MAD/App/ASG/IgNight/app/src/main/res/drawable/interest_btn.xml" value="0.1845" />
         <entry key="..\:/Users/jason/Desktop/Y2/Sem1/MAD/App/ASG/IgNight/app/src/main/res/drawable/next_btn_bg.xml" value="0.1" />
-        <entry key="..\:/Users/jason/Desktop/Y2/Sem1/MAD/App/ASG/IgNight/app/src/main/res/drawable/round_rectangle.xml" value="0.1" />
-        <entry key="..\:/Users/jason/Desktop/Y2/Sem1/MAD/App/ASG/IgNight/app/src/main/res/layout/activity_about_us.xml" value="0.12158054711246201" />
         <entry key="..\:/Users/jason/Desktop/Y2/Sem1/MAD/App/ASG/IgNight/app/src/main/res/layout/activity_blog.xml" value="0.2" />
-        <entry key="..\:/Users/jason/Desktop/Y2/Sem1/MAD/App/ASG/IgNight/app/src/main/res/layout/activity_chat.xml" value="0.264" />
         <entry key="..\:/Users/jason/Desktop/Y2/Sem1/MAD/App/ASG/IgNight/app/src/main/res/layout/activity_chat_list.xml" value="0.25" />
         <entry key="..\:/Users/jason/Desktop/Y2/Sem1/MAD/App/ASG/IgNight/app/src/main/res/layout/activity_create_blog.xml" value="0.2" />
         <entry key="..\:/Users/jason/Desktop/Y2/Sem1/MAD/App/ASG/IgNight/app/src/main/res/layout/activity_edit_blog.xml" value="0.25" />
         <entry key="..\:/Users/jason/Desktop/Y2/Sem1/MAD/App/ASG/IgNight/app/src/main/res/layout/activity_friend_list.xml" value="0.25" />
-        <entry key="..\:/Users/jason/Desktop/Y2/Sem1/MAD/App/ASG/IgNight/app/src/main/res/layout/activity_homepage_fragment.xml" value="0.2" />
+        <entry key="..\:/Users/jason/Desktop/Y2/Sem1/MAD/App/ASG/IgNight/app/src/main/res/layout/activity_homepage_fragment.xml" value="0.14719202898550723" />
         <entry key="..\:/Users/jason/Desktop/Y2/Sem1/MAD/App/ASG/IgNight/app/src/main/res/layout/activity_login.xml" value="0.264" />
         <entry key="..\:/Users/jason/Desktop/Y2/Sem1/MAD/App/ASG/IgNight/app/src/main/res/layout/activity_login_test.xml" value="0.22826086956521738" />
-        <entry key="..\:/Users/jason/Desktop/Y2/Sem1/MAD/App/ASG/IgNight/app/src/main/res/layout/activity_main_menu.xml" value="0.2" />
+        <entry key="..\:/Users/jason/Desktop/Y2/Sem1/MAD/App/ASG/IgNight/app/src/main/res/layout/activity_main_menu.xml" value="0.11398176291793313" />
         <entry key="..\:/Users/jason/Desktop/Y2/Sem1/MAD/App/ASG/IgNight/app/src/main/res/layout/activity_my_profile.xml" value="0.25" />
         <entry key="..\:/Users/jason/Desktop/Y2/Sem1/MAD/App/ASG/IgNight/app/src/main/res/layout/activity_profile_creation.xml" value="0.16893115942028986" />
         <entry key="..\:/Users/jason/Desktop/Y2/Sem1/MAD/App/ASG/IgNight/app/src/main/res/layout/activity_profile_view.xml" value="0.264" />
@@ -47,7 +63,6 @@
         <entry key="..\:/Users/jason/Desktop/Y2/Sem1/MAD/App/ASG/IgNight/app/src/main/res/layout/blog_layout.xml" value="0.176" />
         <entry key="..\:/Users/jason/Desktop/Y2/Sem1/MAD/App/ASG/IgNight/app/src/main/res/layout/blog_likecomment_layout.xml" value="0.264" />
         <entry key="..\:/Users/jason/Desktop/Y2/Sem1/MAD/App/ASG/IgNight/app/src/main/res/layout/custom_dialog.xml" value="0.264" />
-        <entry key="..\:/Users/jason/Desktop/Y2/Sem1/MAD/App/ASG/IgNight/app/src/main/res/layout/fragment_chat_list.xml" value="0.12158054711246201" />
         <entry key="..\:/Users/jason/Desktop/Y2/Sem1/MAD/App/ASG/IgNight/app/src/main/res/layout/friendlist_layout.xml" value="0.25" />
         <entry key="..\:/Users/jason/Desktop/Y2/Sem1/MAD/App/ASG/IgNight/app/src/main/res/layout/hamburger.xml" value="0.21965579710144928" />
         <entry key="..\:/Users/jason/Desktop/Y2/Sem1/MAD/App/ASG/IgNight/app/src/main/res/layout/interest_layout.xml" value="0.25" />
@@ -55,7 +70,7 @@
         <entry key="..\:/Users/jason/Desktop/Y2/Sem1/MAD/App/ASG/IgNight/app/src/main/res/layout/item_media.xml" value="0.14855072463768115" />
         <entry key="..\:/Users/jason/Desktop/Y2/Sem1/MAD/App/ASG/IgNight/app/src/main/res/layout/item_message_by_you.xml" value="0.264" />
         <entry key="..\:/Users/jason/Desktop/Y2/Sem1/MAD/App/ASG/IgNight/app/src/main/res/layout/item_message_to_you.xml" value="0.264" />
-        <entry key="..\:/Users/jason/Desktop/Y2/Sem1/MAD/App/ASG/IgNight/app/src/main/res/layout/main_menu_layout.xml" value="0.264" />
+        <entry key="..\:/Users/jason/Desktop/Y2/Sem1/MAD/App/ASG/IgNight/app/src/main/res/layout/main_menu_layout.xml" value="0.17708333333333334" />
         <entry key="..\:/Users/jason/Desktop/Y2/Sem1/MAD/App/ASG/IgNight/app/src/main/res/layout/profile_creation_interest_layout.xml" value="0.10612968591691996" />
         <entry key="..\:/Users/jason/Desktop/Y2/Sem1/MAD/App/ASG/IgNight/app/src/main/res/layout/profile_view_recycler_layout.xml" value="0.22239583333333332" />
         <entry key="..\:/Users/jason/Desktop/Y2/Sem1/MAD/App/ASG/IgNight/app/src/main/res/layout/toast_message_bg.xml" value="0.10612968591691996" />
