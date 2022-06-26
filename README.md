@@ -25,7 +25,7 @@ Lim Long Teck - Create Profile, Edit Profile
 
 Han Xihe - View Profile, Play Store listing
 
-Keefe Cheong Wenkai - Login, View Chat List, Chat
+Keefe Cheong Wenkai - Login, Chat List Fragment, Chat
 
 ## Appendices (features, screenshots, user guide):
 
