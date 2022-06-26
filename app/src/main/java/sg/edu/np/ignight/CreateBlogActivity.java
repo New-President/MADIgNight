@@ -154,9 +154,14 @@ public class CreateBlogActivity extends AppCompatActivity {
 
         if(requestCode == GALLERY_REQUEST && resultCode == RESULT_OK){
             imgUri = data.getData();
-            blogImg.setImageURI(imgUri);
-            blogImg.setPadding(0,0,0,0);
-            uploadBtn.setText("Change");
+            try {
+                blogImg.setImageURI(imgUri);
+                blogImg.setPadding(0,0,0,0);
+                uploadBtn.setText("Change");
+            }
+            catch (Exception ex){
+                Toast.makeText(this, "Image failed to upload", Toast.LENGTH_SHORT);
+            }
         }
 
     }
