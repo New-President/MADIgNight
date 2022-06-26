@@ -85,7 +85,7 @@ public class LoginActivity extends AppCompatActivity {
         loginProgressBar = findViewById(R.id.loginProgressBar);  // ProgressBar to show login loading
 
         // turn off phone auth app verification (for testing with numbers in firebase console) - remove for real numbers
-        FirebaseAuth.getInstance().getFirebaseAuthSettings().setAppVerificationDisabledForTesting(true);
+        FirebaseAuth.getInstance().getFirebaseAuthSettings().setAppVerificationDisabledForTesting(false);
 
         // set default fields first
         setDefaultFields(false);
