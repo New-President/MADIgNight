@@ -156,7 +156,7 @@ public class SideMenu extends Activity {
                             .addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
                                 @Override
                                 public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
-                                    Toast.makeText(SideMenu.this, "Picture Retrieved", Toast.LENGTH_SHORT).show();
+                                    //Toast.makeText(SideMenu.this, "Picture Retrieved", Toast.LENGTH_SHORT).show();
                                     Bitmap bitmap = BitmapFactory.decodeFile(localFile.getAbsolutePath());
                                     profilePicSideMenu.setImageBitmap(bitmap);
                                 }
@@ -164,7 +164,7 @@ public class SideMenu extends Activity {
                             .addOnFailureListener(new OnFailureListener() {
                                 @Override
                                 public void onFailure(@NonNull Exception e) {
-                                    Toast.makeText(SideMenu.this, "Error Occurred", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(SideMenu.this, "Error loading profile picture", Toast.LENGTH_SHORT).show();
                                 }
                             });
                 } catch (IOException e) {

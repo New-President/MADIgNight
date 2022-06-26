@@ -52,7 +52,7 @@ public class CreateBlogActivity extends AppCompatActivity {
     private Uri imgUri;
     private Button uploadBtn;
     private String uid;
-    private int counter = 0;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -61,10 +61,11 @@ public class CreateBlogActivity extends AppCompatActivity {
         FirebaseUser user = auth.getCurrentUser();
         assert user != null;
         uid = user.getUid();
-        Context c = this;
         FirebaseDatabase database = FirebaseDatabase.getInstance("https://madignight-default-rtdb.asia-southeast1.firebasedatabase.app");
         DatabaseReference databaseReference = database.getReference("user").child(uid).child("blog");
+        Context c = this;
 
+        // Loading dialog for when blog is uploaded
         final LoadingBlogDialog loadingBlogDialog = new LoadingBlogDialog(CreateBlogActivity.this);
         ImageButton backBtn = findViewById(R.id.createBlogBackButton);
         blogImg = findViewById(R.id.createBlogImg);
@@ -84,10 +85,7 @@ public class CreateBlogActivity extends AppCompatActivity {
         uploadBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                // Opens photo gallery and takes photo as input only
-                Intent galleryIntent = new Intent(Intent.ACTION_GET_CONTENT);
-                galleryIntent.setType("image/*");
-                startActivityForResult(galleryIntent, GALLERY_REQUEST);
+                openGallery();
             }
         });
 
@@ -116,7 +114,7 @@ public class CreateBlogActivity extends AppCompatActivity {
                     // Store in firebase under Users
                     databaseReference.child(blogID).setValue(newBlog);
 
-                    // Creates loading dialog with 6 seconds delay for image to upload
+                    // Creates loading dialog with 3 seconds delay for image to upload
                     loadingBlogDialog.startLoadingDialog();
                     Handler handler = new Handler();
                     handler.postDelayed(new Runnable() {
@@ -125,7 +123,7 @@ public class CreateBlogActivity extends AppCompatActivity {
                             loadingBlogDialog.dismissDialog();
                             finish();
                         }
-                    }, 6000);
+                    }, 3000);
 
                 }
             }
@@ -165,14 +163,21 @@ public class CreateBlogActivity extends AppCompatActivity {
         }
 
     }
+    private void openGallery(){
+        // Opens photo gallery and takes photo as input only
+        Intent galleryIntent = new Intent(Intent.ACTION_GET_CONTENT);
+        galleryIntent.setType("image/*");
+        startActivityForResult(galleryIntent, GALLERY_REQUEST);
+    }
 
     // Upload blog image to firebase storage
-    @RequiresApi(api = Build.VERSION_CODES.N)
-    public String uploadImage(Context c){
+    private String uploadImage(Context c){
+        // unique key to be stored in blog object to be retrieved later in the recyclerview
         final String randomKey = UUID.randomUUID().toString();
         FirebaseStorage storage = FirebaseStorage.getInstance("gs://madignight.appspot.com");
         StorageReference storageReference = storage.getReference().child("blog/" + uid).child(randomKey);
 
+        // Takes the URI of the image and stores in Firebase storage which automatically converts into a png file
         storageReference.putFile(imgUri)
                 .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                     @Override

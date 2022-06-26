@@ -109,7 +109,7 @@ public class MainMenuActivity extends AppCompatActivity {
                             .addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
                                 @Override
                                 public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
-                                    Toast.makeText(MainMenuActivity.this, "Picture Retrieved", Toast.LENGTH_SHORT).show();
+                                    //Toast.makeText(MainMenuActivity.this, "Picture Retrieved", Toast.LENGTH_SHORT).show();
                                     Bitmap bitmap = BitmapFactory.decodeFile(localFile.getAbsolutePath());
                                     ownerProfilePic.setImageBitmap(bitmap);
                                 }
@@ -117,7 +117,7 @@ public class MainMenuActivity extends AppCompatActivity {
                             .addOnFailureListener(new OnFailureListener() {
                                 @Override
                                 public void onFailure(@NonNull Exception e) {
-                                    Toast.makeText(MainMenuActivity.this, "Error Occurred", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(MainMenuActivity.this, "Error loading profile picture", Toast.LENGTH_SHORT).show();
                                 }
                             });
                 } catch (IOException e) {
