@@ -177,10 +177,10 @@ public class ChatActivity extends AppCompatActivity {
                         int age = Integer.parseInt(snapshot.child("Age").getValue().toString());
 
                         for (DataSnapshot dateLocSnapshot : snapshot.child("Date Location").getChildren()) {
-                            dateLocList.add(dateLocSnapshot.getKey());
+                            dateLocList.add(dateLocSnapshot.getValue().toString());
                         }
                         for (DataSnapshot interestSnapshot : snapshot.child("Interest").getChildren()) {
-                            interestList.add(interestSnapshot.getKey());
+                            interestList.add(interestSnapshot.getValue().toString());
                         }
 
                         UserObject user = new UserObject(uid, aboutMe, age, dateLocList, gender, genderPref, interestList, profilePicUrl, relationshipPref, phone, profileCreated, username);

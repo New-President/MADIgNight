@@ -104,10 +104,10 @@ public class Homepage_fragment extends Fragment {
                             int age = Integer.parseInt(childSnapshot.child("Age").getValue().toString());
 
                             for (DataSnapshot dateLocSnapshot : childSnapshot.child("Date Location").getChildren()) {
-                                dateLocList.add(dateLocSnapshot.getKey());
+                                dateLocList.add(dateLocSnapshot.getValue().toString());
                             }
                             for (DataSnapshot interestSnapshot : childSnapshot.child("Interest").getChildren()) {
-                                interestList.add(interestSnapshot.getKey());
+                                interestList.add(interestSnapshot.getValue().toString());
                             }
 
                             UserObject user = new UserObject(uid, aboutMe, age, dateLocList, gender, genderPref, interestList, profilePicUrl, relationshipPref, phone, profileCreated, username);
