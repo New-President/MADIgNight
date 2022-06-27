@@ -1,34 +1,30 @@
 package sg.edu.np.ignight.Objects;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 public class BlogObject {
     public String description, location, imgID, blogID;
     public int likes;
     public int comments;
-    public boolean liked;
-    public ArrayList<String> commentsList;
+    public ArrayList<String> commentsList, likedUsersList;
 
     public BlogObject(String description, String location, String imgID, String blogID){
         this.description = description;
         this.location = location;
         this.imgID = imgID;
         this.blogID = blogID;
-        this.likes = 0;
-        this.comments = 0;
-        this.liked = false;
-        this.commentsList = new ArrayList<>();
     }
 
-    public BlogObject(String description, String location, String imgID, String blogID, int likes, int comments, boolean liked, ArrayList<String> commentsList){
+    public BlogObject(String description, String location, String imgID, String blogID, int likes, int comments, ArrayList<String> commentsList, ArrayList<String> likedUsersList){
         this.description = description;
         this.location = location;
         this.imgID = imgID;
         this.blogID = blogID;
         this.likes = likes;
         this.comments = comments;
-        this.liked = liked;
         this.commentsList = commentsList;
+        this.likedUsersList = likedUsersList;
     }
 
     public BlogObject(){ }
@@ -75,10 +71,7 @@ public class BlogObject {
     public void setComments(int comments) {
         this.comments = comments;
     }
-    public boolean isLiked() {
-        return liked;
-    }
-    public void setLiked(boolean liked) {
-        this.liked = liked;
+    public void setLikedUsers(ArrayList<String> likedUsersList) {
+        this.likedUsersList = likedUsersList;
     }
 }
