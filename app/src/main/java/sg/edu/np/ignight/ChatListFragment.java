@@ -59,50 +59,38 @@ public class ChatListFragment extends Fragment {
     private void getChatList() {
 
         ArrayList<String> chatIdList = new ArrayList<>();
+        String currentUserUID = FirebaseAuth.getInstance().getUid();
 
-        DatabaseReference chatDB = FirebaseDatabase.getInstance("https://madignight-default-rtdb.asia-southeast1.firebasedatabase.app/").getReference().child("chat");
         DatabaseReference userDB = FirebaseDatabase.getInstance("https://madignight-default-rtdb.asia-southeast1.firebasedatabase.app/").getReference().child("user");
 
-        chatDB.addValueEventListener(new ValueEventListener() {
+        userDB.child(currentUserUID).child("chats").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if (snapshot.exists()) {
-                    for (DataSnapshot chatIdSnapshot : snapshot.getChildren()) {
-
-                        if (chatIdList.contains(chatIdSnapshot.getKey())) {
+                    for (DataSnapshot chatIDSnapshot : snapshot.getChildren()) {
+                        if (chatIdList.contains(chatIDSnapshot.getKey())) {
                             continue;
                         }
 
-                        String currentUserUID = FirebaseAuth.getInstance().getUid();
-                        String targetUserUID;
+                        String targetUserUID = chatIDSnapshot.getValue().toString();
 
-                        ArrayList<String> usersInChat = new ArrayList<>();
+                        userDB.addListenerForSingleValueEvent(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                String chatName = snapshot.child(targetUserUID).child("username").getValue().toString();
+                                ChatObject chat = new ChatObject(chatIDSnapshot.getKey(), chatName, targetUserUID);
 
-                        for (DataSnapshot userIdSnapshot : chatIdSnapshot.child("users").getChildren()) {
-                            usersInChat.add(userIdSnapshot.getKey());
-                        }
+                                chatList.add(chat);
+                                chatListAdapter.notifyDataSetChanged();
+                            }
 
-                        if (usersInChat.contains(currentUserUID)) {
-                            targetUserUID = usersInChat.get((usersInChat.indexOf(currentUserUID) == 1)?0:1);
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError error) {
+                                Log.e(TAG, "onCancelled: " + error.getMessage());
+                            }
+                        });
 
-                            userDB.addListenerForSingleValueEvent(new ValueEventListener() {
-                                @Override
-                                public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                    String chatName = snapshot.child(targetUserUID).child("username").getValue().toString();
-                                    ChatObject chat = new ChatObject(chatIdSnapshot.getKey(), chatName, targetUserUID);
-
-                                    chatList.add(chat);
-                                    chatListAdapter.notifyDataSetChanged();
-                                }
-
-                                @Override
-                                public void onCancelled(@NonNull DatabaseError error) {
-                                    Log.e(TAG, "onCancelled: " + error.getMessage());
-                                }
-                            });
-                        }
-
-                        chatIdList.add(chatIdSnapshot.getKey());
+                        chatIdList.add(chatIDSnapshot.getKey());
                     }
                 }
             }
