@@ -124,9 +124,7 @@ public class BlogAdapter extends RecyclerView.Adapter<BlogViewHolder> {
                             Log.d("likedstate", liked.toString());
                             if(blog.likedUsersList.contains(firebaseUser.getUid()) && liked){
                                 databaseReference.child("likes").setValue(blog.likes -= 1);
-
                                 holder.likes.setText(String.valueOf(likes - 1));
-
                                 blog.likedUsersList.remove(firebaseUser.getUid());
                                 databaseReference.child("likedUsersList").child(firebaseUser.getUid()).setValue(false);
                                 likebutton.setBackgroundResource(R.drawable.heartwithhole);
@@ -135,6 +133,7 @@ public class BlogAdapter extends RecyclerView.Adapter<BlogViewHolder> {
                                 databaseReference.child("likes").setValue(blog.likes += 1);
                                 blog.likedUsersList.add(firebaseUser.getUid());
                                 holder.likes.setText(String.valueOf(likes + 1));
+                                blog.likedUsersList.add(firebaseUser.getUid());
                                 databaseReference.child("likedUsersList").child(firebaseUser.getUid()).setValue(true);
                                 likebutton.setBackgroundResource(R.drawable.heart);
                             }
