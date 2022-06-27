@@ -10,9 +10,12 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
@@ -42,6 +45,7 @@ public class MainMenuActivity extends AppCompatActivity {
 
     FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
     String Uid = user.getUid();
+    final String[] queryName = {""};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,6 +75,28 @@ public class MainMenuActivity extends AppCompatActivity {
         }
         ft.commit();
 
+        EditText searchUsername = findViewById(R.id.searchUsername);
+        searchUsername.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {}
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                if (searchUsername.getText().toString().length() == 0) {
+                    queryName[0] = "";
+                }
+                else {
+                    queryName[0] = searchUsername.getText().toString();
+                }
+
+                FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+                ft.replace(R.id.frameLayout_menu, new Homepage_fragment());
+                ft.commit();
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {}
+        });
 
         Button home = findViewById(R.id.home_menu);// go back to home menu
         home.setOnClickListener(new View.OnClickListener() {
@@ -169,7 +195,11 @@ public class MainMenuActivity extends AppCompatActivity {
         });
     }
 
-    public void Refresh(){
+    public String getQueryName() {
+        return queryName[0];
+    }
+
+    private void Refresh(){
         Intent refresh = new Intent(this, MainMenuActivity.class);
         startActivity(refresh);
     }
