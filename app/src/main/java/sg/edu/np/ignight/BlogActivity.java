@@ -37,7 +37,7 @@ public class BlogActivity extends AppCompatActivity {
     private Context context;
     private DatabaseReference databaseReference;
     private FirebaseDatabase database;
-
+    private Boolean canEdit;
     private RecyclerView blogRV;
     private BlogAdapter blogAdapter;
     private LinearLayoutManager blogLayoutManager;
@@ -67,18 +67,17 @@ public class BlogActivity extends AppCompatActivity {
             databaseReference = database.getReference("user").child(userObject.getUid()).child("blog");
         }
 
-        getBlogList();
-        initRecyclerView();
-
         // Only show the create blogs button when viewing own profile
         FloatingActionButton createBlogBtn = findViewById(R.id.createBlogBtn);
-        Boolean canEdit = getIntent().getBooleanExtra("canEdit", false);
+        canEdit = getIntent().getBooleanExtra("canEdit", false);
         if(!canEdit){
             createBlogBtn.setVisibility(View.GONE);
         }
         else{
             createBlogBtn.setVisibility(View.VISIBLE);
         }
+        getBlogList();
+        initRecyclerView();
 
         // Goes back to previous activity
         ImageButton backBtn = findViewById(R.id.BlogBackButton);
@@ -104,7 +103,7 @@ public class BlogActivity extends AppCompatActivity {
         blogsList = new ArrayList<>();
         blogRV = findViewById(R.id.blogRecycler);
         blogRV.setNestedScrollingEnabled(false);
-        blogAdapter = new BlogAdapter(BlogActivity.this, blogsList, userObject);
+        blogAdapter = new BlogAdapter(BlogActivity.this, blogsList, userObject, canEdit);
         blogRV.setAdapter(blogAdapter);
         blogLayoutManager = new LinearLayoutManager(context);
         blogLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);

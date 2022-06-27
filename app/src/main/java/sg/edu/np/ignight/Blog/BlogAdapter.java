@@ -47,10 +47,13 @@ public class BlogAdapter extends RecyclerView.Adapter<BlogViewHolder> {
     private ArrayList<BlogObject> data;
     private Context c;
     private UserObject userObject;
-    public BlogAdapter(Context c, ArrayList<BlogObject> data, UserObject userObject){
+    private Boolean canEdit;
+
+    public BlogAdapter(Context c, ArrayList<BlogObject> data, UserObject userObject, Boolean canEdit){
         this.c = c;
         this.data = data;
         this.userObject = userObject;
+        this.canEdit = canEdit;
     }
 
     @NonNull
@@ -98,6 +101,14 @@ public class BlogAdapter extends RecyclerView.Adapter<BlogViewHolder> {
         });
         ImageView likebutton = holder.likesButton; //add fullscreen function
         ImageView commentButton = holder.commentButton; //view profile
+
+        ImageView editBlogBtn = holder.editBlogButton;
+        if (canEdit){
+            editBlogBtn.setVisibility(View.VISIBLE);
+        }
+        else{
+            editBlogBtn.setVisibility(View.GONE);
+        }
 
         if (blog.likedUsersList.contains(firebaseUser.getUid())){
             likebutton.setBackgroundResource(R.drawable.heart);
