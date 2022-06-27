@@ -99,7 +99,6 @@ Keefe Cheong Wenkai - Login, Chat List Fragment, Chat
 
 ### User guide
 
-To begin for both existing and new users, enter your eight-digit phone number and tap on the OTP button. Receive your OTP via SMS and enter it into the OTP box. Tap on tbhe Reset button for the wrong number. 
-Once logged in, tap your profile picture on the top left to view the side menu, and the Search box to search for users based on their username. Tap on the Next button to cycle through users to IgNight with, and IgNight to IgNight (Start a chat) with the target user. Tap on Chat to view all existing IgNighted chats. 
-To view the profile of each user, tap on the profile picture. Blog shows the blog posts by the user, while IgNight starts a chat with the user. 
+To begin for both existing and new users, enter your eight-digit phone number and tap on the OTP button. Receive your OTP via SMS and enter it into the OTP box. Tap on the Reset button for the wrong number. 
+Once logged in, tap your profile picture on the top left to view the side menu, and the Search box to search for users based on their username. Tap on the Next button to cycle through users to IgNight with, and IgNight to IgNight (Start a chat) with the target user. Tap on Chat to view all existing IgNighted chats. Blog shows the blog posts by the user, while IgNight starts a chat with the user. 
 In chat, select the text box and the send button to write and send texts. Use the image button to send media. 
