@@ -3,9 +3,6 @@ package sg.edu.np.ignight;
 import static android.content.ContentValues.TAG;
 
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.media.Image;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
@@ -21,10 +18,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -62,7 +56,7 @@ public class ProfileViewActivity extends AppCompatActivity {
 
     public ArrayList<String> interestsDisplay;
 
-    private DatabaseReference myRef, myRef2;
+    private DatabaseReference chatDB, userDB;
     private FirebaseDatabase db;
     private Map userMap;
     private FirebaseAuth mAuth;
@@ -98,8 +92,8 @@ public class ProfileViewActivity extends AppCompatActivity {
 
         // Firebase and database init
         db = FirebaseDatabase.getInstance("https://madignight-default-rtdb.asia-southeast1.firebasedatabase.app/");
-        myRef2 = db.getReference("user");
-        myRef = db.getReference().child("chat");
+        userDB = db.getReference().child("user");
+        chatDB = db.getReference().child("chat");
 
         // obtain user info and init
         currentUserUID = FirebaseAuth.getInstance().getUid();
@@ -142,31 +136,33 @@ public class ProfileViewActivity extends AppCompatActivity {
         ignightButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                myRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                userDB.child(currentUserUID).child("chats").addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        // Passes relevant info to chat based on whether the chat exists or not
                         boolean chatExists = false;
                         String existingChatID = "";
-                        // Check if the chat with the target IgNighted user already exists
-                        for (DataSnapshot chatIdSnapshot : snapshot.getChildren()) {
-                            ArrayList<String> usersInChat = new ArrayList<>();
-                            for (DataSnapshot userIdSnapshot : chatIdSnapshot.child("users").getChildren()) {
-                                usersInChat.add(userIdSnapshot.getKey());
-                            }
-                            if (usersInChat.contains(currentUserUID) && usersInChat.contains(targetUserUID)) {
-                                chatExists = true;
-                                existingChatID = chatIdSnapshot.getKey();
-                                break;
+
+                        if (snapshot.exists()) {
+                            for (DataSnapshot chatIdSnapshot : snapshot.getChildren()) {
+
+                                if (chatIdSnapshot.getValue().toString().equals(targetUserUID)) {
+                                    chatExists = true;
+                                    existingChatID = chatIdSnapshot.getKey();
+                                    break;
+                                }
                             }
                         }
-                        // Passes relevant info to the chat if the chat does not exist
+
                         if (!chatExists) {
-                            String newChatID = myRef.push().getKey();
+                            String newChatID = chatDB.push().getKey();
                             Map userMap = new HashMap<>();
                             userMap.put(currentUserUID, true);
                             userMap.put(targetUserUID, true);
-                            myRef.child(newChatID).child("users").updateChildren(userMap).addOnCompleteListener(new OnCompleteListener() {
+
+                            userDB.child(currentUserUID).child("chats").child(newChatID).setValue(targetUserUID);
+                            userDB.child(targetUserUID).child("chats").child(newChatID).setValue(currentUserUID);
+
+                            chatDB.child(newChatID).child("users").updateChildren(userMap).addOnCompleteListener(new OnCompleteListener() {
                                 @Override
                                 public void onComplete(@NonNull Task task) {
                                     if (task.isSuccessful()) {
@@ -176,9 +172,7 @@ public class ProfileViewActivity extends AppCompatActivity {
                                         bundle.putString("chatName", user.getUsername());
                                         bundle.putString("targetUserID", targetUserUID);
                                         intent.putExtras(bundle);
-                                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                                         view.getContext().startActivity(intent);
-                                        finish();
                                     }
                                     else {
                                         task.getException().printStackTrace();
@@ -193,11 +187,10 @@ public class ProfileViewActivity extends AppCompatActivity {
                             bundle.putString("chatName", user.getUsername());
                             bundle.putString("targetUserID", targetUserUID);
                             intent.putExtras(bundle);
-                            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                             view.getContext().startActivity(intent);
-                            finish();
                         }
                     }
+
                     @Override
                     public void onCancelled(@NonNull DatabaseError error) {
                         Log.e(TAG, "onCancelled: " + error.getMessage());
@@ -239,7 +232,7 @@ public class ProfileViewActivity extends AppCompatActivity {
         profilePicture = (ImageView) findViewById(R.id.imageView);
 
         // Extract user child to get profile picture name
-        myRef2.child(userObject.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
+        userDB.child(userObject.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 // Get profile picture file name

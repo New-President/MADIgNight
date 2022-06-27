@@ -429,7 +429,7 @@ public class ChatActivity extends AppCompatActivity {
         }
     }
 
-    // update database with new message (from sendMessage())
+    // update database with new message (from sendMessage()) and remove progress bar when done
     private void updateDatabaseWithNewMessage(DatabaseReference newMessageDb, Map newMessageMap) {
         newMessageDb.updateChildren(newMessageMap).addOnCompleteListener(new OnCompleteListener() {
             @Override

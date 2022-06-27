@@ -623,8 +623,8 @@ public class ProfileCreationActivity extends AppCompatActivity {
     // allowing user's to choose different pictures from their gallery
     public void choosePicture() {
         Intent intent = new Intent();
-        // Specifically upload only png images
-        intent.setType("image/png");
+        // Upload any images type
+        intent.setType("image/*");
         intent.setAction(Intent.ACTION_GET_CONTENT);
         startActivityForResult(intent, Gallery_Request);
     }

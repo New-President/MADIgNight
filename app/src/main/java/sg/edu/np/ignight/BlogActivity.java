@@ -37,7 +37,7 @@ public class BlogActivity extends AppCompatActivity {
     private Context context;
     private DatabaseReference databaseReference;
     private FirebaseDatabase database;
-
+    private Boolean canEdit;
     private RecyclerView blogRV;
     private BlogAdapter blogAdapter;
     private LinearLayoutManager blogLayoutManager;
@@ -67,18 +67,17 @@ public class BlogActivity extends AppCompatActivity {
             databaseReference = database.getReference("user").child(userObject.getUid()).child("blog");
         }
 
-        getBlogList();
-        initRecyclerView();
-
         // Only show the create blogs button when viewing own profile
         FloatingActionButton createBlogBtn = findViewById(R.id.createBlogBtn);
-        Boolean canEdit = getIntent().getBooleanExtra("canEdit", false);
+        canEdit = getIntent().getBooleanExtra("canEdit", false);
         if(!canEdit){
             createBlogBtn.setVisibility(View.GONE);
         }
         else{
             createBlogBtn.setVisibility(View.VISIBLE);
         }
+        getBlogList();
+        initRecyclerView();
 
         // Goes back to previous activity
         ImageButton backBtn = findViewById(R.id.BlogBackButton);
@@ -104,7 +103,7 @@ public class BlogActivity extends AppCompatActivity {
         blogsList = new ArrayList<>();
         blogRV = findViewById(R.id.blogRecycler);
         blogRV.setNestedScrollingEnabled(false);
-        blogAdapter = new BlogAdapter(BlogActivity.this, blogsList, userObject);
+        blogAdapter = new BlogAdapter(BlogActivity.this, blogsList, userObject, canEdit);
         blogRV.setAdapter(blogAdapter);
         blogLayoutManager = new LinearLayoutManager(context);
         blogLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
@@ -134,6 +133,7 @@ public class BlogActivity extends AppCompatActivity {
 
                         ArrayList<String> commentsList = new ArrayList<>();
 
+                        // Stores comments into commentlist to be retrieved
                         if (snapshot.child("commentsList").hasChildren()) {
                             for (DataSnapshot commentSnapshot : snapshot.child("commentsList").getChildren()) {
                                 commentsList.add(commentSnapshot.getValue().toString());
@@ -142,9 +142,12 @@ public class BlogActivity extends AppCompatActivity {
 
                         ArrayList<String> likedUsers = new ArrayList<>();
 
+                        // Stores uid of user who liked the blog
                         if (snapshot.child("likedUsersList").hasChildren()) {
                             for (DataSnapshot likedUsersSnapshot : snapshot.child("likedUsersList").getChildren()) {
-                                likedUsers.add(likedUsersSnapshot.getValue().toString());
+                                if (likedUsersSnapshot.getValue().toString().equals("true") && !likedUsers.contains(likedUsersSnapshot.getKey())) {
+                                    likedUsers.add(likedUsersSnapshot.getKey());
+                                }
                             }
                         }
 
@@ -175,11 +178,13 @@ public class BlogActivity extends AppCompatActivity {
                             }
                         }
 
-                        ArrayList<String> likedUsersList = new ArrayList<>();
+                        ArrayList<String> likedUsers = new ArrayList<>();
 
                         if (snapshot.child("likedUsersList").hasChildren()) {
                             for (DataSnapshot likedUsersSnapshot : snapshot.child("likedUsersList").getChildren()) {
-                                likedUsersList.add(likedUsersSnapshot.getValue().toString());
+                                if (likedUsersSnapshot.getValue().toString().equals("true") && !likedUsers.contains(likedUsersSnapshot.getKey())) {
+                                    likedUsers.add(likedUsersSnapshot.getKey());
+                                }
                             }
                         }
 
@@ -189,7 +194,7 @@ public class BlogActivity extends AppCompatActivity {
                         existingBlog.setLikes(likes);
                         existingBlog.setComments(comments);
                         existingBlog.setCommentsList(commentsList);
-                        existingBlog.setLikedUsers(likedUsersList);
+                        existingBlog.setLikedUsers(likedUsers);
 
                         blogAdapter.notifyDataSetChanged();
                     }
