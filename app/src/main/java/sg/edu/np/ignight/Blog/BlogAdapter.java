@@ -45,6 +45,8 @@ public class BlogAdapter extends RecyclerView.Adapter<BlogViewHolder> {
     private ArrayList<BlogObject> data;
     private Context c;
     private UserObject userObject;
+    private Boolean liked;
+
     public BlogAdapter(Context c, ArrayList<BlogObject> data, UserObject userObject){
         this.c = c;
         this.data = data;
@@ -109,42 +111,17 @@ public class BlogAdapter extends RecyclerView.Adapter<BlogViewHolder> {
         holder.likes.setText(String.valueOf(likes));
         holder.comments.setText(String.valueOf(comments));
 
-
+        liked = false;
         likebutton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
                 getLikedUsersList(uid, blogID, blog);
-
                 databaseReference.child("likedUsersList").child(uid).addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
                         if (snapshot.exists()){
-                            Boolean liked = snapshot.getValue(Boolean.class);
-                            Log.d("likedstate", liked.toString());
-                            if(blog.likedUsersList.contains(firebaseUser.getUid()) && liked){
-                                databaseReference.child("likes").setValue(blog.likes -= 1);
-                                holder.likes.setText(String.valueOf(likes - 1));
-                                blog.likedUsersList.remove(firebaseUser.getUid());
-                                databaseReference.child("likedUsersList").child(firebaseUser.getUid()).setValue(false);
-                                likebutton.setBackgroundResource(R.drawable.heartwithhole);
-                            }
-                            else {
-                                databaseReference.child("likes").setValue(blog.likes += 1);
-                                blog.likedUsersList.add(firebaseUser.getUid());
-                                holder.likes.setText(String.valueOf(likes + 1));
-                                blog.likedUsersList.add(firebaseUser.getUid());
-                                databaseReference.child("likedUsersList").child(firebaseUser.getUid()).setValue(true);
-                                likebutton.setBackgroundResource(R.drawable.heart);
-                            }
-                        }
-                        else{
-                            databaseReference.child("likes").setValue(blog.likes += 1);
-                            blog.likedUsersList.add(firebaseUser.getUid());
-                            holder.likes.setText(String.valueOf(likes + 1));
-                            blog.likedUsersList.add(firebaseUser.getUid());
-                            databaseReference.child("likedUsersList").child(firebaseUser.getUid()).setValue(true);
-                            likebutton.setBackgroundResource(R.drawable.heart);
+                            liked = snapshot.getValue(Boolean.class);
                         }
                     }
                     @Override
@@ -153,6 +130,23 @@ public class BlogAdapter extends RecyclerView.Adapter<BlogViewHolder> {
                     }
                 });
 
+                if(blog.likedUsersList.contains(firebaseUser.getUid()) && liked){
+                    databaseReference.child("likes").setValue(blog.likes -= 1);
+                    holder.likes.setText(String.valueOf(likes));
+                    blog.likedUsersList.remove(firebaseUser.getUid());
+                    databaseReference.child("likedUsersList").child(firebaseUser.getUid()).setValue(false);
+                    liked = false;
+                    likebutton.setBackgroundResource(R.drawable.heartwithhole);
+                }
+                else {
+                    databaseReference.child("likes").setValue(blog.likes += 1);
+                    blog.likedUsersList.add(firebaseUser.getUid());
+                    holder.likes.setText(String.valueOf(likes + 1));
+                    blog.likedUsersList.add(firebaseUser.getUid());
+                    databaseReference.child("likedUsersList").child(firebaseUser.getUid()).setValue(true);
+                    liked = true;
+                    likebutton.setBackgroundResource(R.drawable.heart);
+                }
 
             }
         });
