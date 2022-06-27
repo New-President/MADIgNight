@@ -144,7 +144,7 @@ public class BlogActivity extends AppCompatActivity {
 
                         if (snapshot.child("likedUsersList").hasChildren()) {
                             for (DataSnapshot likedUsersSnapshot : snapshot.child("likedUsersList").getChildren()) {
-                                likedUsers.add(likedUsersSnapshot.getValue().toString());
+                                likedUsers.add(likedUsersSnapshot.getKey().toString());
                             }
                         }
 
