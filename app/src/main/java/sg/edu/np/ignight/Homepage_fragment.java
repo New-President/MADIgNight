@@ -19,6 +19,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
@@ -34,6 +35,7 @@ public class Homepage_fragment extends Fragment {
 
     private ArrayList<UserObject> userList;
 
+    private String queryName;
 
     public Homepage_fragment() {
     }
@@ -45,6 +47,10 @@ public class Homepage_fragment extends Fragment {
         View view = inflater.inflate(R.layout.activity_homepage_fragment, container, false);
 
         userList = new ArrayList<>();
+
+        // get the name queried (text entered in search box in MainMenuActivity)
+        MainMenuActivity activity = (MainMenuActivity) getActivity();
+        queryName = activity.getQueryName();
 
         getUserList();
         initRecyclerView(view);
@@ -66,9 +72,11 @@ public class Homepage_fragment extends Fragment {
         userRV.setLayoutManager(userLayoutManager);
     }
 
+    // get list of users to display
     private void getUserList() {
         DatabaseReference userDB = FirebaseDatabase.getInstance("https://madignight-default-rtdb.asia-southeast1.firebasedatabase.app/").getReference().child("user");
-        userDB.addValueEventListener(new ValueEventListener() {
+
+        ValueEventListener getUserListListener = new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if (snapshot.exists()) {
@@ -124,6 +132,14 @@ public class Homepage_fragment extends Fragment {
             public void onCancelled(@NonNull DatabaseError error) {
                 Log.e(TAG, "onCancelled: " + error.getMessage());
             }
-        });
+        };
+
+        if (queryName != "" || queryName != null) {
+            Query query  = userDB.orderByChild("username").startAt(queryName);
+            query.addValueEventListener(getUserListListener);
+        }
+        else {
+            userDB.addValueEventListener(getUserListListener);
+        }
     }
 }

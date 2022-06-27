@@ -115,27 +115,25 @@ public class MainMenuAdapter extends RecyclerView.Adapter<MainMenuViewHolder>{
             public void onClick(View view) {
 
                 DatabaseReference chatDB = FirebaseDatabase.getInstance("https://madignight-default-rtdb.asia-southeast1.firebasedatabase.app/").getReference().child("chat");
+                DatabaseReference userDB = FirebaseDatabase.getInstance("https://madignight-default-rtdb.asia-southeast1.firebasedatabase.app/").getReference().child("user");
 
                 String currentUserUID = FirebaseAuth.getInstance().getUid();
                 String targetUserUID = user.getUid();
 
-                chatDB.addListenerForSingleValueEvent(new ValueEventListener() {
+                userDB.child(currentUserUID).child("chats").addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
                         boolean chatExists = false;
                         String existingChatID = "";
 
-                        for (DataSnapshot chatIdSnapshot : snapshot.getChildren()) {
-                            ArrayList<String> usersInChat = new ArrayList<>();
+                        if (snapshot.exists()) {
+                            for (DataSnapshot chatIdSnapshot : snapshot.getChildren()) {
 
-                            for (DataSnapshot userIdSnapshot : chatIdSnapshot.child("users").getChildren()) {
-                                usersInChat.add(userIdSnapshot.getKey());
-                            }
-
-                            if (usersInChat.contains(currentUserUID) && usersInChat.contains(targetUserUID)) {
-                                chatExists = true;
-                                existingChatID = chatIdSnapshot.getKey();
-                                break;
+                                if (chatIdSnapshot.getValue().toString().equals(targetUserUID)) {
+                                    chatExists = true;
+                                    existingChatID = chatIdSnapshot.getKey();
+                                    break;
+                                }
                             }
                         }
 
@@ -144,6 +142,9 @@ public class MainMenuAdapter extends RecyclerView.Adapter<MainMenuViewHolder>{
                             Map userMap = new HashMap<>();
                             userMap.put(currentUserUID, true);
                             userMap.put(targetUserUID, true);
+
+                            userDB.child(currentUserUID).child("chats").child(newChatID).setValue(targetUserUID);
+                            userDB.child(targetUserUID).child("chats").child(newChatID).setValue(currentUserUID);
 
                             chatDB.child(newChatID).child("users").updateChildren(userMap).addOnCompleteListener(new OnCompleteListener() {
                                 @Override

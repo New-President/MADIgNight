@@ -39,7 +39,7 @@
                 android:fontFamily="@font/amaranth_bold"
                 android:paddingLeft="20dp"
                 android:text="Username"
-                android:textColor="#ffffff"
+                android:textColor="#555555"
                 android:textSize="20sp" />
 
             <TextView
@@ -48,7 +48,7 @@
                 android:layout_height="wrap_content"
                 android:paddingLeft="20dp"
                 android:text="Online"
-                android:textColor="#ffffff"
+                android:textColor="#555555"
                 android:textSize="14sp"
                 android:visibility="gone" />
 

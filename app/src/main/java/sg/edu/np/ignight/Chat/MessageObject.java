@@ -8,6 +8,7 @@ import java.util.ArrayList;
 
 import sg.edu.np.ignight.Objects.TimestampObject;
 
+// object to store information about messages
 public class MessageObject {
     private String chatId;
     private String messageId;
