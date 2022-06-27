@@ -35,6 +35,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
         this.messageList = messageList;
     }
 
+    // to find out whether the message was sent by the current user or the other party
     @Override
     public int getItemViewType(int position) {
         if (messageList.get(position).getCreatorId().equals(FirebaseAuth.getInstance().getUid())) {

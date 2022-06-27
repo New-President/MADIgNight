@@ -43,7 +43,6 @@ public class MainMenuActivity extends AppCompatActivity {
     FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
     String Uid = user.getUid();
 
-    // Edit profile, Logout, about page, stage 2: map, paywalls, terms & conditions??
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -133,6 +132,7 @@ public class MainMenuActivity extends AppCompatActivity {
 
     }
 
+    // updates presence system - when user logs on, set connection to true, when user logs off, set connection to null and update last online time
     private void updateConnection() {
         FirebaseDatabase db = FirebaseDatabase.getInstance("https://madignight-default-rtdb.asia-southeast1.firebasedatabase.app/");
 
