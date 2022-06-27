@@ -144,7 +144,9 @@ public class BlogActivity extends AppCompatActivity {
 
                         if (snapshot.child("likedUsersList").hasChildren()) {
                             for (DataSnapshot likedUsersSnapshot : snapshot.child("likedUsersList").getChildren()) {
-                                likedUsers.add(likedUsersSnapshot.getKey().toString());
+                                if (likedUsersSnapshot.getValue().toString().equals("true") && !likedUsers.contains(likedUsersSnapshot.getKey())) {
+                                    likedUsers.add(likedUsersSnapshot.getKey());
+                                }
                             }
                         }
 
@@ -175,11 +177,13 @@ public class BlogActivity extends AppCompatActivity {
                             }
                         }
 
-                        ArrayList<String> likedUsersList = new ArrayList<>();
+                        ArrayList<String> likedUsers = new ArrayList<>();
 
                         if (snapshot.child("likedUsersList").hasChildren()) {
                             for (DataSnapshot likedUsersSnapshot : snapshot.child("likedUsersList").getChildren()) {
-                                likedUsersList.add(likedUsersSnapshot.getValue().toString());
+                                if (likedUsersSnapshot.getValue().toString().equals("true") && !likedUsers.contains(likedUsersSnapshot.getKey())) {
+                                    likedUsers.add(likedUsersSnapshot.getKey());
+                                }
                             }
                         }
 
@@ -189,7 +193,7 @@ public class BlogActivity extends AppCompatActivity {
                         existingBlog.setLikes(likes);
                         existingBlog.setComments(comments);
                         existingBlog.setCommentsList(commentsList);
-                        existingBlog.setLikedUsers(likedUsersList);
+                        existingBlog.setLikedUsers(likedUsers);
 
                         blogAdapter.notifyDataSetChanged();
                     }

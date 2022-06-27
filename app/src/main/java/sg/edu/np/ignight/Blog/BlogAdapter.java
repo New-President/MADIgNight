@@ -1,5 +1,7 @@
 package sg.edu.np.ignight.Blog;
 
+import static android.content.ContentValues.TAG;
+
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -84,7 +86,7 @@ public class BlogAdapter extends RecyclerView.Adapter<BlogViewHolder> {
 
 
         DatabaseReference databaseReference = FirebaseDatabase.getInstance("https://madignight-default-rtdb.asia-southeast1.firebasedatabase.app/")
-                .getReference("users").child(uid).child("blog").child(blogID);
+                .getReference("user").child(uid).child("blog").child(blogID);
 
         ImageView blogImage = holder.blogImg; //add fullscreen function
 
@@ -109,43 +111,24 @@ public class BlogAdapter extends RecyclerView.Adapter<BlogViewHolder> {
         holder.likes.setText(String.valueOf(likes));
         holder.comments.setText(String.valueOf(comments));
 
-
         likebutton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
-                getLikedUsersList(uid, blogID, blog);
-
-                databaseReference.child("likedUsersList").child(uid).addValueEventListener(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        Boolean liked = snapshot.getValue(Boolean.class);
-                        Log.d("likedstate", liked.toString());
-                        if(blog.likedUsersList.contains(firebaseUser.getUid()) && liked){
-                            databaseReference.child("likes").setValue(blog.likes -= 1);
-
-                            holder.likes.setText(String.valueOf(likes - 1));
-
-                            blog.likedUsersList.remove(firebaseUser.getUid());
-                            databaseReference.child("likedUsersList").child(firebaseUser.getUid()).setValue(false);
-                            likebutton.setBackgroundResource(R.drawable.heartwithhole);
-                        }
-                        else {
-                            databaseReference.child("likes").setValue(blog.likes += 1);
-                            blog.likedUsersList.add(firebaseUser.getUid());
-                            holder.likes.setText(String.valueOf(likes + 1));
-                            databaseReference.child("likedUsersList").child(firebaseUser.getUid()).setValue(true);
-                            likebutton.setBackgroundResource(R.drawable.heart);
-                        }
-                    }
-
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError error) {
-
-                    }
-                });
-
-
+                if (blog.likedUsersList.contains(firebaseUser.getUid())) {
+                    blog.likes = ((blog.likes - 1) <= 0)?0:(blog.likes -= 1);
+                    databaseReference.child("likedUsersList").child(firebaseUser.getUid()).setValue(false);
+                    databaseReference.child("likes").setValue(blog.likes);
+                    holder.likes.setText(Integer.toString(blog.likes));
+                    likebutton.setBackgroundResource(R.drawable.heartwithhole);
+                }
+                else {
+                    blog.likes += 1;
+                    databaseReference.child("likedUsersList").child(firebaseUser.getUid()).setValue(true);
+                    databaseReference.child("likes").setValue(blog.likes);
+                    holder.likes.setText(Integer.toString(blog.likes));
+                    likebutton.setBackgroundResource(R.drawable.heart);
+                }
             }
         });
 
@@ -183,27 +166,6 @@ public class BlogAdapter extends RecyclerView.Adapter<BlogViewHolder> {
     @Override
     public int getItemCount() {
         return data.size();
-    }
-
-    private void getLikedUsersList(String uid, String blogID, BlogObject blog) {
-        FirebaseDatabase database = FirebaseDatabase.getInstance("https://madignight-default-rtdb.asia-southeast1.firebasedatabase.app/");
-        DatabaseReference databaseReference = database.getReference("user").child(uid).child("blog").child(blogID).child("likedUsersList");
-
-        databaseReference.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                if (snapshot.hasChildren()) {
-                    for (DataSnapshot likedUserSnapshot : snapshot.getChildren()) {
-                        blog.likedUsersList.add(likedUserSnapshot.getKey().toString());
-                    }
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
-            }
-        });
     }
 
 }
