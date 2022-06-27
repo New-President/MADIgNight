@@ -9,13 +9,6 @@ public class BlogObject {
     public int comments;
     public ArrayList<String> commentsList, likedUsersList;
 
-    public BlogObject(String description, String location, String imgID, String blogID){
-        this.description = description;
-        this.location = location;
-        this.imgID = imgID;
-        this.blogID = blogID;
-    }
-
     public BlogObject(String description, String location, String imgID, String blogID, int likes, int comments, ArrayList<String> commentsList, ArrayList<String> likedUsersList){
         this.description = description;
         this.location = location;

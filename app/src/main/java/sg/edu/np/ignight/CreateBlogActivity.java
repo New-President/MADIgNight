@@ -37,6 +37,7 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
+import java.util.ArrayList;
 import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -110,7 +111,7 @@ public class CreateBlogActivity extends AppCompatActivity {
                 else{
                     // Creates a unique ID for the blog post
                     String blogID = databaseReference.push().getKey();
-                    BlogObject newBlog = new BlogObject(blogDesc, blogLoc, uploadImage(c), blogID);
+                    BlogObject newBlog = new BlogObject(blogDesc, blogLoc, uploadImage(c), blogID, 0, 0, new ArrayList<String>(), new ArrayList<String>());
                     // Store in firebase under Users
                     databaseReference.child(blogID).setValue(newBlog);
 

@@ -17,8 +17,11 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FileDownloadTask;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
@@ -107,21 +110,38 @@ public class BlogAdapter extends RecyclerView.Adapter<BlogViewHolder> {
         likebutton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                DatabaseReference databaseReference = database.getReference("user").child(uid).child("blog").child(blogID).child("likedUsersList");
+                DatabaseReference databaseReference = database.getReference("user").child(uid).child("blog").child(blogID);
 
+                databaseReference.child("likedUsersList").addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        if (snapshot.hasChildren()) {
+                            for (DataSnapshot likedUserSnapshot : snapshot.getChildren()) {
+                                blog.likedUsersList.add(likedUserSnapshot.getKey().toString());
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+
+                    }
+                });
 
                 if(blog.likedUsersList.contains(user.getUid())){
                     databaseReference.child("likes").setValue(blog.likes -= 1);
-                    if (likes - 1 == -1){
-                        holder.likes.setText(String.valueOf(0));
-                    }
+
+                    holder.likes.setText(String.valueOf(0));
+
                     blog.likedUsersList.remove(user.getUid());
+                    databaseReference.child("likedUsersList").child(user.getUid()).setValue(false);
                     likebutton.setBackgroundResource(R.drawable.heartwithhole);
                 }
                 else {
                     databaseReference.child("likes").setValue(blog.likes += 1);
                     blog.likedUsersList.add(user.getUid());
                     holder.likes.setText(String.valueOf(likes + 1));
+                    databaseReference.child("likedUsersList").child(user.getUid()).setValue(true);
                     likebutton.setBackgroundResource(R.drawable.heart);
                 }
             }
@@ -161,6 +181,27 @@ public class BlogAdapter extends RecyclerView.Adapter<BlogViewHolder> {
     @Override
     public int getItemCount() {
         return data.size();
+    }
+
+    private void getLikedUsersList(String uid, String blogID, BlogObject blog) {
+        FirebaseDatabase database = FirebaseDatabase.getInstance("https://madignight-default-rtdb.asia-southeast1.firebasedatabase.app/");
+        DatabaseReference databaseReference = database.getReference("user").child(uid).child("blog").child(blogID);
+
+        databaseReference.child("likedUsersList").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (snapshot.hasChildren()) {
+                    for (DataSnapshot likedUserSnapshot : snapshot.getChildren()) {
+                        blog.likedUsersList.add(likedUserSnapshot.getKey().toString());
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
     }
 
 }
