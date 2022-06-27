@@ -80,6 +80,7 @@ public class MainMenuActivity extends AppCompatActivity {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {}
 
+            // set queryName to the text in search box and update Homepagefragment when text changes in the search box
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
                 if (searchUsername.getText().toString().length() == 0) {

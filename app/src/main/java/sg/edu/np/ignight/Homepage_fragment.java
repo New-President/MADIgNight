@@ -47,6 +47,8 @@ public class Homepage_fragment extends Fragment {
         View view = inflater.inflate(R.layout.activity_homepage_fragment, container, false);
 
         userList = new ArrayList<>();
+
+        // get the name queried (text entered in search box in MainMenuActivity)
         MainMenuActivity activity = (MainMenuActivity) getActivity();
         queryName = activity.getQueryName();
 
@@ -70,6 +72,7 @@ public class Homepage_fragment extends Fragment {
         userRV.setLayoutManager(userLayoutManager);
     }
 
+    // get list of users to display
     private void getUserList() {
         DatabaseReference userDB = FirebaseDatabase.getInstance("https://madignight-default-rtdb.asia-southeast1.firebasedatabase.app/").getReference().child("user");
 
