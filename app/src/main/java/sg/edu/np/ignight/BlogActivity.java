@@ -134,6 +134,7 @@ public class BlogActivity extends AppCompatActivity {
 
                         ArrayList<String> commentsList = new ArrayList<>();
 
+                        // Stores comments into commentlist to be retrieved
                         if (snapshot.child("commentsList").hasChildren()) {
                             for (DataSnapshot commentSnapshot : snapshot.child("commentsList").getChildren()) {
                                 commentsList.add(commentSnapshot.getValue().toString());
@@ -142,6 +143,7 @@ public class BlogActivity extends AppCompatActivity {
 
                         ArrayList<String> likedUsers = new ArrayList<>();
 
+                        // Stores uid of user who liked the blog
                         if (snapshot.child("likedUsersList").hasChildren()) {
                             for (DataSnapshot likedUsersSnapshot : snapshot.child("likedUsersList").getChildren()) {
                                 if (likedUsersSnapshot.getValue().toString().equals("true") && !likedUsers.contains(likedUsersSnapshot.getKey())) {

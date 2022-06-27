@@ -119,14 +119,14 @@ public class BlogAdapter extends RecyclerView.Adapter<BlogViewHolder> {
                     blog.likes = ((blog.likes - 1) <= 0)?0:(blog.likes -= 1);
                     databaseReference.child("likedUsersList").child(firebaseUser.getUid()).setValue(false);
                     databaseReference.child("likes").setValue(blog.likes);
-                    holder.likes.setText(Integer.toString(blog.likes));
+                    holder.likes.setText(String.valueOf(blog.likes));
                     likebutton.setBackgroundResource(R.drawable.heartwithhole);
                 }
                 else {
                     blog.likes += 1;
                     databaseReference.child("likedUsersList").child(firebaseUser.getUid()).setValue(true);
                     databaseReference.child("likes").setValue(blog.likes);
-                    holder.likes.setText(Integer.toString(blog.likes));
+                    holder.likes.setText(String.valueOf(blog.likes));
                     likebutton.setBackgroundResource(R.drawable.heart);
                 }
             }
