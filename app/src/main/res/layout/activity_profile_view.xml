@@ -91,11 +91,11 @@
                     android:layout_width="128dp"
                     android:layout_height="48dp"
                     android:layout_marginTop="364dp"
-                    android:layout_marginEnd="140dp"
                     android:background="@drawable/gradient_background"
                     android:fontFamily="@font/amaranth_bold"
                     android:text="ignight"
                     app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/imageView" />
 
                 <TextView
