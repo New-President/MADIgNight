@@ -141,7 +141,7 @@ public class ProfileCreationActivity extends AppCompatActivity {
         // Saving to Firebase storage
         storage = FirebaseStorage.getInstance("gs://madignight.appspot.com");
 
-        // if the intent from Main Menu is ture, it means that the user clicked on edit profile
+        // if the intent from Main Menu is true, it means that the user clicked on edit profile
         // Load all the data from firebase that were keyed in from profile creation, into the input fields
         if (fromMenu) {
             // getting the child (user's UID)

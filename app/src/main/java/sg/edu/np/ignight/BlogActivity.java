@@ -130,7 +130,7 @@ public class BlogActivity extends AppCompatActivity {
                         String location = snapshot.child("location").getValue().toString();
                         int likes = Integer.parseInt(snapshot.child("likes").getValue().toString());
                         int comments = Integer.parseInt(snapshot.child("comments").getValue().toString());
-                        boolean liked = Boolean.parseBoolean(snapshot.child("liked").getValue().toString());
+                        //boolean liked = Boolean.parseBoolean(snapshot.child("liked").getValue().toString());
 
                         ArrayList<String> commentsList = new ArrayList<>();
 
@@ -140,7 +140,15 @@ public class BlogActivity extends AppCompatActivity {
                             }
                         }
 
-                        BlogObject blogObject = new BlogObject(description, location, imgID, blogID, likes, comments, liked, commentsList);
+                        ArrayList<String> likedUsers = new ArrayList<>();
+
+                        if (snapshot.child("likedUsers").hasChildren()) {
+                            for (DataSnapshot likedUsersSnapshot : snapshot.child("likedUsers").getChildren()) {
+                                likedUsers.add(likedUsersSnapshot.getValue().toString());
+                            }
+                        }
+
+                        BlogObject blogObject = new BlogObject(description, location, imgID, blogID, likes, comments, commentsList, likedUsers);
                         blogsList.add(blogObject);
 
                         blogAdapter.notifyDataSetChanged();
@@ -158,7 +166,6 @@ public class BlogActivity extends AppCompatActivity {
                         String location = snapshot.child("location").getValue().toString();
                         int likes = Integer.parseInt(snapshot.child("likes").getValue().toString());
                         int comments = Integer.parseInt(snapshot.child("comments").getValue().toString());
-                        boolean liked = Boolean.parseBoolean(snapshot.child("liked").getValue().toString());
 
                         ArrayList<String> commentsList = new ArrayList<>();
 
@@ -168,13 +175,21 @@ public class BlogActivity extends AppCompatActivity {
                             }
                         }
 
+                        ArrayList<String> likedUsersList = new ArrayList<>();
+
+                        if (snapshot.child("likedUsersList").hasChildren()) {
+                            for (DataSnapshot likedUsersSnapshot : snapshot.child("likedUsersList").getChildren()) {
+                                likedUsersList.add(likedUsersSnapshot.getValue().toString());
+                            }
+                        }
+
                         existingBlog.setDescription(description);
                         existingBlog.setImgID(imgID);
                         existingBlog.setLocation(location);
                         existingBlog.setLikes(likes);
-                        existingBlog.setLiked(liked);
                         existingBlog.setComments(comments);
                         existingBlog.setCommentsList(commentsList);
+                        existingBlog.setLikedUsers(likedUsersList);
 
                         blogAdapter.notifyDataSetChanged();
                     }
