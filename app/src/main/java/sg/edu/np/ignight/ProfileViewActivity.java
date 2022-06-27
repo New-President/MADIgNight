@@ -118,6 +118,7 @@ public class ProfileViewActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent backToMainMenu = new Intent(getApplicationContext(), MainMenuActivity.class);
+                backToMainMenu.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 startActivity(backToMainMenu);
                 finish();
             }
