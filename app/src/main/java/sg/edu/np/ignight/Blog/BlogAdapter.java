@@ -122,6 +122,7 @@ public class BlogAdapter extends RecyclerView.Adapter<BlogViewHolder> {
         holder.likes.setText(String.valueOf(likes));
         holder.comments.setText(String.valueOf(comments));
 
+        // Like a photo and store the number of likes in the firebase
         likebutton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
