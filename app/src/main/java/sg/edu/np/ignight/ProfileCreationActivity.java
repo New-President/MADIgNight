@@ -279,6 +279,24 @@ public class ProfileCreationActivity extends AppCompatActivity {
                     // Interest
                     int interestSize = interestList.size();
                     DatabaseReference nestedInterest = nested.child("Interest");
+                    /*myRef.child(Uid).addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                            long totalInterestSize = snapshot.child("Interest").getChildrenCount();
+                            for (int i = 1; i <= totalInterestSize; i++) {
+                                String existingInterest = snapshot.child("Interest").child("Interest")
+                                // Add into interestList
+                                interestList.add(existingInterest);
+                                // Load recycler view to show it in View Holder
+                                InitRecyclerView();
+                            }
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) {
+
+                        }
+                    };*/
                     for (int i = 0; i < interestSize; i++) {
                         String interest = interestList.get(i);
                         // Save the interest in ascending order from 1
@@ -456,7 +474,7 @@ public class ProfileCreationActivity extends AppCompatActivity {
 
 
         //Preferred Locations
-        String[] locations = {"Restaurant", "Arcade", "Cafe", "Amusement Park", "Shopping", "Mall", "Hotel", "Home"};
+        String[] locations = {"Restaurant", "Arcade", "Cafe", "Amusement Park", "Hotel", "Home"};
         boolean[] selectedLocation = new boolean[locations.length];
         ArrayList<Integer> locationCheckedList = new ArrayList<>();
 
@@ -604,6 +622,9 @@ public class ProfileCreationActivity extends AppCompatActivity {
         }
         if (imageUri == null) {
             invalidList.add("No Profile Picture");
+            if (fromMenu == false){
+                invalidFieldCount++;
+            }
         }
 
         return (invalidFieldCount == 0);

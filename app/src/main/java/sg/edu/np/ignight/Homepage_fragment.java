@@ -85,7 +85,6 @@ public class Homepage_fragment extends Fragment {
                         boolean exists = false;
 
                         if (!childSnapshot.getKey().equals(FirebaseAuth.getInstance().getUid())) {
-
                             for (UserObject existingUser : userList) {
                                 if (childSnapshot.getKey().equals(existingUser.getUid())) {
                                     exists = true;
