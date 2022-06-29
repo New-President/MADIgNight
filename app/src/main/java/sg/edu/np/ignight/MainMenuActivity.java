@@ -118,45 +118,45 @@ public class MainMenuActivity extends AppCompatActivity {
                 ft.commit();
             }
         });
-        ImageView ownerProfilePic = findViewById(R.id.ownerprofile_menu);
-
-        FirebaseDatabase database = FirebaseDatabase.getInstance("https://madignight-default-rtdb.asia-southeast1.firebasedatabase.app/");
-        DatabaseReference myRef = database.getReference("user");
-        storage = FirebaseStorage.getInstance("gs://madignight.appspot.com");
-        myRef.child(Uid).addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                String existProfilePic = snapshot.child("Profile Picture").getValue(String.class);
-                storageReference = storage.getReference().child("profilePicture/" + Uid + "/" + existProfilePic);
-
-                try {
-                    final File localFile = File.createTempFile(existProfilePic, existProfilePic);
-                    storageReference.getFile(localFile)
-                            .addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
-                                @Override
-                                public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
-                                    //Toast.makeText(MainMenuActivity.this, "Picture Retrieved", Toast.LENGTH_SHORT).show();
-                                    Bitmap bitmap = BitmapFactory.decodeFile(localFile.getAbsolutePath());
-                                    ownerProfilePic.setImageBitmap(bitmap);
-                                }
-                            })
-                            .addOnFailureListener(new OnFailureListener() {
-                                @Override
-                                public void onFailure(@NonNull Exception e) {
-                                    Toast.makeText(MainMenuActivity.this, "Error loading profile picture", Toast.LENGTH_SHORT).show();
-                                }
-                            });
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
-            }
-        });
-
+//        ImageView ownerProfilePic = findViewById(R.id.ownerprofile_menu);
+//
+//        FirebaseDatabase database = FirebaseDatabase.getInstance("https://madignight-default-rtdb.asia-southeast1.firebasedatabase.app/");
+//        DatabaseReference myRef = database.getReference("user");
+//        storage = FirebaseStorage.getInstance("gs://madignight.appspot.com");
+//        myRef.child(Uid).addValueEventListener(new ValueEventListener() {
+//            @Override
+//            public void onDataChange(@NonNull DataSnapshot snapshot) {
+//                String existProfilePic = snapshot.child("Profile Picture").getValue(String.class);
+//                storageReference = storage.getReference().child("profilePicture/" + Uid + "/" + existProfilePic);
+//
+//                try {
+//                    final File localFile = File.createTempFile(existProfilePic, existProfilePic);
+//                    storageReference.getFile(localFile)
+//                            .addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
+//                                @Override
+//                                public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
+//                                    //Toast.makeText(MainMenuActivity.this, "Picture Retrieved", Toast.LENGTH_SHORT).show();
+//                                    Bitmap bitmap = BitmapFactory.decodeFile(localFile.getAbsolutePath());
+//                                    ownerProfilePic.setImageBitmap(bitmap);
+//                                }
+//                            })
+//                            .addOnFailureListener(new OnFailureListener() {
+//                                @Override
+//                                public void onFailure(@NonNull Exception e) {
+//                                    Toast.makeText(MainMenuActivity.this, "Error loading profile picture", Toast.LENGTH_SHORT).show();
+//                                }
+//                            });
+//                } catch (IOException e) {
+//                    e.printStackTrace();
+//                }
+//            }
+//
+//            @Override
+//            public void onCancelled(@NonNull DatabaseError error) {
+//
+//            }
+//        });
+//
     }
 
     // updates presence system - when user logs on, set connection to true, when user logs off, set connection to null and update last online time
