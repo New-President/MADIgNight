@@ -6,7 +6,6 @@ import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.annotation.SuppressLint;
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
@@ -20,7 +19,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -38,9 +36,6 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
 import java.util.ArrayList;
-import java.util.Random;
-import java.util.Timer;
-import java.util.TimerTask;
 import java.util.UUID;
 
 import sg.edu.np.ignight.Blog.LoadingBlogDialog;
@@ -99,16 +94,19 @@ public class CreateBlogActivity extends AppCompatActivity {
                 String blogLoc = editLocation.getText().toString().trim();
 
                 // Input Validation for missing blog image, description and location
+
                 if (imgUri == null) {
                     errorMsg.setText("Upload an image before posting!");
+
                 }
-                if(blogDesc.length() <= 5) {
+                else if (blogDesc.length() <= 5) {
                     errorMsg.setText("Give your blog more information");
                 }
                 else if (TextUtils.isEmpty(blogLoc)) {
                     errorMsg.setText("Enter a location");
                 }
                 else{
+
                     // Creates a unique ID for the blog post
                     String blogID = databaseReference.push().getKey();
                     BlogObject newBlog = new BlogObject(blogDesc, blogLoc, uploadImage(c), blogID, 0, 0, new ArrayList<String>(), new ArrayList<String>());
@@ -124,7 +122,7 @@ public class CreateBlogActivity extends AppCompatActivity {
                             loadingBlogDialog.dismissDialog();
                             finish();
                         }
-                    }, 3000);
+                    }, 2500);
 
                 }
             }
@@ -172,9 +170,10 @@ public class CreateBlogActivity extends AppCompatActivity {
     }
 
     // Upload blog image to firebase storage
-    private String uploadImage(Context c){
+    private String uploadImage(Context c) {
         // unique key to be stored in blog object to be retrieved later in the recyclerview
         final String randomKey = UUID.randomUUID().toString();
+
         FirebaseStorage storage = FirebaseStorage.getInstance("gs://madignight.appspot.com");
         StorageReference storageReference = storage.getReference().child("blog/" + uid).child(randomKey);
 
@@ -186,6 +185,7 @@ public class CreateBlogActivity extends AppCompatActivity {
                         //Snackbar.make(view, "Image Uploaded", Snackbar.LENGTH_LONG).show();
 
                         Toast.makeText(c, "Blog uploaded", Toast.LENGTH_LONG).show();
+
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
@@ -194,6 +194,8 @@ public class CreateBlogActivity extends AppCompatActivity {
                         Toast.makeText(c, "Failed to upload", Toast.LENGTH_LONG).show();
                     }
                 });
+
         return randomKey;
+
     }
 }
