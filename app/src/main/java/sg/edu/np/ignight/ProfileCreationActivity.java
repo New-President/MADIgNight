@@ -46,6 +46,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
 
 import sg.edu.np.ignight.ProfileCreation.ProfileCreationAdapter;
@@ -279,29 +281,17 @@ public class ProfileCreationActivity extends AppCompatActivity {
                     // Interest
                     int interestSize = interestList.size();
                     DatabaseReference nestedInterest = nested.child("Interest");
-                    /*myRef.child(Uid).addListenerForSingleValueEvent(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(@NonNull DataSnapshot snapshot) {
-                            long totalInterestSize = snapshot.child("Interest").getChildrenCount();
-                            for (int i = 1; i <= totalInterestSize; i++) {
-                                String existingInterest = snapshot.child("Interest").child("Interest")
-                                // Add into interestList
-                                interestList.add(existingInterest);
-                                // Load recycler view to show it in View Holder
-                                InitRecyclerView();
-                            }
+                    // new Map to store interests and update database
+                    Map interestMap = new HashMap<>();
+                    for (int i = 0; i < interests.length; i++) {
+                        if (i < interestSize) {
+                            interestMap.put("Interest" + (i + 1), interestList.get(i));
                         }
-
-                        @Override
-                        public void onCancelled(@NonNull DatabaseError error) {
-
+                        else {
+                            interestMap.put("Interest" + (i + 1), null);
                         }
-                    };*/
-                    for (int i = 0; i < interestSize; i++) {
-                        String interest = interestList.get(i);
-                        // Save the interest in ascending order from 1
-                        nestedInterest.child("Interest" + (i + 1)).setValue(interest);
                     }
+                    nestedInterest.updateChildren(interestMap);
 
                     // Relationship Preference
                     String RelationshipPref = relationshipPrefDropdown.getSelectedItem().toString();
@@ -314,11 +304,17 @@ public class ProfileCreationActivity extends AppCompatActivity {
                     // Date Location
                     int dateLocSize = dateLocList.size();
                     DatabaseReference nestedDateLoc = nested.child("Date Location");
-                    for (int i = 0; i < dateLocSize; i++) {
-                        String dateLoc = dateLocList.get(i);
-                        // Save the Date Location in ascending order from 1
-                        nestedDateLoc.child("Date Location" + (i + 1)).setValue(dateLoc);
+                    // new Map to store interests and update database
+                    Map dateLocMap = new HashMap<>();
+                    for (int i = 0; i < locations.length; i++) {
+                        if (i < dateLocSize) {
+                            dateLocMap.put("Date Location" + (i + 1), dateLocList.get(i));
+                        }
+                        else {
+                            dateLocMap.put("Date Location" + (i + 1), null);
+                        }
                     }
+                    nestedDateLoc.updateChildren(dateLocMap);
 
                     // Profile Picture
                     if(imageUri != null){
@@ -367,6 +363,9 @@ public class ProfileCreationActivity extends AppCompatActivity {
         });
     }
 
+    //Preferred Locations
+    private String[] locations = {"Restaurant", "Arcade", "Cafe", "Amusement Park", "Hotel", "Home"};
+    private String[] interests = {"Running", "Cooking", "Gaming", "Swimming", "Reading", "Shopping", "Others"};
     // method to initialise Inputs
     private void InitInputs() {
         //Gender (Spinner, dropdown)
@@ -385,7 +384,6 @@ public class ProfileCreationActivity extends AppCompatActivity {
         genderPrefDropdown.setAdapter(genderPrefAdapter);
 
         // Interest (drop down button --> display output in a view holder)
-        String[] interests = {"Running", "Cooking", "Gaming", "Swimming", "Reading", "Shopping", "Others"};
         boolean[] selectedInterest = new boolean[interests.length];
         ArrayList<Integer> interestCheckedList = new ArrayList<>();
 
@@ -473,8 +471,6 @@ public class ProfileCreationActivity extends AppCompatActivity {
         });
 
 
-        //Preferred Locations
-        String[] locations = {"Restaurant", "Arcade", "Cafe", "Amusement Park", "Hotel", "Home"};
         boolean[] selectedLocation = new boolean[locations.length];
         ArrayList<Integer> locationCheckedList = new ArrayList<>();
 
@@ -621,8 +617,8 @@ public class ProfileCreationActivity extends AppCompatActivity {
             invalidFieldCount++;
         }
         if (imageUri == null) {
-            invalidList.add("No Profile Picture");
-            if (fromMenu == false){
+            if (fromLogin){
+                invalidList.add("No Profile Picture");
                 invalidFieldCount++;
             }
         }
@@ -632,7 +628,6 @@ public class ProfileCreationActivity extends AppCompatActivity {
 
     // Select the chosen spinner value to display when loading back user's input
     private void selectSpinnerValue(Spinner spinner, String myString) {
-        int index = 0;
         for (int i = 0; i < spinner.getCount(); i++) {
             if (spinner.getItemAtPosition(i).toString().equals(myString)) {
                 spinner.setSelection(i);
