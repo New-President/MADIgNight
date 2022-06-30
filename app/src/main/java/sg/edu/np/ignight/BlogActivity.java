@@ -113,12 +113,12 @@ public class BlogActivity extends AppCompatActivity {
     }
 
     private void getBlogList() {
+        blogIDList = new ArrayList<>();
         databaseReference.addChildEventListener(new ChildEventListener() {
 
             // Updates changes to the activity when a change is made in the database
             @Override
             public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
-                ArrayList<String> blogIDList = new ArrayList<>();
 
                 if (snapshot.exists()) {
                     if (!blogIDList.contains(snapshot.getKey())) {
