@@ -34,6 +34,7 @@ import sg.edu.np.ignight.Objects.UserObject;
 
 public class BlogActivity extends AppCompatActivity {
     private ArrayList<BlogObject> blogsList;
+    private ArrayList<String> blogIDList;
     private Context context;
     private DatabaseReference databaseReference;
     private FirebaseDatabase database;
@@ -41,7 +42,6 @@ public class BlogActivity extends AppCompatActivity {
     private RecyclerView blogRV;
     private BlogAdapter blogAdapter;
     private LinearLayoutManager blogLayoutManager;
-
     private UserObject userObject;
 
     @Override
@@ -51,7 +51,7 @@ public class BlogActivity extends AppCompatActivity {
         context = this;
         FirebaseAuth auth = FirebaseAuth.getInstance();
         FirebaseUser user = auth.getCurrentUser();
-
+        Log.d("testtest", "test");
         // When viewing own profile, gets own UID
         String uid = user.getUid();
 
@@ -99,6 +99,7 @@ public class BlogActivity extends AppCompatActivity {
         });
 
     }
+
 
     private void initRecyclerView() {
         blogsList = new ArrayList<>();
@@ -203,7 +204,12 @@ public class BlogActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onChildRemoved(@NonNull DataSnapshot snapshot) {}
+            public void onChildRemoved(@NonNull DataSnapshot snapshot) {
+                int index = blogIDList.indexOf(snapshot.getKey());
+                blogsList.remove(index);
+                blogIDList.remove(index);
+                blogAdapter.notifyDataSetChanged();
+            }
 
             @Override
             public void onChildMoved(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {}

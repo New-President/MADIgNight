@@ -37,6 +37,7 @@ import com.google.firebase.storage.UploadTask;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 import sg.edu.np.ignight.Blog.LoadingBlogDialog;
@@ -49,7 +50,6 @@ public class CreateBlogActivity extends AppCompatActivity {
     private Uri imgUri;
     private Button uploadBtn;
     private String uid;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -68,6 +68,7 @@ public class CreateBlogActivity extends AppCompatActivity {
         Intent intent = getIntent();
         Boolean fromEdit = intent.getBooleanExtra("fromEdit", false);
         BlogObject blog = (BlogObject) intent.getSerializableExtra("blogObject");
+        Context context = (Context) intent.getSerializableExtra("context");
 
         ImageButton backBtn = findViewById(R.id.createBlogBackButton);
         blogImg = findViewById(R.id.createBlogImg);
@@ -106,7 +107,6 @@ public class CreateBlogActivity extends AppCompatActivity {
 
         postBtn.setOnClickListener(new View.OnClickListener() {
             @SuppressLint("SetTextI18n")
-            @RequiresApi(api = Build.VERSION_CODES.N)
             @Override
             public void onClick(View view) {
                 String blogDesc = editDesc.getText().toString().trim();
@@ -133,7 +133,7 @@ public class CreateBlogActivity extends AppCompatActivity {
                     databaseReference.child(blogID).setValue(newBlog);
 
                     // Creates loading dialog with 3 seconds delay for image to upload
-                    loadingBlogDialog.startLoadingDialog();
+                    loadingBlogDialog.startLoadingDialog("Posting Blog!");
                     Handler handler = new Handler();
                     handler.postDelayed(new Runnable() {
                         @Override
@@ -150,8 +150,16 @@ public class CreateBlogActivity extends AppCompatActivity {
         deleteBlogBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
-                finish();
+                databaseReference.child(blog.blogID).removeValue();
+                loadingBlogDialog.startLoadingDialog("Deleting Blog!");
+                Handler handler = new Handler();
+                handler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        loadingBlogDialog.dismissDialog();
+                        finish();
+                    }
+                }, 2500);
             }
         });
 

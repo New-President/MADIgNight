@@ -11,7 +11,7 @@
         android:layout_height="20dp"
         android:layout_marginTop="16dp"
         android:layout_marginBottom="24dp"
-        android:text="Creating Blog.."
+        android:text="A moment please!"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.498"

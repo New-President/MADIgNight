@@ -247,7 +247,6 @@ public class ProfileViewActivity extends AppCompatActivity {
                 Glide.with(getApplicationContext())
                         .load(storageReference)
                        .into(profilePicture);
-                Log.d("test2", profilePictureName);
             }
 
             @Override
