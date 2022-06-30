@@ -1,9 +1,10 @@
 package sg.edu.np.ignight.Objects;
 
+import java.io.Serializable;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 
-public class BlogObject {
+public class BlogObject implements Serializable {
     public String description, location, imgID, blogID;
     public int likes;
     public int comments;
@@ -67,4 +68,6 @@ public class BlogObject {
     public void setLikedUsers(ArrayList<String> likedUsersList) {
         this.likedUsersList = likedUsersList;
     }
+
+
 }

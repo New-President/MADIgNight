@@ -3,6 +3,7 @@ package sg.edu.np.ignight.Blog;
 import static android.content.ContentValues.TAG;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.util.Log;
@@ -36,8 +37,11 @@ import com.nostra13.universalimageloader.core.display.FadeInBitmapDisplayer;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.Serializable;
 import java.util.ArrayList;
 
+import sg.edu.np.ignight.BlogActivity;
+import sg.edu.np.ignight.CreateBlogActivity;
 import sg.edu.np.ignight.Objects.BlogObject;
 import sg.edu.np.ignight.Objects.UserObject;
 import sg.edu.np.ignight.R;
@@ -100,7 +104,8 @@ public class BlogAdapter extends RecyclerView.Adapter<BlogViewHolder> {
             }
         });
         ImageView likebutton = holder.likesButton; //add fullscreen function
-        ImageView commentButton = holder.commentButton; //view profile
+        ImageView commentButton = holder.commentButton; //comment
+        ImageView editBlogButton = holder.editBlogButton; //comment
 
         ImageView editBlogBtn = holder.editBlogButton;
         if (canEdit){
@@ -148,6 +153,16 @@ public class BlogAdapter extends RecyclerView.Adapter<BlogViewHolder> {
             @Override
             public void onClick(View view) {
                 //go to comment activity
+            }
+        });
+
+        editBlogButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent editBlogPage = new Intent(c, CreateBlogActivity.class);
+                editBlogPage.putExtra("fromEdit", true);
+                editBlogPage.putExtra("blogObject", (Serializable) blog);
+                c.startActivity(editBlogPage);
             }
         });
 

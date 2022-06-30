@@ -167,10 +167,20 @@
                         android:id="@+id/postBtn"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginBottom="32dp"
+                        android:layout_marginBottom="8dp"
                         android:background="@drawable/btn_bg"
                         android:elevation="10dp"
                         android:text="Post"
+                        app:layout_constraintBottom_toTopOf="@+id/deleteBlogBtn"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent" />
+
+                    <Button
+                        android:id="@+id/deleteBlogBtn"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:backgroundTint="#BFFF0000"
+                        android:text="Delete"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent" />

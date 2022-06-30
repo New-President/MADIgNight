@@ -35,6 +35,7 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.UUID;
 
@@ -60,16 +61,34 @@ public class CreateBlogActivity extends AppCompatActivity {
         FirebaseDatabase database = FirebaseDatabase.getInstance("https://madignight-default-rtdb.asia-southeast1.firebasedatabase.app");
         DatabaseReference databaseReference = database.getReference("user").child(uid).child("blog");
         Context c = this;
-
         // Loading dialog for when blog is uploaded
         final LoadingBlogDialog loadingBlogDialog = new LoadingBlogDialog(CreateBlogActivity.this);
+
+        // from edit button
+        Intent intent = getIntent();
+        Boolean fromEdit = intent.getBooleanExtra("fromEdit", false);
+        BlogObject blog = (BlogObject) intent.getSerializableExtra("blogObject");
+
         ImageButton backBtn = findViewById(R.id.createBlogBackButton);
         blogImg = findViewById(R.id.createBlogImg);
         uploadBtn = findViewById(R.id.uploadBtn);
+        Button deleteBlogBtn = findViewById(R.id.deleteBlogBtn);
         Button postBtn = findViewById(R.id.postBtn);
         EditText editDesc = findViewById(R.id.editBlogDesc);
         EditText editLocation = findViewById(R.id.editBlogLocation);
         TextView errorMsg = findViewById(R.id.errorMsg);
+        TextView blogHeader = findViewById(R.id.blogHeader);
+
+        if(fromEdit){
+            deleteBlogBtn.setVisibility(View.VISIBLE);
+            postBtn.setText("Confirm");
+            blogHeader.setText("Editing Blog");
+            uploadBtn.setText("Change");
+        }
+        else{
+            deleteBlogBtn.setVisibility(View.GONE);
+
+        }
 
         backBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -127,6 +146,17 @@ public class CreateBlogActivity extends AppCompatActivity {
                 }
             }
         });
+
+        deleteBlogBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                finish();
+            }
+        });
+
+
+
 
         // Debug
         databaseReference.addValueEventListener(new ValueEventListener() {
