@@ -61,27 +61,49 @@ public class ChatListFragment extends Fragment {
         ArrayList<String> chatIdList = new ArrayList<>();
         String currentUserUID = FirebaseAuth.getInstance().getUid();
 
-        DatabaseReference userDB = FirebaseDatabase.getInstance("https://madignight-default-rtdb.asia-southeast1.firebasedatabase.app/").getReference().child("user");
+        DatabaseReference rootDB = FirebaseDatabase.getInstance("https://madignight-default-rtdb.asia-southeast1.firebasedatabase.app/").getReference();
+        DatabaseReference userDB = rootDB.child("user");
+        DatabaseReference chatDB = rootDB.child("chat");
 
         userDB.child(currentUserUID).child("chats").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if (snapshot.exists()) {
                     for (DataSnapshot chatIDSnapshot : snapshot.getChildren()) {
-                        if (chatIdList.contains(chatIDSnapshot.getKey())) {
+
+                        String chatID = chatIDSnapshot.getKey();
+
+                        if (chatIdList.contains(chatID)) {
                             continue;
                         }
 
                         String targetUserUID = chatIDSnapshot.getValue().toString();
 
-                        userDB.addListenerForSingleValueEvent(new ValueEventListener() {
+                        userDB.child(targetUserUID).child("username").addListenerForSingleValueEvent(new ValueEventListener() {
                             @Override
                             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                String chatName = snapshot.child(targetUserUID).child("username").getValue().toString();
-                                ChatObject chat = new ChatObject(chatIDSnapshot.getKey(), chatName, targetUserUID);
+                                String chatName = snapshot.getValue().toString();
 
-                                chatList.add(chat);
-                                chatListAdapter.notifyDataSetChanged();
+                                chatDB.child(chatID).child("unread").child(currentUserUID).addListenerForSingleValueEvent(new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                        int unreadMsgCount = 0;
+                                        if (snapshot.exists()) {
+                                            unreadMsgCount = Integer.parseInt(snapshot.getValue().toString());
+                                        }
+
+                                        ChatObject chat = new ChatObject(chatID, chatName, targetUserUID, unreadMsgCount);
+
+                                        chatList.add(chat);
+
+                                        chatListAdapter.notifyDataSetChanged();
+                                    }
+
+                                    @Override
+                                    public void onCancelled(@NonNull DatabaseError error) {
+                                        Log.e(TAG, "onCancelled: " + error.getMessage());
+                                    }
+                                });
                             }
 
                             @Override
@@ -90,7 +112,57 @@ public class ChatListFragment extends Fragment {
                             }
                         });
 
-                        chatIdList.add(chatIDSnapshot.getKey());
+                        userDB.child(targetUserUID).child("username").addValueEventListener(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                if (chatIdList.contains(chatID)) {
+                                    String chatName = snapshot.getValue().toString();
+
+                                    for (ChatObject chatIterator : chatList) {
+                                        if (chatIterator.getChatId().equals(chatID)) {
+                                            chatIterator.setChatName(chatName);
+
+                                            chatListAdapter.notifyDataSetChanged();
+                                            break;
+                                        }
+                                    }
+                                }
+                            }
+
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError error) {
+                                Log.e(TAG, "onCancelled: " + error.getMessage());
+                            }
+                        });
+
+                        chatDB.child(chatID).child("unread").child(currentUserUID).addValueEventListener(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                if (chatIdList.contains(chatID)) {
+                                    int unreadMsgCount = 0;
+                                    if (snapshot.exists()) {
+                                        unreadMsgCount = Integer.parseInt(snapshot.getValue().toString());
+                                    }
+
+                                    for (ChatObject chatIterator : chatList) {
+                                        if (chatIterator.getChatId().equals(chatID)) {
+                                            chatIterator.setUnreadMsgCount(unreadMsgCount);
+
+                                            chatListAdapter.notifyDataSetChanged();
+                                            break;
+                                        }
+                                    }
+                                }
+                            }
+
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError error) {
+                                Log.e(TAG, "onCancelled: " + error.getMessage());
+                            }
+                        });
+
+
+                        chatIdList.add(chatID);
                     }
                 }
             }

@@ -1,8 +1,5 @@
 package sg.edu.np.ignight.Chat;
 
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.ValueEventListener;
-
 import java.text.ParseException;
 import java.util.ArrayList;
 
@@ -19,8 +16,6 @@ public class MessageObject {
     private boolean isFirstMessage;
     private boolean isSent;
     private boolean isSeen;
-    private DatabaseReference dbRef;
-    private ValueEventListener listener;
 
     public MessageObject(String chatId, String messageId, String creatorId, String message, String timestamp, ArrayList<String> mediaUrlList) throws ParseException {
         this.chatId = chatId;
@@ -58,19 +53,7 @@ public class MessageObject {
     public boolean isSent() {
         return isSent;
     }
-    public DatabaseReference getDbRef() {
-        return dbRef;
-    }
-    public ValueEventListener getListener() {
-        return listener;
-    }
 
-    public void setDbRef(DatabaseReference dbRef) {
-        this.dbRef = dbRef;
-    }
-    public void setListener(ValueEventListener listener) {
-        this.listener = listener;
-    }
     public void setSent(boolean sent) {
         isSent = sent;
     }

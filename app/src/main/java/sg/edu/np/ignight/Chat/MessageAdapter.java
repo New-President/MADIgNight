@@ -1,6 +1,9 @@
 package sg.edu.np.ignight.Chat;
 
+import static android.content.ContentValues.TAG;
+
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,7 +17,16 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.facebook.drawee.drawable.ProgressBarDrawable;
 import com.facebook.drawee.generic.GenericDraweeHierarchyBuilder;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.stfalcon.frescoimageviewer.ImageViewer;
 
 import java.text.ParseException;
@@ -142,10 +154,33 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
             }
         }
         else {
+            Log.v("message adapt", thisMessage.getMessageId());
+            Log.v("message adapt", "item view type 0");
+            Log.v("message adapt", "is sent: " + Boolean.toString(thisMessage.isSent()));
+            Log.v("message adapt", "is seen: " + Boolean.toString(thisMessage.isSeen()));
+
+            DatabaseReference chatDB = FirebaseDatabase.getInstance("https://madignight-default-rtdb.asia-southeast1.firebasedatabase.app/").getReference().child("chat").child(thisMessage.getChatId());
+            DatabaseReference messageDB = chatDB.child("messages").child(thisMessage.getMessageId());
+
             // update seen status of messages received
             if (!thisMessage.isSeen()) {
-                thisMessage.getDbRef().setValue(true);
-                thisMessage.getDbRef().removeEventListener(thisMessage.getListener());
+                messageDB.child("isSeen").setValue(true);
+                chatDB.child("unread").child(FirebaseAuth.getInstance().getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        int unreadCount = 0;
+                        if (snapshot.exists()) {
+                            unreadCount = Integer.parseInt(snapshot.getValue().toString());
+                        }
+
+                        chatDB.child("unread").child(FirebaseAuth.getInstance().getUid()).setValue((unreadCount == 0)?unreadCount:(unreadCount - 1));
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+                        Log.e(TAG, "onCancelled: " + error.getMessage());
+                    }
+                });
             }
         }
     }
