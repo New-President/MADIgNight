@@ -267,7 +267,7 @@ public class ChatActivity extends AppCompatActivity {
     private void getChatMessages() {
         chatDB.child("messages").addChildEventListener(new ChildEventListener() {
             @Override
-            public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+            public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {  // initialize messages and add to the list when new messages are sent
                 ArrayList<String> messageIDList = new ArrayList<>();
 
                 if (snapshot.exists()) {
@@ -312,7 +312,7 @@ public class ChatActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onChildChanged(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+            public void onChildChanged(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {  // updates the existing message with the relevant fields when it changes
                 for (MessageObject messageIterator : messageList) {
                     if (messageIterator.getMessageId().equals(snapshot.getKey())) {
                         messageIterator.setSeen(snapshot.child("isSeen").getValue().toString().equals("true"));
@@ -345,6 +345,7 @@ public class ChatActivity extends AppCompatActivity {
     // send message
     private void sendMessage() {
 
+        // checks if the text entered is valid (gets rid of leading and trailing spaces and checks length is not 0)
         String messageText = messageInput.getText().toString().trim();
         boolean validText = !messageText.isEmpty();
 
@@ -364,13 +365,18 @@ public class ChatActivity extends AppCompatActivity {
 
         final Map newMessageMap = new HashMap<>();
 
+        // put relevant fields and values in a map to be updated to the database
         if (validText) {
             newMessageMap.put("messages/" + messageId + "/text", messageText);
         }
-        newMessageMap.put("messages/" + messageId + "/creator", currentUserUID);
-        newMessageMap.put("messages/" + messageId + "/timestamp", new Date().toString());
 
+        String timestamp = new Date().toString();
+
+        newMessageMap.put("messages/" + messageId + "/creator", currentUserUID);
+        newMessageMap.put("messages/" + messageId + "/timestamp", timestamp);
         newMessageMap.put("messages/" + messageId + "/isSeen", false);
+
+        newMessageMap.put("lastUsed", timestamp);
 
         chatDB.child("unread").child(targetUserID).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -389,6 +395,7 @@ public class ChatActivity extends AppCompatActivity {
                     for (String mediaUri : mediaUriListCopy) {
                         String mediaId = chatDB.child("messages/" + messageId + "media").push().getKey();
                         mediaIdList.add(mediaId);
+                        // store the image in Firebase Storage
                         final StorageReference filePath = FirebaseStorage.getInstance("gs://madignight.appspot.com").getReference().child("chat").child(chatID).child(messageId).child(mediaId);
 
                         UploadTask uploadTask = filePath.putFile(Uri.parse(mediaUri));

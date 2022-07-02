@@ -32,6 +32,7 @@ import com.google.firebase.storage.UploadTask;
 import com.bumptech.glide.Glide;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -136,14 +137,15 @@ public class ProfileViewActivity extends AppCompatActivity {
         ignightButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                userDB.child(currentUserUID).child("chats").addListenerForSingleValueEvent(new ValueEventListener() {
+                userDB.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
                         boolean chatExists = false;
                         String existingChatID = "";
 
-                        if (snapshot.exists()) {
-                            for (DataSnapshot chatIdSnapshot : snapshot.getChildren()) {
+                        // check if a chat exists between the two users
+                        if (snapshot.child(currentUserUID).child("chats").exists()) {
+                            for (DataSnapshot chatIdSnapshot : snapshot.child(currentUserUID).child("chats").getChildren()) {
 
                                 if (chatIdSnapshot.getValue().toString().equals(targetUserUID)) {
                                     chatExists = true;
@@ -153,16 +155,17 @@ public class ProfileViewActivity extends AppCompatActivity {
                             }
                         }
 
-                        if (!chatExists) {
+                        if (!chatExists) {  // creates a new chat with the target user if it does not exist
                             String newChatID = chatDB.push().getKey();
-                            Map userMap = new HashMap<>();
-                            userMap.put(currentUserUID, true);
-                            userMap.put(targetUserUID, true);
+                            Map newChatMap = new HashMap<>();
+                            newChatMap.put("users/" + currentUserUID, snapshot.child(currentUserUID).child("username").getValue().toString());
+                            newChatMap.put("users/" + targetUserUID, snapshot.child(targetUserUID).child("username").getValue().toString());
+                            newChatMap.put("lastUsed", new Date().toString());
 
                             userDB.child(currentUserUID).child("chats").child(newChatID).setValue(targetUserUID);
                             userDB.child(targetUserUID).child("chats").child(newChatID).setValue(currentUserUID);
 
-                            chatDB.child(newChatID).child("users").updateChildren(userMap).addOnCompleteListener(new OnCompleteListener() {
+                            chatDB.child(newChatID).updateChildren(newChatMap).addOnCompleteListener(new OnCompleteListener() {
                                 @Override
                                 public void onComplete(@NonNull Task task) {
                                     if (task.isSuccessful()) {
@@ -180,7 +183,7 @@ public class ProfileViewActivity extends AppCompatActivity {
                                 }
                             });
                         }
-                        else {
+                        else {  // go to the chat if it already exists
                             Intent intent = new Intent(view.getContext(), ChatActivity.class);
                             Bundle bundle = new Bundle();
                             bundle.putString("chatID", existingChatID);
