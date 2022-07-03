@@ -177,7 +177,7 @@ public class BlogAdapter extends RecyclerView.Adapter<BlogViewHolder> {
             }).addOnFailureListener(new OnFailureListener() {
                 @Override
                 public void onFailure(@NonNull Exception e) {
-                    Toast.makeText(c, "Failed to retrieve blogs", Toast.LENGTH_LONG).show();
+                    Toast.makeText(c, "Failed to retrieve blogs", Toast.LENGTH_SHORT).show();
                 }
             });
 

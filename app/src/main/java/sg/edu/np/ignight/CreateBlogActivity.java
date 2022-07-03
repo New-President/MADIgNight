@@ -74,7 +74,6 @@ public class CreateBlogActivity extends AppCompatActivity {
         Intent intent = getIntent();
         Boolean fromEdit = intent.getBooleanExtra("fromEdit", false);
         BlogObject blog = (BlogObject) intent.getSerializableExtra("blogObject");
-        Context context = (Context) intent.getSerializableExtra("context");
 
         StorageReference storageReference = FirebaseStorage.getInstance().getReference("blog").child(uid);
         ImageButton backBtn = findViewById(R.id.createBlogBackButton);
@@ -108,7 +107,7 @@ public class CreateBlogActivity extends AppCompatActivity {
                 }).addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
-                        Toast.makeText(c, "Failed to retrieve blogs", Toast.LENGTH_LONG).show();
+                        Toast.makeText(c, "Failed to retrieve image", Toast.LENGTH_SHORT).show();
                     }
                 });
 
