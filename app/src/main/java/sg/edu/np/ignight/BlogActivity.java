@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
@@ -28,6 +29,7 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 import java.util.List;
 
+import sg.edu.np.ignight.Blog.LoadingBlogDialog;
 import sg.edu.np.ignight.Objects.BlogObject;
 import sg.edu.np.ignight.Blog.BlogAdapter;
 import sg.edu.np.ignight.Objects.UserObject;
@@ -49,6 +51,16 @@ public class BlogActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_blog);
         context = this;
+
+        LoadingBlogDialog loadingBlogDialog = new LoadingBlogDialog(this);
+        loadingBlogDialog.startLoadingDialog("Loading blogs..");
+        Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                loadingBlogDialog.dismissDialog();
+            }
+        }, 2000);
         FirebaseAuth auth = FirebaseAuth.getInstance();
         FirebaseUser user = auth.getCurrentUser();
         Log.d("testtest", "test");

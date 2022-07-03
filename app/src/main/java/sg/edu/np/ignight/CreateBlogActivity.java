@@ -121,7 +121,6 @@ public class CreateBlogActivity extends AppCompatActivity {
         }
         else{
             deleteBlogBtn.setVisibility(View.GONE);
-
         }
 
         backBtn.setOnClickListener(new View.OnClickListener() {
