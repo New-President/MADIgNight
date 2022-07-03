@@ -1,22 +1,42 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/chatLayout">
 
     <TextView
         android:id="@+id/chatTitle"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:background="#CBC8C8"
         android:padding="10dp"
         android:text="chat name"
-        android:textSize="20sp" />
+        android:textSize="20sp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
+    <TextView
+        android:id="@+id/unreadMsgCount"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="@id/chatTitle"
+        app:layout_constraintBottom_toBottomOf="@id/chatTitle"
+        app:layout_constraintEnd_toEndOf="@id/chatTitle"
+        android:textColor="#000000"
+        android:text="1 unread"
+        android:textStyle="italic"
+        android:textSize="16sp"
+        android:layout_marginEnd="20dp"
+        android:visibility="gone"/>
 
     <View
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="1dp"
-        android:background="#000000" />
+        android:background="#000000"
+        app:layout_constraintTop_toBottomOf="@id/chatTitle"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
 
-</LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

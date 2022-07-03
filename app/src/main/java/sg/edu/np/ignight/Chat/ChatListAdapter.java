@@ -9,6 +9,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
@@ -50,6 +51,15 @@ public class ChatListAdapter extends RecyclerView.Adapter<ChatListAdapter.ChatLi
                 view.getContext().startActivity(intent);
             }
         });
+
+        int unreadMsgCount = chatList.get(holder.getAdapterPosition()).getUnreadMsgCount();
+        if (unreadMsgCount > 0) {
+            holder.chatUnreadMsgCount.setText(unreadMsgCount + " unread");
+            holder.chatUnreadMsgCount.setVisibility(View.VISIBLE);
+        }
+        else {
+            holder.chatUnreadMsgCount.setVisibility(View.GONE);
+        }
     }
 
     @Override
@@ -58,13 +68,14 @@ public class ChatListAdapter extends RecyclerView.Adapter<ChatListAdapter.ChatLi
     }
 
     public class ChatListViewHolder extends RecyclerView.ViewHolder {
-        public TextView chatTitle;
-        public LinearLayout chatLayout;
+        public TextView chatTitle, chatUnreadMsgCount;
+        public ConstraintLayout chatLayout;
 
         public ChatListViewHolder(@NonNull View itemView) {
             super(itemView);
             chatTitle = itemView.findViewById(R.id.chatTitle);
             chatLayout = itemView.findViewById(R.id.chatLayout);
+            chatUnreadMsgCount = itemView.findViewById(R.id.unreadMsgCount);
         }
     }
 }

@@ -267,7 +267,7 @@ public class ChatActivity extends AppCompatActivity {
     private void getChatMessages() {
         chatDB.child("messages").addChildEventListener(new ChildEventListener() {
             @Override
-            public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+            public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {  // initialize messages and add to the list when new messages are sent
                 ArrayList<String> messageIDList = new ArrayList<>();
 
                 if (snapshot.exists()) {
@@ -301,42 +301,27 @@ public class ChatActivity extends AppCompatActivity {
 
                         message.setFirstMessage(messageList);
                         message.setSent(true);
+                        message.setSeen(snapshot.child("isSeen").getValue().toString().equals("true"));
 
                         messageList.add(message);
                         messageLayoutManager.smoothScrollToPosition(messageRV, new RecyclerView.State(), messageList.size() - 1);
 
                         messageAdapter.notifyDataSetChanged();
-
-                        MessageObject finalMessage = message;
-                        ValueEventListener messageIsSeenListener = new ValueEventListener() {
-                            @Override
-                            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                if (snapshot.getValue() == null) {
-                                    finalMessage.setSeen(false);
-                                }
-                                else {
-                                    finalMessage.setSeen(snapshot.getValue().toString().equals("true"));
-                                }
-
-                                messageAdapter.notifyDataSetChanged();
-                            }
-
-                            @Override
-                            public void onCancelled(@NonNull DatabaseError error) {
-                                Log.e(TAG, "onCancelled: " + error.getMessage());
-                            }
-                        };
-
-                        chatDB.child("messages").child(snapshot.getKey()).child("isSeen").addValueEventListener(messageIsSeenListener);
-
-                        message.setDbRef(chatDB.child("messages").child(snapshot.getKey()).child("isSeen"));
-                        message.setListener(messageIsSeenListener);
                     }
                 }
             }
 
             @Override
-            public void onChildChanged(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {}
+            public void onChildChanged(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {  // updates the existing message with the relevant fields when it changes
+                for (MessageObject messageIterator : messageList) {
+                    if (messageIterator.getMessageId().equals(snapshot.getKey())) {
+                        messageIterator.setSeen(snapshot.child("isSeen").getValue().toString().equals("true"));
+
+                        messageAdapter.notifyDataSetChanged();
+                        break;
+                    }
+                }
+            }
 
             @Override
             public void onChildRemoved(@NonNull DataSnapshot snapshot) {}
@@ -360,6 +345,7 @@ public class ChatActivity extends AppCompatActivity {
     // send message
     private void sendMessage() {
 
+        // checks if the text entered is valid (gets rid of leading and trailing spaces and checks length is not 0)
         String messageText = messageInput.getText().toString().trim();
         boolean validText = !messageText.isEmpty();
 
@@ -376,57 +362,76 @@ public class ChatActivity extends AppCompatActivity {
         }
 
         String messageId = chatDB.push().getKey();
-        DatabaseReference newMessageDB = chatDB.child("messages").child(messageId);
 
         final Map newMessageMap = new HashMap<>();
 
+        // put relevant fields and values in a map to be updated to the database
         if (validText) {
-            newMessageMap.put("text", messageText);
+            newMessageMap.put("messages/" + messageId + "/text", messageText);
         }
-        newMessageMap.put("creator", currentUserUID);
-        newMessageMap.put("timestamp", new Date().toString());
 
-        newMessageMap.put("isSeen", false);
+        String timestamp = new Date().toString();
 
-        ArrayList<String> mediaUrlList = new ArrayList<>();
+        newMessageMap.put("messages/" + messageId + "/creator", currentUserUID);
+        newMessageMap.put("messages/" + messageId + "/timestamp", timestamp);
+        newMessageMap.put("messages/" + messageId + "/isSeen", false);
 
-        if (!mediaUriListCopy.isEmpty()) {
-            final int[] totalMediaUploaded = {0};
-            ArrayList<String> mediaIdList = new ArrayList<>();
+        newMessageMap.put("lastUsed", timestamp);
 
-            for (String mediaUri : mediaUriListCopy) {
-                String mediaId = newMessageDB.child("media").push().getKey();
-                mediaIdList.add(mediaId);
-                final StorageReference filePath = FirebaseStorage.getInstance("gs://madignight.appspot.com").getReference().child("chat").child(chatID).child(messageId).child(mediaId);
+        chatDB.child("unread").child(targetUserID).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                int unreadCount = 0;
+                if (snapshot.exists()) {
+                    unreadCount = Integer.parseInt(snapshot.getValue().toString());
+                }
 
-                UploadTask uploadTask = filePath.putFile(Uri.parse(mediaUri));
+                newMessageMap.put("unread/" + targetUserID, unreadCount + 1);
 
-                uploadTask.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                    @Override
-                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                        filePath.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                if (!mediaUriListCopy.isEmpty()) {
+                    final int[] totalMediaUploaded = {0};
+                    ArrayList<String> mediaIdList = new ArrayList<>();
+
+                    for (String mediaUri : mediaUriListCopy) {
+                        String mediaId = chatDB.child("messages/" + messageId + "media").push().getKey();
+                        mediaIdList.add(mediaId);
+                        // store the image in Firebase Storage
+                        final StorageReference filePath = FirebaseStorage.getInstance("gs://madignight.appspot.com").getReference().child("chat").child(chatID).child(messageId).child(mediaId);
+
+                        UploadTask uploadTask = filePath.putFile(Uri.parse(mediaUri));
+
+                        uploadTask.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                             @Override
-                            public void onSuccess(Uri uri) {
-                                mediaUrlList.add(uri.toString());
+                            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                                filePath.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                                    @Override
+                                    public void onSuccess(Uri uri) {
+                                        newMessageMap.put("messages/" + messageId + "/media/" + mediaIdList.get(totalMediaUploaded[0]) + "/" , uri.toString());
 
-                                newMessageMap.put("/media/" + mediaIdList.get(totalMediaUploaded[0]) + "/" , uri.toString());
+                                        totalMediaUploaded[0] += 1;
 
-                                totalMediaUploaded[0] += 1;
+                                        if (totalMediaUploaded[0] == mediaUriListCopy.size()) {
 
-                                if (totalMediaUploaded[0] == mediaUriListCopy.size()) {
-                                    updateDatabaseWithNewMessage(newMessageDB, newMessageMap);
-                                }
+                                            updateDatabaseWithNewMessage(chatDB, newMessageMap);
+                                        }
+                                    }
+                                });
                             }
                         });
                     }
-                });
+                }
+                else {
+                    if (validText) {
+                        updateDatabaseWithNewMessage(chatDB, newMessageMap);
+                    }
+                }
             }
-        }
-        else {
-            if (validText) {
-                updateDatabaseWithNewMessage(newMessageDB, newMessageMap);
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Log.e(TAG, "onCancelled: " + error.getMessage());
             }
-        }
+        });
     }
 
     // update database with new message (from sendMessage()) and remove progress bar when done
