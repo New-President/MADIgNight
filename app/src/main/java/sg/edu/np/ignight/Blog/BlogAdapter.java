@@ -72,7 +72,6 @@ public class BlogAdapter extends RecyclerView.Adapter<BlogViewHolder> {
     public void onBindViewHolder(@NonNull BlogViewHolder holder, int position) {
         BlogObject blog = data.get(position);
         FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
-        FirebaseDatabase database = FirebaseDatabase.getInstance("https://madignight-default-rtdb.asia-southeast1.firebasedatabase.app/");
         FirebaseStorage storage = FirebaseStorage.getInstance();
 
         String uid;

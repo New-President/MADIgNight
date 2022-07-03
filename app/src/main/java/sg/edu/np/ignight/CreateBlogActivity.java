@@ -8,6 +8,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -22,6 +24,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
@@ -31,10 +34,13 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FileDownloadTask;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
+import java.io.File;
+import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -70,6 +76,7 @@ public class CreateBlogActivity extends AppCompatActivity {
         BlogObject blog = (BlogObject) intent.getSerializableExtra("blogObject");
         Context context = (Context) intent.getSerializableExtra("context");
 
+        StorageReference storageReference = FirebaseStorage.getInstance().getReference("blog").child(uid);
         ImageButton backBtn = findViewById(R.id.createBlogBackButton);
         blogImg = findViewById(R.id.createBlogImg);
         uploadBtn = findViewById(R.id.uploadBtn);
@@ -85,6 +92,33 @@ public class CreateBlogActivity extends AppCompatActivity {
             postBtn.setText("Confirm");
             blogHeader.setText("Editing Blog");
             uploadBtn.setText("Change");
+
+            editDesc.setText(blog.description);
+            editLocation.setText(blog.location);
+
+            try{
+                File localfile = File.createTempFile("tempfile", ".png");
+                storageReference.child(blog.imgID).getFile(localfile).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
+                    @Override
+                    public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
+                        Bitmap bitmap = BitmapFactory.decodeFile(localfile.getAbsolutePath());
+                        blogImg.setPadding(0,0,0,0);
+                        blogImg.setImageBitmap(bitmap);
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Toast.makeText(c, "Failed to retrieve blogs", Toast.LENGTH_LONG).show();
+                    }
+                });
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            catch (Exception ex){
+                Log.d("Load Image Error", "Failed to load image");
+            }
+
         }
         else{
             deleteBlogBtn.setVisibility(View.GONE);
@@ -114,7 +148,7 @@ public class CreateBlogActivity extends AppCompatActivity {
 
                 // Input Validation for missing blog image, description and location
 
-                if (imgUri == null) {
+                if (imgUri == null && !fromEdit) {
                     errorMsg.setText("Upload an image before posting!");
 
                 }
@@ -124,11 +158,11 @@ public class CreateBlogActivity extends AppCompatActivity {
                 else if (TextUtils.isEmpty(blogLoc)) {
                     errorMsg.setText("Enter a location");
                 }
-                else{
+                else if (!fromEdit){
 
                     // Creates a unique ID for the blog post
                     String blogID = databaseReference.push().getKey();
-                    BlogObject newBlog = new BlogObject(blogDesc, blogLoc, uploadImage(c), blogID, 0, 0, new ArrayList<String>(), new ArrayList<String>());
+                    BlogObject newBlog = new BlogObject(blogDesc, blogLoc, uploadImage(c, null), blogID, 0, 0, new ArrayList<String>(), new ArrayList<String>());
                     // Store in firebase under Users
                     databaseReference.child(blogID).setValue(newBlog);
 
@@ -143,6 +177,22 @@ public class CreateBlogActivity extends AppCompatActivity {
                         }
                     }, 2500);
 
+                }
+                else{
+                    databaseReference.child(blog.blogID).child("description").setValue(blogDesc);
+                    databaseReference.child(blog.blogID).child("location").setValue(blogLoc);
+
+                    uploadImage(c, blog.imgID);
+
+                    loadingBlogDialog.startLoadingDialog("Editing Blog!");
+                    Handler handler = new Handler();
+                    handler.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            loadingBlogDialog.dismissDialog();
+                            finish();
+                        }
+                    }, 2500);
                 }
             }
         });
@@ -208,32 +258,41 @@ public class CreateBlogActivity extends AppCompatActivity {
     }
 
     // Upload blog image to firebase storage
-    private String uploadImage(Context c) {
-        // unique key to be stored in blog object to be retrieved later in the recyclerview
-        final String randomKey = UUID.randomUUID().toString();
+    private String uploadImage(Context c, String imgID) {
 
+        // unique key to be stored in blog object to be retrieved later in the recyclerview
+        String uniqueKey = null;
+        if (imgID == null) {
+            uniqueKey = UUID.randomUUID().toString();
+        }
+        else{
+            uniqueKey = imgID;
+        }
+        Log.d("uniqueKey", uniqueKey);
         FirebaseStorage storage = FirebaseStorage.getInstance("gs://madignight.appspot.com");
-        StorageReference storageReference = storage.getReference().child("blog/" + uid).child(randomKey);
+        StorageReference storageReference = storage.getReference().child("blog/" + uid).child(uniqueKey);
 
         // Takes the URI of the image and stores in Firebase storage which automatically converts into a png file
-        storageReference.putFile(imgUri)
-                .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                    @Override
-                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                        //Snackbar.make(view, "Image Uploaded", Snackbar.LENGTH_LONG).show();
+        if (imgUri != null){
+            storageReference.putFile(imgUri)
+                    .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                        @Override
+                        public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                            //Snackbar.make(view, "Image Uploaded", Snackbar.LENGTH_LONG).show();
 
-                        Toast.makeText(c, "Blog uploaded", Toast.LENGTH_LONG).show();
+                            Toast.makeText(c, "Blog uploaded", Toast.LENGTH_LONG).show();
 
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Toast.makeText(c, "Failed to upload", Toast.LENGTH_LONG).show();
-                    }
-                });
+                        }
+                    })
+                    .addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            Toast.makeText(c, "Failed to upload", Toast.LENGTH_LONG).show();
+                        }
+                    });
+        }
 
-        return randomKey;
+        return uniqueKey;
 
     }
 }
