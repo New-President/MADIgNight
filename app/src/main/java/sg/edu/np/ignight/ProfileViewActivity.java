@@ -47,8 +47,10 @@ public class ProfileViewActivity extends AppCompatActivity {
     private String nameAndAge1;
     private String currentUserUID, targetUserUID;
     private String profilePictureUrl;
+    private String preferredGender;
+    private ArrayList preferredDateLocation;
 
-    private TextView nameAndAge, textView8, textView9;
+    private TextView nameAndAge, textView8, textView9, textView11;
 
     private Button ignightButton, viewBlogsButton;
     private ImageButton backButton;
@@ -220,6 +222,17 @@ public class ProfileViewActivity extends AppCompatActivity {
         aboutMe = (String) userObject.getAboutMe();
         whatImLookingFor = (String) userObject.getRelationshipPref();
         age = (Integer) userObject.getAge();
+        preferredGender = (String) userObject.getGenderPref();
+        preferredDateLocation = (ArrayList) userObject.getDateLocList();
+
+        // Changes preferred date locations to a string
+        StringBuilder preferredDateLocationDisplay = new StringBuilder();
+        for (Object s : preferredDateLocation)
+        {
+            preferredDateLocationDisplay.append(s);
+            preferredDateLocationDisplay.append(", ");
+        }
+        preferredDateLocationDisplay.append(preferredGender);
 
         nameAndAge1 = username + ", " + age.toString();
         nameAndAge = (TextView) findViewById(R.id.NameAndAgeTextView);
@@ -228,6 +241,8 @@ public class ProfileViewActivity extends AppCompatActivity {
         textView8.setText(aboutMe);
         textView9 = (TextView) findViewById(R.id.textView9);
         textView9.setText(whatImLookingFor);
+        textView11 = (TextView) findViewById(R.id.textView11);
+        textView11.setText(preferredDateLocationDisplay);
     }
 
     // Retrieves profile picture from Firebase Storage and sets it as profile picture
