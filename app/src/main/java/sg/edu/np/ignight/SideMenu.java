@@ -1,12 +1,20 @@
 package sg.edu.np.ignight;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
+import androidx.appcompat.app.AlertDialog;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
+import android.Manifest;
 import android.app.Activity;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -38,7 +46,6 @@ public class SideMenu extends Activity {
 
     private FirebaseStorage storage;
     private StorageReference storageReference;
-
     FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
     String Uid = user.getUid();
 
@@ -98,10 +105,14 @@ public class SideMenu extends Activity {
         });
 
         TextView map = findViewById(R.id.map_sidemenu);
+
+        // Asks for location permission
         map.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mToast.show();
+                Intent mapPage = new Intent(SideMenu.this, MapActivity.class);
+                startActivity(mapPage);
+
             }
         });
 
@@ -129,6 +140,7 @@ public class SideMenu extends Activity {
 
         TextView createBlogBtn = findViewById(R.id.menuCreateBlogBtn);
         createBlogBtn.setOnClickListener(new View.OnClickListener() {
+            @RequiresApi(api = Build.VERSION_CODES.N)
             @Override
             public void onClick(View view) {
                 Intent createBlog = new Intent(SideMenu.this, BlogActivity.class);
