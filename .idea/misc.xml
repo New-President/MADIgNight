@@ -50,9 +50,9 @@
         <entry key="..\:/Users/jason/Desktop/Y2/Sem1/MAD/App/ASG/IgNight/app/src/main/res/drawable/ignight_btn.xml" value="0.1" />
         <entry key="..\:/Users/jason/Desktop/Y2/Sem1/MAD/App/ASG/IgNight/app/src/main/res/drawable/interest_btn.xml" value="0.1845" />
         <entry key="..\:/Users/jason/Desktop/Y2/Sem1/MAD/App/ASG/IgNight/app/src/main/res/drawable/next_btn_bg.xml" value="0.1" />
-        <entry key="..\:/Users/jason/Desktop/Y2/Sem1/MAD/App/ASG/IgNight/app/src/main/res/layout/activity_blog.xml" value="0.45904173106646057" />
+        <entry key="..\:/Users/jason/Desktop/Y2/Sem1/MAD/App/ASG/IgNight/app/src/main/res/layout/activity_blog.xml" value="0.2" />
         <entry key="..\:/Users/jason/Desktop/Y2/Sem1/MAD/App/ASG/IgNight/app/src/main/res/layout/activity_chat_list.xml" value="0.25" />
-        <entry key="..\:/Users/jason/Desktop/Y2/Sem1/MAD/App/ASG/IgNight/app/src/main/res/layout/activity_create_blog.xml" value="0.264" />
+        <entry key="..\:/Users/jason/Desktop/Y2/Sem1/MAD/App/ASG/IgNight/app/src/main/res/layout/activity_create_blog.xml" value="0.2" />
         <entry key="..\:/Users/jason/Desktop/Y2/Sem1/MAD/App/ASG/IgNight/app/src/main/res/layout/activity_edit_blog.xml" value="0.25" />
         <entry key="..\:/Users/jason/Desktop/Y2/Sem1/MAD/App/ASG/IgNight/app/src/main/res/layout/activity_friend_list.xml" value="0.25" />
         <entry key="..\:/Users/jason/Desktop/Y2/Sem1/MAD/App/ASG/IgNight/app/src/main/res/layout/activity_homepage_fragment.xml" value="0.14719202898550723" />
@@ -66,7 +66,7 @@
         <entry key="..\:/Users/jason/Desktop/Y2/Sem1/MAD/App/ASG/IgNight/app/src/main/res/layout/activity_registration.xml" value="0.264" />
         <entry key="..\:/Users/jason/Desktop/Y2/Sem1/MAD/App/ASG/IgNight/app/src/main/res/layout/activity_side_menu2.xml" value="0.264" />
         <entry key="..\:/Users/jason/Desktop/Y2/Sem1/MAD/App/ASG/IgNight/app/src/main/res/layout/activity_view_profile.xml" value="0.22826086956521738" />
-        <entry key="..\:/Users/jason/Desktop/Y2/Sem1/MAD/App/ASG/IgNight/app/src/main/res/layout/blog_layout.xml" value="0.5224913494809689" />
+        <entry key="..\:/Users/jason/Desktop/Y2/Sem1/MAD/App/ASG/IgNight/app/src/main/res/layout/blog_layout.xml" value="0.176" />
         <entry key="..\:/Users/jason/Desktop/Y2/Sem1/MAD/App/ASG/IgNight/app/src/main/res/layout/blog_likecomment_layout.xml" value="0.264" />
         <entry key="..\:/Users/jason/Desktop/Y2/Sem1/MAD/App/ASG/IgNight/app/src/main/res/layout/custom_dialog.xml" value="0.264" />
         <entry key="..\:/Users/jason/Desktop/Y2/Sem1/MAD/App/ASG/IgNight/app/src/main/res/layout/friendlist_layout.xml" value="0.25" />
