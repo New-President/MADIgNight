@@ -1,6 +1,7 @@
 package sg.edu.np.ignight.Map;
 
 import android.content.Context;
+import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,6 +10,8 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.bumptech.glide.Glide;
 
 import java.util.ArrayList;
 import java.util.Map;
@@ -39,6 +42,11 @@ public class MapAdapter extends RecyclerView.Adapter<MapAdapter.MapViewHolder>{
         LocationObject location = locationsList.get(position);
         Name.setText(location.getName());
         Category.setText(location.getCategory());
+
+        Glide.with(c)
+                .load(location.getImgUri())
+                .placeholder(R.drawable.ic_baseline_image_24)
+                .into(LocImage);
 
     }
 

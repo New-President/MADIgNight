@@ -20,6 +20,7 @@ public class LocationObject {
     public String getDesc() {
         return Desc;
     }
+
     public String getCategory() {
         return Category;
     }
