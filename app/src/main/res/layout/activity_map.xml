@@ -6,11 +6,40 @@
     android:layout_height="match_parent"
     tools:context=".MapActivity">
 
-    <Button
-        android:id="@+id/checkPerms"
-        android:layout_width="wrap_content"
+    <com.google.android.material.tabs.TabLayout
+        android:id="@+id/tabLayout"
+        android:layout_width="409dp"
         android:layout_height="wrap_content"
-        android:text="Button"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <com.google.android.material.tabs.TabItem
+            android:id="@+id/userPreferred"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Your Preferred" />
+
+        <com.google.android.material.tabs.TabItem
+            android:id="@+id/hotSpots"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Hot Spots" />
+
+        <com.google.android.material.tabs.TabItem
+            android:id="@+id/all"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="All" />
+    </com.google.android.material.tabs.TabLayout>
+
+    <androidx.viewpager2.widget.ViewPager2
+        android:id="@+id/mapViewPager"
+        android:layout_width="409dp"
+        android:layout_height="681dp"
+        app:layout_constraintBottom_toTopOf="@+id/tabLayout"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
