@@ -15,8 +15,6 @@ public class mapViewPagerAdapter extends FragmentStateAdapter {
     @Override
     public Fragment createFragment(int position) {
         switch (position){
-            case (0):
-                return new UserPreferredFragment();
             case (1):
                 return new HotSpotsFragment();
             case (2):
