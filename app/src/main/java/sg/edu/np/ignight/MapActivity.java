@@ -5,6 +5,10 @@ import androidx.viewpager2.widget.ViewPager2;
 
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
+import android.widget.ImageButton;
+import android.widget.ImageView;
 
 import com.google.android.material.tabs.TabLayout;
 
@@ -22,6 +26,7 @@ public class MapActivity extends AppCompatActivity {
         //Button checkPerms = findViewById(R.id.checkPerms);
         TabLayout mapTabLayout = findViewById(R.id.tabLayout);
         ViewPager2 mapVP = findViewById(R.id.mapViewPager);
+        ImageButton backBtn = findViewById(R.id.MapBackButton);
         MapViewPagerAdapter vpAdapter = new MapViewPagerAdapter(this);
         mapVP.setAdapter(vpAdapter);
 //        checkPerms.setOnClickListener(new View.OnClickListener() {
@@ -68,6 +73,13 @@ public class MapActivity extends AppCompatActivity {
             public void onPageSelected(int position) {
                 super.onPageSelected(position);
                 mapTabLayout.getTabAt(position).select();
+            }
+        });
+
+        backBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                finish();
             }
         });
     }
