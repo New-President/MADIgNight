@@ -104,9 +104,8 @@ public class ProfileViewActivity extends AppCompatActivity {
         interestsDisplay = new ArrayList<>();
         interestsDisplay = user.getInterestList();
 
-        // Show user information and display their profile picture
+        // Show user information
         ShowInformation(user);
-        setProfilePicture(user);
 
         // Intents for buttons
         // Return back to main menu
@@ -243,38 +242,9 @@ public class ProfileViewActivity extends AppCompatActivity {
         textView9.setText(whatImLookingFor);
         textView11 = (TextView) findViewById(R.id.textView11);
         textView11.setText(preferredDateLocationDisplay);
-    }
 
-    // Retrieves profile picture from Firebase Storage and sets it as profile picture
-    public void setProfilePicture(UserObject userObject){
-        profilePicture = (ImageView) findViewById(R.id.imageView);
-
-        // Extract user child to get profile picture name
-        userDB.child(userObject.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                // Get profile picture file name
-                String profilePictureName = snapshot.child("Profile Picture").getValue().toString();
-                StorageReference storageReference = FirebaseStorage.
-                        getInstance().
-                        getReference("profilePicture/" +
-                                userObject.getUid() +
-                                "/" +
-                                profilePictureName);
-                // Set profile picture using Glide
-                Glide.with(getApplicationContext())
-                        .load(storageReference)
-                       .into(profilePicture);
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-                // If there is an error retrieving profile pics, show toast
-                Log.d("testError", "testing");
-                Toast.makeText(getApplicationContext(),
-                        "Error retrieving profile photo. Please try again later.",
-                        Toast.LENGTH_LONG).show();
-            }
-        });
+        // display profile picture
+        profilePicture = findViewById(R.id.imageView);
+        Glide.with(getApplicationContext()).load(userObject.getProfilePicUrl()).placeholder(R.drawable.ic_baseline_image_24).into(profilePicture);
     }
 }

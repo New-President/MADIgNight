@@ -113,7 +113,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
         }
         else {
             holder.mediaHolder.setVisibility(View.VISIBLE);
-            Glide.with(context).load(mediaUrlList.get(0)).into(holder.mediaHolder);
+            Glide.with(context).load(mediaUrlList.get(0)).placeholder(R.drawable.ic_baseline_image_24).into(holder.mediaHolder);
 
             if (mediaUrlList.size() > 1) {
                 holder.mediaCount.setVisibility(View.VISIBLE);
@@ -128,7 +128,6 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
         holder.mediaHolder.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
                 GenericDraweeHierarchyBuilder hierarchyBuilder = GenericDraweeHierarchyBuilder.newInstance(context.getResources())
                         .setFailureImage(R.drawable.ic_baseline_error_outline_24)
                         .setProgressBarImage(new ProgressBarDrawable())
@@ -154,11 +153,6 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
             }
         }
         else {
-            Log.v("message adapt", thisMessage.getMessageId());
-            Log.v("message adapt", "item view type 0");
-            Log.v("message adapt", "is sent: " + Boolean.toString(thisMessage.isSent()));
-            Log.v("message adapt", "is seen: " + Boolean.toString(thisMessage.isSeen()));
-
             DatabaseReference chatDB = FirebaseDatabase.getInstance("https://madignight-default-rtdb.asia-southeast1.firebasedatabase.app/").getReference().child("chat").child(thisMessage.getChatId());
             DatabaseReference messageDB = chatDB.child("messages").child(thisMessage.getMessageId());
 

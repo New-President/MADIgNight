@@ -26,6 +26,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
@@ -37,6 +38,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FileDownloadTask;
 import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.ListResult;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
@@ -162,8 +164,8 @@ public class ProfileCreationActivity extends AppCompatActivity {
                     String existRelationshipPref = snapshot.child("Relationship Preference").getValue(String.class);
                     // Get the user's Gender preference
                     String existGenderPref = snapshot.child("Gender Preference").getValue(String.class);
-                    // Get the user's profile picture random key
-                    String existProfilePic = snapshot.child("Profile Picture").getValue(String.class);
+                    // Get the user's profile picture url
+                    String existProfilePic = snapshot.child("profileUrl").getValue(String.class);
 
                     // Get the total amount of interest the user had inputted
                     Integer totalInterest = (int) snapshot.child("Interest").getChildrenCount();
@@ -212,36 +214,8 @@ public class ProfileCreationActivity extends AppCompatActivity {
                     // Set the text onto the Date Location drop down
                     locationPref.setText(stringBuilder.toString());
 
-                    // Navigate to the Profile picture saved by the user
-                    storageReference = storage.getReference().child("profilePicture/" + Uid + "/" + existProfilePic);
-
-                    try {
-                        // Get the prefix and suffix of the file
-                        final File localFile = File.createTempFile(existProfilePic, existProfilePic);
-                        storageReference.getFile(localFile)
-                                // when retrieved the image successfully
-                                .addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
-                                    @Override
-                                    public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
-                                        // Show that the Picture is retrieved in Toast
-                                        Toast.makeText(ProfileCreationActivity.this, "Picture Retrieved", Toast.LENGTH_SHORT).show();
-                                        Bitmap bitmap = BitmapFactory.decodeFile(localFile.getAbsolutePath());
-                                        // Display the image
-                                        imgGallery.setImageBitmap(bitmap);
-                                    }
-                                })
-                                // When failed to retrieve the image
-                                .addOnFailureListener(new OnFailureListener() {
-                                    @Override
-                                    public void onFailure(@NonNull Exception e) {
-                                        // Show that the picture failed to be retrieved in Toast
-                                        Toast.makeText(ProfileCreationActivity.this, "Error Occurred", Toast.LENGTH_SHORT).show();
-                                    }
-                                });
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-
+                    // set profile picture
+                    Glide.with(getApplicationContext()).load(existProfilePic).placeholder(R.drawable.ic_baseline_image_24).into(imgGallery);
                 }
 
                 @Override
@@ -318,9 +292,7 @@ public class ProfileCreationActivity extends AppCompatActivity {
 
                     // Profile Picture
                     if(imageUri != null){
-                        String imageKey = uploadPicture();
-                        // Save the random key of the image generated from uploadPicture()
-                        nested.child("Profile Picture").setValue(imageKey);
+                        uploadPicture(nested);
                     }
 
                     // set profileCreated to true
@@ -672,21 +644,27 @@ public class ProfileCreationActivity extends AppCompatActivity {
         }
     }
 
-    // uploading the pictures to database storage
-    public String uploadPicture() {
-
+    // upload the new profile picture and removes previous records in the storage
+    private void uploadPicture(DatabaseReference userDB) {
         final String randomKey = UUID.randomUUID().toString();
         storage = FirebaseStorage.getInstance("gs://madignight.appspot.com");
         // putting the images to the specific folders, their own UID
         // the images are labelled with a random key
-        storageReference = storage.getReference().child("profilePicture/" + Uid).child(randomKey);
-
-        storageReference.putFile(imageUri)
+        storageReference = storage.getReference().child("profilePicture/" + Uid);
+        storageReference.child(randomKey).putFile(imageUri)
                 .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                     @Override
                     public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                        // Display image successfully uploaded with Toast
-                        Toast.makeText(getApplicationContext(), "Image uploaded", Toast.LENGTH_SHORT).show();
+                        storageReference.child(randomKey).getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                            @Override
+                            public void onSuccess(Uri uri) {
+                                // save the profile picture url to database
+                                userDB.child("profileUrl").setValue(uri.toString());
+
+                                // Display image successfully uploaded with Toast
+                                Toast.makeText(getApplicationContext(), "Image uploaded", Toast.LENGTH_SHORT).show();
+                            }
+                        });
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
@@ -696,8 +674,16 @@ public class ProfileCreationActivity extends AppCompatActivity {
                         Toast.makeText(getApplicationContext(), "Failed to Upload", Toast.LENGTH_SHORT).show();
                     }
                 });
-        // return the random key generated so that it can be stored into firebase database
-        // When users logs in again, the firebase knows which photo to choose from firebase storage
-        return randomKey;
+
+        storageReference.listAll().addOnSuccessListener(new OnSuccessListener<ListResult>() {
+            @Override
+            public void onSuccess(ListResult listResult) {
+                for (StorageReference childResult : listResult.getItems()) {
+                    if (!childResult.getName().equals(randomKey)) {
+                        childResult.delete();
+                    }
+                }
+            }
+        });
     }
 }

@@ -18,6 +18,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
@@ -36,8 +37,6 @@ import java.io.IOException;
 
 public class SideMenu extends Activity {
 
-    private FirebaseStorage storage;
-    private StorageReference storageReference;
 
     FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
     String Uid = user.getUid();
@@ -139,37 +138,13 @@ public class SideMenu extends Activity {
 
         ImageView profilePicSideMenu = findViewById(R.id.profilepic_sidemenu);
 
-        FirebaseDatabase database = FirebaseDatabase.getInstance("https://madignight-default-rtdb.asia-southeast1.firebasedatabase.app/");
-        DatabaseReference myRef = database.getReference("user");
-        storage = FirebaseStorage.getInstance("gs://madignight.appspot.com");
+        DatabaseReference myRef = FirebaseDatabase.getInstance("https://madignight-default-rtdb.asia-southeast1.firebasedatabase.app/").getReference("user");
 
         myRef.child(Uid).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                String existProfilePic = snapshot.child("Profile Picture").getValue(String.class);
-                Log.d("Hello",existProfilePic);
-                storageReference = storage.getReference().child("profilePicture/" + Uid + "/" + existProfilePic);
-
-                try {
-                    final File localFile = File.createTempFile(existProfilePic, existProfilePic);
-                    storageReference.getFile(localFile)
-                            .addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
-                                @Override
-                                public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
-                                    //Toast.makeText(SideMenu.this, "Picture Retrieved", Toast.LENGTH_SHORT).show();
-                                    Bitmap bitmap = BitmapFactory.decodeFile(localFile.getAbsolutePath());
-                                    profilePicSideMenu.setImageBitmap(bitmap);
-                                }
-                            })
-                            .addOnFailureListener(new OnFailureListener() {
-                                @Override
-                                public void onFailure(@NonNull Exception e) {
-                                    Toast.makeText(SideMenu.this, "Error loading profile picture", Toast.LENGTH_SHORT).show();
-                                }
-                            });
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+                String existProfilePic = snapshot.child("profileUrl").getValue(String.class);
+                Glide.with(getApplicationContext()).load(existProfilePic).placeholder(R.drawable.ic_baseline_image_24).into(profilePicSideMenu);
             }
 
             @Override

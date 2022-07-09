@@ -104,7 +104,7 @@ public class Homepage_fragment extends Fragment {
                             String aboutMe = childSnapshot.child("About Me").getValue().toString();
                             String gender = childSnapshot.child("Gender").getValue().toString();
                             String genderPref = childSnapshot.child("Gender Preference").getValue().toString();
-                            String profilePicUrl = childSnapshot.child("Profile Picture").getValue().toString();
+                            String profilePicUrl = childSnapshot.child("profileUrl").getValue().toString();
                             String relationshipPref = childSnapshot.child("Relationship Preference").getValue().toString();
                             String username = childSnapshot.child("username").getValue().toString();
                             String profileCreated = childSnapshot.child("profileCreated").getValue().toString();

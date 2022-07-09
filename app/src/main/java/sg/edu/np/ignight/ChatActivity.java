@@ -77,9 +77,6 @@ public class ChatActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat);
 
-        // initialize Fresco (library to view images full screen)
-        Fresco.initialize(this);
-
         Bundle bundle = getIntent().getExtras();
         chatID = bundle.getString("chatID");
         String chatName = bundle.getString("chatName");
@@ -158,7 +155,7 @@ public class ChatActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(getApplicationContext(), ProfileViewActivity.class);
-                DatabaseReference targetUserDB = FirebaseDatabase.getInstance("https://madignight-default-rtdb.asia-southeast1.firebasedatabase.app/").getReference().child("user").child(targetUserID);
+                DatabaseReference targetUserDB = rootDB.child("user").child(targetUserID);
                 targetUserDB.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -170,7 +167,7 @@ public class ChatActivity extends AppCompatActivity {
                         String aboutMe = snapshot.child("About Me").getValue().toString();
                         String gender = snapshot.child("Gender").getValue().toString();
                         String genderPref = snapshot.child("Gender Preference").getValue().toString();
-                        String profilePicUrl = snapshot.child("Profile Picture").getValue().toString();
+                        String profilePicUrl = snapshot.child("profileUrl").getValue().toString();
                         String relationshipPref = snapshot.child("Relationship Preference").getValue().toString();
                         String username = snapshot.child("username").getValue().toString();
                         String profileCreated = snapshot.child("profileCreated").getValue().toString();

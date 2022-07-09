@@ -8,6 +8,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.Manifest;
 import android.content.Intent;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.CountDownTimer;
@@ -22,7 +23,9 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.facebook.drawee.backends.pipeline.Fresco;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.FirebaseException;
@@ -39,6 +42,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -68,6 +72,7 @@ public class LoginActivity extends AppCompatActivity {
         FirebaseDatabase.getInstance("https://madignight-default-rtdb.asia-southeast1.firebasedatabase.app/").goOnline();
 
         // to update db values
+        // (to add username for chat users)
 //        FirebaseDatabase.getInstance("https://madignight-default-rtdb.asia-southeast1.firebasedatabase.app/").getReference().addListenerForSingleValueEvent(new ValueEventListener() {
 //            @Override
 //            public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -87,6 +92,36 @@ public class LoginActivity extends AppCompatActivity {
 //                Log.e(TAG, "onCancelled: " + error.getMessage());
 //            }
 //        });
+//
+        // (to set profileUrl for users)
+//        FirebaseDatabase.getInstance("https://madignight-default-rtdb.asia-southeast1.firebasedatabase.app/").getReference().child("user").addListenerForSingleValueEvent(new ValueEventListener() {
+//            @Override
+//            public void onDataChange(@NonNull DataSnapshot snapshot) {
+//                for (DataSnapshot userSnapshot : snapshot.getChildren()) {
+//                    String uid = userSnapshot.getKey();
+//
+//                    if (!Boolean.parseBoolean(userSnapshot.child("profileCreated").getValue().toString())) {
+//                        continue;
+//                    }
+//                    if (userSnapshot.child("profileUrl").exists()) {
+//                        continue;
+//                    }
+//
+//                    String imageKey = userSnapshot.child("Profile Picture").getValue().toString();
+//                    FirebaseStorage.getInstance("gs://madignight.appspot.com/").getReference().child("profilePicture").child(uid).child(imageKey).getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+//                        @Override
+//                        public void onSuccess(Uri uri) {
+//                            FirebaseDatabase.getInstance("https://madignight-default-rtdb.asia-southeast1.firebasedatabase.app/").getReference().child("user").child(uid).child("profileUrl").setValue(uri.toString());
+//                        }
+//                    });
+//                }
+//            }
+//
+//            @Override
+//            public void onCancelled(@NonNull DatabaseError error) {
+//                Log.e(TAG, "onCancelled: " + error.getMessage());
+//            }
+//        });
 
         getPermission();
 
@@ -94,6 +129,9 @@ public class LoginActivity extends AppCompatActivity {
         FirebaseApp.initializeApp(this);
         FirebaseAppCheck firebaseAppCheck = FirebaseAppCheck.getInstance();
         firebaseAppCheck.installAppCheckProviderFactory(SafetyNetAppCheckProviderFactory.getInstance());
+
+        // initialize Fresco (library to view images full screen)
+        Fresco.initialize(this);
 
         // initialize various fields
         phoneNumberInput = findViewById(R.id.phoneNumberInput);  // EditText field for phone number

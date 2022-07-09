@@ -70,32 +70,7 @@ public class MainMenuAdapter extends RecyclerView.Adapter<MainMenuViewHolder>{
         Button ignight = holder.Accept;
         ImageView profile = holder.ProfilePic_menu;
 
-        myRef2.child(user.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                // get profile picture file name
-                String profilePictureName = snapshot.child("Profile Picture").getValue().toString();
-                StorageReference storageReference = FirebaseStorage.
-                        getInstance().
-                        getReference("profilePicture/" +
-                                user.getUid() +
-                                "/" +
-                                profilePictureName);
-                Glide.with(c.getApplicationContext())
-                        .load(storageReference)
-                        .into(profile);
-                Log.d("test2", profilePictureName);
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-                // if there is an error retrieving profile pics, show toast
-                Log.d("testError", "testing");
-                Toast.makeText(c.getApplicationContext(),
-                        "Error retrieving profile photo. Please try again later.",
-                        Toast.LENGTH_LONG).show();
-            }
-        });
+        Glide.with(c.getApplicationContext()).load(user.getProfilePicUrl()).placeholder(R.drawable.ic_baseline_image_24).into(profile);
 
         next.setOnClickListener(new View.OnClickListener() {  // goes to the next user in the list or first user (if currently showing user is the last user)
             @Override
