@@ -54,12 +54,12 @@
         android:id="@+id/phoneNumberInput"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="5dp"
+        android:layout_marginTop="36dp"
         android:digits="0123456789"
         android:hint="Enter Phone Number"
         app:layout_constraintEnd_toStartOf="@+id/enterPhoneEndGuideline"
         app:layout_constraintStart_toEndOf="@+id/phonePrefix"
-        tools:layout_editor_absoluteY="330dp" />
+        app:layout_constraintTop_toBottomOf="@+id/title2" />
 
     <EditText
         android:id="@+id/OTPInput"
@@ -176,15 +176,17 @@
         android:textColor="#000"
         android:textSize="34sp"
         android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@+id/whiteBackground"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.0" />
 
     <TextView
         android:id="@+id/title2"
         android:layout_width="217dp"
         android:layout_height="98dp"
         android:layout_marginStart="28dp"
-        android:layout_marginTop="60dp"
+        android:layout_marginTop="36dp"
         android:fontFamily="@font/poppins"
         android:text="Login or Register."
         android:textAllCaps="false"
@@ -192,7 +194,7 @@
         android:textSize="34sp"
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/title1" />
+        app:layout_constraintTop_toTopOf="@+id/whiteBackground" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
