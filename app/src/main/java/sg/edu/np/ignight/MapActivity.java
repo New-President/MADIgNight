@@ -1,43 +1,14 @@
 package sg.edu.np.ignight;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
 import androidx.viewpager2.widget.ViewPager2;
 
-import android.Manifest;
-import android.content.Context;
-import android.content.DialogInterface;
-import android.content.Intent;
-import android.content.IntentSender;
-import android.content.pm.PackageManager;
 import android.location.LocationManager;
-import android.location.LocationRequest;
 import android.os.Bundle;
-import android.os.Handler;
-import android.provider.Settings;
-import android.util.Log;
-import android.view.View;
-import android.widget.Button;
-import android.widget.TableLayout;
-import android.widget.Toast;
 
-import com.google.android.gms.common.api.ApiException;
-import com.google.android.gms.common.api.ResolvableApiException;
-import com.google.android.gms.location.LocationServices;
-import com.google.android.gms.location.LocationSettingsRequest;
-import com.google.android.gms.location.LocationSettingsResponse;
-import com.google.android.gms.location.LocationSettingsStatusCodes;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.android.material.tabs.TabLayout;
 
-import sg.edu.np.ignight.Map.mapViewPagerAdapter;
+import sg.edu.np.ignight.Map.MapViewPagerAdapter;
 
 public class MapActivity extends AppCompatActivity {
 
@@ -51,7 +22,7 @@ public class MapActivity extends AppCompatActivity {
         //Button checkPerms = findViewById(R.id.checkPerms);
         TabLayout mapTabLayout = findViewById(R.id.tabLayout);
         ViewPager2 mapVP = findViewById(R.id.mapViewPager);
-        mapViewPagerAdapter vpAdapter = new mapViewPagerAdapter(this);
+        MapViewPagerAdapter vpAdapter = new MapViewPagerAdapter(this);
         mapVP.setAdapter(vpAdapter);
 //        checkPerms.setOnClickListener(new View.OnClickListener() {
 //            @Override

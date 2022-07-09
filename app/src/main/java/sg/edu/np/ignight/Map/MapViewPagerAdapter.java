@@ -5,9 +5,9 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 
-public class mapViewPagerAdapter extends FragmentStateAdapter {
+public class MapViewPagerAdapter extends FragmentStateAdapter {
 
-    public mapViewPagerAdapter(@NonNull FragmentActivity fragmentActivity) {
+    public MapViewPagerAdapter(@NonNull FragmentActivity fragmentActivity) {
         super(fragmentActivity);
     }
 

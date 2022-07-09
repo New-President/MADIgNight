@@ -16,6 +16,8 @@ import java.util.Map;
 import sg.edu.np.ignight.R;
 
 public class MapAdapter extends RecyclerView.Adapter<MapAdapter.MapViewHolder>{
+    private TextView Name, Category;
+    private ImageView LocImage;
 
     private ArrayList<LocationObject> locationsList;
     private Context c;
@@ -35,6 +37,8 @@ public class MapAdapter extends RecyclerView.Adapter<MapAdapter.MapViewHolder>{
     @Override
     public void onBindViewHolder(@NonNull MapViewHolder holder, int position) {
         LocationObject location = locationsList.get(position);
+        Name.setText(location.getName());
+        Category.setText(location.getCategory());
 
     }
 
@@ -44,22 +48,12 @@ public class MapAdapter extends RecyclerView.Adapter<MapAdapter.MapViewHolder>{
     }
 
     public class MapViewHolder extends RecyclerView.ViewHolder {
-        TextView desc, location;
-        View viewItem;
-        TextView likes, comments;
-        ImageView commentButton, likesButton, blogImg, editBlogButton;
 
         public MapViewHolder(View item) {
             super(item);
-            desc = item.findViewById(R.id.blogDesc);
-            location = item.findViewById(R.id.location);
-            blogImg = item.findViewById(R.id.blogImg);
-            likes = item.findViewById(R.id.likesCount);
-            comments = item.findViewById(R.id.commentsCount);
-            commentButton = item.findViewById(R.id.commentButton);
-            likesButton = item.findViewById(R.id.likeButton);
-            editBlogButton = item.findViewById(R.id.editBlogButton);
-            viewItem = item;
+            Name = item.findViewById(R.id.locName);
+            Category = item.findViewById(R.id.locCat);
+            LocImage = item.findViewById(R.id.locImage);
         }
     }
 }
