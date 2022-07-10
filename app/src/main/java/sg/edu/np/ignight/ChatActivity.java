@@ -25,7 +25,10 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.facebook.drawee.backends.pipeline.Fresco;
+import com.facebook.drawee.drawable.ProgressBarDrawable;
+import com.facebook.drawee.generic.GenericDraweeHierarchyBuilder;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
@@ -39,9 +42,11 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+import com.stfalcon.frescoimageviewer.ImageViewer;
 
 import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -65,7 +70,7 @@ public class ChatActivity extends AppCompatActivity {
 
     private DatabaseReference rootDB, chatDB;
 
-    private ImageView removeMediaButton, scrollToChatBottomButton;
+    private ImageView removeMediaButton, scrollToChatBottomButton, profilePicture;
     private EditText messageInput;
     private ImageButton addMediaButton, sendMessageButton, backButton;
     private TextView userOnlineStatus;
@@ -96,6 +101,7 @@ public class ChatActivity extends AppCompatActivity {
         userOnlineStatus = findViewById(R.id.userOnlineStatus);
         sendMessageProgressBar = findViewById(R.id.sendMessageProgressBar);
         messageLayoutHeaderUserInfo = findViewById(R.id.messageLayoutHeaderUserInfo);
+        profilePicture = findViewById(R.id.chatActivityProfilePicture);
 
         TextView headerChatName = findViewById(R.id.messageLayoutHeaderChatName);
         headerChatName.setText(chatName);
@@ -191,6 +197,40 @@ public class ChatActivity extends AppCompatActivity {
                         Log.e(TAG, "onCancelled: " + error.getMessage());
                     }
                 });
+            }
+        });
+
+        // show profile picture of user
+        DatabaseReference targetUserDB = rootDB.child("user").child(targetUserID);
+        targetUserDB.child("profileUrl").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                String profilePictureUrl = snapshot.getValue().toString();
+                Glide.with(getApplicationContext()).load(profilePictureUrl).placeholder(R.drawable.ic_baseline_image_24).into(profilePicture);
+
+                // show pictures in full screen when user clicks on the picture
+                profilePicture.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        GenericDraweeHierarchyBuilder hierarchyBuilder = GenericDraweeHierarchyBuilder.newInstance(getApplicationContext().getResources())
+                                .setFailureImage(R.drawable.ic_baseline_error_outline_24)
+                                .setProgressBarImage(new ProgressBarDrawable())
+                                .setPlaceholderImage(R.drawable.ic_baseline_image_24);
+
+                        new ImageViewer.Builder(view.getContext(), Collections.singletonList(profilePictureUrl))
+                                .setStartPosition(0)
+                                .hideStatusBar(false)
+                                .allowZooming(true)
+                                .allowSwipeToDismiss(true)
+                                .setCustomDraweeHierarchyBuilder(hierarchyBuilder)
+                                .show();
+                    }
+                });
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Log.e(TAG, "onCancelled: " + error.getMessage());
             }
         });
 

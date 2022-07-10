@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ChatRequestActivity"
+    android:background="@drawable/gradient_background">
+
+    <RelativeLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:id="@+id/chatRequestsHeaderContainer"
+        android:background="#000000"
+        android:padding="5dp">
+
+        <ImageButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_baseline_arrow_back_24"
+            android:id="@+id/chatRequestsBackButton"
+            android:clickable="true"
+            android:focusable="true"
+            android:layout_alignParentStart="true"
+            android:layout_centerVertical="true"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Requests"
+            android:textColor="#ffffff"
+            android:textSize="25sp"
+            android:layout_toEndOf="@+id/chatRequestsBackButton"
+            android:layout_centerVertical="true"
+            android:layout_marginStart="5dp"/>
+
+    </RelativeLayout>
+
+    <com.google.android.material.tabs.TabLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/chatRequestsTabs"
+        app:layout_constraintTop_toBottomOf="@+id/chatRequestsHeaderContainer"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/chatRequestsViewPager"
+        app:tabMode="fixed"
+        app:tabGravity="center"
+        app:tabSelectedTextColor="#ffffff"
+        app:tabTextColor="#555555"
+        app:tabIndicatorGravity="stretch"
+        app:tabIndicatorAnimationMode="elastic"
+        app:tabIndicator="@drawable/tab_indicator"
+        app:tabIndicatorColor="#555555"
+        app:tabRippleColor="#00000000"
+        android:layout_margin="5dp"/>
+
+    <View
+        android:layout_width="0dp"
+        android:layout_height="1dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/chatRequestsTabs"
+        android:background="#000000"
+        android:id="@+id/chatRequestTabSeparator"/>
+
+    <androidx.viewpager2.widget.ViewPager2
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:id="@+id/chatRequestsViewPager"
+        app:layout_constraintTop_toBottomOf="@+id/chatRequestTabSeparator"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
