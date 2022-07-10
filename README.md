@@ -46,6 +46,7 @@ Keefe Cheong Wenkai - Login, Chat List Fragment, Chat
         * Terms and Conditions (to be implemented in Stage 2)
         * Create Blogs 
         * Log Out  
+        * Delete User
     * Search for other users
     * 'Next' button to cycle to the next user
     * 'IgNight' button to "IgNight" with a user, which starts a chat with them
@@ -69,6 +70,7 @@ Keefe Cheong Wenkai - Login, Chat List Fragment, Chat
     * Time log for each session 
     * Time sent
     * Last seen online date and time
+    * Video Call
 * Blogs
     * Create posts
     * See posts by other users
