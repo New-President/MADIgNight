@@ -4,40 +4,40 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".LoginActivity"
-    android:background="@drawable/gradient_background">
+    android:background="#fcc267"
+    tools:context=".LoginActivity">
 
     <ImageView
-        android:id="@+id/loginIgnightLogo"
+        android:id="@+id/whiteBackground"
         android:layout_width="0dp"
-        android:layout_height="250dp"
-        android:layout_marginTop="32dp"
-        app:layout_constraintEnd_toEndOf="@+id/enterPhoneEndGuideline"
-        app:layout_constraintStart_toStartOf="@+id/enterPhoneStartGuideline"
-        app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/ignitelogo"
-        tools:srcCompat="@drawable/ignitelogo" />
+        android:layout_height="600dp"
+        android:scaleType="fitXY"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:srcCompat="@drawable/login_white_background" />
 
     <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/enterPhoneTopGuideline"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.1"
-        android:id="@+id/enterPhoneTopGuideline"/>
+        app:layout_constraintGuide_percent="0.1" />
 
     <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/enterPhoneStartGuideline"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        app:layout_constraintGuide_percent="0.15"
-        android:id="@+id/enterPhoneStartGuideline"/>
+        app:layout_constraintGuide_percent="0.15" />
 
     <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/enterPhoneEndGuideline"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        app:layout_constraintGuide_percent="0.85"
-        android:id="@+id/enterPhoneEndGuideline"/>
+        app:layout_constraintGuide_percent="0.85" />
 
     <TextView
         android:id="@+id/phonePrefix"
@@ -46,44 +46,44 @@
         android:text="+65"
         android:textAlignment="center"
         android:textSize="18sp"
+        app:layout_constraintBottom_toBottomOf="@+id/phoneNumberInput"
         app:layout_constraintStart_toStartOf="@+id/enterPhoneStartGuideline"
-        app:layout_constraintTop_toTopOf="@+id/phoneNumberInput"
-        app:layout_constraintBottom_toBottomOf="@+id/phoneNumberInput"/>
+        app:layout_constraintTop_toTopOf="@+id/phoneNumberInput" />
 
     <EditText
         android:id="@+id/phoneNumberInput"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="5dp"
-        android:layout_marginTop="48dp"
+        android:layout_marginTop="36dp"
         android:digits="0123456789"
         android:hint="Enter Phone Number"
         app:layout_constraintEnd_toStartOf="@+id/enterPhoneEndGuideline"
         app:layout_constraintStart_toEndOf="@+id/phonePrefix"
-        app:layout_constraintTop_toBottomOf="@+id/loginIgnightLogo" />
+        app:layout_constraintTop_toBottomOf="@+id/title2" />
 
     <EditText
         android:id="@+id/OTPInput"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:hint="Enter Code"
+        android:layout_marginTop="10dp"
         android:digits="0123456789"
-        app:layout_constraintStart_toEndOf="@+id/enterPhoneStartGuideline"
-        app:layout_constraintTop_toBottomOf="@+id/phoneNumberInput"
+        android:hint="Enter Code"
         app:layout_constraintEnd_toStartOf="@+id/sendOTPButton"
-        android:layout_marginTop="10dp"/>
+        app:layout_constraintStart_toEndOf="@+id/enterPhoneStartGuideline"
+        app:layout_constraintTop_toBottomOf="@+id/phoneNumberInput" />
 
     <Button
         android:id="@+id/sendOTPButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:background="@drawable/round_rectangle"
         android:enabled="false"
         android:text="send OTP"
-        app:layout_constraintEnd_toEndOf="@+id/enterPhoneEndGuideline"
-        app:layout_constraintTop_toTopOf="@+id/OTPInput"
+        android:textColor="#000"
+        app:backgroundTint="#fcc267"
         app:layout_constraintBottom_toBottomOf="@+id/OTPInput"
-        android:background="@drawable/round_rectangle"
-        android:textColor="#000000"/>
+        app:layout_constraintEnd_toEndOf="@+id/enterPhoneEndGuideline"
+        app:layout_constraintTop_toTopOf="@+id/OTPInput" />
 
     <TextView
         android:id="@+id/loginErrorMessage"
@@ -98,70 +98,104 @@
         app:layout_constraintTop_toBottomOf="@+id/OTPInput" />
 
     <RelativeLayout
+        android:id="@+id/loginButtonContainer"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/loginButtonContainer"
-        app:layout_constraintStart_toEndOf="@+id/enterPhoneStartGuideline"
+        android:layout_marginTop="70dp"
         app:layout_constraintEnd_toStartOf="@+id/enterPhoneEndGuideline"
-        app:layout_constraintTop_toBottomOf="@+id/OTPInput"
-        android:layout_marginTop="70dp">
+        app:layout_constraintStart_toEndOf="@+id/enterPhoneStartGuideline"
+        app:layout_constraintTop_toBottomOf="@+id/OTPInput">
 
         <Button
             android:id="@+id/loginButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
+            android:background="@drawable/round_rectangle"
             android:enabled="false"
             android:text="login"
-            android:background="@drawable/round_rectangle"
-            android:textColor="#000000"/>
+            android:textColor="#000"
+            app:backgroundTint="#fcc267" />
 
         <ProgressBar
+            android:id="@+id/loginProgressBar"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
-            android:id="@+id/loginProgressBar"
             android:indeterminate="true"
             android:indeterminateTint="#000000"
             android:indeterminateTintMode="src_atop"
-            android:visibility="gone"/>
+            android:visibility="gone" />
 
         <ImageView
+            android:id="@+id/loginSuccessImage"
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:layout_centerInParent="true"
-            android:id="@+id/loginSuccessImage"
             android:src="@drawable/ic_baseline_check_circle_24"
-            app:tint="#4bb543"
-            android:visibility="gone" />
+            android:visibility="gone"
+            app:tint="#4bb543" />
 
     </RelativeLayout>
 
     <TextView
+        android:id="@+id/loginActivityWrongNumberTxt"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="36dp"
         android:text="Wrong Number?"
         android:textAlignment="center"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/loginButtonContainer"
-        android:layout_marginTop="50dp"
-        android:id="@+id/loginActivityWrongNumberTxt"/>
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/loginButtonContainer" />
 
     <Button
         android:id="@+id/resetLoginFields"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
         android:backgroundTint="#ffffff"
         android:minWidth="0dp"
         android:minHeight="0dp"
         android:text="reset"
         android:textColor="#FF0000"
         android:textSize="12sp"
-        app:layout_constraintTop_toBottomOf="@+id/loginActivityWrongNumberTxt"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="5dp"/>
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/loginActivityWrongNumberTxt" />
+
+    <TextView
+        android:id="@+id/title1"
+        android:layout_width="217dp"
+        android:layout_height="98dp"
+        android:layout_marginStart="28dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="16dp"
+        android:fontFamily="@font/poppins"
+        android:text="IgNight a Spark today."
+        android:textAllCaps="false"
+        android:textColor="#000"
+        android:textSize="34sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@+id/whiteBackground"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.636" />
+
+    <TextView
+        android:id="@+id/title2"
+        android:layout_width="217dp"
+        android:layout_height="98dp"
+        android:layout_marginStart="28dp"
+        android:layout_marginTop="68dp"
+        android:fontFamily="@font/poppins"
+        android:text="Login or Register."
+        android:textAllCaps="false"
+        android:textColor="#000"
+        android:textSize="34sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/whiteBackground" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
