@@ -40,6 +40,8 @@
         <entry key="..\:/AndroidStudioProjects/MADIgNightFinaleDemo2/app/src/main/res/layout/activity_profile_view.xml" value="0.4" />
         <entry key="..\:/AndroidStudioProjects/MADIgNightFinaleDemo7/app/src/main/res/drawable-v24/round_orange_rectangle.xml" value="0.1" />
         <entry key="..\:/AndroidStudioProjects/MADIgNightFinaleDemo7/app/src/main/res/drawable/gradient_background.xml" value="0.1" />
+        <entry key="..\:/AndroidStudioProjects/MADIgNightFinaleDemo7/app/src/main/res/drawable/ic_baseline_arrow_back_24.xml" value="0.1" />
+        <entry key="..\:/AndroidStudioProjects/MADIgNightFinaleDemo7/app/src/main/res/drawable/ic_baseline_error_outline_24.xml" value="0.1" />
         <entry key="..\:/AndroidStudioProjects/MADIgNightFinaleDemo7/app/src/main/res/drawable/ic_baseline_image_24.xml" value="0.1" />
         <entry key="..\:/AndroidStudioProjects/MADIgNightFinaleDemo7/app/src/main/res/drawable/interest_btn.xml" value="0.1" />
         <entry key="..\:/AndroidStudioProjects/MADIgNightFinaleDemo7/app/src/main/res/drawable/next_btn_bg.xml" value="0.1" />
@@ -49,8 +51,8 @@
         <entry key="..\:/AndroidStudioProjects/MADIgNightFinaleDemo7/app/src/main/res/layout/activity_chat.xml" value="0.35507246376811596" />
         <entry key="..\:/AndroidStudioProjects/MADIgNightFinaleDemo7/app/src/main/res/layout/activity_create_blog.xml" value="0.35507246376811596" />
         <entry key="..\:/AndroidStudioProjects/MADIgNightFinaleDemo7/app/src/main/res/layout/activity_homepage_fragment.xml" value="0.2971014492753623" />
-        <entry key="..\:/AndroidStudioProjects/MADIgNightFinaleDemo7/app/src/main/res/layout/activity_login.xml" value="0.25" />
-        <entry key="..\:/AndroidStudioProjects/MADIgNightFinaleDemo7/app/src/main/res/layout/activity_main_menu.xml" value="0.2971014492753623" />
+        <entry key="..\:/AndroidStudioProjects/MADIgNightFinaleDemo7/app/src/main/res/layout/activity_login.xml" value="0.2" />
+        <entry key="..\:/AndroidStudioProjects/MADIgNightFinaleDemo7/app/src/main/res/layout/activity_main_menu.xml" value="0.4" />
         <entry key="..\:/AndroidStudioProjects/MADIgNightFinaleDemo7/app/src/main/res/layout/activity_map.xml" value="0.1" />
         <entry key="..\:/AndroidStudioProjects/MADIgNightFinaleDemo7/app/src/main/res/layout/activity_profile_creation.xml" value="0.1" />
         <entry key="..\:/AndroidStudioProjects/MADIgNightFinaleDemo7/app/src/main/res/layout/activity_profile_view.xml" value="0.264" />

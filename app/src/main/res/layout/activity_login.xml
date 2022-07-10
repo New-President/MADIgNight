@@ -9,8 +9,8 @@
 
     <ImageView
         android:id="@+id/whiteBackground"
-        android:layout_width="407dp"
-        android:layout_height="505dp"
+        android:layout_width="0dp"
+        android:layout_height="600dp"
         android:scaleType="fitXY"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -169,7 +169,8 @@
         android:layout_width="217dp"
         android:layout_height="98dp"
         android:layout_marginStart="28dp"
-        android:layout_marginTop="36dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="16dp"
         android:fontFamily="@font/poppins"
         android:text="IgNight a Spark today."
         android:textAllCaps="false"
@@ -179,14 +180,14 @@
         app:layout_constraintBottom_toTopOf="@+id/whiteBackground"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.0" />
+        app:layout_constraintVertical_bias="0.636" />
 
     <TextView
         android:id="@+id/title2"
         android:layout_width="217dp"
         android:layout_height="98dp"
         android:layout_marginStart="28dp"
-        android:layout_marginTop="36dp"
+        android:layout_marginTop="68dp"
         android:fontFamily="@font/poppins"
         android:text="Login or Register."
         android:textAllCaps="false"
