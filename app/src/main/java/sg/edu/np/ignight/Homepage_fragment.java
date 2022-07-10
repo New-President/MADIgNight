@@ -14,7 +14,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
+import com.bumptech.glide.Glide;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -37,8 +39,14 @@ public class Homepage_fragment extends Fragment {
 
     private String queryName;
 
+    private String preferredGender;
+
     public Homepage_fragment() {
     }
+    // Get the current user
+    FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+    //get the current user's UID
+    String Uid = user.getUid();
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -74,7 +82,29 @@ public class Homepage_fragment extends Fragment {
 
     // get list of users to display
     private void getUserList() {
+        // Saving to Firebase database
+        FirebaseDatabase database = FirebaseDatabase.getInstance("https://madignight-default-rtdb.asia-southeast1.firebasedatabase.app/");
+        // getting the child user
+        DatabaseReference myRef = database.getReference("user");
+
+        myRef.child(Uid).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                // Get the user's Gender preference
+                preferredGender = snapshot.child("Gender Preference").getValue(String.class);
+                Log.e(TAG, "Hello: " + preferredGender);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
+
+/*
         DatabaseReference userDB = FirebaseDatabase.getInstance("https://madignight-default-rtdb.asia-southeast1.firebasedatabase.app/").getReference().child("user");
+*/
 
         ValueEventListener getUserListListener = new ValueEventListener() {
             @Override
@@ -119,8 +149,15 @@ public class Homepage_fragment extends Fragment {
 
                             UserObject user = new UserObject(uid, aboutMe, age, dateLocList, gender, genderPref, interestList, profilePicUrl, relationshipPref, phone, profileCreated, username);
 
+                            if (user.getGender().equals(preferredGender)){
+                                userList.add(user);
+                                userListAdapter.notifyDataSetChanged();
+                            }
+
+/*
                             userList.add(user);
                             userListAdapter.notifyDataSetChanged();
+*/
 
                         }
                     }
@@ -134,11 +171,12 @@ public class Homepage_fragment extends Fragment {
         };
 
         if (queryName != "" || queryName != null) {
-            Query query  = userDB.orderByChild("username").startAt(queryName);
+            Query query  = myRef.orderByChild("username").startAt(queryName);
             query.addValueEventListener(getUserListListener);
         }
         else {
-            userDB.addValueEventListener(getUserListListener);
+            myRef.addValueEventListener(getUserListListener);
         }
     }
+
 }
