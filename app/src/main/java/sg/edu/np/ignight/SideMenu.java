@@ -161,7 +161,7 @@ public class SideMenu extends Activity {
         activityReport.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(getApplicationContext(), ActivityReportActivity.class);
+                Intent intent = new Intent(getApplicationContext(), ActivityReport_Activity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 startActivity(intent);
                 finish();
