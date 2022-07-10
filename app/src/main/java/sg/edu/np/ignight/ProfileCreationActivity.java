@@ -351,7 +351,7 @@ public class ProfileCreationActivity extends AppCompatActivity {
         relationshipPrefDropdown.setAdapter(relationshipPrefAdapter);
 
         // Gender Preference (Spinner, dropdown)
-        String[] genderPref = new String[]{"Male", "Female", "Others"};
+        String[] genderPref = new String[]{"Male", "Female"};
         ArrayAdapter<String> genderPrefAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, genderPref);
         genderPrefDropdown.setAdapter(genderPrefAdapter);
 
