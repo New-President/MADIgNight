@@ -79,11 +79,11 @@
         android:background="@drawable/round_rectangle"
         android:enabled="false"
         android:text="send OTP"
-        android:textColor="#fff"
+        android:textColor="#000"
+        app:backgroundTint="#fcc267"
         app:layout_constraintBottom_toBottomOf="@+id/OTPInput"
         app:layout_constraintEnd_toEndOf="@+id/enterPhoneEndGuideline"
-        app:layout_constraintTop_toTopOf="@+id/OTPInput"
-        app:backgroundTint="#fcc267" />
+        app:layout_constraintTop_toTopOf="@+id/OTPInput" />
 
     <TextView
         android:id="@+id/loginErrorMessage"
@@ -114,7 +114,7 @@
             android:background="@drawable/round_rectangle"
             android:enabled="false"
             android:text="login"
-            android:textColor="#ffffff"
+            android:textColor="#000"
             app:backgroundTint="#fcc267" />
 
         <ProgressBar
