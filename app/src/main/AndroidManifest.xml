@@ -28,11 +28,6 @@
             android:name=".ActivityReport_Activity"
             android:exported="false" />
         <activity
-            android:name=".ProfileView.ActivityReportActivity"
-            android:exported="false"
-            android:label="@string/title_activity_report"
-            android:theme="@style/Theme.IgNight.NoActionBar" />
-        <activity
             android:name=".MapActivity"
             android:exported="false" />
         <activity
