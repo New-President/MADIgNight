@@ -156,6 +156,18 @@ public class SideMenu extends Activity {
             }
         });
 
+        // side menu button for activity report activity. pls edit if its wrong
+        TextView activityReport = findViewById(R.id.activityReport_sidemenu);
+        activityReport.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getApplicationContext(), ActivityReportActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                startActivity(intent);
+                finish();
+            }
+        });
+
         TextView createBlogBtn = findViewById(R.id.menuCreateBlogBtn);
         createBlogBtn.setOnClickListener(new View.OnClickListener() {
             @RequiresApi(api = Build.VERSION_CODES.N)
