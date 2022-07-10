@@ -67,26 +67,6 @@ public class LoginActivity extends AppCompatActivity {
         /*FirebaseAuth.getInstance().signOut();*/
         FirebaseDatabase.getInstance("https://madignight-default-rtdb.asia-southeast1.firebasedatabase.app/").goOnline();
 
-        // to update db values
-//        FirebaseDatabase.getInstance("https://madignight-default-rtdb.asia-southeast1.firebasedatabase.app/").getReference().addListenerForSingleValueEvent(new ValueEventListener() {
-//            @Override
-//            public void onDataChange(@NonNull DataSnapshot snapshot) {
-//                for (DataSnapshot chatSnapshot : snapshot.child("chat").getChildren()) {
-//                    String chatid = chatSnapshot.getKey();
-//
-//                    for (DataSnapshot userSnapshot : chatSnapshot.child("users").getChildren()) {
-//                        String uid = userSnapshot.getKey();
-//                        String username = snapshot.child("user").child(uid).child("username").getValue().toString();
-//                        userSnapshot.getRef().setValue(username);
-//                    }
-//                }
-//            }
-//
-//            @Override
-//            public void onCancelled(@NonNull DatabaseError error) {
-//                Log.e(TAG, "onCancelled: " + error.getMessage());
-//            }
-//        });
 
         getPermission();
 
