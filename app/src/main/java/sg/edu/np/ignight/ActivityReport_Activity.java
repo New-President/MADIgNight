@@ -11,4 +11,5 @@ public class ActivityReport_Activity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activityreport_activity);
     }
+    // test
 }
