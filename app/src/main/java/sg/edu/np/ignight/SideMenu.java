@@ -6,11 +6,12 @@ import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AlertDialog;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.core.content.ContextCompat;
 
+import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
+import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
@@ -30,6 +31,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -46,20 +48,11 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.google.firebase.storage.FileDownloadTask;
-import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.StorageReference;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 public class SideMenu extends Activity {
 
-    private FirebaseStorage storage;
-    private StorageReference storageReference;
     private PhoneAuthProvider.OnVerificationStateChangedCallbacks callbacks;
     private PhoneAuthProvider.ForceResendingToken resendingToken;
     private boolean initialVerificationSent;
@@ -129,8 +122,13 @@ public class SideMenu extends Activity {
         map.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent mapPage = new Intent(SideMenu.this, MapActivity.class);
-                startActivity(mapPage);
+                if (ContextCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+                    Intent mapPage = new Intent(SideMenu.this, MapActivity.class);
+                    startActivity(mapPage);
+                }else {
+                    Intent mapPage = new Intent(SideMenu.this, PermissionsActivity.class);
+                    startActivity(mapPage);
+                }
 
             }
         });
@@ -151,6 +149,18 @@ public class SideMenu extends Activity {
                 FirebaseDatabase.getInstance("https://madignight-default-rtdb.asia-southeast1.firebasedatabase.app/").goOffline();
                 FirebaseAuth.getInstance().signOut();
                 Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                startActivity(intent);
+                finish();
+            }
+        });
+
+        // side menu button for activity report activity. pls edit if its wrong
+        TextView activityReport = findViewById(R.id.activityReport_sidemenu);
+        activityReport.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getApplicationContext(), ActivityReport_Activity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 startActivity(intent);
                 finish();
@@ -307,38 +317,15 @@ public class SideMenu extends Activity {
 
         ImageView profilePicSideMenu = findViewById(R.id.profilepic_sidemenu);
 
-        FirebaseDatabase database = FirebaseDatabase.getInstance("https://madignight-default-rtdb.asia-southeast1.firebasedatabase.app/");
-        DatabaseReference myRef = database.getReference("user");
-        storage = FirebaseStorage.getInstance("gs://madignight.appspot.com");
+        DatabaseReference myRef = FirebaseDatabase.getInstance("https://madignight-default-rtdb.asia-southeast1.firebasedatabase.app/").getReference("user");
 
         myRef.child(Uid).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                String existProfilePic = snapshot.child("Profile Picture").getValue(String.class);
-                Log.d("Hello",existProfilePic);
-                storageReference = storage.getReference().child("profilePicture/" + Uid + "/" + existProfilePic);
-
-                try {
-                    final File localFile = File.createTempFile(existProfilePic, existProfilePic);
-                    storageReference.getFile(localFile)
-                            .addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
-                                @Override
-                                public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
-                                    //Toast.makeText(SideMenu.this, "Picture Retrieved", Toast.LENGTH_SHORT).show();
-                                    Bitmap bitmap = BitmapFactory.decodeFile(localFile.getAbsolutePath());
-                                    profilePicSideMenu.setImageBitmap(bitmap);
-                                }
-                            })
-                            .addOnFailureListener(new OnFailureListener() {
-                                @Override
-                                public void onFailure(@NonNull Exception e) {
-                                    Toast.makeText(SideMenu.this, "Error loading profile picture", Toast.LENGTH_SHORT).show();
-                                }
-                            });
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+                String existProfilePic = snapshot.child("profileUrl").getValue(String.class);
+                Glide.with(getApplicationContext()).load(existProfilePic).placeholder(R.drawable.ic_baseline_image_24).into(profilePicSideMenu);
             }
+
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
 

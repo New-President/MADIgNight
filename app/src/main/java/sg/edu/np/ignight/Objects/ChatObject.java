@@ -9,14 +9,19 @@ public class ChatObject implements Comparable<ChatObject> {
     private String targetUserId;
     private int unreadMsgCount;
     private TimestampObject lastUsedTimestamp;
+    private boolean newChat;
+    private String profileUrl;
+
+    public ChatObject() {}
 
     // takes in chat id, name of chat, user id of the other user for the chat, unread messages count and last used time as a string
-    public ChatObject(String chatId, String chatName, String targetUserId, int unreadMsgCount, String lastUsedTimeString) throws ParseException {
+    public ChatObject(String chatId, String chatName, String targetUserId, int unreadMsgCount, String lastUsedTimeString, boolean newChat) throws ParseException {
         this.chatId = chatId;
         this.chatName = chatName;
         this.targetUserId = targetUserId;
         this.unreadMsgCount = unreadMsgCount;
         this.lastUsedTimestamp = new TimestampObject(lastUsedTimeString);
+        this.newChat = newChat;
     }
 
     // compare the lastUsedTimestamp of chats for sorting
@@ -42,6 +47,12 @@ public class ChatObject implements Comparable<ChatObject> {
     public TimestampObject getLastUsedTimestamp() {
         return lastUsedTimestamp;
     }
+    public boolean isNewChat() {
+        return newChat;
+    }
+    public String getProfileUrl() {
+        return profileUrl;
+    }
 
     public void setUnreadMsgCount(int unreadMsgCount) {
         this.unreadMsgCount = unreadMsgCount;
@@ -49,8 +60,13 @@ public class ChatObject implements Comparable<ChatObject> {
     public void setChatName(String chatName) {
         this.chatName = chatName;
     }
-
+    public void setNewChat(boolean newChat) {
+        this.newChat = newChat;
+    }
     public void setLastUsedTimestamp(String lastUsedTimeString) throws ParseException {
         this.lastUsedTimestamp = new TimestampObject(lastUsedTimeString);
+    }
+    public void setProfileUrl(String profileUrl) {
+        this.profileUrl = profileUrl;
     }
 }

@@ -9,8 +9,8 @@
 
     <ImageView
         android:id="@+id/whiteBackground"
-        android:layout_width="407dp"
-        android:layout_height="505dp"
+        android:layout_width="0dp"
+        android:layout_height="600dp"
         android:scaleType="fitXY"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -79,11 +79,11 @@
         android:background="@drawable/round_rectangle"
         android:enabled="false"
         android:text="send OTP"
-        android:textColor="#fff"
+        android:textColor="#000"
+        app:backgroundTint="#fcc267"
         app:layout_constraintBottom_toBottomOf="@+id/OTPInput"
         app:layout_constraintEnd_toEndOf="@+id/enterPhoneEndGuideline"
-        app:layout_constraintTop_toTopOf="@+id/OTPInput"
-        app:backgroundTint="#fcc267" />
+        app:layout_constraintTop_toTopOf="@+id/OTPInput" />
 
     <TextView
         android:id="@+id/loginErrorMessage"
@@ -114,7 +114,7 @@
             android:background="@drawable/round_rectangle"
             android:enabled="false"
             android:text="login"
-            android:textColor="#ffffff"
+            android:textColor="#000"
             app:backgroundTint="#fcc267" />
 
         <ProgressBar
@@ -169,7 +169,8 @@
         android:layout_width="217dp"
         android:layout_height="98dp"
         android:layout_marginStart="28dp"
-        android:layout_marginTop="36dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="16dp"
         android:fontFamily="@font/poppins"
         android:text="IgNight a Spark today."
         android:textAllCaps="false"
@@ -179,14 +180,14 @@
         app:layout_constraintBottom_toTopOf="@+id/whiteBackground"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.0" />
+        app:layout_constraintVertical_bias="0.636" />
 
     <TextView
         android:id="@+id/title2"
         android:layout_width="217dp"
         android:layout_height="98dp"
         android:layout_marginStart="28dp"
-        android:layout_marginTop="36dp"
+        android:layout_marginTop="68dp"
         android:fontFamily="@font/poppins"
         android:text="Login or Register."
         android:textAllCaps="false"

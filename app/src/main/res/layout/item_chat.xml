@@ -3,39 +3,79 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/chatLayout">
+    android:id="@+id/chatLayout"
+    android:background="#CBC8C8">
+
+    <androidx.cardview.widget.CardView
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_margin="10dp"
+        app:cardCornerRadius="50dp"
+        android:id="@+id/chatProfileContainer"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent">
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:src="@mipmap/ic_launcher"
+            android:id="@+id/chatProfilePicture"/>
+
+    </androidx.cardview.widget.CardView>
 
     <TextView
         android:id="@+id/chatTitle"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:background="#CBC8C8"
-        android:padding="10dp"
+        android:layout_marginStart="10dp"
         android:text="chat name"
-        android:textSize="20sp"
+        android:maxLines="1"
+        android:ellipsize="end"
+        android:textSize="25sp"
+        app:layout_constraintTop_toTopOf="@+id/chatProfileContainer"
+        app:layout_constraintBottom_toBottomOf="@+id/chatProfileContainer"
+        app:layout_constraintStart_toEndOf="@+id/chatProfileContainer"
+        app:layout_constraintEnd_toEndOf="@+id/chatTitleGuideline"/>
+
+    <androidx.constraintlayout.widget.Guideline
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.7"
+        android:id="@+id/chatTitleGuideline"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/newChatIndicator"
+        android:text="*New"
+        android:textStyle="italic"
+        android:textSize="16sp"
+        android:textColor="#ff0000"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"/>
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginEnd="20dp"
+        android:layout_marginTop="10dp"/>
 
     <TextView
         android:id="@+id/unreadMsgCount"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toTopOf="@id/chatTitle"
-        app:layout_constraintBottom_toBottomOf="@id/chatTitle"
-        app:layout_constraintEnd_toEndOf="@id/chatTitle"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         android:textColor="#000000"
         android:text="1 unread"
         android:textStyle="italic"
         android:textSize="16sp"
-        android:layout_marginEnd="20dp"
-        android:visibility="gone"/>
+        android:layout_marginBottom="10dp"
+        android:layout_marginEnd="20dp"/>
 
     <View
         android:layout_width="0dp"
         android:layout_height="1dp"
         android:background="#000000"
-        app:layout_constraintTop_toBottomOf="@id/chatTitle"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"/>
 

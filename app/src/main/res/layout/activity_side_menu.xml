@@ -120,6 +120,17 @@
         app:layout_constraintTop_toBottomOf="@+id/logout_sidemenu" />
 
     <View
+        android:id="@+id/view4"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginTop="44dp"
+        android:background="@android:color/darker_gray"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/logout_sidemenu" />
+
+    <View
         android:id="@+id/view18"
         android:layout_width="1dp"
         android:layout_height="match_parent"
@@ -222,11 +233,27 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/view" />
 
+    <TextView
+        android:id="@+id/activityReport_sidemenu"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:layout_marginBottom="9dp"
+        android:text="Activity Report"
+        android:textSize="20sp"
+        app:layout_constraintBottom_toTopOf="@+id/view4"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/view18"
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/logout_sidemenu"
+        app:layout_constraintVertical_bias="0.0" />
+
     <Button
         android:id="@+id/delete_acc_btn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="68dp"
         android:background="@drawable/delete_btn_bg"
         android:paddingLeft="70dp"
         android:paddingTop="5dp"
@@ -236,7 +263,8 @@
         android:textColor="@drawable/delete_text_color"
         android:textSize="14sp"
         app:layout_constraintEnd_toStartOf="@+id/view18"
+        app:layout_constraintHorizontal_bias="0.502"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/view16" />
+        app:layout_constraintTop_toBottomOf="@+id/view4" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
