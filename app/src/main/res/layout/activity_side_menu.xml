@@ -222,4 +222,21 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/view" />
 
+    <Button
+        android:id="@+id/delete_acc_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:background="@drawable/delete_btn_bg"
+        android:paddingLeft="70dp"
+        android:paddingTop="5dp"
+        android:paddingRight="70dp"
+        android:paddingBottom="5dp"
+        android:text="Delete Account"
+        android:textColor="@drawable/delete_text_color"
+        android:textSize="14sp"
+        app:layout_constraintEnd_toStartOf="@+id/view18"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/view16" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
