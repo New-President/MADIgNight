@@ -34,6 +34,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.FirebaseException;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -176,7 +177,30 @@ public class SideMenu extends Activity {
                 builder.setView(view);
 
                 final AlertDialog alertDialog = builder.create(); //Display alert dialog
+                callbacks = new PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
 
+                    // verification complete -> sign in with credentials
+                    @Override
+                    public void onVerificationCompleted(@NonNull PhoneAuthCredential phoneAuthCredential) {
+                        ReAuthPhoneAuthCredential(phoneAuthCredential);
+                    }
+
+                    // OTP sent -> store verification id and resending token, start timer for OTP resend
+                    @Override
+                    public void onCodeSent(@NonNull String s, @NonNull PhoneAuthProvider.ForceResendingToken forceResendingToken) {
+                        super.onCodeSent(s, forceResendingToken);
+                        verificationId = s;
+                        initialVerificationSent = true;
+                        resendingToken = forceResendingToken;
+                        allowResendOTP(view);
+                    }
+
+                    // verification failed -> call setDefaultFields()
+                    @Override
+                    public void onVerificationFailed(@NonNull FirebaseException e) {
+                        e.printStackTrace();
+                    }
+                };
                 EditText delete_word = view.findViewById(R.id.delete_input);
                 delete_word.addTextChangedListener(new TextWatcher() { //check the DELETE word to confirm delete
                     @Override
@@ -184,13 +208,21 @@ public class SideMenu extends Activity {
 
                     @Override
                     public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) { // check everytime the input changes
+                        Button delete_otp_btn = view.findViewById(R.id.delete_send_otp);
+                        EditText get_delete_otp = view.findViewById(R.id.delete_otp);
                         if (delete_word.getText().toString().equals("DELETE")) { // Matched the DELETE word
-                            view.findViewById(R.id.delete_send_otp).setEnabled(true);
-                            view.findViewById(R.id.delete_send_otp).setOnClickListener(new View.OnClickListener() {
+                            delete_otp_btn.setEnabled(true);
+                            delete_otp_btn.setOnClickListener(new View.OnClickListener() {
                                 @Override
-                                public void onClick(View view) {
-                                    view.findViewById(R.id.delete_send_otp).setEnabled(false);
-                                    EditText get_delete_otp = view.findViewById(R.id.delete_otp);
+                                public void onClick(View view2) {
+                                    delete_word.setEnabled(false);
+                                    if (initialVerificationSent) {
+                                        resendVerificationCode();
+                                    }
+                                    else {
+                                        startPhoneNumberVerification();
+                                    }
+                                    delete_otp_btn.setEnabled(false);
                                     get_delete_otp.setEnabled(true);
                                     get_delete_otp.addTextChangedListener(new TextWatcher() {
                                         @Override
@@ -204,22 +236,31 @@ public class SideMenu extends Activity {
                                                 view.findViewById(R.id.button_yes_delete).setBackgroundResource(R.drawable.btn_delete_delete);
                                                 view.findViewById(R.id.button_yes_delete).setOnClickListener(new View.OnClickListener() {
                                                     @Override
-                                                    public void onClick(View view) {
+                                                    public void onClick(View view3) {
+                                                        if (countDownTimer != null) {
+                                                            countDownTimer.cancel();
+                                                            delete_otp_btn.setText("send OTP");
+                                                            get_delete_otp.setText("");
+                                                        }
+                                                        verifyPhoneNumberWithCode(view);
                                                         user.delete().addOnCompleteListener(new OnCompleteListener<Void>() { // Delete the user
                                                             @Override
                                                             public void onComplete(@NonNull Task<Void> task) {
                                                                 if (task.isSuccessful()) {
+                                                                    alertDialog.dismiss();
+                                                                    FirebaseDatabase.getInstance("https://madignight-default-rtdb.asia-southeast1.firebasedatabase.app/").goOffline();
+                                                                    FirebaseAuth.getInstance().signOut();
+                                                                    Intent main_to_start = new Intent(getApplicationContext(), LoginActivity.class);
+                                                                    main_to_start.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                                                    startActivity(main_to_start); // Go back to login
+                                                                    finish();
                                                                     Log.d("Delete Status", "User account deleted.");
+                                                                }
+                                                                else {
+                                                                    Toast.makeText(getApplicationContext(), "Wrong OTP", Toast.LENGTH_SHORT).show();
                                                                 }
                                                             }
                                                         });
-                                                        alertDialog.dismiss();
-                                                        FirebaseDatabase.getInstance("https://madignight-default-rtdb.asia-southeast1.firebasedatabase.app/").goOffline();
-                                                        FirebaseAuth.getInstance().signOut();
-                                                        Intent main_to_start = new Intent(getApplicationContext(), LoginActivity.class);
-                                                        main_to_start.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                                                        startActivity(main_to_start); // Go back to login
-                                                        finish();
                                                     }
                                                 });
                                             }
@@ -237,10 +278,11 @@ public class SideMenu extends Activity {
                             });
                         }
                         else { // If does not match delete, set to disable the buttons to prevent miss click
-                            Log.d("hello",delete_word.getText().toString());
                             view.findViewById(R.id.button_yes_delete).setEnabled(false);
                             view.findViewById(R.id.delete_otp).setEnabled(false);
                             view.findViewById(R.id.delete_send_otp).setEnabled(false);
+                            delete_otp_btn.setText("send OTP");
+                            get_delete_otp.setText("");
                             view.findViewById(R.id.button_yes_delete).setBackgroundResource(R.drawable.btn_delete_delete_locked);
                         }
                     }
@@ -304,12 +346,13 @@ public class SideMenu extends Activity {
         });
     }
 
+
     private CountDownTimer countDownTimer;
 
     // use countdown timer to change sendOTPButton text and enable the button to allow resending the OTP after one minute
     private void allowResendOTP(View view) {
+        Button send_otp = view.findViewById(R.id.delete_send_otp);
         countDownTimer = new CountDownTimer(60000, 1000) {
-            Button send_otp = view.findViewById(R.id.delete_send_otp);
             @Override
             public void onTick(long l) {
                 send_otp.setText(Long.toString(Math.round(l / 1000.0)) + "(s)");
@@ -326,30 +369,68 @@ public class SideMenu extends Activity {
 
     // start to verify phone number (send otp to the retrieved phone number)
     private void startPhoneNumberVerification() {
-        PhoneAuthOptions options = PhoneAuthOptions.newBuilder()
-                .setPhoneNumber(phonePrefix.getText().toString() + phoneNumberInput.getText().toString())
-                .setTimeout(60L, TimeUnit.SECONDS)
-                .setActivity(this)
-                .setCallbacks(callbacks)
-                .build();
-        PhoneAuthProvider.verifyPhoneNumber(options);
+        DatabaseReference phoneNum = FirebaseDatabase.getInstance().getReference("user").child(Uid).child("phone");
+        phoneNum.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                Log.d("phone",snapshot.getValue().toString());
+                PhoneAuthOptions options = PhoneAuthOptions.newBuilder()
+                        .setPhoneNumber(snapshot.getValue().toString())
+                        .setTimeout(60L, TimeUnit.SECONDS)
+                        .setActivity(SideMenu.this)
+                        .setCallbacks(callbacks)
+                        .build();
+                PhoneAuthProvider.verifyPhoneNumber(options);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Log.w(TAG, "onCancelled", error.toException());
+            }
+        });
     }
 
     // resend otp
     private void resendVerificationCode() {
-        PhoneAuthOptions options = PhoneAuthOptions.newBuilder()
-                .setPhoneNumber(phonePrefix.getText().toString() + phoneNumberInput.getText().toString())
-                .setTimeout(60L, TimeUnit.SECONDS)
-                .setActivity(this)
-                .setCallbacks(callbacks)
-                .setForceResendingToken(resendingToken)
-                .build();
-        PhoneAuthProvider.verifyPhoneNumber(options);
+        DatabaseReference phoneNum = FirebaseDatabase.getInstance().getReference("user").child(Uid).child("phone");
+        phoneNum.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                Log.d("phone2",snapshot.getValue().toString());
+                PhoneAuthOptions options = PhoneAuthOptions.newBuilder()
+                        .setPhoneNumber(snapshot.getValue().toString())
+                        .setTimeout(60L, TimeUnit.SECONDS)
+                        .setActivity(SideMenu.this)
+                        .setCallbacks(callbacks)
+                        .setForceResendingToken(resendingToken)
+                        .build();
+                PhoneAuthProvider.verifyPhoneNumber(options);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Log.w(TAG, "onCancelled", error.toException());
+            }
+        });
     }
 
     // create a PhoneAuthCredential object with the verification id obtained from onCodeSent()
-    private void verifyPhoneNumberWithCode() {
-        PhoneAuthCredential credential = PhoneAuthProvider.getCredential(verificationId, codeInput.getText().toString());
+    private void verifyPhoneNumberWithCode(View view) {
+        EditText delete_otp_input = view.findViewById(R.id.delete_otp);
+        PhoneAuthCredential credential = PhoneAuthProvider.getCredential(verificationId, delete_otp_input.toString());
+        ReAuthPhoneAuthCredential(credential);
+    }
+
+    // reauth the user with the credentials
+    private void ReAuthPhoneAuthCredential(PhoneAuthCredential phoneAuthCredential) {
+        user.reauthenticate(phoneAuthCredential).addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                if (task.isSuccessful()) {
+                    Log.d(TAG, "User re-authenticated.");
+                }
+            }
+        });
     }
 
     @Override
