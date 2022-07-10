@@ -128,8 +128,13 @@ public class SideMenu extends Activity {
         map.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent mapPage = new Intent(SideMenu.this, MapActivity.class);
-                startActivity(mapPage);
+                if (ContextCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+                    Intent mapPage = new Intent(SideMenu.this, MapActivity.class);
+                    startActivity(mapPage);
+                }else {
+                    Intent mapPage = new Intent(SideMenu.this, PermissionsActivity.class);
+                    startActivity(mapPage);
+                }
 
             }
         });
