@@ -2,14 +2,19 @@ package sg.edu.np.ignight;
 
 import static android.content.ContentValues.TAG;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
@@ -34,6 +39,7 @@ import sg.edu.np.ignight.Objects.BlogObject;
 import sg.edu.np.ignight.Blog.BlogAdapter;
 import sg.edu.np.ignight.Objects.UserObject;
 
+@RequiresApi(api = Build.VERSION_CODES.N)
 public class BlogActivity extends AppCompatActivity {
     private ArrayList<BlogObject> blogsList;
     private ArrayList<String> blogIDList;
