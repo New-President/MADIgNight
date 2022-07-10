@@ -23,13 +23,14 @@
         android:id="@+id/activityReportTitle"
         android:layout_width="250dp"
         android:layout_height="96dp"
-        android:layout_marginStart="24dp"
         android:layout_marginTop="92dp"
         android:fontFamily="@font/poppins"
         android:text="Insert General Advice Here!"
         android:textColor="#000"
         android:textSize="34sp"
         android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.149"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -45,4 +46,19 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/activityTitle2"
+        android:layout_width="198dp"
+        android:layout_height="61dp"
+        android:layout_marginTop="3dp"
+        android:fontFamily="sans-serif-light"
+        android:text="Here is how you have done so far."
+        android:textColor="#808080"
+        android:textSize="20sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.112"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/activityReportTitle" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
