@@ -43,7 +43,7 @@
 
         <LinearLayout
             android:id="@+id/messageLayoutHeaderUserInfo"
-            android:layout_width="230dp"
+            android:layout_width="195dp"
             android:layout_height="match_parent"
             android:gravity="center_vertical"
             android:orientation="vertical"
@@ -72,6 +72,7 @@
             android:id="@+id/btn_call"
             android:layout_width="50dp"
             android:layout_height="50dp"
+            android:layout_gravity="center"
             app:srcCompat="@drawable/call" />
 
     </LinearLayout>
