@@ -2,13 +2,6 @@ package sg.edu.np.ignight;
 
 import static android.content.ContentValues.TAG;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.DefaultItemAnimator;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -25,8 +18,14 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.DefaultItemAnimator;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.bumptech.glide.Glide;
-import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.drawee.drawable.ProgressBarDrawable;
 import com.facebook.drawee.generic.GenericDraweeHierarchyBuilder;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -44,12 +43,18 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.stfalcon.frescoimageviewer.ImageViewer;
 
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+
+import org.jitsi.meet.sdk.JitsiMeet;
+import org.jitsi.meet.sdk.JitsiMeetActivity;
+import org.jitsi.meet.sdk.JitsiMeetConferenceOptions;
 
 import sg.edu.np.ignight.Chat.MediaAdapter;
 import sg.edu.np.ignight.Chat.MessageAdapter;
@@ -246,6 +251,29 @@ public class ChatActivity extends AppCompatActivity {
             }
         });
 
+        //Calling button for call function
+        ImageView call_btn = findViewById(R.id.btn_call);
+        call_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                URL server;
+                try{
+                    server =new URL("https://meet.jit.si");
+                    JitsiMeetConferenceOptions defaultOptions= new JitsiMeetConferenceOptions.Builder()
+                                    .setServerURL(server)
+                                    .setWelcomePageEnabled(false)
+                                    .build();
+                    JitsiMeet.setDefaultConferenceOptions(defaultOptions);
+
+                }catch (MalformedURLException e){
+                    e.printStackTrace();
+                }
+                JitsiMeetConferenceOptions options = new JitsiMeetConferenceOptions.Builder()
+                        .setRoom("big_room")// need changing
+                        .setWelcomePageEnabled(false).build();
+                JitsiMeetActivity.launch(ChatActivity.this,options);
+            }
+        });
     }
 
     // update status of other user

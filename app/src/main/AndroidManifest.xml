@@ -69,7 +69,7 @@
         </activity>
         <activity
             android:name=".ProfileCreationActivity"
-            android:exported="true" />
+            android:exported="false" />
         <activity
             android:name=".ProfileViewActivity"
             android:exported="false" />
