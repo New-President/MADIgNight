@@ -2,8 +2,6 @@ package sg.edu.np.ignight;
 
 import static android.content.ContentValues.TAG;
 
-import androidx.activity.result.ActivityResultLauncher;
-import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
@@ -11,7 +9,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
@@ -20,6 +17,7 @@ import android.os.Handler;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
+import android.widget.TextView;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
@@ -29,10 +27,8 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import sg.edu.np.ignight.Blog.LoadingBlogDialog;
 import sg.edu.np.ignight.Objects.BlogObject;
@@ -51,6 +47,7 @@ public class BlogActivity extends AppCompatActivity {
     private BlogAdapter blogAdapter;
     private LinearLayoutManager blogLayoutManager;
     private UserObject userObject;
+    private LoadingBlogDialog loadingBlogDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,18 +55,11 @@ public class BlogActivity extends AppCompatActivity {
         setContentView(R.layout.activity_blog);
         context = this;
 
-        LoadingBlogDialog loadingBlogDialog = new LoadingBlogDialog(this);
-        loadingBlogDialog.startLoadingDialog("Loading blogs..");
-        Handler handler = new Handler();
-        handler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                loadingBlogDialog.dismissDialog();
-            }
-        }, 2000);
+        loadingBlogDialog = new LoadingBlogDialog(this);
+
         FirebaseAuth auth = FirebaseAuth.getInstance();
         FirebaseUser user = auth.getCurrentUser();
-        Log.d("testtest", "test");
+
         // When viewing own profile, gets own UID
         String uid = user.getUid();
 
@@ -94,8 +84,9 @@ public class BlogActivity extends AppCompatActivity {
         else{
             createBlogBtn.setVisibility(View.VISIBLE);
         }
-        getBlogList();
+
         initRecyclerView();
+        getBlogList();
 
         // Goes back to previous activity
         ImageButton backBtn = findViewById(R.id.BlogBackButton);
@@ -131,6 +122,14 @@ public class BlogActivity extends AppCompatActivity {
     }
 
     private void getBlogList() {
+        loadingBlogDialog.startLoadingDialog("Loading blogs..");
+        Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                loadingBlogDialog.dismissDialog();
+            }
+        }, 2000);
         blogIDList = new ArrayList<>();
         databaseReference.addChildEventListener(new ChildEventListener() {
 
@@ -173,6 +172,10 @@ public class BlogActivity extends AppCompatActivity {
 
                         BlogObject blogObject = new BlogObject(description, location, imgID, blogID, likes, comments, commentsList, likedUsers);
                         blogsList.add(blogObject);
+
+                        TextView noBlogMsg = findViewById(R.id.noBlogMsg);
+
+                        noBlogMsg.setVisibility(View.GONE);
 
                         blogAdapter.notifyDataSetChanged();
                     }
@@ -236,7 +239,10 @@ public class BlogActivity extends AppCompatActivity {
             public void onCancelled(@NonNull DatabaseError error) {
                 Log.e(TAG, "onCancelled: " + error.getMessage());
             }
+
+
         });
+
     }
 
 }
