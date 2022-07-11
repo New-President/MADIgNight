@@ -1,5 +1,7 @@
 package sg.edu.np.ignight;
 
+import static android.content.ContentValues.TAG;
+
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -8,6 +10,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -193,6 +196,27 @@ public class ProfileCreationActivity extends AppCompatActivity {
                     ageInput.setText(existAge.toString());
                     // Set About Me input to user's About Me
                     aboutMeInput.setText(existAboutMe);
+                    // Get the length of the text
+                    int length = aboutMeInput.getText().length();
+                    // Set the text size according to length of text keyed in before
+                    int textSize = 0;
+                    if (length >= 160){
+                        textSize = 15;
+                    }
+                    else if(length >= 140){
+                        textSize = 16;
+                    }
+                    else if(length >= 120){
+                        textSize = 17;
+                    }
+                    else if(length >= 110){
+                        textSize = 18;
+                    }
+                    else if(length >= 100){
+                        textSize = 19;
+                    }
+                    aboutMeInput.setTextSize(textSize);
+
 
                     //  Set the gender dropdown value to user's selected gender
                     selectSpinnerValue(genderDropdown, existGender);

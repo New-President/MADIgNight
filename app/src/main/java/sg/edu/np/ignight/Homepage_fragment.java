@@ -92,7 +92,6 @@ public class Homepage_fragment extends Fragment {
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 // Get the user's Gender preference
                 preferredGender = snapshot.child("Gender Preference").getValue(String.class);
-                Log.e(TAG, "Hello: " + preferredGender);
             }
 
             @Override
