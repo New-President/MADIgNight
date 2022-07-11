@@ -80,4 +80,8 @@ dependencies {
 
     // jitsi - video call
     implementation ('org.jitsi.react:jitsi-meet-sdk:2.+') { transitive = true }
+
+    // google maps
+    implementation 'com.google.android.gms:play-services-maps:18.0.2'
+    implementation 'com.google.android.gms:play-services-maps:18.0.2'
 }

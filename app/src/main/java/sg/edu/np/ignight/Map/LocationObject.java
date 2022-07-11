@@ -1,6 +1,8 @@
 package sg.edu.np.ignight.Map;
 
-public class LocationObject {
+import java.io.Serializable;
+
+public class LocationObject implements Serializable {
     private String Name;
     private String Desc;
     private String Category;
@@ -32,4 +34,5 @@ public class LocationObject {
     public void setImgUri(String imgUri) {
         this.imgUri = imgUri;
     }
+
 }

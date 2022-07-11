@@ -1,6 +1,7 @@
 package sg.edu.np.ignight.Map;
 
 import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,7 +21,7 @@ import sg.edu.np.ignight.R;
 
 public class MapAdapter extends RecyclerView.Adapter<MapAdapter.MapViewHolder>{
     private TextView Name, Category;
-    private ImageView LocImage;
+    private ImageView LocImage, ViewLoc;
 
     private ArrayList<LocationObject> locationsList;
     private Context c;
@@ -48,6 +49,14 @@ public class MapAdapter extends RecyclerView.Adapter<MapAdapter.MapViewHolder>{
                 .placeholder(R.drawable.ic_baseline_image_24)
                 .into(LocImage);
 
+        ViewLoc.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent viewloc = new Intent(c, ViewLocation.class);
+                viewloc.putExtra("locationObject", location);
+                c.startActivity(viewloc);
+            }
+        });
     }
 
     @Override
@@ -62,6 +71,7 @@ public class MapAdapter extends RecyclerView.Adapter<MapAdapter.MapViewHolder>{
             Name = item.findViewById(R.id.locName);
             Category = item.findViewById(R.id.locCat);
             LocImage = item.findViewById(R.id.locImage);
+            ViewLoc = item.findViewById(R.id.viewLoc);
         }
     }
 }
