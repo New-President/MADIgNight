@@ -43,6 +43,7 @@ public class ViewLocation extends AppCompatActivity implements OnMapReadyCallbac
         location = (LocationObject) getIntent().getSerializableExtra("locationObject");
 
         ImageView viewLocImg = findViewById(R.id.viewLocImg);
+        ImageView viewLocBackBtn = findViewById(R.id.viewLocBackButton);
         TextView locNameField = findViewById(R.id.viewLocName);
         TextView locDescField = findViewById(R.id.viewLocDesc);
 
@@ -75,6 +76,13 @@ public class ViewLocation extends AppCompatActivity implements OnMapReadyCallbac
                     })
                     .show();
         }
+
+        viewLocBackBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                finish();
+            }
+        });
     }
 
     private void initGoogleMap(Bundle savedInstanceState){

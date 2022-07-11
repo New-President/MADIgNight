@@ -2,9 +2,52 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    xmlns:andriod="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".Map.ViewLocation">
+
+    <com.google.android.material.navigation.NavigationView
+        android:id="@+id/navigationView"
+        andriod:background="@drawable/gradient_background"
+        android:layout_width="0dp"
+        android:layout_height="70dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <ImageButton
+                android:id="@+id/viewLocBackButton"
+                andriod:background="#00FFFFFF"
+                andriod:layout_marginStart="16dp"
+                andriod:layout_marginTop="10dp"
+                andriod:minHeight="48dp"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:src="@drawable/ic_baseline_arrow_back_24"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                andriod:fontFamily="@font/amaranth_bold"
+                android:text="Viewing Location"
+                andriod:textColor="#FFFFFF"
+                andriod:textSize="24sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </com.google.android.material.navigation.NavigationView>
 
     <ScrollView
         android:layout_width="match_parent"
@@ -12,7 +55,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toBottomOf="@+id/navigationView">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -21,15 +64,15 @@
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
-                android:layout_height="900dp">
+                android:layout_height="1000dp">
 
                 <TextView
                     android:id="@+id/viewLocName"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="24dp"
-                    android:paddingLeft="24dp"
-                    android:paddingRight="24dp"
+                    android:paddingLeft="48dp"
+                    android:paddingRight="48dp"
                     android:text="TextView"
                     android:textSize="16sp"
                     android:textStyle="bold"
@@ -41,10 +84,9 @@
                     android:id="@+id/viewLocImg"
                     android:layout_width="0dp"
                     android:layout_height="300dp"
-                    android:layout_marginTop="-5dp"
+                    android:scaleType="centerCrop"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
                     tools:srcCompat="@tools:sample/avatars" />
 
                 <TextView
@@ -52,8 +94,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="16dp"
-                    android:paddingLeft="24dp"
-                    android:paddingRight="24dp"
+                    android:paddingLeft="48dp"
+                    android:paddingRight="48dp"
                     android:text="TextView"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
