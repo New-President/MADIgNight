@@ -39,7 +39,7 @@ public class Homepage_fragment extends Fragment {
 
     private String queryName;
 
-    private String preferredGender;
+    private String preferredGender, preferredRelationship;
 
     public Homepage_fragment() {
     }
@@ -92,6 +92,7 @@ public class Homepage_fragment extends Fragment {
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 // Get the user's Gender preference
                 preferredGender = snapshot.child("Gender Preference").getValue(String.class);
+                preferredRelationship = snapshot.child("Relationship Preference").getValue(String.class);
             }
 
             @Override
@@ -148,7 +149,7 @@ public class Homepage_fragment extends Fragment {
 
                             UserObject user = new UserObject(uid, aboutMe, age, dateLocList, gender, genderPref, interestList, profilePicUrl, relationshipPref, phone, profileCreated, username);
 
-                            if (user.getGender().equals(preferredGender)){
+                            if (user.getGender().equals(preferredGender) && user.getRelationshipPref().equals(preferredRelationship)){
                                 userList.add(user);
                                 userListAdapter.notifyDataSetChanged();
                             }
