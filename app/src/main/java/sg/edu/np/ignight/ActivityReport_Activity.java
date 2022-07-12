@@ -28,6 +28,7 @@ public class ActivityReport_Activity extends AppCompatActivity {
     private PieChart pieChart;
     private BarChart barChart;
 
+    private ImageButton backButton2;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,6 +41,18 @@ public class ActivityReport_Activity extends AppCompatActivity {
         // Data entries for charts
         barChartData = new ArrayList<>();
         pieChartData = new ArrayList<>();
+
+        // Return back to main menu
+        backButton2 = findViewById(R.id.backButton3);
+        backButton2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent backToMainMenu = new Intent(getApplicationContext(), MainMenuActivity.class);
+                backToMainMenu.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                startActivity(backToMainMenu);
+                finish();
+            }
+        });
 
         // Testing data input
         for (int i=1; i<10; i++){
@@ -62,7 +75,7 @@ public class ActivityReport_Activity extends AppCompatActivity {
         // input bar data
         barChart.setData(new BarData(barDataSet));
         // set animation
-        barChart.animateY(5000);
+        barChart.animateY(1100);
         // set graph description
         barChart.getDescription().setText("Test2");
         barChart.getDescription().setTextColor(Color.BLUE);
@@ -74,20 +87,11 @@ public class ActivityReport_Activity extends AppCompatActivity {
         // input bar data
         pieChart.setData(new PieData(pieDataSet));
         // set animation
-        pieChart.animateXY(5000,5000);
+        pieChart.animateXY(1100,1100);
         // hide description
         pieChart.getDescription().setEnabled(false);
 
-        // Back button to go back to main menu
-        ImageButton back_btn = findViewById(R.id.profileViewBackButton2);
-        back_btn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent activity_report_to_main = new Intent(ActivityReport_Activity.this,MainMenuActivity.class);
-                startActivity(activity_report_to_main);
-                finish();
-            }
-        });
+
     }
 
 }
