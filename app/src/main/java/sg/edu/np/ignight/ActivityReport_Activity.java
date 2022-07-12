@@ -2,8 +2,11 @@ package sg.edu.np.ignight;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.ImageButton;
 
 import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.charts.PieChart;
@@ -74,6 +77,17 @@ public class ActivityReport_Activity extends AppCompatActivity {
         pieChart.animateXY(5000,5000);
         // hide description
         pieChart.getDescription().setEnabled(false);
+
+        // Back button to go back to main menu
+        ImageButton back_btn = findViewById(R.id.profileViewBackButton2);
+        back_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent activity_report_to_main = new Intent(ActivityReport_Activity.this,MainMenuActivity.class);
+                startActivity(activity_report_to_main);
+                finish();
+            }
+        });
     }
 
 }

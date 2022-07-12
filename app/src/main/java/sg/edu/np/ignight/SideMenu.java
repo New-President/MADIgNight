@@ -254,12 +254,12 @@ public class SideMenu extends Activity {
                                                 view.findViewById(R.id.button_yes_delete).setOnClickListener(new View.OnClickListener() {
                                                     @Override
                                                     public void onClick(View view3) {
+                                                        verifyPhoneNumberWithCode(view, alertDialog);
                                                         if (countDownTimer != null) {
                                                             countDownTimer.cancel();
                                                             delete_otp_btn.setText("send OTP");
                                                             get_delete_otp.setText("");
                                                         }
-                                                        verifyPhoneNumberWithCode(view, alertDialog);
                                                     }
                                                 });
                                             }
@@ -345,7 +345,7 @@ public class SideMenu extends Activity {
 
     // start to verify phone number (send otp to the retrieved phone number)
     private void startPhoneNumberVerification() {
-        DatabaseReference phoneNum = FirebaseDatabase.getInstance().getReference("user").child(Uid).child("phone");
+        DatabaseReference phoneNum = FirebaseDatabase.getInstance("https://madignight-default-rtdb.asia-southeast1.firebasedatabase.app/").getReference("user").child(Uid).child("phone");
         phoneNum.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -368,7 +368,7 @@ public class SideMenu extends Activity {
 
     // resend otp
     private void resendVerificationCode() {
-        DatabaseReference phoneNum = FirebaseDatabase.getInstance().getReference("user").child(Uid).child("phone");
+        DatabaseReference phoneNum = FirebaseDatabase.getInstance("https://madignight-default-rtdb.asia-southeast1.firebasedatabase.app/").getReference("user").child(Uid).child("phone");
         phoneNum.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -394,6 +394,7 @@ public class SideMenu extends Activity {
     private void verifyPhoneNumberWithCode(View view, AlertDialog alertDialog) {
         EditText delete_otp_input = view.findViewById(R.id.delete_otp);
         Log.d("Verify",verificationId);
+        Log.d("OTP",delete_otp_input.getText().toString());
         PhoneAuthCredential credential = PhoneAuthProvider.getCredential(verificationId, delete_otp_input.getText().toString());
         ReAuthPhoneAuthCredential(credential, alertDialog);
     }
