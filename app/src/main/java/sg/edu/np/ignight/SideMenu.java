@@ -90,6 +90,7 @@ public class SideMenu extends Activity {
         mToast.setDuration(Toast.LENGTH_LONG);
         mToast.setView(customtoast);
 
+        // Display profile
         TextView editprofile = findViewById(R.id.editprofile_sidemenu);
         editprofile.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -100,6 +101,7 @@ public class SideMenu extends Activity {
             }
         });
 
+        // About us page
         TextView aboutus = findViewById(R.id.aboutus_sidemenu);
         aboutus.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -108,6 +110,7 @@ public class SideMenu extends Activity {
             }
         });
 
+        // Premium services
         TextView premium = findViewById(R.id.premium_sidemenu);
         premium.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -118,7 +121,7 @@ public class SideMenu extends Activity {
 
         TextView map = findViewById(R.id.map_sidemenu);
 
-        // Asks for location permission
+        // Asks for location permission (MAP)
         map.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -133,6 +136,7 @@ public class SideMenu extends Activity {
             }
         });
 
+        // Terms and services
         TextView TandC = findViewById(R.id.TandC_sidemenu);
         TandC.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -142,6 +146,7 @@ public class SideMenu extends Activity {
             }
         });
 
+        // Button for logout
         TextView logout = findViewById(R.id.logout_sidemenu);
         logout.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -167,6 +172,7 @@ public class SideMenu extends Activity {
             }
         });
 
+        // Create Blog tab
         TextView createBlogBtn = findViewById(R.id.menuCreateBlogBtn);
         createBlogBtn.setOnClickListener(new View.OnClickListener() {
             @RequiresApi(api = Build.VERSION_CODES.N)
@@ -178,6 +184,7 @@ public class SideMenu extends Activity {
             }
         });
 
+        // Delete user tab
         Button delete_acc = findViewById(R.id.delete_acc_btn);
         delete_acc.setOnClickListener(new View.OnClickListener() { // onclick on delete account
             @Override
@@ -192,7 +199,7 @@ public class SideMenu extends Activity {
                     // verification complete -> sign in with credentials
                     @Override
                     public void onVerificationCompleted(@NonNull PhoneAuthCredential phoneAuthCredential) {
-                        ReAuthPhoneAuthCredential(phoneAuthCredential);
+                        ReAuthPhoneAuthCredential(phoneAuthCredential, alertDialog);
                     }
 
                     // OTP sent -> store verification id and resending token, start timer for OTP resend
@@ -252,30 +259,12 @@ public class SideMenu extends Activity {
                                                             delete_otp_btn.setText("send OTP");
                                                             get_delete_otp.setText("");
                                                         }
-                                                        verifyPhoneNumberWithCode(view);
-                                                        user.delete().addOnCompleteListener(new OnCompleteListener<Void>() { // Delete the user
-                                                            @Override
-                                                            public void onComplete(@NonNull Task<Void> task) {
-                                                                if (task.isSuccessful()) {
-                                                                    alertDialog.dismiss();
-                                                                    FirebaseDatabase.getInstance("https://madignight-default-rtdb.asia-southeast1.firebasedatabase.app/").goOffline();
-                                                                    FirebaseAuth.getInstance().signOut();
-                                                                    Intent main_to_start = new Intent(getApplicationContext(), LoginActivity.class);
-                                                                    main_to_start.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                                                                    startActivity(main_to_start); // Go back to login
-                                                                    finish();
-                                                                    Log.d("Delete Status", "User account deleted.");
-                                                                }
-                                                                else {
-                                                                    Toast.makeText(getApplicationContext(), "Wrong OTP", Toast.LENGTH_SHORT).show();
-                                                                }
-                                                            }
-                                                        });
+                                                        verifyPhoneNumberWithCode(view, alertDialog);
                                                     }
                                                 });
                                             }
                                             else { // If does not match length, set to disable the buttons to prevent miss click
-                                                Log.d("hello",get_delete_otp.getText().toString());
+                                                Log.d("OTP",get_delete_otp.getText().toString());
                                                 view.findViewById(R.id.button_yes_delete).setEnabled(false);
                                                 view.findViewById(R.id.button_yes_delete).setBackgroundResource(R.drawable.btn_delete_delete_locked);
                                             }
@@ -402,19 +391,40 @@ public class SideMenu extends Activity {
     }
 
     // create a PhoneAuthCredential object with the verification id obtained from onCodeSent()
-    private void verifyPhoneNumberWithCode(View view) {
+    private void verifyPhoneNumberWithCode(View view, AlertDialog alertDialog) {
         EditText delete_otp_input = view.findViewById(R.id.delete_otp);
-        PhoneAuthCredential credential = PhoneAuthProvider.getCredential(verificationId, delete_otp_input.toString());
-        ReAuthPhoneAuthCredential(credential);
+        Log.d("Verify",verificationId);
+        PhoneAuthCredential credential = PhoneAuthProvider.getCredential(verificationId, delete_otp_input.getText().toString());
+        ReAuthPhoneAuthCredential(credential, alertDialog);
     }
 
     // reauth the user with the credentials
-    private void ReAuthPhoneAuthCredential(PhoneAuthCredential phoneAuthCredential) {
+    private void ReAuthPhoneAuthCredential(PhoneAuthCredential phoneAuthCredential, AlertDialog alertDialog) {
         user.reauthenticate(phoneAuthCredential).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
                 if (task.isSuccessful()) {
-                    Log.d(TAG, "User re-authenticated.");
+                    user.delete().addOnCompleteListener(new OnCompleteListener<Void>() { // Delete the user
+                        @Override
+                        public void onComplete(@NonNull Task<Void> task) {
+                            if (task.isSuccessful()) {
+                                alertDialog.dismiss();
+                                FirebaseDatabase.getInstance("https://madignight-default-rtdb.asia-southeast1.firebasedatabase.app/").goOffline();
+                                FirebaseAuth.getInstance().signOut();
+                                Intent main_to_start = new Intent(getApplicationContext(), LoginActivity.class);
+                                main_to_start.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                startActivity(main_to_start); // Go back to login
+                                finish();
+                                Log.d("Delete Status", "User account deleted.");
+                            }
+                            else {
+                                Toast.makeText(getApplicationContext(), "Wrong OTP", Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    });
+                }
+                else {
+                    Log.e("AuthError",task.getException().getMessage());
                 }
             }
         });
