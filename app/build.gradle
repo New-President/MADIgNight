@@ -85,5 +85,5 @@ dependencies {
     implementation 'com.google.firebase:firebase-firestore:24.2.0'
     // google maps
     implementation 'com.google.android.gms:play-services-maps:18.0.2'
-    api 'com.google.maps:google-maps-services:0.10.2'
+    implementation 'com.google.maps:google-maps-services:0.10.2'
 }

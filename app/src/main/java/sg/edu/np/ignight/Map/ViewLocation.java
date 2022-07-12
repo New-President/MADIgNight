@@ -1,11 +1,8 @@
 package sg.edu.np.ignight.Map;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
-
 import android.Manifest;
 import android.app.AlertDialog;
+import android.content.ActivityNotFoundException;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -13,6 +10,7 @@ import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.util.Log;
@@ -20,8 +18,13 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+
 import com.bumptech.glide.Glide;
 import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -32,20 +35,12 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.firestore.GeoPoint;
-import com.google.maps.DirectionsApi;
-import com.google.maps.DirectionsApiRequest;
 import com.google.maps.GeoApiContext;
-import com.google.maps.PendingResult;
-import com.google.maps.model.DirectionsResult;
 
 import java.io.IOException;
 import java.util.List;
-import java.util.Map;
 
-import sg.edu.np.ignight.MapActivity;
 import sg.edu.np.ignight.R;
-import timber.log.Timber;
 
 public class ViewLocation extends AppCompatActivity implements OnMapReadyCallback, GoogleMap.OnInfoWindowClickListener {
     private MapView mapView;
@@ -56,8 +51,9 @@ public class ViewLocation extends AppCompatActivity implements OnMapReadyCallbac
     private Geocoder geocoder;
     private GeoApiContext geoApiContext = null;
     private FusedLocationProviderClient fusedLocationProviderClient;
-    private Location userLoc;
+    private Location lastUserLoc;
     private static final String MAPVIEW_BUNDLE_KEY = "MapViewBundleKey";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -77,29 +73,12 @@ public class ViewLocation extends AppCompatActivity implements OnMapReadyCallbac
                 .load(location.getImgUri())
                 .placeholder(R.drawable.ic_baseline_image_24)
                 .into(viewLocImg);
-        initGoogleMap(savedInstanceState);
 
         // Checks if location is enabled
         if (!isGPSEnabled()) {
-            new AlertDialog.Builder(ViewLocation.this)
-                    .setTitle("Enable Location")
-                    .setMessage("Location is needed to access this feature")
-                    .setPositiveButton("Settings", new
-                            DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface paramDialogInterface, int paramInt) {
-                                    startActivity(new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS));
-                                    finish();
-                                }
-                            })
-                    .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialogInterface, int i) {
-                            finish();
-                        }
-                    })
-                    .show();
+            turnOnGPS();
         }
+
 
         viewLocBackBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -107,9 +86,12 @@ public class ViewLocation extends AppCompatActivity implements OnMapReadyCallbac
                 finish();
             }
         });
+
+        initGoogleMap(savedInstanceState);
+
     }
 
-    private void initGoogleMap(Bundle savedInstanceState){
+    private void initGoogleMap(Bundle savedInstanceState) {
 
         // *** IMPORTANT ***
         // MapView requires that the Bundle you pass contain _ONLY_ MapView SDK
@@ -120,14 +102,7 @@ public class ViewLocation extends AppCompatActivity implements OnMapReadyCallbac
         }
         mapView.onCreate(mapViewBundle);
         mapView.getMapAsync(this);
-
         geocoder = new Geocoder(this);
-
-        if(geoApiContext == null){
-            geoApiContext = new GeoApiContext.Builder()
-                    .apiKey(getString(R.string.google_map_api_key)).build();
-        }
-        getUserLocation();
     }
 
     @Override
@@ -167,10 +142,10 @@ public class ViewLocation extends AppCompatActivity implements OnMapReadyCallbac
         try {
             List<Address> addressList = geocoder.getFromLocationName(locName, 1);
 
-            if (addressList.size() > 0 ){
+            if (addressList.size() > 0) {
                 Address address = addressList.get(0);
-                LatLng latLng = new LatLng(address.getLatitude(),address.getLongitude());
-                map.addMarker(new MarkerOptions().position(latLng).title(locName).snippet("Determine distance to " + locName + "?"));
+                LatLng latLng = new LatLng(address.getLatitude(), address.getLongitude());
+                map.addMarker(new MarkerOptions().position(latLng).title(locName).snippet("Click here to learn more!"));
                 map.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 14));
             }
 
@@ -186,7 +161,7 @@ public class ViewLocation extends AppCompatActivity implements OnMapReadyCallbac
         }
         map.setMyLocationEnabled(true);
         map.setOnInfoWindowClickListener(this);
-
+        getCurrentLocation();
     }
 
     @Override
@@ -207,18 +182,20 @@ public class ViewLocation extends AppCompatActivity implements OnMapReadyCallbac
         mapView.onLowMemory();
     }
 
-    public boolean isGPSEnabled(){
+    public boolean isGPSEnabled() {
         Boolean isEnabled = false;
-        locationManager = (LocationManager)this.getSystemService(LOCATION_SERVICE);
+        locationManager = (LocationManager) this.getSystemService(LOCATION_SERVICE);
         try {
             gps_enabled = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
-        } catch(Exception ex) {}
+        } catch (Exception ex) {
+        }
 
         try {
             network_enabled = locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
-        } catch(Exception ex) {}
+        } catch (Exception ex) {
+        }
 
-        if (gps_enabled && network_enabled){
+        if (gps_enabled && network_enabled) {
             return true;
         }
         return isEnabled;
@@ -226,15 +203,15 @@ public class ViewLocation extends AppCompatActivity implements OnMapReadyCallbac
 
     @Override
     public void onInfoWindowClick(@NonNull Marker marker) {
-
         final AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setMessage(marker.getSnippet())
                 .setCancelable(true)
                 .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-                        calculateDirections(marker, userLoc);
+                        //calculateDirections(marker, userLoc);
                         dialogInterface.dismiss();
+                        displayTrack(location.getName());
                     }
                 })
                 .setNegativeButton("No", new DialogInterface.OnClickListener() {
@@ -245,42 +222,57 @@ public class ViewLocation extends AppCompatActivity implements OnMapReadyCallbac
                 }).create().show();
 
     }
-    private void calculateDirections(Marker marker, Location userLoc){
-        com.google.maps.model.LatLng destination = new com.google.maps.model.LatLng(
-                marker.getPosition().latitude,
-                marker.getPosition().longitude);
-        DirectionsApiRequest directionsApiRequest = new DirectionsApiRequest(geoApiContext);
 
-        directionsApiRequest.alternatives(true);
-        directionsApiRequest.origin(
-                new com.google.maps.model.LatLng(userLoc.getLatitude(), userLoc.getLongitude())
-        );
+    private void getCurrentLocation() {
 
-        directionsApiRequest.destination(destination).setCallback(new PendingResult.Callback<DirectionsResult>() {
-            @Override
-            public void onResult(DirectionsResult result) {
-                Log.d("DirectionsCal", "Calculate Directions: " + result.routes);
-            }
-
-            @Override
-            public void onFailure(Throwable e) {
-                Log.d("DirectionsFail", "onFailure: Failed to get directions");
-            }
-        });
-    }
-    private void getUserLocation(){
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED){
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             return;
         }
         fusedLocationProviderClient.getLastLocation().addOnCompleteListener(new OnCompleteListener<Location>() {
             @Override
             public void onComplete(@NonNull Task<Location> task) {
-                if (task.isSuccessful()){
-                    userLoc = task.getResult();
-                    GeoPoint geoPoint = new GeoPoint(userLoc.getLatitude(), userLoc.getLongitude());
-                    Timber.d("GeoPoint of user location: %s", geoPoint.toString());
-                }
+                lastUserLoc = task.getResult();
             }
         });
+    }
+    private void displayTrack(String dest){
+        try {
+            Uri uri = Uri.parse("https://www.google.co.in/maps/dir/" + lastUserLoc.getLatitude() + "," + lastUserLoc.getLongitude()
+                    + "/" + dest);
+
+            // initialize intent (google maps)
+            Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+            intent.setPackage("com.google.android.apps.maps");
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(intent);
+        }
+        catch (ActivityNotFoundException e){
+            Uri uri = Uri.parse("https://play.google.com/store/apps/details?id=com.google.android.apps.maps");
+            Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+            intent.setPackage("com.google.android.apps.maps");
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(intent);
+        }
+    }
+
+    private void turnOnGPS(){
+        new AlertDialog.Builder(ViewLocation.this)
+                .setTitle("Enable Location")
+                .setMessage("Location is needed to access this feature")
+                .setPositiveButton("Settings", new
+                        DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface paramDialogInterface, int paramInt) {
+                                startActivity(new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS));
+                                finish();
+                            }
+                        })
+                .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        finish();
+                    }
+                })
+                .show();
     }
 }
