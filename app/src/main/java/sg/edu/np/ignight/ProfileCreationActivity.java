@@ -199,7 +199,7 @@ public class ProfileCreationActivity extends AppCompatActivity {
                     // Get the length of the text
                     int length = aboutMeInput.getText().length();
                     // Set the text size according to length of text keyed in before
-                    int textSize = 0;
+                    int textSize = 23;
                     if (length >= 160){
                         textSize = 15;
                     }
