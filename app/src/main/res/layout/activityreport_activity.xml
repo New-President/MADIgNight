@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:textAlignment="center"
     tools:context=".ActivityReport_Activity">
 
     <ImageButton
@@ -64,11 +65,13 @@
     <ScrollView
         android:layout_width="0dp"
         android:layout_height="470dp"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="8dp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/activityTitle2">
+        app:layout_constraintTop_toBottomOf="@+id/activityTitle2"
+        app:layout_constraintVertical_bias="0.0">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
@@ -86,11 +89,11 @@
 
             <TextView
                 android:id="@+id/timeSpentTitle"
-                android:layout_width="134dp"
-                android:layout_height="24dp"
+                android:layout_width="187dp"
+                android:layout_height="23dp"
                 android:layout_marginTop="100dp"
                 android:fontFamily="@font/poppins"
-                android:text="Total time spent:"
+                android:text="Total time spent daily:"
                 android:textColor="#000"
                 android:textSize="16sp"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -106,7 +109,7 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.497"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/topIgNightChatsTitle" >
+                app:layout_constraintTop_toBottomOf="@+id/topIgNightChatsTitle">
 
             </com.github.mikephil.charting.charts.PieChart>
 
@@ -128,10 +131,10 @@
                 android:layout_height="25dp"
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="100dp"
+                android:contentDescription="imageView2"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/PieChart"
-                app:srcCompat="@drawable/ic_baseline_pending_icon_24"
-                android:contentDescription="imageView2" />
+                app:srcCompat="@drawable/ic_baseline_pending_icon_24" />
 
             <TextView
                 android:id="@+id/topIgNightChatsTitle"
@@ -145,6 +148,20 @@
                 android:textSize="16sp"
                 app:layout_constraintStart_toEndOf="@+id/imageView3"
                 app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/comfortBottomTextView"
+                android:layout_width="362dp"
+                android:layout_height="48dp"
+                android:layout_marginTop="100dp"
+                android:layout_marginBottom="15dp"
+                android:fontFamily="@font/poppins"
+                android:textAlignment="center"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.489"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/BarChart" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>
