@@ -3,13 +3,19 @@ package sg.edu.np.ignight;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
+import android.app.usage.UsageStats;
+import android.app.usage.UsageStatsManager;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.view.View;
 import android.widget.ImageButton;
+import android.widget.Toast;
 
 import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.charts.PieChart;
@@ -30,12 +36,20 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.List;
+import java.util.SortedMap;
+import java.util.Timer;
+import java.util.TimerTask;
+import java.util.TreeMap;
+
+import sg.edu.np.ignight.Objects.UserObject;
 
 public class ActivityReport_Activity extends AppCompatActivity {
     // init fields
     private ArrayList<PieEntry> pieChartData;
     private ArrayList<BarEntry> barChartData;
-    private ArrayList<String> weeklyTimeTrackingData;
+    private List<UsageStats> dailyTimeTrackingData;
 
     private PieChart pieChart;
     private BarChart barChart;
@@ -45,6 +59,10 @@ public class ActivityReport_Activity extends AppCompatActivity {
     private Boolean isTracking;
 
     private String uid;
+    private String IgNightCounter = "IgNight Counter";
+
+    private SharedPreferences sharedPreferences;
+    private SharedPreferences.Editor sPedit;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -111,8 +129,8 @@ public class ActivityReport_Activity extends AppCompatActivity {
         // Retrieves isTracking child from database to check if the user wants to be
         // tracked.
 
-        // If user is not currently
-        if(isTracking == false){
+        // If user is not currently tracking
+        if(!isTracking){
             new AlertDialog.Builder(getApplicationContext())
                     .setTitle("Start Tracking")
                     .setMessage("Would you like to start tracking?")
@@ -121,12 +139,13 @@ public class ActivityReport_Activity extends AppCompatActivity {
                         public void onClick(DialogInterface dialogInterface, int i) {
                             // Creates isTracking child within the user
                             // isTracking will contain user's activity info, so that it can be accessed on the same account in another device
-
+                            myRef.child(uid).child("isTracking");
 
                             // The activity shows your weekly usage in a week. So the WeeklyTimeSpent child will have 7 children for 7 days
-                            //for (int i = 0; i < 7; i++){
-
-                            //}
+                            // Days of the week will be represented by numbers from 1 to 7, but the actual graph will display the actual days
+                            for (int i1 = 1; i1 < 8; i1++){
+                                myRef.child(uid).child("isTracking").child(String.valueOf(i1));
+                            }
                         }
                     })
                     .setNegativeButton("No", new DialogInterface.OnClickListener() {
@@ -142,17 +161,48 @@ public class ActivityReport_Activity extends AppCompatActivity {
         }
 
 
+        /*
+        // Obtain time spent in the app
+        // Setting can only be accessed by IgNight
+        sharedPreferences = getSharedPreferences("IgNight",MODE_PRIVATE);
+        if(!checkUsageStatsAllowedOrNot()){
+            // Ask user to grant permission for tracking to work
+            Intent usageAccessIntent = new Intent(Settings.ACTION_USAGE_ACCESS_SETTINGS);
+            usageAccessIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(usageAccessIntent);
+
+            if(checkUsageStatsAllowedOrNot()){
+                startService(new Intent(ActivityReport_Activity.this, BackgroundTrackingService.class));
+            }
+            else{
+                Toast.makeText(getApplicationContext(), "Enable permissions for activtiy report tracking service to work.")
+                        .setDuration(Toast.LENGTH_LONG)
+                        .show();
+            }
+        }
+        else{
+            startService(new Intent(ActivityReport_Activity.this, BackgroundTrackingService.class));
+        }
+        // test_View = findViewById(R.id.testView);
+
+        TimerTask updateView = new TimerTask(){
+
+            @Override
+            public void run() {
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+
+                    }
+                });
+            }
+        };
+        */
 
 
 
 
-
-
-
-
-
-
-        // Testing data input
+        // Testing data input for bar chart and pie chart
         for (int i=1; i<10; i++){
             float value = (float) (i*10.0);
             // per bar chart entry
@@ -190,9 +240,10 @@ public class ActivityReport_Activity extends AppCompatActivity {
         pieChart.getDescription().setEnabled(false);
 
 
-        // Control structure for user to enable tracking
 
 
     }
+
+
 
 }
