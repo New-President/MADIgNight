@@ -66,9 +66,12 @@ public class ViewLocation extends AppCompatActivity implements OnMapReadyCallbac
         ImageView viewLocBackBtn = findViewById(R.id.viewLocBackButton);
         TextView locNameField = findViewById(R.id.viewLocName);
         TextView locDescField = findViewById(R.id.viewLocDesc);
+        TextView addrField = findViewById(R.id.addrText);
 
         locNameField.setText(location.getName());
         locDescField.setText(location.getDesc());
+        addrField.setText(location.getAddress());
+
         Glide.with(this)
                 .load(location.getImgUri())
                 .placeholder(R.drawable.ic_baseline_image_24)

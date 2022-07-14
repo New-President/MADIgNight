@@ -3,10 +3,14 @@ package sg.edu.np.ignight;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -198,16 +202,33 @@ public class CreateBlogActivity extends AppCompatActivity {
         deleteBlogBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                databaseReference.child(blog.blogID).removeValue();
-                loadingBlogDialog.startLoadingDialog("Deleting Blog!");
-                Handler handler = new Handler();
-                handler.postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        loadingBlogDialog.dismissDialog();
-                        finish();
-                    }
-                }, 2500);
+                AlertDialog.Builder builder = new AlertDialog.Builder(CreateBlogActivity.this);
+                builder.setTitle("Confirm")
+                        .setMessage("Once deleted forever gone!")
+                        .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                databaseReference.child(blog.blogID).removeValue();
+                                loadingBlogDialog.startLoadingDialog("Deleting Blog!");
+                                Handler handler = new Handler();
+                                handler.postDelayed(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        loadingBlogDialog.dismissDialog();
+                                        finish();
+                                    }
+                                }, 2500);
+                            }
+                        })
+                        .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                dialogInterface.dismiss();
+                            }
+                        })
+                        .create().show();
+
+
             }
         });
 

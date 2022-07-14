@@ -33,6 +33,7 @@
                 app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
+                android:id="@+id/textView12"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"
@@ -43,6 +44,17 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
+
+            <ImageView
+                andriod:id="@+id/favouriteBtn"
+                andriod:layout_width="48dp"
+                andriod:layout_height="48dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="16dp"
+                android:src="@drawable/heartwithhole"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:srcCompat="@tools:sample/avatars" />
 
 
         </androidx.constraintlayout.widget.ConstraintLayout>
@@ -66,6 +78,17 @@
                 android:layout_width="match_parent"
                 android:layout_height="1000dp">
 
+                <view
+                    andriod:id="@+id/divider"
+                    class="androidx.appcompat.widget.ActionMenuView"
+                    andriod:layout_width="0dp"
+                    andriod:layout_height="1dp"
+                    andriod:background="#2A000000"
+                    app:layout_constraintBottom_toTopOf="@+id/addrText"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/viewLocDesc" />
+
                 <TextView
                     android:id="@+id/viewLocName"
                     android:layout_width="wrap_content"
@@ -74,7 +97,8 @@
                     android:paddingLeft="48dp"
                     android:paddingRight="48dp"
                     android:text="TextView"
-                    android:textSize="16sp"
+                    android:textAlignment="center"
+                    android:textSize="24sp"
                     android:textStyle="bold"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
@@ -84,9 +108,11 @@
                     android:id="@+id/viewLocImg"
                     android:layout_width="0dp"
                     android:layout_height="300dp"
+                    android:layout_marginTop="32dp"
                     android:scaleType="centerCrop"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
                     tools:srcCompat="@tools:sample/avatars" />
 
                 <TextView
@@ -107,6 +133,19 @@
                     android:layout_height="300dp"
                     android:layout_marginBottom="32dp"
                     app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent" />
+
+                <TextView
+                    android:id="@+id/addrText"
+                    andriod:layout_width="wrap_content"
+                    andriod:layout_height="wrap_content"
+                    android:layout_marginBottom="24dp"
+                    android:paddingLeft="48dp"
+                    android:paddingRight="48dp"
+                    andriod:text="TextView"
+                    android:textAlignment="center"
+                    app:layout_constraintBottom_toTopOf="@+id/mapView"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent" />
 
