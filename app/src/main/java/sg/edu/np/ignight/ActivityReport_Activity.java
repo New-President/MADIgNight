@@ -5,11 +5,14 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
+import android.app.AppOpsManager;
 import android.app.usage.UsageStats;
 import android.app.usage.UsageStatsManager;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.ApplicationInfo;
+import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.provider.Settings;
@@ -36,14 +39,10 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.List;
-import java.util.SortedMap;
 import java.util.Timer;
 import java.util.TimerTask;
-import java.util.TreeMap;
 
-import sg.edu.np.ignight.Objects.UserObject;
 
 public class ActivityReport_Activity extends AppCompatActivity {
     // init fields
@@ -59,7 +58,7 @@ public class ActivityReport_Activity extends AppCompatActivity {
     private Boolean isTracking;
 
     private String uid;
-    private String IgNightCounter = "IgNight Counter";
+    public static String IgNightCounter = "IgNight Counter";
 
     private SharedPreferences sharedPreferences;
     private SharedPreferences.Editor sPedit;
@@ -161,7 +160,7 @@ public class ActivityReport_Activity extends AppCompatActivity {
         }
 
 
-        /*
+
         // Obtain time spent in the app
         // Setting can only be accessed by IgNight
         sharedPreferences = getSharedPreferences("IgNight",MODE_PRIVATE);
@@ -175,8 +174,9 @@ public class ActivityReport_Activity extends AppCompatActivity {
                 startService(new Intent(ActivityReport_Activity.this, BackgroundTrackingService.class));
             }
             else{
-                Toast.makeText(getApplicationContext(), "Enable permissions for activtiy report tracking service to work.")
-                        .setDuration(Toast.LENGTH_LONG)
+                Toast.makeText(getApplicationContext(),
+                        "Enable permissions for activtiy report tracking service to work.",
+                        Toast.LENGTH_LONG)
                         .show();
             }
         }
@@ -192,12 +192,21 @@ public class ActivityReport_Activity extends AppCompatActivity {
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-
+                        long IgNight_time = sharedPreferences.getLong(IgNightCounter, 0);
+                        long second = (IgNight_time/1000)%60;
+                        long minute = (IgNight_time/(1000*60))%60;
+                        long hour = (IgNight_time/(1000*60*60));
+                        String Ignight_val = hour + "h" + minute + "m" + second + "s";
+                        // IgNight_View SetTEXT find view by ID to display the time used
                     }
                 });
             }
         };
-        */
+        Timer timer = new Timer();
+        timer.scheduleAtFixedRate(updateView,0,1000);
+
+
+
 
 
 
@@ -243,7 +252,29 @@ public class ActivityReport_Activity extends AppCompatActivity {
 
 
     }
+     public boolean checkUsageStatsAllowedOrNot(){
+        try{
+            PackageManager packageManager = getPackageManager();
+            ApplicationInfo applicationInfo = packageManager.getApplicationInfo(getPackageName(),0);
+            AppOpsManager appOpsManager = (AppOpsManager) getSystemService(APP_OPS_SERVICE);
+            int mode = appOpsManager.checkOpNoThrow(AppOpsManager.OPSTR_GET_USAGE_STATS,
+                    applicationInfo.uid,
+                    applicationInfo.packageName);
+            return (mode==AppOpsManager.MODE_ALLOWED);
+        }catch(Exception exception){
+            Toast.makeText(getApplicationContext(),
+                    "Enable permissions for activtiy report tracking service to work.",
+                    Toast.LENGTH_LONG)
+                    .show();
+            return false;
+         }
+     }
 
-
-
+    @Override
+    protected void onDestroy() {
+        if (checkUsageStatsAllowedOrNot()) {
+            startService(new Intent(ActivityReport_Activity.this, BackgroundTrackingService.class));
+        }
+        super.onDestroy();
+    }
 }
