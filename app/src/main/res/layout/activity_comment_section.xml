@@ -21,7 +21,7 @@
             android:layout_height="match_parent">
 
             <ImageButton
-                android:id="@+id/viewLocBackButton"
+                android:id="@+id/commentBackButton"
                 andriod:background="#00FFFFFF"
                 andriod:layout_marginStart="16dp"
                 andriod:layout_marginTop="10dp"
@@ -52,8 +52,8 @@
 
     <ImageView
         andriod:id="@+id/commentBlogImg"
-        andriod:layout_height="250dp"
         andriod:layout_width="250dp"
+        andriod:layout_height="250dp"
         android:scaleType="centerCrop"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -64,9 +64,8 @@
         android:id="@+id/commentsRV"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_marginTop="5dp"
-        android:layout_marginBottom="5dp"
-        app:layout_constraintBottom_toTopOf="@+id/commentTextField"
+        android:layout_marginBottom="10dp"
+        app:layout_constraintBottom_toTopOf="@+id/commentInputField"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/commentBlogImg" />
@@ -75,21 +74,22 @@
         android:id="@+id/commentProfileContainer"
         android:layout_width="50dp"
         android:layout_height="50dp"
-        android:layout_marginEnd="16dp"
+        android:layout_marginEnd="24dp"
         android:layout_marginBottom="16dp"
         app:cardCornerRadius="50dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/commentTextField">
+        app:layout_constraintEnd_toStartOf="@+id/commentInputField">
 
         <ImageView
             android:id="@+id/commentProfilePic"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:scaleType="centerCrop"
             android:src="@mipmap/ic_launcher" />
     </androidx.cardview.widget.CardView>
 
     <EditText
-        andriod:id="@+id/commentTextField"
+        andriod:id="@+id/commentInputField"
         andriod:layout_width="wrap_content"
         andriod:layout_height="wrap_content"
         android:layout_marginBottom="16dp"
@@ -101,12 +101,13 @@
         app:layout_constraintStart_toStartOf="parent" />
 
     <ImageView
-        andriod:id="@+id/imageView4"
+        android:id="@+id/sendCommentBtn"
         andriod:layout_width="48dp"
         andriod:layout_height="48dp"
-        android:layout_marginStart="24dp"
+        android:layout_marginStart="16dp"
         android:layout_marginBottom="16dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/commentTextField"
+        app:layout_constraintStart_toEndOf="@+id/commentInputField"
         app:srcCompat="@drawable/ic_baseline_send_24" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

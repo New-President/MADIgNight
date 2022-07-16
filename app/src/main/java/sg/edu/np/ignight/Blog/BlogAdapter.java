@@ -168,6 +168,8 @@ public class BlogAdapter extends RecyclerView.Adapter<BlogViewHolder> {
                 Intent commentSection = new Intent(c, CommentSectionActivity.class);
                 commentSection.putExtra("uid", uid);
                 commentSection.putExtra("blogID", blogID);
+                commentSection.putExtra("imgID", blog.imgID);
+                commentSection.putExtra("numOfComments", blog.comments);
                 c.startActivity(commentSection);
             }
         });
