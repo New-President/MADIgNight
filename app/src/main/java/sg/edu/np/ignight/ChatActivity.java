@@ -10,6 +10,7 @@ import android.transition.Transition;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -81,6 +82,7 @@ public class ChatActivity extends AppCompatActivity {
     private TextView userOnlineStatus;
     private ProgressBar sendMessageProgressBar;
     private LinearLayout messageLayoutHeaderUserInfo;
+    private Button ProposeDateBtn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -272,6 +274,15 @@ public class ChatActivity extends AppCompatActivity {
                         .setRoom("big_room")// need changing
                         .setWelcomePageEnabled(false).build();
                 JitsiMeetActivity.launch(ChatActivity.this,options);
+            }
+        });
+
+        ProposeDateBtn = findViewById(R.id.ProposeDate);
+        ProposeDateBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent ProposeDate = new Intent(ChatActivity.this, ProposeDateActivity.class);
+                startActivity(ProposeDate);
             }
         });
     }

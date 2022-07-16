@@ -1,12 +1,24 @@
 package sg.edu.np.ignight;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.annotation.SuppressLint;
+import android.app.AlertDialog;
+import android.app.AppOpsManager;
+import android.app.usage.UsageStats;
+import android.app.usage.UsageStatsManager;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.pm.ApplicationInfo;
+import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.view.View;
 import android.widget.ImageButton;
+import android.widget.Toast;
 
 import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.charts.PieChart;
@@ -17,17 +29,39 @@ import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.data.PieEntry;
 import com.github.mikephil.charting.utils.ColorTemplate;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
 
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
+
 
 public class ActivityReport_Activity extends AppCompatActivity {
     // init fields
     private ArrayList<PieEntry> pieChartData;
     private ArrayList<BarEntry> barChartData;
+    private List<UsageStats> dailyTimeTrackingData;
 
     private PieChart pieChart;
     private BarChart barChart;
 
+    private ImageButton backButton2;
+
+    private Boolean isTracking;
+
+    private String uid;
+    public static String IgNightCounter = "IgNight Counter";
+
+    private SharedPreferences sharedPreferences;
+    private SharedPreferences.Editor sPedit;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,7 +75,143 @@ public class ActivityReport_Activity extends AppCompatActivity {
         barChartData = new ArrayList<>();
         pieChartData = new ArrayList<>();
 
-        // Testing data input
+        // Return back to main menu
+        backButton2 = findViewById(R.id.backButton3);
+        backButton2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent backToMainMenu = new Intent(getApplicationContext(), MainMenuActivity.class);
+                backToMainMenu.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                startActivity(backToMainMenu);
+                finish();
+            }
+        });
+
+
+
+
+
+        // Firebase logic
+        // Retrieves current user
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        //get the current user's UID
+        uid = user.getUid();
+        // Saving to Firebase database
+        FirebaseDatabase database = FirebaseDatabase.getInstance("https://madignight-default-rtdb.asia-southeast1.firebasedatabase.app/");
+        // getting the child user
+        DatabaseReference myRef = database.getReference("user");
+        // Check if the current user has an isTracking child
+        myRef.child(uid).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                // DO NOT SIMPLIFY
+                if(snapshot.hasChild("isTracking")){
+                    isTracking = true;
+                }else{
+                    isTracking = false;
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
+
+
+
+
+
+
+        // Data tracking logic
+        // Retrieves isTracking child from database to check if the user wants to be
+        // tracked.
+
+        // If user is not currently tracking
+        if(!isTracking){
+            new AlertDialog.Builder(getApplicationContext())
+                    .setTitle("Start Tracking")
+                    .setMessage("Would you like to start tracking?")
+                    .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            // Creates isTracking child within the user
+                            // isTracking will contain user's activity info, so that it can be accessed on the same account in another device
+                            myRef.child(uid).child("isTracking");
+
+                            // The activity shows your weekly usage in a week. So the WeeklyTimeSpent child will have 7 children for 7 days
+                            // Days of the week will be represented by numbers from 1 to 7, but the actual graph will display the actual days
+                            for (int i1 = 1; i1 < 8; i1++){
+                                myRef.child(uid).child("isTracking").child(String.valueOf(i1));
+                            }
+                        }
+                    })
+                    .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            // If user does not want to do activity tracking, they get back to the home menu
+                            Intent backToMainMenu = new Intent(getApplicationContext(), MainMenuActivity.class);
+                            backToMainMenu.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                            startActivity(backToMainMenu);
+                            finish();
+                        }
+                    });
+        }
+
+
+
+        // Obtain time spent in the app
+        // Setting can only be accessed by IgNight
+        sharedPreferences = getSharedPreferences("IgNight",MODE_PRIVATE);
+        if(!checkUsageStatsAllowedOrNot()){
+            // Ask user to grant permission for tracking to work
+            Intent usageAccessIntent = new Intent(Settings.ACTION_USAGE_ACCESS_SETTINGS);
+            usageAccessIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(usageAccessIntent);
+
+            if(checkUsageStatsAllowedOrNot()){
+                startService(new Intent(ActivityReport_Activity.this, BackgroundTrackingService.class));
+            }
+            else{
+                Toast.makeText(getApplicationContext(),
+                        "Enable permissions for activtiy report tracking service to work.",
+                        Toast.LENGTH_LONG)
+                        .show();
+            }
+        }
+        else{
+            startService(new Intent(ActivityReport_Activity.this, BackgroundTrackingService.class));
+        }
+        // test_View = findViewById(R.id.testView);
+
+        TimerTask updateView = new TimerTask(){
+
+            @Override
+            public void run() {
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        long IgNight_time = sharedPreferences.getLong(IgNightCounter, 0);
+                        long second = (IgNight_time/1000)%60;
+                        long minute = (IgNight_time/(1000*60))%60;
+                        long hour = (IgNight_time/(1000*60*60));
+                        String Ignight_val = hour + "h" + minute + "m" + second + "s";
+                        // IgNight_View SetTEXT find view by ID to display the time used
+                    }
+                });
+            }
+        };
+        Timer timer = new Timer();
+        timer.scheduleAtFixedRate(updateView,0,1000);
+
+
+
+
+
+
+
+        // Testing data input for bar chart and pie chart
         for (int i=1; i<10; i++){
             float value = (float) (i*10.0);
             // per bar chart entry
@@ -62,7 +232,7 @@ public class ActivityReport_Activity extends AppCompatActivity {
         // input bar data
         barChart.setData(new BarData(barDataSet));
         // set animation
-        barChart.animateY(5000);
+        barChart.animateY(1100);
         // set graph description
         barChart.getDescription().setText("Test2");
         barChart.getDescription().setTextColor(Color.BLUE);
@@ -74,20 +244,37 @@ public class ActivityReport_Activity extends AppCompatActivity {
         // input bar data
         pieChart.setData(new PieData(pieDataSet));
         // set animation
-        pieChart.animateXY(5000,5000);
+        pieChart.animateXY(1100,1100);
         // hide description
         pieChart.getDescription().setEnabled(false);
 
-        // Back button to go back to main menu
-        ImageButton back_btn = findViewById(R.id.profileViewBackButton2);
-        back_btn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent activity_report_to_main = new Intent(ActivityReport_Activity.this,MainMenuActivity.class);
-                startActivity(activity_report_to_main);
-                finish();
-            }
-        });
-    }
 
+
+
+    }
+     public boolean checkUsageStatsAllowedOrNot(){
+        try{
+            PackageManager packageManager = getPackageManager();
+            ApplicationInfo applicationInfo = packageManager.getApplicationInfo(getPackageName(),0);
+            AppOpsManager appOpsManager = (AppOpsManager) getSystemService(APP_OPS_SERVICE);
+            int mode = appOpsManager.checkOpNoThrow(AppOpsManager.OPSTR_GET_USAGE_STATS,
+                    applicationInfo.uid,
+                    applicationInfo.packageName);
+            return (mode==AppOpsManager.MODE_ALLOWED);
+        }catch(Exception exception){
+            Toast.makeText(getApplicationContext(),
+                    "Enable permissions for activtiy report tracking service to work.",
+                    Toast.LENGTH_LONG)
+                    .show();
+            return false;
+         }
+     }
+
+    @Override
+    protected void onDestroy() {
+        if (checkUsageStatsAllowedOrNot()) {
+            startService(new Intent(ActivityReport_Activity.this, BackgroundTrackingService.class));
+        }
+        super.onDestroy();
+    }
 }

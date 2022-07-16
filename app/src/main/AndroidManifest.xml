@@ -23,6 +23,7 @@
         android:theme="@style/Theme.IgNight">
         <activity
             android:name=".CommentSectionActivity"
+            android:name=".ProposeDateActivity"
             android:exported="false" />
         <activity
             android:name=".Map.ViewLocation"
