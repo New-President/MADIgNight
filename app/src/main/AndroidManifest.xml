@@ -22,6 +22,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.IgNight">
         <activity
+            android:name=".CommentSectionActivity"
             android:name=".ProposeDateActivity"
             android:exported="false" />
         <activity
@@ -38,7 +39,9 @@
             android:exported="false" />
         <activity
             android:name=".MapActivity"
-            android:exported="false" />
+            android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize"
+            android:exported="false"
+            android:windowSoftInputMode="adjustPan" />
         <activity
             android:name=".AboutUsActivity"
             android:exported="false" />

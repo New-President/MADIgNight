@@ -3,35 +3,52 @@ package sg.edu.np.ignight.Objects;
 import java.util.Date;
 
 public class Comment {
-    private final UserObject user;
-    private final String comment;
-    private final Date timestamp;
-    private int likes;
+    private String commentID;
+    private String username;
+    private String profUrl;
+    private String content;
+    private String timestamp;
 
-    public UserObject getUser() {
-        return user;
+    public String getUsername() {
+        return username;
     }
 
-    public String getComment() {
-        return comment;
+    public String getContent() {
+        return content;
     }
 
-    public Date getTimestamp() {
+    public String getTimestamp() {
         return timestamp;
     }
 
-    public int getLikes() {
-        return likes;
+    public String getProfUrl() {
+        return profUrl;
     }
 
-    public void setLikes(int likes) {
-        this.likes = likes;
+    public void setUsername(String username) {
+        this.username = username;
     }
 
-    public Comment(UserObject user, String comment, Date timestamp, int likes){
-        this.user = user;
-        this.comment = comment;
+    public void setProfUrl(String profUrl) {
+        this.profUrl = profUrl;
+    }
+
+    public String getCommentID() {
+        return commentID;
+    }
+
+    public void setContent(String content) {
+        this.content = content;
+    }
+    public void setTimestamp(String timestamp) {
         this.timestamp = timestamp;
-        this.likes = likes;
+    }
+
+    public Comment(String commentID, String username, String profUrl, String content, String timestamp){
+        this.commentID = commentID;
+        this.username = username;
+        this.profUrl = profUrl;
+        this.content = content;
+        this.timestamp = timestamp;
     }
 }

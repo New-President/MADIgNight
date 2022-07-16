@@ -16,6 +16,8 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.facebook.drawee.drawable.ProgressBarDrawable;
+import com.facebook.drawee.generic.GenericDraweeHierarchyBuilder;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
@@ -34,13 +36,16 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.nostra13.universalimageloader.core.assist.ImageScaleType;
 import com.nostra13.universalimageloader.core.display.FadeInBitmapDisplayer;
+import com.stfalcon.frescoimageviewer.ImageViewer;
 
 import java.io.File;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collections;
 
 import sg.edu.np.ignight.BlogActivity;
+import sg.edu.np.ignight.CommentSectionActivity;
 import sg.edu.np.ignight.CreateBlogActivity;
 import sg.edu.np.ignight.Objects.BlogObject;
 import sg.edu.np.ignight.Objects.UserObject;
@@ -89,19 +94,28 @@ public class BlogAdapter extends RecyclerView.Adapter<BlogViewHolder> {
         holder.desc.setText(description);
         holder.location.setText("@" + location);
 
-
-
         DatabaseReference databaseReference = FirebaseDatabase.getInstance("https://madignight-default-rtdb.asia-southeast1.firebasedatabase.app/")
                 .getReference("user").child(uid).child("blog").child(blogID);
 
         ImageView blogImage = holder.blogImg; //add fullscreen function
 
-        blogImage.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                //fullscreen
-            }
-        });
+//        blogImage.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                GenericDraweeHierarchyBuilder hierarchyBuilder = GenericDraweeHierarchyBuilder.newInstance(c.getResources())
+//                        .setFailureImage(R.drawable.ic_baseline_error_outline_24)
+//                        .setProgressBarImage(new ProgressBarDrawable())
+//                        .setPlaceholderImage(R.drawable.ic_baseline_image_24);
+//
+//                new ImageViewer.Builder(view.getContext(), Collections.singletonList(""))
+//                        .setStartPosition(0)
+//                        .hideStatusBar(false)
+//                        .allowZooming(true)
+//                        .allowSwipeToDismiss(true)
+//                        .setCustomDraweeHierarchyBuilder(hierarchyBuilder)
+//                        .show();
+//            }
+//        });
         ImageView likebutton = holder.likesButton; //add fullscreen function
         ImageView commentButton = holder.commentButton; //comment
         ImageView editBlogButton = holder.editBlogButton; //comment
@@ -151,7 +165,12 @@ public class BlogAdapter extends RecyclerView.Adapter<BlogViewHolder> {
         commentButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //go to comment activity
+                Intent commentSection = new Intent(c, CommentSectionActivity.class);
+                commentSection.putExtra("uid", uid);
+                commentSection.putExtra("blogID", blogID);
+                commentSection.putExtra("imgID", blog.imgID);
+                commentSection.putExtra("numOfComments", blog.comments);
+                c.startActivity(commentSection);
             }
         });
 
