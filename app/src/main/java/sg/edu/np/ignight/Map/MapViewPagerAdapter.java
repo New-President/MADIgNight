@@ -1,7 +1,6 @@
 package sg.edu.np.ignight.Map;
 
 import android.util.Log;
-import android.view.View;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -16,8 +15,6 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
-
-import sg.edu.np.ignight.R;
 
 public class MapViewPagerAdapter extends FragmentStateAdapter {
     private ArrayList<LocationObject> locationObjectList;
@@ -52,7 +49,7 @@ public class MapViewPagerAdapter extends FragmentStateAdapter {
         });
         switch (position){
             case (1):
-                return new HotSpotsFragment();
+                return new FavouriteLocFragment();
             case (2):
                 return new AllLocFragment(locationObjectList);
             default:

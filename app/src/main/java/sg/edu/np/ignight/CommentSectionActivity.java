@@ -136,8 +136,8 @@ public class CommentSectionActivity extends AppCompatActivity {
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
                         String username = snapshot.child("username").getValue().toString();
                         String profUrl = snapshot.child("profileUrl").getValue().toString();
-                        Log.d("username", username);
-                        Comment newComment = new Comment(commentID, username, profUrl, content, timestamp);
+
+                        Comment newComment = new Comment(commentID, uid, username, profUrl, content, timestamp);
                         databaseReference.child("comment").child(commentID).setValue(newComment);
                     }
 
@@ -187,11 +187,12 @@ public class CommentSectionActivity extends AppCompatActivity {
                         commentIDList.add(snapshot.getKey());
                         Log.d("commentAdded", "onChildAdded: " + snapshot.getKey());
                         String commentID = snapshot.child("commentID").getValue().toString();
+                        String uid = snapshot.child("uid").getValue().toString();
                         String username = snapshot.child("username").getValue().toString();
                         String profUrl = snapshot.child("profUrl").getValue().toString();
                         String content = snapshot.child("content").getValue().toString();
                         String timestamp = snapshot.child("timestamp").getValue().toString();
-                        Comment commentObj = new Comment(commentID, username, profUrl, content, timestamp);
+                        Comment commentObj = new Comment(commentID, uid, username, profUrl, content, timestamp);
                         commentsList.add(commentObj);
 
 

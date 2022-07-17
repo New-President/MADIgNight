@@ -122,14 +122,7 @@ public class BlogActivity extends AppCompatActivity {
     }
 
     private void getBlogList() {
-        loadingBlogDialog.startLoadingDialog("Loading blogs..");
-        Handler handler = new Handler();
-        handler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                loadingBlogDialog.dismissDialog();
-            }
-        }, 2000);
+
         blogIDList = new ArrayList<>();
         databaseReference.addChildEventListener(new ChildEventListener() {
 
@@ -148,7 +141,6 @@ public class BlogActivity extends AppCompatActivity {
                         String location = snapshot.child("location").getValue().toString();
                         int likes = Integer.parseInt(snapshot.child("likes").getValue().toString());
                         int comments = Integer.parseInt(snapshot.child("comments").getValue().toString());
-                        //boolean liked = Boolean.parseBoolean(snapshot.child("liked").getValue().toString());
 
                         ArrayList<String> commentsList = new ArrayList<>();
 
@@ -178,6 +170,16 @@ public class BlogActivity extends AppCompatActivity {
                         noBlogMsg.setVisibility(View.GONE);
 
                         blogAdapter.notifyDataSetChanged();
+
+                        loadingBlogDialog.startLoadingDialog("Fetching blogs..");
+                        Handler handler = new Handler();
+                        handler.postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                loadingBlogDialog.dismissDialog();
+                            }
+                        }, 2000);
+
                     }
                 }
             }
