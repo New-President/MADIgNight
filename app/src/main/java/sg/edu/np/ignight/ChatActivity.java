@@ -52,6 +52,11 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.stfalcon.frescoimageviewer.ImageViewer;
 
+import org.jitsi.meet.sdk.BroadcastEvent;
+import org.jitsi.meet.sdk.JitsiMeet;
+import org.jitsi.meet.sdk.JitsiMeetActivity;
+import org.jitsi.meet.sdk.JitsiMeetConferenceOptions;
+
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.text.ParseException;
@@ -60,12 +65,6 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
-
-import org.jitsi.meet.sdk.BroadcastEvent;
-import org.jitsi.meet.sdk.JitsiMeet;
-import org.jitsi.meet.sdk.JitsiMeetActivity;
-import org.jitsi.meet.sdk.JitsiMeetActivityInterface;
-import org.jitsi.meet.sdk.JitsiMeetConferenceOptions;
 
 import sg.edu.np.ignight.Chat.MediaAdapter;
 import sg.edu.np.ignight.Chat.MessageAdapter;
@@ -82,7 +81,7 @@ public class ChatActivity extends AppCompatActivity {
     private ArrayList<MessageObject> messageList;
     private ArrayList<String> mediaUriList;
     private String currentUserUID, targetUserID, chatID;
-    private int PICK_IMAGE_INTENT = 1;
+    private final int PICK_IMAGE_INTENT = 1;
 
     private DatabaseReference rootDB, chatDB;
 
@@ -296,15 +295,14 @@ public class ChatActivity extends AppCompatActivity {
                         alertDialog.dismiss();
                         EditText call_text = findViewById(R.id.messageInput);
                         call_text.setText("Hey, I started a call come join me!");
-                        ImageButton send = findViewById(R.id.sendMessage);
                         sendMessage();
                         BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
-                            Integer count = 1;
+                            final Integer count = 1;
                             Integer total_count = 0;
                             @Override
                             public void onReceive(Context context, Intent intent) {
                                 total_count += 1;
-                                if (total_count == count) {
+                                if (total_count.equals(count)) {
                                     EditText call_text = findViewById(R.id.messageInput);
                                     call_text.setText("The call just ended, let's have another call next time!");
                                     Log.d("Call Ended","Yes");
@@ -342,15 +340,14 @@ public class ChatActivity extends AppCompatActivity {
                         alertDialog.dismiss();
                         EditText call_text = findViewById(R.id.messageInput);
                         call_text.setText("Hey, I started a call come join me!");
-                        ImageButton send = findViewById(R.id.sendMessage);
                         sendMessage();
                         BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
-                            Integer count = 1;
+                            final Integer count = 1;
                             Integer total_count = 0;
                             @Override
                             public void onReceive(Context context, Intent intent) {
                                 total_count += 1;
-                                if (total_count == count) {
+                                if (total_count.equals(count)) {
                                     EditText call_text = findViewById(R.id.messageInput);
                                     call_text.setText("The call just ended, let's have another call next time!");
                                     Log.d("Call Ended","Yes");

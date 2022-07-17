@@ -1,53 +1,28 @@
 package sg.edu.np.ignight;
 
 import static android.content.pm.PackageManager.PERMISSION_GRANTED;
-import static com.amplitude.api.Utils.TAG;
 
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
-
-import android.Manifest;
-import android.content.ContentResolver;
-import android.content.ContentUris;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.database.Cursor;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.provider.CalendarContract;
-import android.text.PrecomputedText;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TimePicker;
-import android.widget.Toast;
 
-/*import com.google.api.client.util.DateTime;
-import com.google.api.services.calendar.model.Event;
-import com.google.api.services.calendar.model.EventAttendee;
-import com.google.api.services.calendar.model.EventDateTime;
-import com.google.api.services.calendar.model.EventReminder;*/
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
-import com.calendarevents.CalendarEvents;
-import com.google.android.material.datepicker.CalendarConstraints;
-import com.google.type.DateTime;
-
-import java.math.BigDecimal;
-import java.math.BigInteger;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Calendar;
-import java.util.GregorianCalendar;
-import java.util.TimeZone;
 
 public class ProposeDateActivity extends AppCompatActivity {
 
@@ -57,7 +32,7 @@ public class ProposeDateActivity extends AppCompatActivity {
     private DatePicker date;
     private TimePicker time;
 
-    private ArrayList<String> invalidList = new ArrayList<>();
+    private final ArrayList<String> invalidList = new ArrayList<>();
 
     Context context = this;
 
