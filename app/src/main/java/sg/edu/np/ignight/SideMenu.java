@@ -103,7 +103,8 @@ public class SideMenu extends Activity {
         aboutus.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mToast.show();
+                Intent main_to_aboutus = new Intent(SideMenu.this,AboutUsActivity.class);
+                startActivity(main_to_aboutus);
             }
         });
 
@@ -144,7 +145,7 @@ public class SideMenu extends Activity {
         });
 
         // Button for logout
-        TextView logout = findViewById(R.id.logout_sidemenu);
+        TextView logout = findViewById(R.id.activityReport_sidemenu);
         logout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -158,7 +159,7 @@ public class SideMenu extends Activity {
         });
 
         // side menu button for activity report activity. pls edit if its wrong
-        TextView activityReport = findViewById(R.id.activityReport_sidemenu);
+        TextView activityReport = findViewById(R.id.logout_sidemenu);
         activityReport.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
