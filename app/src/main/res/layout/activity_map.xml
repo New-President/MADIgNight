@@ -61,13 +61,13 @@
             android:id="@+id/userPreferred"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Your Preferred" />
+            android:text="Preference" />
 
         <com.google.android.material.tabs.TabItem
-            android:id="@+id/hotSpots"
+            android:id="@+id/favouriteLocs"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Hot Spots" />
+            android:text="Favourite" />
 
         <com.google.android.material.tabs.TabItem
             android:id="@+id/all"

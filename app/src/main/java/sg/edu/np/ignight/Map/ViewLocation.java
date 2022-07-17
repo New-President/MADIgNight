@@ -64,6 +64,7 @@ public class ViewLocation extends AppCompatActivity implements OnMapReadyCallbac
 
         ImageView viewLocImg = findViewById(R.id.viewLocImg);
         ImageView viewLocBackBtn = findViewById(R.id.viewLocBackButton);
+        ImageView favouriteBtn = findViewById(R.id.favouriteBtn);
         TextView locNameField = findViewById(R.id.viewLocName);
         TextView locDescField = findViewById(R.id.viewLocDesc);
         TextView addrField = findViewById(R.id.addrText);
@@ -77,12 +78,6 @@ public class ViewLocation extends AppCompatActivity implements OnMapReadyCallbac
                 .placeholder(R.drawable.ic_baseline_image_24)
                 .into(viewLocImg);
 
-        // Checks if location is enabled
-        if (!isGPSEnabled()) {
-            turnOnGPS();
-        }
-
-
         viewLocBackBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -92,10 +87,20 @@ public class ViewLocation extends AppCompatActivity implements OnMapReadyCallbac
 
         initGoogleMap(savedInstanceState);
 
+        favouriteBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+            }
+        });
+
     }
 
     private void initGoogleMap(Bundle savedInstanceState) {
-
+        // Checks if location is enabled
+        if (!isGPSEnabled()) {
+            turnOnGPS();
+        }
         // *** IMPORTANT ***
         // MapView requires that the Bundle you pass contain _ONLY_ MapView SDK
         // objects or sub-Bundles.
@@ -206,8 +211,9 @@ public class ViewLocation extends AppCompatActivity implements OnMapReadyCallbac
 
     @Override
     public void onInfoWindowClick(@NonNull Marker marker) {
+
         final AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setMessage(marker.getSnippet())
+        builder.setMessage("Find paths to this location?")
                 .setCancelable(true)
                 .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                     @Override

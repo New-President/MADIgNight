@@ -10,7 +10,7 @@ import android.view.ViewGroup;
 
 import sg.edu.np.ignight.R;
 
-public class HotSpotsFragment extends Fragment {
+public class FavouriteLocFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
