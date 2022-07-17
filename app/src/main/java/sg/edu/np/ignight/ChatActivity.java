@@ -2,13 +2,18 @@ package sg.edu.np.ignight;
 
 import static android.content.ContentValues.TAG;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.transition.Slide;
 import android.transition.Transition;
 import android.util.Log;
 import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -21,7 +26,10 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -53,8 +61,10 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.jitsi.meet.sdk.BroadcastEvent;
 import org.jitsi.meet.sdk.JitsiMeet;
 import org.jitsi.meet.sdk.JitsiMeetActivity;
+import org.jitsi.meet.sdk.JitsiMeetActivityInterface;
 import org.jitsi.meet.sdk.JitsiMeetConferenceOptions;
 
 import sg.edu.np.ignight.Chat.MediaAdapter;
@@ -258,22 +268,106 @@ public class ChatActivity extends AppCompatActivity {
         call_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                URL server;
-                try{
-                    server =new URL("https://meet.jit.si");
-                    JitsiMeetConferenceOptions defaultOptions= new JitsiMeetConferenceOptions.Builder()
-                                    .setServerURL(server)
-                                    .setWelcomePageEnabled(false)
-                                    .build();
-                    JitsiMeet.setDefaultConferenceOptions(defaultOptions);
+                AlertDialog.Builder builder = new AlertDialog.Builder(ChatActivity.this, R.style.AlertDialogTheme);
+                View view1 = LayoutInflater.from(ChatActivity.this).inflate(R.layout.call_confrimation_dialog, (ConstraintLayout)findViewById(R.id.layoutDialogContainer));
+                builder.setView(view1);
 
-                }catch (MalformedURLException e){
-                    e.printStackTrace();
+                final AlertDialog alertDialog = builder.create(); //Display alert dialog
+                view1.findViewById(R.id.button_yes_delete).setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        URL server;
+                        try{
+                            server = new URL("https://meet.jit.si");
+                            JitsiMeetConferenceOptions defaultOptions= new JitsiMeetConferenceOptions.Builder()
+                                    .setServerURL(server)
+                                    .setFeatureFlag("welcomepage.enabled", false)
+                                    .build();
+                            JitsiMeet.setDefaultConferenceOptions(defaultOptions);
+
+                        }catch (MalformedURLException e){
+                            e.printStackTrace();
+                        }
+                        JitsiMeetConferenceOptions options = new JitsiMeetConferenceOptions.Builder()
+                                .setRoom("big_room")// need changing
+                                .setFeatureFlag("welcomepage.enabled", false)
+                                .build();
+                        JitsiMeetActivity.launch(ChatActivity.this,options);
+                        alertDialog.dismiss();
+                        EditText call_text = findViewById(R.id.messageInput);
+                        call_text.setText("Hey, I started a call come join me!");
+                        ImageButton send = findViewById(R.id.sendMessage);
+                        sendMessage();
+                        BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
+                            Integer count = 1;
+                            Integer total_count = 0;
+                            @Override
+                            public void onReceive(Context context, Intent intent) {
+                                total_count += 1;
+                                if (total_count == count) {
+                                    EditText call_text = findViewById(R.id.messageInput);
+                                    call_text.setText("The call just ended, let's have another call next time!");
+                                    Log.d("Call Ended","Yes");
+                                    sendMessage();
+                                }
+                            }
+                        };
+                        IntentFilter intentFilter = new IntentFilter();
+                        intentFilter.addAction(BroadcastEvent.Type.CONFERENCE_TERMINATED.getAction());
+                        LocalBroadcastManager.getInstance(ChatActivity.this).registerReceiver(broadcastReceiver, intentFilter);
+                    }
+                });
+
+                view1.findViewById(R.id.button_cancel_delete).setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        URL server;
+                        try{
+                            server = new URL("https://meet.jit.si");
+                            JitsiMeetConferenceOptions defaultOptions= new JitsiMeetConferenceOptions.Builder()
+                                    .setServerURL(server)
+                                    .setFeatureFlag("welcomepage.enabled", false)
+                                    .build();
+                            JitsiMeet.setDefaultConferenceOptions(defaultOptions);
+
+                        }catch (MalformedURLException e){
+                            e.printStackTrace();
+                        }
+                        JitsiMeetConferenceOptions options = new JitsiMeetConferenceOptions.Builder()
+                                .setRoom("big_room")// need changing
+                                .setFeatureFlag("welcomepage.enabled", false)
+                                .setVideoMuted(true)
+                                .build();
+                        JitsiMeetActivity.launch(ChatActivity.this,options);
+                        alertDialog.dismiss();
+                        EditText call_text = findViewById(R.id.messageInput);
+                        call_text.setText("Hey, I started a call come join me!");
+                        ImageButton send = findViewById(R.id.sendMessage);
+                        sendMessage();
+                        BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
+                            Integer count = 1;
+                            Integer total_count = 0;
+                            @Override
+                            public void onReceive(Context context, Intent intent) {
+                                total_count += 1;
+                                if (total_count == count) {
+                                    EditText call_text = findViewById(R.id.messageInput);
+                                    call_text.setText("The call just ended, let's have another call next time!");
+                                    Log.d("Call Ended","Yes");
+                                    sendMessage();
+                                }
+                            }
+                        };
+                        IntentFilter intentFilter = new IntentFilter();
+                        intentFilter.addAction(BroadcastEvent.Type.CONFERENCE_TERMINATED.getAction());
+                        LocalBroadcastManager.getInstance(ChatActivity.this).registerReceiver(broadcastReceiver, intentFilter);
+                    }
+                });
+
+                if (alertDialog.getWindow() != null){
+                    alertDialog.getWindow().setBackgroundDrawable(new ColorDrawable(0));
                 }
-                JitsiMeetConferenceOptions options = new JitsiMeetConferenceOptions.Builder()
-                        .setRoom("big_room")// need changing
-                        .setWelcomePageEnabled(false).build();
-                JitsiMeetActivity.launch(ChatActivity.this,options);
+                alertDialog.show();
             }
         });
 
