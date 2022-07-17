@@ -1,7 +1,6 @@
 package sg.edu.np.ignight;
 
 import static android.content.pm.PackageManager.PERMISSION_GRANTED;
-import static com.amplitude.api.Utils.TAG;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
@@ -37,7 +36,6 @@ import com.google.api.services.calendar.model.EventAttendee;
 import com.google.api.services.calendar.model.EventDateTime;
 import com.google.api.services.calendar.model.EventReminder;*/
 
-import com.calendarevents.CalendarEvents;
 import com.google.android.material.datepicker.CalendarConstraints;
 import com.google.type.DateTime;
 
