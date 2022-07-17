@@ -6,12 +6,14 @@ public class LocationObject implements Serializable {
     private String Name;
     private String Desc;
     private String Category;
+    private String Address;
     private String imgUri;
 
-    public LocationObject(String Name, String Desc, String Category, String imgUri){
+    public LocationObject(String Name, String Desc, String Category, String Address, String imgUri){
         this.Name = Name;
         this.Desc = Desc;
         this.Category = Category;
+        this.Address = Address;
         this.imgUri = imgUri;
     }
 
@@ -29,6 +31,10 @@ public class LocationObject implements Serializable {
 
     public String getImgUri() {
         return imgUri;
+    }
+
+    public String getAddress() {
+        return Address;
     }
 
     public void setImgUri(String imgUri) {

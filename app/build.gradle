@@ -9,7 +9,7 @@ android {
     defaultConfig {
         applicationId "sg.edu.np.ignight"
         minSdk 23
-        targetSdk 30
+        targetSdk 32
         versionCode 12
         versionName '3.8'
 
@@ -79,11 +79,11 @@ dependencies {
     implementation 'com.github.PhilJay:MPAndroidChart:v3.1.0'
 
     // jitsi - video call
-    implementation ('org.jitsi.react:jitsi-meet-sdk:2.+') { transitive = true }
+    implementation ('org.jitsi.react:jitsi-meet-sdk:5.1.0') { transitive = true }
 
 
     implementation 'com.google.firebase:firebase-firestore:24.2.0'
     // google maps
     implementation 'com.google.android.gms:play-services-maps:18.0.2'
-    api 'com.google.maps:google-maps-services:0.10.2'
+    implementation 'com.google.maps:google-maps-services:0.10.2'
 }

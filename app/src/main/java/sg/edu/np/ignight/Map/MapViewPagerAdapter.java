@@ -1,6 +1,6 @@
 package sg.edu.np.ignight.Map;
 
-import android.view.View;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -16,18 +16,18 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 
-import sg.edu.np.ignight.R;
-
 public class MapViewPagerAdapter extends FragmentStateAdapter {
-
+    private ArrayList<LocationObject> locationObjectList;
+    ArrayList<String> userPrefList;
     public MapViewPagerAdapter(@NonNull FragmentActivity fragmentActivity) {
         super(fragmentActivity);
+        //this.locationObjectList = locationObjectList;
     }
 
     @NonNull
     @Override
     public Fragment createFragment(int position) {
-        ArrayList<String> userPrefList = new ArrayList<>();
+        userPrefList = new ArrayList<>();
         FirebaseAuth auth = FirebaseAuth.getInstance();
         String uid = auth.getCurrentUser().getUid();
         FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance("https://madignight-default-rtdb.asia-southeast1.firebasedatabase.app");
@@ -39,6 +39,7 @@ public class MapViewPagerAdapter extends FragmentStateAdapter {
                 for (DataSnapshot keynode : snapshot.getChildren()) {
                     userPrefList.add(keynode.getValue().toString());
                 }
+
             }
 
             @Override
@@ -46,14 +47,14 @@ public class MapViewPagerAdapter extends FragmentStateAdapter {
 
             }
         });
-
         switch (position){
             case (1):
-                return new HotSpotsFragment();
+                return new FavouriteLocFragment();
             case (2):
-                return new AllLocFragment();
+                return new AllLocFragment(locationObjectList);
             default:
-                return new UserPreferredFragment(userPrefList);
+                Log.d("prefsize", String.valueOf(userPrefList.size()));
+                return new UserPreferredFragment(userPrefList, locationObjectList);
 
         }
     }
@@ -62,4 +63,5 @@ public class MapViewPagerAdapter extends FragmentStateAdapter {
     public int getItemCount() {
         return 3;
     }
+
 }

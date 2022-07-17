@@ -13,8 +13,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@drawable/dialog_bg"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
         <TextView
@@ -23,68 +21,27 @@
             android:layout_height="wrap_content"
             android:background="@drawable/delete_alert_dialog"
             android:padding="10dp"
-            android:text="Delete?"
+            android:text="What's your call?"
             android:textAlignment="center"
             android:textColor="@color/colorWhite"
             android:textSize="20sp"
             android:textStyle="bold"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            tools:layout_editor_absoluteX="0dp" />
 
         <TextView
             android:id="@+id/textMessage"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="18sp"
-            android:text="Are you sure to delete this profile? \n(Type &quot;DELETE&quot; in the box below)"
+            android:layout_marginBottom="40dp"
+            android:text="Choose a call."
             android:textAlignment="center"
             android:textColor="@color/colorTextPrimary"
             android:textSize="18sp"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintTop_toBottomOf="@id/textTitle"
             tools:layout_editor_absoluteX="21dp" />
-
-        <EditText
-            android:id="@+id/delete_input"
-            android:layout_width="284dp"
-            android:layout_height="40dp"
-            android:layout_marginTop="10dp"
-            android:background="@drawable/delete_dialog_input"
-            android:ems="10"
-            android:hint="DELETE"
-            android:inputType="textPersonName"
-            android:paddingLeft="10dp"
-            app:layout_constraintBottom_toTopOf="@+id/delete_otp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textMessage" />
-
-        <EditText
-            android:id="@+id/delete_otp"
-            android:layout_width="180dp"
-            android:layout_height="40dp"
-            android:layout_marginTop="16dp"
-            android:layout_marginBottom="30dp"
-            android:background="@drawable/delete_dialog_input"
-            android:ems="10"
-            android:hint="OTP"
-            android:inputType="textPersonName"
-            android:paddingLeft="10dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/delete_send_otp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/delete_input" />
-
-        <Button
-            android:id="@+id/delete_send_otp"
-            android:layout_width="wrap_content"
-            android:layout_height="49dp"
-            android:layout_marginTop="16dp"
-            android:layout_marginBottom="30dp"
-            android:enabled="false"
-            android:text="send OTP"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/delete_otp"
-            app:layout_constraintTop_toBottomOf="@+id/delete_input" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -95,7 +52,7 @@
         android:layout_marginStart="40dp"
         android:layout_marginEnd="10dp"
         android:background="@drawable/btn_cancel_delete"
-        android:text="No"
+        android:text="Voice"
         android:textColor="@color/colorWhite"
         android:textSize="14sp"
         app:layout_constraintBottom_toBottomOf="@id/layoutDialog"
@@ -109,9 +66,8 @@
         android:layout_height="40dp"
         android:layout_marginStart="10dp"
         android:layout_marginEnd="40dp"
-        android:background="@drawable/btn_delete_delete_locked"
-        android:enabled="false"
-        android:text="Delete"
+        android:background="@drawable/btn_delete_delete"
+        android:text="Video"
         android:textColor="@color/colorWhite"
         android:textSize="14sp"
         app:layout_constraintBottom_toBottomOf="@id/layoutDialog"

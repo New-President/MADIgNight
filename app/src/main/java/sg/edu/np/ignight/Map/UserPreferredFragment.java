@@ -26,8 +26,9 @@ public class UserPreferredFragment extends Fragment {
     private ArrayList<LocationObject> locList;
     private ArrayList<String> userPrefList;
 
-    public UserPreferredFragment(ArrayList<String> userPrefList){
+    public UserPreferredFragment(ArrayList<String> userPrefList, ArrayList<LocationObject> locList){
         this.userPrefList = userPrefList;
+        this.locList = locList;
     }
 
     @Override
@@ -37,6 +38,7 @@ public class UserPreferredFragment extends Fragment {
         DatabaseReference databaseReference = firebaseDatabase.getReference("location");
         locList = new ArrayList<>();
 
+        Log.d("prefsize2", String.valueOf(userPrefList.size()));
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_user_preferred, container, false);
 
@@ -45,16 +47,17 @@ public class UserPreferredFragment extends Fragment {
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 for (DataSnapshot categoryNode: snapshot.getChildren()){
                     for (String loc: userPrefList){
-                        Log.d("locationsstuff", loc);
+                        Log.d("userPref", loc);
+                        Log.d("prefsize3", String.valueOf(userPrefList.size()));
                         if (categoryNode.getKey().equals(loc) && categoryNode.child("1").exists()){
                             for (DataSnapshot locNode : categoryNode.getChildren()){
                                 String Name = locNode.child("Name").getValue().toString();
                                 String Desc = locNode.child("Description").getValue().toString();
+                                String Addr = locNode.child("Address").getValue().toString();
                                 String imgUri = locNode.child("imgUri").getValue().toString();
 
-                                locList.add(new LocationObject(Name, Desc, loc, imgUri));
+                                locList.add(new LocationObject(Name, Desc, loc, Addr, imgUri));
 
-                                Log.d("MapList", Name);
                             }
                         }
                     }
@@ -72,15 +75,24 @@ public class UserPreferredFragment extends Fragment {
 
             }
         });
-        return view;
+//        Log.d("prefsize2", String.valueOf(userPrefList.size()));
+//        ArrayList<LocationObject> filteredLocs = new ArrayList<>();
+//
+//        Log.d("locsize", String.valueOf(locList.size()));
+//        for (LocationObject locObj : locList){
+//            Log.d("catname", locObj.getCategory());
+//            for (String loc : userPrefList){
+//                if (locObj.getCategory().equals(loc)){
+//                    filteredLocs.add(locObj);
+//                }
+//            }
+//        }
+//        RecyclerView recyclerView = view.findViewById(R.id.userPrefRecyclerView);
+//        recyclerView.setLayoutManager(new LinearLayoutManager(view.getContext()));
+//        recyclerView.setAdapter(new MapAdapter(filteredLocs, view.getContext()));
+       return view;
     }
 
-    public ArrayList<String> userPreferredLocList(){
-        ArrayList<String> locStringList = new ArrayList<>();
-
-
-        return locStringList;
-    }
 
 
 }
