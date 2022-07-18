@@ -216,7 +216,7 @@ public class ActivityReport_Activity extends AppCompatActivity {
 
                 treeMap.put(TimeInforground,PackageName);
 
-                Log.i("BAC123", "PackageName is" + PackageName + "Time is: " + hours + "h" + ":" + minutes + "m" + seconds + "s");
+                Log.i("BAC123", "test" + PackageName);
             }
         }
 
