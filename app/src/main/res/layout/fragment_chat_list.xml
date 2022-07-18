@@ -77,4 +77,17 @@
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/chatbotFAB"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:focusable="true"
+        android:clickable="true"
+        android:enabled="true"
+        app:backgroundTint="#999999"
+        android:src="@drawable/ic_baseline_chat_24"
+        app:tint="#ffffff"
+        android:layout_gravity="bottom|end"
+        android:layout_margin="20dp"/>
+
 </FrameLayout>

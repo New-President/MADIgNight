@@ -29,6 +29,9 @@ android {
     buildFeatures {
         viewBinding true
     }
+    packagingOptions {
+        resources.excludes.add("META-INF/*")
+    }
 }
 
 dependencies {
@@ -82,8 +85,11 @@ dependencies {
     implementation ('org.jitsi.react:jitsi-meet-sdk:5.1.0') { transitive = true }
 
 
-    implementation 'com.google.firebase:firebase-firestore:24.2.0'
     // google maps
     implementation 'com.google.android.gms:play-services-maps:18.0.2'
     implementation 'com.google.maps:google-maps-services:0.10.2'
+
+    // dialogflow (chatbot)
+    implementation 'com.google.cloud:google-cloud-dialogflow:2.1.0'
+    implementation 'io.grpc:grpc-okhttp:1.30.0'
 }

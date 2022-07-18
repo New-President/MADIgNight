@@ -24,11 +24,14 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.IgNight">
         <activity
+            android:name=".ChatbotActivity"
+            android:exported="false" />
+        <activity
             android:name=".CommentSectionActivity"
             android:exported="false" />
         <activity
             android:name=".ProposeDateActivity"
-            android:exported="false"/>
+            android:exported="false" />
         <activity
             android:name=".Map.ViewLocation"
             android:exported="false" />
