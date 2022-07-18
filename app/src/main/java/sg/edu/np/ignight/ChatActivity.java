@@ -275,6 +275,7 @@ public class ChatActivity extends AppCompatActivity {
                 view1.findViewById(R.id.button_yes_delete).setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
+                        // Call
                         URL server;
                         try{
                             server = new URL("https://meet.jit.si");
@@ -293,6 +294,7 @@ public class ChatActivity extends AppCompatActivity {
                                 .build();
                         JitsiMeetActivity.launch(ChatActivity.this,options);
                         alertDialog.dismiss();
+                        // Calling message notification
                         EditText call_text = findViewById(R.id.messageInput);
                         call_text.setText("Hey, I started a call come join me!");
                         sendMessage();
@@ -319,6 +321,7 @@ public class ChatActivity extends AppCompatActivity {
                 view1.findViewById(R.id.button_cancel_delete).setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
+                        // Call
                         URL server;
                         try{
                             server = new URL("https://meet.jit.si");
@@ -338,6 +341,7 @@ public class ChatActivity extends AppCompatActivity {
                                 .build();
                         JitsiMeetActivity.launch(ChatActivity.this,options);
                         alertDialog.dismiss();
+                        // Calling message notification
                         EditText call_text = findViewById(R.id.messageInput);
                         call_text.setText("Hey, I started a call come join me!");
                         sendMessage();
