@@ -162,7 +162,7 @@ public class ActivityReport_Activity extends AppCompatActivity {
                         long hour = (IgNight_time/(1000*60*60));
                         String Ignight_val = hour + "h" + minute + "m" + second + "s";
                         // For testing
-                        finalTest_View.setText(Ignight_val);
+                        finalTest_View.setText('2');
                     }
                 });
             }
