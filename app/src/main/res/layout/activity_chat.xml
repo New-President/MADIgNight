@@ -43,7 +43,8 @@
 
         <LinearLayout
             android:id="@+id/messageLayoutHeaderUserInfo"
-            android:layout_width="131dp"
+            android:layout_width="0dp"
+            android:layout_weight="1"
             android:layout_height="match_parent"
             android:gravity="center_vertical"
             android:orientation="vertical"
@@ -55,6 +56,8 @@
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/amaranth_bold"
                 android:text="Username"
+                android:maxLines="1"
+                android:ellipsize="end"
                 android:textColor="#555555"
                 android:textSize="20sp" />
 
@@ -63,6 +66,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Online"
+                android:maxLines="2"
                 android:textColor="#555555"
                 android:textSize="14sp" />
 
@@ -73,15 +77,16 @@
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:layout_gravity="center"
+            android:layout_marginStart="5dp"
             app:srcCompat="@drawable/call" />
 
         <Button
             android:id="@+id/ProposeDate"
-            android:layout_width="146dp"
-            android:layout_height="57dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:minWidth="0dp"
             android:layout_marginStart="5dp"
             android:layout_marginEnd="5dp"
-            android:layout_weight="1"
             android:text="Date" />
 
     </LinearLayout>
