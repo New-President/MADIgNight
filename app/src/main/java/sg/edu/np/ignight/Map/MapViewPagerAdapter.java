@@ -51,7 +51,7 @@ public class MapViewPagerAdapter extends FragmentStateAdapter {
             case (1):
                 return new FavouriteLocFragment();
             case (2):
-                return new AllLocFragment(locationObjectList);
+                return new AllLocFragment();
             default:
                 Log.d("prefsize", String.valueOf(userPrefList.size()));
                 return new UserPreferredFragment(userPrefList, locationObjectList);

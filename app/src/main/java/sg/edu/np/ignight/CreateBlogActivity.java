@@ -164,7 +164,7 @@ public class CreateBlogActivity extends AppCompatActivity {
 
                     // Creates a unique ID for the blog post
                     String blogID = databaseReference.push().getKey();
-                    BlogObject newBlog = new BlogObject(blogDesc, blogLoc, uploadImage(c, null), blogID, 0, 0, new ArrayList<String>(), new ArrayList<String>());
+                    BlogObject newBlog = new BlogObject(blogDesc, blogLoc, uploadImage(c, null), blogID, 0, 0, new ArrayList<String>());
                     // Store in firebase under Users
                     databaseReference.child(blogID).setValue(newBlog);
 

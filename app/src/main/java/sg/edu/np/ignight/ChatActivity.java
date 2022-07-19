@@ -9,6 +9,7 @@ import android.content.IntentFilter;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
+import android.text.format.DateFormat;
 import android.transition.Slide;
 import android.transition.Transition;
 import android.util.Log;
@@ -61,6 +62,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
@@ -84,6 +86,8 @@ public class ChatActivity extends AppCompatActivity {
     private final int PICK_IMAGE_INTENT = 1;
 
     private DatabaseReference rootDB, chatDB;
+
+    private boolean fromProposeDate;
 
     private ImageView removeMediaButton, scrollToChatBottomButton, profilePicture;
     private EditText messageInput;
@@ -376,8 +380,8 @@ public class ChatActivity extends AppCompatActivity {
         ProposeDateBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent ProposeDate = new Intent(ChatActivity.this, ProposeDateActivity.class);
-                startActivity(ProposeDate);
+                Intent proposeDate = new Intent(ChatActivity.this, ProposeDateActivity.class);
+                startActivityForResult(proposeDate, 1000);
             }
         });
     }
@@ -648,6 +652,17 @@ public class ChatActivity extends AppCompatActivity {
         }
         catch (Exception e) {
             Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
+        }
+
+        Boolean fromProposeDate= data.getBooleanExtra("dateMessage", true);
+        String dateDescription = data.getStringExtra("dateDescription");
+        String dateLocation = data.getStringExtra("dateLocation");
+        long dateTime = data.getLongExtra("datetime", 0);
+        String dateString = DateFormat.format("dd/MM/yyyy HH:mm", new Date(dateTime)).toString();
+        if(fromProposeDate) {
+            EditText call_text = findViewById(R.id.messageInput);
+            call_text.setText("Date Description: " + dateDescription +"\nDate Location: " + dateLocation + "\nDate and Time: " + dateString);
+            sendMessage();
         }
     }
 
