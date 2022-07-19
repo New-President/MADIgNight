@@ -2,7 +2,10 @@ package sg.edu.np.ignight;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.AppOpsManager;
@@ -53,6 +56,7 @@ import java.util.TreeMap;
 
 
 public class ActivityReport_Activity extends AppCompatActivity {
+
     // init fields
     private ArrayList<PieEntry> pieChartData;
     private ArrayList<BarEntry> barChartData;
@@ -63,13 +67,13 @@ public class ActivityReport_Activity extends AppCompatActivity {
     private ImageButton backButton2;
     private TextView timeUsageTestTextView;
 
-    private String uid, timeSpentToday;
+    private String uid, timeSpentToday, packageName;
 
+    private long foregroundTime, time;
 
-    // Testing
-    TreeMap<Long,String> treeMap = new TreeMap<>();
+    private int hours1, hours2, minutes1, minutes2, seconds1, seconds2, USAGE_STATS_PERMISSION_CODE;
 
-    @SuppressLint("SetTextI18n")
+    @SuppressLint("LogNotTimber")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -113,6 +117,15 @@ public class ActivityReport_Activity extends AppCompatActivity {
             }
         });
 
+        // Obtain time spent on the IgNight app and display it
+        // also adds data to barChartData
+        if (ContextCompat.checkSelfPermission(ActivityReport_Activity.this,
+                Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_DENIED){
+            requestUsageStatsPermission();
+        }
+
+        getTimeSpentToday();
+
         // Data entries for charts
         pieChart = findViewById(R.id.PieChart);
         barChart = findViewById(R.id.BarChart);
@@ -155,75 +168,70 @@ public class ActivityReport_Activity extends AppCompatActivity {
         pieChart.animateXY(1100,1100);
         // hide description
         pieChart.getDescription().setEnabled(false);
+    }
 
+    private void requestUsageStatsPermission(){
+        if(ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.PACKAGE_USAGE_STATS)){
+            new AlertDialog.Builder(this).setTitle("Usage Statistics Permission")
+                    .setMessage("This permission is needed to show your usage time.")
+                    .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            ActivityCompat.requestPermissions(ActivityReport_Activity.this,new String[]{Manifest.permission.PACKAGE_USAGE_STATS}, USAGE_STATS_PERMISSION_CODE);
+                        }
+                    })
+                    .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            dialogInterface.dismiss();
+                        }
+                    }).create().show();
+        }else{
+            ActivityCompat.requestPermissions(this,new String[]{Manifest.permission.PACKAGE_USAGE_STATS}, USAGE_STATS_PERMISSION_CODE);
+        }
+    }
 
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+    }
 
-
-
-
-
-
-
-
-
-
-
-        // Testing new way of collecting data
-        SharedPreferences spForDay = getSharedPreferences("dataForDay", Context.MODE_PRIVATE);
-        SharedPreferences.Editor spForDayEditor = spForDay.edit();
-
+    // Obtain time spent on the IgNight app and displays it
+    // Also adds data to the barChartData for graph display
+    private void getTimeSpentToday(){
+        // Instantiate some fields
+        SharedPreferences sPday = getSharedPreferences("dataForDay", Context.MODE_PRIVATE);
+        SharedPreferences.Editor sPdayEdit = sPday.edit();
         UsageStatsManager mUsageStatsManager = (UsageStatsManager)getSystemService(USAGE_STATS_SERVICE);
-        //UsageStats usageStats;
-        String PackageName = "com.android.chrome" ;
-        long TimeInforground;
-        int minutes,seconds,hours,h=0,m=0,s=0;
-        long time = System.currentTimeMillis();
-
-        Calendar c = Calendar.getInstance();
-        c.add(Calendar.DAY_OF_MONTH,1);
-        c.add(Calendar.HOUR_OF_DAY,0);
-        c.add(Calendar.MINUTE,0);
-        c.add(Calendar.SECOND,0);
-        c.add(Calendar.MILLISECOND,0);
-        long howMany = c.getTimeInMillis();
-        Log.i("midnighttime",Long.toString(howMany)+" "+Long.toString(time));
-
+        time = System.currentTimeMillis();
+        hours2 = minutes2 = seconds2 = 0;
         timeUsageTestTextView = (TextView) findViewById(R.id.timeUsageTestTextView);
+
         List<UsageStats> stats = mUsageStatsManager.queryUsageStats(UsageStatsManager.INTERVAL_DAILY, time-10*1000, time);
         if(stats != null) {
-            SortedMap<Long, UsageStats> mySortedMap = new TreeMap<Long, UsageStats>();
             for (UsageStats usageStats : stats) {
-                TimeInforground = usageStats.getTotalTimeInForeground();
-                PackageName = usageStats.getPackageName();
-                Log.i("pkg_name", "PackageName is" + PackageName);
+                // Shows the time spent on the IgNight app itself
+                packageName = usageStats.getPackageName();
+                if(packageName.equals("sg.edu.np.ignight")){
+                    foregroundTime = usageStats.getTotalTimeInForeground();
 
-                minutes = (int) ((TimeInforground / (1000 * 60)) % 60);
-                seconds = (int) (TimeInforground / 1000) % 60;
-                hours = (int) ((TimeInforground / (1000 * 60 * 60)) % 24);
+                    // Time unit conversion logic
+                    hours1 = (int) ((foregroundTime / (1000 * 60 * 60)) % 24);
+                    minutes1 = (int) ((foregroundTime / (1000 * 60)) % 60);
 
-                h = h + hours;
-                m = m + minutes;
-                if (m >= 60) {
-                    h = h + m / 60;
-                    m = m % 60;
-                }
-                s = s + seconds;
-                if (s >= 60) {
-                    m = m + s / 60;
-                    s = s % 60;
-                }
+                    // Testing to check if the phone detects other packages and thus sg.edu.np.ignight
+                    // Log.d line here sees if the permissions are enabled so all stats can be seen
+                    Log.d("PackageName", packageName + hours1 + "h," + minutes1 + "min");
 
-                spForDayEditor.putInt(PackageName, hours * 60 + minutes);
-                spForDayEditor.apply();
-
-                treeMap.put(TimeInforground, PackageName);
-
-                if(PackageName.equals("sg.edu.np.ignight")){
-                    timeSpentToday = "You spent " + hours + "h," + minutes + "min" + " on IgNight today.";
+                    timeSpentToday = "You spent " + hours1 + "h," + minutes1 + "min" + " on IgNight today.";
                     timeUsageTestTextView.setText(timeSpentToday);
+
+                    // Add time to sharedPreference to save it
+                    sPdayEdit.putInt(packageName, hours1 * 60 + minutes1);
+                    sPdayEdit.apply();
                 }
             }
         }
-
     }
 }
+
