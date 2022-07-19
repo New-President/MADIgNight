@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -17,6 +18,7 @@ import com.google.api.gax.core.FixedCredentialsProvider;
 import com.google.auth.oauth2.GoogleCredentials;
 import com.google.auth.oauth2.ServiceAccountCredentials;
 import com.google.cloud.dialogflow.v2beta1.DetectIntentResponse;
+import com.google.cloud.dialogflow.v2beta1.EventInput;
 import com.google.cloud.dialogflow.v2beta1.QueryInput;
 import com.google.cloud.dialogflow.v2beta1.SessionName;
 import com.google.cloud.dialogflow.v2beta1.SessionsClient;
@@ -124,6 +126,8 @@ public class ChatbotActivity extends AppCompatActivity implements ChatbotReply {
                     FixedCredentialsProvider.create(credentials)).build();
             sessionsClient = SessionsClient.create(sessionsSettings);
             sessionName = SessionName.of(projectId, uuid);
+
+            initConvo();
         }catch (Exception e) {
             e.printStackTrace();
         }
@@ -149,6 +153,18 @@ public class ChatbotActivity extends AppCompatActivity implements ChatbotReply {
         QueryInput input = QueryInput.newBuilder()
                 .setText(
                         TextInput.newBuilder().setText(text).setLanguageCode("en-US")
+                ).build();
+        new QueryChatbot(this, sessionName, sessionsClient, input).execute();
+    }
+
+    // send query to bot to make bot initiate conversation
+    private void initConvo() {
+        QueryInput input = QueryInput.newBuilder()
+                .setEvent(
+                        EventInput.newBuilder()
+                                .setName("Welcome")
+                                .setLanguageCode("en-US")
+                                .build()
                 ).build();
         new QueryChatbot(this, sessionName, sessionsClient, input).execute();
     }

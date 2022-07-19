@@ -21,9 +21,6 @@ import java.util.Map;
 import sg.edu.np.ignight.R;
 
 public class MapAdapter extends RecyclerView.Adapter<MapAdapter.MapViewHolder>{
-    private TextView Name, Category;
-    private ImageView LocImage, ViewLoc;
-
     private ArrayList<LocationObject> locationsList;
     private Context c;
 
@@ -42,15 +39,15 @@ public class MapAdapter extends RecyclerView.Adapter<MapAdapter.MapViewHolder>{
     @Override
     public void onBindViewHolder(@NonNull MapViewHolder holder, int position) {
         LocationObject location = locationsList.get(position);
-        Name.setText(location.getName());
-        Category.setText(location.getCategory());
+        holder.Name.setText(location.getName());
+        holder.Category.setText(location.getCategory());
 
         Glide.with(c)
                 .load(location.getImgUri())
                 .placeholder(R.drawable.ic_baseline_image_24)
-                .into(LocImage);
+                .into(holder.LocImage);
 
-        ViewLoc.setOnClickListener(new View.OnClickListener() {
+        holder.ViewLoc.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent viewloc = new Intent(c, ViewLocation.class);
@@ -67,7 +64,8 @@ public class MapAdapter extends RecyclerView.Adapter<MapAdapter.MapViewHolder>{
     }
 
     public class MapViewHolder extends RecyclerView.ViewHolder {
-
+        public TextView Name, Category;
+        public ImageView LocImage, ViewLoc;
         public MapViewHolder(View item) {
             super(item);
             Name = item.findViewById(R.id.locName);
