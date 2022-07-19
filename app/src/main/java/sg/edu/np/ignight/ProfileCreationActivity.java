@@ -360,7 +360,7 @@ public class ProfileCreationActivity extends AppCompatActivity {
     }
 
     //Preferred Locations
-    private String[] locations = {"Mall", "Restaurant", "Arcade", "Cafe", "Amusement Park", "Park"};
+    private String[] locations = {"Mall", "Restaurant", "Arcade", "Cafe", "Theme Park", "Park"};
     private String[] interests = {"Running", "Cooking", "Gaming", "Swimming", "Reading", "Shopping", "Others"};
     // method to initialise Inputs
     private void InitInputs() {
