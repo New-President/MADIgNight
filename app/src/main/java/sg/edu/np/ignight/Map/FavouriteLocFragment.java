@@ -68,6 +68,8 @@ public class FavouriteLocFragment extends Fragment {
         favLocationsReference.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+                // Filters off the locations with user's preferences stored in a string array
+                // , stored into filteredlocations list
                 for (DataSnapshot locNode : snapshot.getChildren()) {
                     if ((boolean) locNode.getValue()){
                         String name = locNode.getKey();
@@ -86,33 +88,28 @@ public class FavouriteLocFragment extends Fragment {
             public void onChildChanged(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
 
                 for (DataSnapshot locNode : snapshot.getChildren()) {
-                    Log.d("snapshotKey", "snapshot: " + snapshot.getKey());
                     if ((boolean) locNode.getValue() && !favLocationNames.contains(locNode.getKey())){
                         favLocationNames.add(locNode.getKey());
 
                         for (LocationObject loc: locationsList){
                             if(loc.getName().equals(locNode.getKey())){
-                                Log.d("AddedLoc", "onChildChanged: " + locNode.getKey());
                                 filteredLocs.add(loc);
                             }
                         }
 
-                        mapAdapter.notifyDataSetChanged();
                     }
                     else if (!(boolean) locNode.getValue()){
                         favLocationNames.remove(locNode.getKey());
                         for (LocationObject loc: locationsList){
                             if(loc.getName().equals(locNode.getKey())){
-                                Log.d("RemovedLoc", "onChildChanged: " + locNode.getKey());
                                 filteredLocs.remove(loc);
                             }
                         }
 
-                        mapAdapter.notifyDataSetChanged();
                     }
 
+                    mapAdapter.notifyDataSetChanged();
                 }
-
             }
 
             @Override
