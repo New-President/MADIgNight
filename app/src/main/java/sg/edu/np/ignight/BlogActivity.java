@@ -145,11 +145,11 @@ public class BlogActivity extends AppCompatActivity {
                         ArrayList<String> commentsList = new ArrayList<>();
 
                         // Stores comments into commentlist to be retrieved
-                        if (snapshot.child("commentsList").hasChildren()) {
-                            for (DataSnapshot commentSnapshot : snapshot.child("commentsList").getChildren()) {
-                                commentsList.add(commentSnapshot.getValue().toString());
-                            }
-                        }
+//                        if (snapshot.child("commentsList").hasChildren()) {
+//                            for (DataSnapshot commentSnapshot : snapshot.child("commentsList").getChildren()) {
+//                                commentsList.add(commentSnapshot.getValue().toString());
+//                            }
+//                        }
 
                         ArrayList<String> likedUsers = new ArrayList<>();
 
@@ -162,7 +162,7 @@ public class BlogActivity extends AppCompatActivity {
                             }
                         }
 
-                        BlogObject blogObject = new BlogObject(description, location, imgID, blogID, likes, comments, commentsList, likedUsers);
+                        BlogObject blogObject = new BlogObject(description, location, imgID, blogID, likes, comments, likedUsers);
                         blogsList.add(blogObject);
 
                         TextView noBlogMsg = findViewById(R.id.noBlogMsg);
@@ -179,7 +179,6 @@ public class BlogActivity extends AppCompatActivity {
                                 loadingBlogDialog.dismissDialog();
                             }
                         }, 2000);
-
                     }
                 }
             }
@@ -197,11 +196,11 @@ public class BlogActivity extends AppCompatActivity {
 
                         ArrayList<String> commentsList = new ArrayList<>();
 
-                        if (snapshot.child("commentsList").hasChildren()) {
-                            for (DataSnapshot commentSnapshot : snapshot.child("commentsList").getChildren()) {
-                                commentsList.add(commentSnapshot.getValue().toString());
-                            }
-                        }
+//                        if (snapshot.child("commentsList").hasChildren()) {
+//                            for (DataSnapshot commentSnapshot : snapshot.child("commentsList").getChildren()) {
+//                                commentsList.add(commentSnapshot.getValue().toString());
+//                            }
+//                        }
 
                         ArrayList<String> likedUsers = new ArrayList<>();
 
@@ -218,7 +217,7 @@ public class BlogActivity extends AppCompatActivity {
                         existingBlog.setLocation(location);
                         existingBlog.setLikes(likes);
                         existingBlog.setComments(comments);
-                        existingBlog.setCommentsList(commentsList);
+                        //existingBlog.setCommentsList(commentsList);
                         existingBlog.setLikedUsers(likedUsers);
 
                         blogAdapter.notifyDataSetChanged();

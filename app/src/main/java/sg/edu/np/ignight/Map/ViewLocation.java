@@ -35,6 +35,12 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.maps.GeoApiContext;
 
 import java.io.IOException;
@@ -61,7 +67,10 @@ public class ViewLocation extends AppCompatActivity implements OnMapReadyCallbac
         mapView = findViewById(R.id.mapView);
         location = (LocationObject) getIntent().getSerializableExtra("locationObject");
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
-
+        FirebaseAuth auth = FirebaseAuth.getInstance();
+        String uid = auth.getUid();
+        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("user")
+                .child(uid).child("Favourite Locations").child(location.getCategory()).child(location.getName());
         ImageView viewLocImg = findViewById(R.id.viewLocImg);
         ImageView viewLocBackBtn = findViewById(R.id.viewLocBackButton);
         ImageView favouriteBtn = findViewById(R.id.favouriteBtn);
@@ -87,10 +96,45 @@ public class ViewLocation extends AppCompatActivity implements OnMapReadyCallbac
 
         initGoogleMap(savedInstanceState);
 
+        databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (snapshot.exists() && (boolean) snapshot.getValue()){
+                    favouriteBtn.setBackgroundResource(R.drawable.heart);
+                }
+                else{
+                    favouriteBtn.setBackgroundResource(R.drawable.heartwithhole);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
         favouriteBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                databaseReference
+                        .addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        if (snapshot.exists() && (boolean) snapshot.getValue()){
+                            databaseReference.setValue(false);
+                            favouriteBtn.setBackgroundResource(R.drawable.heartwithhole);
+                        }
+                        else{
+                            databaseReference.setValue(true);
+                            favouriteBtn.setBackgroundResource(R.drawable.heart);
+                        }
+                    }
 
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+
+                    }
+                });
             }
         });
 

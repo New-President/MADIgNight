@@ -98,6 +98,13 @@ public class ProposeDateActivity extends AppCompatActivity {
                             .putExtra(CalendarContract.Events.AVAILABILITY, CalendarContract.Events.AVAILABILITY_FREE);
                     startActivity(insertCalendarIntent);
 
+                    Intent dateMessage = new Intent(getApplicationContext(), ChatActivity.class);
+                    dateMessage.putExtra("dateMessage", true);
+                    dateMessage.putExtra("dateDescription", description);
+                    dateMessage.putExtra("dateLocation", location);
+                    dateMessage.putExtra("datetime", startMillis);
+                    setResult(1000, dateMessage);
+
                     finish();
 
                 }else{
