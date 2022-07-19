@@ -61,14 +61,15 @@ public class ActivityReport_Activity extends AppCompatActivity {
     private BarChart barChart;
 
     private ImageButton backButton2;
-    private TextView testTextView;
+    private TextView timeUsageTestTextView;
 
-    private String uid;
+    private String uid, timeSpentToday;
 
 
     // Testing
     TreeMap<Long,String> treeMap = new TreeMap<>();
 
+    @SuppressLint("SetTextI18n")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -187,6 +188,7 @@ public class ActivityReport_Activity extends AppCompatActivity {
         long howMany = c.getTimeInMillis();
         Log.i("midnighttime",Long.toString(howMany)+" "+Long.toString(time));
 
+        timeUsageTestTextView = (TextView) findViewById(R.id.timeUsageTestTextView);
         List<UsageStats> stats = mUsageStatsManager.queryUsageStats(UsageStatsManager.INTERVAL_DAILY, time-10*1000, time);
         if(stats != null) {
             SortedMap<Long, UsageStats> mySortedMap = new TreeMap<Long, UsageStats>();
@@ -199,24 +201,27 @@ public class ActivityReport_Activity extends AppCompatActivity {
                 seconds = (int) (TimeInforground / 1000) % 60;
                 hours = (int) ((TimeInforground / (1000 * 60 * 60)) % 24);
 
-                h=h+hours;
-                m=m+minutes;
-                if(m>=60){
-                    h = h+m/60;
-                    m = m%60;
+                h = h + hours;
+                m = m + minutes;
+                if (m >= 60) {
+                    h = h + m / 60;
+                    m = m % 60;
                 }
-                s = s+seconds;
-                if(s>=60){
-                    m = m+s/60;
-                    s = s%60;
+                s = s + seconds;
+                if (s >= 60) {
+                    m = m + s / 60;
+                    s = s % 60;
                 }
 
-                spForDayEditor.putInt(PackageName,hours*60+minutes);
+                spForDayEditor.putInt(PackageName, hours * 60 + minutes);
                 spForDayEditor.apply();
 
-                treeMap.put(TimeInforground,PackageName);
+                treeMap.put(TimeInforground, PackageName);
 
-                Log.i("BAC123", "test" + PackageName);
+                if(PackageName.equals("sg.edu.np.ignight")){
+                    timeSpentToday = "You spent " + hours + "h," + minutes + "min" + " on IgNight today.";
+                    timeUsageTestTextView.setText(timeSpentToday);
+                }
             }
         }
 
