@@ -1,7 +1,5 @@
 package sg.edu.np.ignight;
 
-import static android.content.ContentValues.TAG;
-
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.DefaultItemAnimator;
@@ -9,7 +7,6 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -19,12 +16,12 @@ import com.google.android.material.textfield.TextInputEditText;
 import com.google.api.gax.core.FixedCredentialsProvider;
 import com.google.auth.oauth2.GoogleCredentials;
 import com.google.auth.oauth2.ServiceAccountCredentials;
-import com.google.cloud.dialogflow.v2.DetectIntentResponse;
-import com.google.cloud.dialogflow.v2.QueryInput;
-import com.google.cloud.dialogflow.v2.SessionName;
-import com.google.cloud.dialogflow.v2.SessionsClient;
-import com.google.cloud.dialogflow.v2.SessionsSettings;
-import com.google.cloud.dialogflow.v2.TextInput;
+import com.google.cloud.dialogflow.v2beta1.DetectIntentResponse;
+import com.google.cloud.dialogflow.v2beta1.QueryInput;
+import com.google.cloud.dialogflow.v2beta1.SessionName;
+import com.google.cloud.dialogflow.v2beta1.SessionsClient;
+import com.google.cloud.dialogflow.v2beta1.SessionsSettings;
+import com.google.cloud.dialogflow.v2beta1.TextInput;
 
 import java.io.InputStream;
 import java.util.ArrayList;
