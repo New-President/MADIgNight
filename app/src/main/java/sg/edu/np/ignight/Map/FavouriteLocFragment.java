@@ -19,14 +19,13 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 
 import sg.edu.np.ignight.R;
 
 public class FavouriteLocFragment extends Fragment {
-    private ArrayList<LocationObject> locationsList;
+    private ArrayList<LocationObject> allLocationsList;
     private FirebaseDatabase firebaseDatabase;
     private String uid;
     private ArrayList<String> favLocationNames;
@@ -42,29 +41,32 @@ public class FavouriteLocFragment extends Fragment {
         uid = FirebaseAuth.getInstance().getUid();
         firebaseDatabase = FirebaseDatabase.getInstance();
 
-        locationsList = new ArrayList<>();
+        allLocationsList = new ArrayList<>();
 
         View view = inflater.inflate(R.layout.fragment_all_loc, container, false);
 
+        initRecyclerView(view);
         getLocationsList();
         getUserFavLoc();
-        initRecyclerView(view);
 
         // Inflate the layout for this fragment
         return view;
     }
 
     public void initRecyclerView(View view){
+        filteredLocs = new ArrayList<>();
         RecyclerView recyclerView = view.findViewById(R.id.allLocRecyclerView);
-        recyclerView.setLayoutManager(new LinearLayoutManager(view.getContext()));
         mapAdapter = new MapAdapter(filteredLocs, view.getContext());
         recyclerView.setAdapter(mapAdapter);
+        LinearLayoutManager mapLayoutManager = new LinearLayoutManager(view.getContext());
+        mapLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+        recyclerView.setLayoutManager(mapLayoutManager);
     }
     public void getUserFavLoc(){
         DatabaseReference favLocationsReference = firebaseDatabase.getReference("user")
                 .child(uid).child("Favourite Locations");
         favLocationNames = new ArrayList<>();
-        filteredLocs = new ArrayList<>();
+
         favLocationsReference.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
@@ -74,7 +76,7 @@ public class FavouriteLocFragment extends Fragment {
                     if ((boolean) locNode.getValue()){
                         String name = locNode.getKey();
                         favLocationNames.add(name);
-                        for (LocationObject loc: locationsList){
+                        for (LocationObject loc: allLocationsList){
                             if (loc.getName().equals(name)){
                                 filteredLocs.add(loc);
                             }
@@ -88,24 +90,36 @@ public class FavouriteLocFragment extends Fragment {
             public void onChildChanged(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
 
                 for (DataSnapshot locNode : snapshot.getChildren()) {
+                    // if location preference is now set to true and is already stored in the favLocationNames list
+                    // , location name is added into favLocationNames and the location with the same name is extracted
+                    // from the allLocationsList and stored in filteredLocs
                     if ((boolean) locNode.getValue() && !favLocationNames.contains(locNode.getKey())){
                         favLocationNames.add(locNode.getKey());
 
-                        for (LocationObject loc: locationsList){
+                        for (LocationObject loc: allLocationsList){
                             if(loc.getName().equals(locNode.getKey())){
                                 filteredLocs.add(loc);
+
+                                Log.d("Added", locNode.getKey());
                             }
                         }
 
                     }
-                    else if (!(boolean) locNode.getValue()){
+                    // if not specified, all location names will be removed under the same category (can be true but stored in list)
+                    else if (!(boolean) locNode.getValue() && favLocationNames.contains(locNode.getKey())){
                         favLocationNames.remove(locNode.getKey());
-                        for (LocationObject loc: locationsList){
+
+                        for (LocationObject loc: allLocationsList){
                             if(loc.getName().equals(locNode.getKey())){
                                 filteredLocs.remove(loc);
+
+                                Log.d("Removed", loc.getName());
+
                             }
                         }
-
+                    }
+                    for (LocationObject loc:filteredLocs){
+                        Log.d("Locations", loc.getName());
                     }
 
                     mapAdapter.notifyDataSetChanged();
@@ -142,7 +156,7 @@ public class FavouriteLocFragment extends Fragment {
                     String Desc = locNode.child("Description").getValue().toString();
                     String Addr = locNode.child("Address").getValue().toString();
                     String imgUri = locNode.child("imgUri").getValue().toString();
-                    locationsList.add(new LocationObject(Name, Desc, snapshot.getKey(), Addr, imgUri));
+                    allLocationsList.add(new LocationObject(Name, Desc, snapshot.getKey(), Addr, imgUri));
 
 
                 }
