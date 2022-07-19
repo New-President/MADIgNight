@@ -24,10 +24,10 @@ import sg.edu.np.ignight.R;
 
 public class AllLocFragment extends Fragment {
     private ArrayList<LocationObject> locList;
-    public AllLocFragment(ArrayList<LocationObject> locList){
-        this.locList = locList;
-
-    }
+//    public AllLocFragment(ArrayList<LocationObject> locList){
+//        this.locList = locList;
+//
+//    }
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -42,7 +42,6 @@ public class AllLocFragment extends Fragment {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 for (DataSnapshot categoryNode : snapshot.getChildren()) {
-
                     for (DataSnapshot locNode : categoryNode.getChildren()) {
                         String Name = locNode.child("Name").getValue().toString();
                         String Desc = locNode.child("Description").getValue().toString();

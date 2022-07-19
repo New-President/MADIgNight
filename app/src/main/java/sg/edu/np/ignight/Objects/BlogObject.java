@@ -10,18 +10,15 @@ public class BlogObject implements Serializable {
     public int comments;
     public ArrayList<String> commentsList, likedUsersList;
 
-    public BlogObject(String description, String location, String imgID, String blogID, int likes, int comments, ArrayList<String> commentsList, ArrayList<String> likedUsersList){
+    public BlogObject(String description, String location, String imgID, String blogID, int likes, int comments, ArrayList<String> likedUsersList){
         this.description = description;
         this.location = location;
         this.imgID = imgID;
         this.blogID = blogID;
         this.likes = likes;
         this.comments = comments;
-        this.commentsList = commentsList;
         this.likedUsersList = likedUsersList;
     }
-
-    public BlogObject(){ }
 
     public String getDescription() {
         return description;
@@ -47,6 +44,7 @@ public class BlogObject implements Serializable {
     public void setCommentsList(ArrayList<String> commentsList) {
         this.commentsList = commentsList;
     }
+
     public String getBlogID() {
         return blogID;
     }
