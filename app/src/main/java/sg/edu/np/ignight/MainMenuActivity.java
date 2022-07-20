@@ -43,6 +43,8 @@ public class MainMenuActivity extends AppCompatActivity {
     private FirebaseStorage storage;
     private StorageReference storageReference;
 
+    private ImageView notificationButton;
+
     FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
     String Uid = user.getUid();
     final String[] queryName = {""};
@@ -194,6 +196,16 @@ public class MainMenuActivity extends AppCompatActivity {
                 Log.e(TAG, "onCancelled: " + error.getMessage());
             }
         });
+
+        notificationButton = findViewById(R.id.notificationButton);
+        notificationButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent goNotification = new Intent(getApplicationContext(), NotificationActivity.class);
+                startActivity(goNotification);
+            }
+        });
+
     }
 
     public String getQueryName() {

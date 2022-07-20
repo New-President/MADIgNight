@@ -78,7 +78,6 @@
         <entry key="..\:/AndroidStudioProjects/MADIgNightFinaleDemo7/app/src/main/res/layout/profile_creation_interest_layout.xml" value="0.1" />
         <entry key="..\:/AndroidStudioProjects/MADIgNightFinaleDemo7/app/src/main/res/layout/profile_view_recycler_layout.xml" value="0.1" />
         <entry key="..\:/AndroidStudioProjects/MADIgNightFinaleDemo7/app/src/main/res/layout/toast_message_bg.xml" value="0.1" />
-        <entry key="..\:/AndroidStudioProjects/MADIgNightFinaleDemo8/app/src/main/res/layout/activityreport_activity.xml" value="0.2838541666666667" />
         <entry key="..\:/School/Y2S1/MAD/ASG/MADIgNight/app/src/main/res/layout/activity_chat.xml" value="0.25" />
         <entry key="..\:/School/Y2S1/MAD/ASG/MADIgNight/app/src/main/res/layout/activity_delete_alert_dialog.xml" value="0.25" />
         <entry key="..\:/School/Y2S1/MAD/ASG/MADIgNight/app/src/main/res/layout/activity_profile_view.xml" value="0.22826086956521738" />
@@ -131,10 +130,12 @@
         <entry key="..\:/Users/limlo/Downloads/MAD/Assignment/Assignment/app/src/main/res/layout/activity_chat.xml" value="0.1" />
         <entry key="..\:/Users/limlo/Downloads/MAD/Assignment/Assignment/app/src/main/res/layout/activity_create_blog.xml" value="0.12158054711246201" />
         <entry key="..\:/Users/limlo/Downloads/MAD/Assignment/Assignment/app/src/main/res/layout/activity_login.xml" value="0.12158054711246201" />
-        <entry key="..\:/Users/limlo/Downloads/MAD/Assignment/Assignment/app/src/main/res/layout/activity_main_menu.xml" value="0.22780797101449277" />
+        <entry key="..\:/Users/limlo/Downloads/MAD/Assignment/Assignment/app/src/main/res/layout/activity_main_menu.xml" value="0.3333333333333333" />
+        <entry key="..\:/Users/limlo/Downloads/MAD/Assignment/Assignment/app/src/main/res/layout/activity_notification.xml" value="0.264" />
         <entry key="..\:/Users/limlo/Downloads/MAD/Assignment/Assignment/app/src/main/res/layout/activity_profile_creation.xml" value="0.23738872403560832" />
         <entry key="..\:/Users/limlo/Downloads/MAD/Assignment/Assignment/app/src/main/res/layout/activity_profile_view.xml" value="0.2" />
-        <entry key="..\:/Users/limlo/Downloads/MAD/Assignment/Assignment/app/src/main/res/layout/activity_propose_date.xml" value="0.10989583333333333" />
+        <entry key="..\:/Users/limlo/Downloads/MAD/Assignment/Assignment/app/src/main/res/layout/activity_propose_date.xml" value="0.2" />
+        <entry key="..\:/Users/limlo/Downloads/MAD/Assignment/Assignment/app/src/main/res/layout/activity_side_menu.xml" value="0.25" />
         <entry key="..\:/Users/limlo/Downloads/MAD/Assignment/Assignment/app/src/main/res/layout/blog_layout.xml" value="0.2246376811594203" />
         <entry key="..\:/Users/limlo/Downloads/MAD/Assignment/Assignment/app/src/main/res/layout/fragment_chat_list.xml" value="0.2246376811594203" />
         <entry key="..\:/Users/limlo/Downloads/MAD/Assignment/Assignment/app/src/main/res/layout/interest_layout.xml" value="0.6" />
@@ -142,6 +143,7 @@
         <entry key="..\:/Users/limlo/Downloads/MAD/Assignment/Assignment/app/src/main/res/layout/item_media.xml" value="0.2246376811594203" />
         <entry key="..\:/Users/limlo/Downloads/MAD/Assignment/Assignment/app/src/main/res/layout/item_message_to_you.xml" value="0.2246376811594203" />
         <entry key="..\:/Users/limlo/Downloads/MAD/Assignment/Assignment/app/src/main/res/layout/main_menu_layout.xml" value="0.2246376811594203" />
+        <entry key="..\:/Users/limlo/Downloads/MAD/Assignment/Assignment/app/src/main/res/layout/notification_layout.xml" value="0.264" />
         <entry key="..\:/Users/limlo/Downloads/MAD/Assignment/Assignment/app/src/main/res/layout/profile_creation_interest_layout.xml" value="0.2" />
         <entry key="..\:/Users/limlo/Downloads/MAD/Assignment/Assignment/app/src/main/res/layout/profile_view_recycler_layout.xml" value="0.2246376811594203" />
         <entry key="..\:/Users/ziren/Desktop/MADIgNight/app/src/main/res/layout/activity_side_menu2.xml" value="0.22826086956521738" />
