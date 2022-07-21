@@ -120,6 +120,21 @@ public class LoginActivity extends AppCompatActivity {
 //            }
 //        });
 
+        // to add onCall for chats
+        FirebaseDatabase.getInstance("https://madignight-default-rtdb.asia-southeast1.firebasedatabase.app/").getReference().child("chat").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                for (DataSnapshot chatSnapshot : snapshot.getChildren()) {
+                    FirebaseDatabase.getInstance("https://madignight-default-rtdb.asia-southeast1.firebasedatabase.app/").getReference().child("chat").child(chatSnapshot.getKey()).child("onCall").setValue(false);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
         getPermission();
 
         // initialize Firebase

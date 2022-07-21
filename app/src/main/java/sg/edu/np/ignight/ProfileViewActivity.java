@@ -353,6 +353,7 @@ public class ProfileViewActivity extends AppCompatActivity {
         newChatMap.put("newChat/" + currentUserUID, true);
         newChatMap.put("newChat/" + targetUserUID, true);
         newChatMap.put("lastUsed", currentTimestamp);
+        newChatMap.put("onCall", false);
 
         Map updateRequestMap = new HashMap<>();
         updateRequestMap.put("responseTimestamp", currentTimestamp);

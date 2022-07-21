@@ -192,6 +192,7 @@ public class ChatRequestReceivedAdapter extends RecyclerView.Adapter<ChatRequest
             newChatMap.put("newChat/" + currentUserUID, true);
             newChatMap.put("newChat/" + targetUserUID, true);
             newChatMap.put("lastUsed", currentTimestamp);
+            newChatMap.put("onCall", false);
 
             chatRequestDB.child(requestID).updateChildren(updateRequestMap);
 
