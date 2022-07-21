@@ -46,7 +46,7 @@ import sg.edu.np.ignight.Objects.UserObject;
 public class NotificationAdapter
                 extends RecyclerView.Adapter<NotificationViewHolder> {
 
-    public ArrayList<BlogCommentObject> bloList;
+
 
     public static ArrayList<String> likedUser;
     public static ArrayList<UserObject> userList;
