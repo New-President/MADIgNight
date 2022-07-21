@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
+import android.hardware.ConsumerIrManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
@@ -49,6 +50,9 @@ public class NotificationActivity extends AppCompatActivity {
     public ArrayList<String> blogIDList = new ArrayList<>();
     public ArrayList<String> likedUsers = new ArrayList<>();
     public ArrayList<UserObject> userList = new ArrayList<>();
+
+    public String phone, username, gender, aboutMe, relationshipPref, genderPref, profilePicUrl;
+    public int age;
 
     // Get the current user
     FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
@@ -89,7 +93,7 @@ public class NotificationActivity extends AppCompatActivity {
 
     public void initRecyclerView(){
         RecyclerView rv = findViewById(R.id.notificationRecyclerView);
-        NotificationAdapter adapter = new NotificationAdapter(NotificationActivity.this, data, userList);
+        NotificationAdapter adapter = new NotificationAdapter(NotificationActivity.this, likedUsers, userList, data);
         LinearLayoutManager layout = new LinearLayoutManager(this);
 
         rv.setAdapter(adapter);
@@ -107,7 +111,7 @@ public class NotificationActivity extends AppCompatActivity {
 
                 if (snapshot.exists()) {
                     if (!blogIDList.contains(snapshot.getKey())) {
-
+                        Log.d(TAG, "Hello: " + snapshot.getKey());
                         blogIDList.add(snapshot.getKey());
                         String blogID = snapshot.child("blogID").getValue().toString();
                         String description = snapshot.child("description").getValue().toString();
@@ -190,69 +194,73 @@ public class NotificationActivity extends AppCompatActivity {
         });
     }
 
-    public void getUserList(){
-        ArrayList<String> interestList = new ArrayList<>();
-        ArrayList<String> dateLocList = new ArrayList<>();
-        databaseUserReference.addChildEventListener(new ChildEventListener() {
+    public void getUserList() {
+        ValueEventListener getUserListListener = new ValueEventListener() {
             @Override
-            public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
-                for (DataSnapshot childSnapshot : snapshot.getChildren()) {
-                    String uid = snapshot.getKey();
-                    Log.e(TAG, "Hello: " + snapshot.child(uid).child("profileCreated").getValue());
-                    String profileCreated = snapshot.child(uid).child("phone").getValue().toString();
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (snapshot.exists()) {
+                    for (DataSnapshot childSnapshot : snapshot.getChildren()) {
 
-                    if (profileCreated.equals("true")){
-                        String phone = snapshot.child(uid).child("phone").getValue().toString();
-                        String username = snapshot.child(uid).child("username").getValue().toString();
-                        String gender = snapshot.child(uid).child("Gender").getValue().toString();
-                        String aboutMe = snapshot.child(uid).child("About Me").getValue().toString();
-                        String relationshipPref = snapshot.child(uid).child("Relationship Preference").getValue().toString();
-                        String genderPref = snapshot.child(uid).child("Gender Preference").getValue().toString();
-                        String profilePicUrl = snapshot.child(uid).child("profileUrl").getValue().toString();
-                        int age = (int) snapshot.child(uid).child("username").getValue();
+                        boolean exists = false;
 
-                        long interestCount = snapshot.child(uid).child("Interest").getChildrenCount();
-                        for (int i = 1; i <= interestCount; i++) {
-                            String interest = snapshot.child("Interest").child("Interest" + i).getValue(String.class);
-                            // Add into interestList
-                            interestList.add(interest);
+                        if (!childSnapshot.getKey().equals(FirebaseAuth.getInstance().getUid())) {
+                            for (UserObject existingUser : userList) {
+                                if (childSnapshot.getKey().equals(existingUser.getUid())) {
+                                    exists = true;
+                                    break;
+                                }
+                            }
+
+                            if (exists || childSnapshot.child("profileCreated").getValue().toString().equals("false")) {
+                                continue;
+                            }
+
+                            String uid = childSnapshot.getKey();
+                            ArrayList<String> dateLocList = new ArrayList<>();
+                            ArrayList<String> interestList = new ArrayList<>();
+
+                            String phone = childSnapshot.child("phone").getValue().toString();
+                            String aboutMe = childSnapshot.child("About Me").getValue().toString();
+                            String gender = childSnapshot.child("Gender").getValue().toString();
+                            String genderPref = childSnapshot.child("Gender Preference").getValue().toString();
+                            String profilePicUrl = childSnapshot.child("profileUrl").getValue().toString();
+                            String relationshipPref = childSnapshot.child("Relationship Preference").getValue().toString();
+                            String username = childSnapshot.child("username").getValue().toString();
+                            String profileCreated = childSnapshot.child("profileCreated").getValue().toString();
+                            int age = Integer.parseInt(childSnapshot.child("Age").getValue().toString());
+
+                            for (DataSnapshot dateLocSnapshot : childSnapshot.child("Date Location").getChildren()) {
+                                dateLocList.add(dateLocSnapshot.getValue().toString());
+                            }
+                            for (DataSnapshot interestSnapshot : childSnapshot.child("Interest").getChildren()) {
+                                interestList.add(interestSnapshot.getValue().toString());
+                            }
+
+                            UserObject user = new UserObject(uid, aboutMe, age, dateLocList, gender, genderPref, interestList, profilePicUrl, relationshipPref, phone, profileCreated, username);
+
+                            userList.add(user);
+
+
+/*
+                            userList.add(user);
+                            userListAdapter.notifyDataSetChanged();
+*/
+
                         }
-
-                        long dateLocCount = snapshot.child(uid).child("Date Location").getChildrenCount();
-                        for (int i = 1; i <= dateLocCount; i++) {
-                            String dateLoc = snapshot.child("Date Location").child("Date Location" + i).getValue(String.class);
-                            // Add into dateLocList
-                            dateLocList.add(dateLoc);
-                        }
-                        UserObject user = new UserObject(uid, aboutMe, age, dateLocList, gender, genderPref, interestList, profilePicUrl, relationshipPref, phone, "True", username );
-                        userList.add(user);
-                        Log.e(TAG, "Hello: " + userList.size());
-
                     }
                 }
-            }
 
-            @Override
-            public void onChildChanged(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
-
-            }
-
-            @Override
-            public void onChildRemoved(@NonNull DataSnapshot snapshot) {
-                int index = userList.indexOf(snapshot.getKey());
-                userList.remove(index);
-            }
-
-            @Override
-            public void onChildMoved(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
-
+                Log.e(TAG, "Hello1: " + userList);
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
-
+                Log.e(TAG, "onCancelled: " + error.getMessage());
             }
-        });
+        };
+
+
+        databaseUserReference.addValueEventListener(getUserListListener);
     }
 
     /*public void sendOnChannel1(View v){

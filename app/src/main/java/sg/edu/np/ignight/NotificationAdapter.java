@@ -3,16 +3,24 @@ package sg.edu.np.ignight;
 import static android.content.ContentValues.TAG;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.nfc.Tag;
 import android.text.Layout;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.ImageView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.common.collect.ArrayTable;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -22,10 +30,14 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FileDownloadTask;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.gson.internal.bind.ArrayTypeAdapter;
 
+import java.io.File;
+import java.io.IOException;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 import sg.edu.np.ignight.Objects.BlogObject;
@@ -34,8 +46,11 @@ import sg.edu.np.ignight.Objects.UserObject;
 public class NotificationAdapter
                 extends RecyclerView.Adapter<NotificationViewHolder> {
 
-    public static ArrayList<BlogObject> data;
+    public ArrayList<BlogCommentObject> bloList;
+
+    public static ArrayList<String> likedUser;
     public static ArrayList<UserObject> userList;
+    public static ArrayList<BlogObject> blogList;
     Context c;
 
     private FirebaseStorage storage;
@@ -46,10 +61,11 @@ public class NotificationAdapter
     //get the current user's UID
     String Uid = user.getUid();
 
-    public NotificationAdapter(Context c, ArrayList<BlogObject> data, ArrayList<UserObject> userList){
+    public NotificationAdapter(Context c, ArrayList<String> likedUser, ArrayList<UserObject> userList, ArrayList<BlogObject> blogList){
         this.c = c;
-        this.data = data;
+        this.likedUser = likedUser;
         this.userList = userList;
+        this.blogList = blogList;
     }
 
     @NonNull
@@ -64,16 +80,67 @@ public class NotificationAdapter
 
     @Override
     public void onBindViewHolder(@NonNull NotificationViewHolder holder, int position) {
-        BlogObject context = data.get(position);
-        String username = "";
-        Log.e(TAG, "Bruh: " + data.size());
-        for (int i = 0; i<= userList.size(); i++){
-            UserObject tempUser = userList.get(i);
-            if(tempUser.equals(context.likedUsersList.get(0))){
-                username = tempUser.getUsername();
+        String liked = likedUser.get(position);
+
+        for (int i = 0; i < blogList.size(); i++){
+            BlogObject blog = blogList.get(i);
+            String blogID = blog.blogID;
+
+            FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+            FirebaseStorage storage = FirebaseStorage.getInstance();
+            String uid = firebaseUser.getUid();
+
+/*
+            DatabaseReference databaseReference = FirebaseDatabase.getInstance("https://madignight-default-rtdb.asia-southeast1.firebasedatabase.app/")
+                    .getReference("user").child(uid).child("blog").child(blogID);
+*/
+
+            ImageView blogImage = holder.blogImage;
+
+            holder.description.setText(liked);
+            Log.d("Tag", "Hello:" + blog.imgID);
+            try{
+                StorageReference storageReference = storage.getReference("blog").child(uid).child(blog.imgID);
+                File localfile = File.createTempFile("tempfile", ".png");
+                storageReference.getFile(localfile).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
+                    @Override
+                    public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
+                        Bitmap bitmap = BitmapFactory.decodeFile(localfile.getAbsolutePath());
+                        blogImage.setImageBitmap(bitmap);
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Toast.makeText(c, "Failed to retrieve blogs", Toast.LENGTH_SHORT).show();
+                    }
+                });
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            catch (Exception ex){
+                Log.d("Load Image Error", "Failed to load image");
             }
         }
-        holder.description.setText(username);
+
+
+
+        String username = "";
+        /*Log.e(TAG, "Hello: " + data.size());*/
+        /*for (int i = 0; i< userList.size(); i++){
+            UserObject tempUser = userList.get(i);
+            Log.e(TAG, "Hello: " + tempUser.getUid());
+            for (int j = 0; j<context.likedUsersList.size(); j++){
+                Log.e(TAG, "Hello1: " + context.likedUsersList.get(j));
+                if(tempUser.getUid().equals(context.likedUsersList.get(j))){
+                    username = tempUser.getUsername();
+                    BlogCommentObject blo = new BlogCommentObject(username, "comments", "hi");
+                    bloList.add(blo);
+                }
+            }
+        }*/
+
+
 
 
 
@@ -95,6 +162,6 @@ public class NotificationAdapter
 
     @Override
     public int getItemCount() {
-        return data.size();
+        return likedUser.size();
     }
 }

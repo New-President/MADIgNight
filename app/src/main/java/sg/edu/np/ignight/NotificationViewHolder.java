@@ -7,7 +7,7 @@ import android.widget.TextView;
 import androidx.recyclerview.widget.RecyclerView;
 
 public class NotificationViewHolder extends RecyclerView.ViewHolder {
-    ImageView profile;
+    ImageView profile, blogImage;
     TextView description;
 
     public NotificationViewHolder(View item){
@@ -15,6 +15,7 @@ public class NotificationViewHolder extends RecyclerView.ViewHolder {
 
         profile = item.findViewById(R.id.notificationImageView);
         description = item.findViewById(R.id.notificationComment);
+        blogImage = item.findViewById(R.id.blogImage);
 
     }
 }
