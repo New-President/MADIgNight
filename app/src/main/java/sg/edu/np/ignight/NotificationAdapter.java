@@ -82,13 +82,15 @@ public class NotificationAdapter
     public void onBindViewHolder(@NonNull NotificationViewHolder holder, int position) {
         String liked = likedUser.get(position);
 
+        FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+        FirebaseStorage storage = FirebaseStorage.getInstance();
+        String uid = firebaseUser.getUid();
+
         for (int i = 0; i < blogList.size(); i++){
             BlogObject blog = blogList.get(i);
             String blogID = blog.blogID;
 
-            FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
-            FirebaseStorage storage = FirebaseStorage.getInstance();
-            String uid = firebaseUser.getUid();
+
 
 /*
             DatabaseReference databaseReference = FirebaseDatabase.getInstance("https://madignight-default-rtdb.asia-southeast1.firebasedatabase.app/")
@@ -97,8 +99,6 @@ public class NotificationAdapter
 
             ImageView blogImage = holder.blogImage;
 
-            holder.description.setText(liked);
-            Log.d("Tag", "Hello:" + blog.imgID);
             try{
                 StorageReference storageReference = storage.getReference("blog").child(uid).child(blog.imgID);
                 File localfile = File.createTempFile("tempfile", ".png");
@@ -120,6 +120,39 @@ public class NotificationAdapter
             }
             catch (Exception ex){
                 Log.d("Load Image Error", "Failed to load image");
+            }
+        }
+
+        for (int j = 0; j < userList.size(); j++){
+            UserObject user = userList.get(j);
+            if (user.getUid().equals(liked)){
+                holder.description.setText(user.getUsername() + " liked your blog.");
+
+                ImageView profile = holder.profile;
+
+                try{
+                    StorageReference storageReference = storage.getReference("profilePicture").child(uid).child(user.getProfilePicUrl());
+                    File localfile = File.createTempFile("tempfile", ".png");
+                    storageReference.getFile(localfile).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
+                        @Override
+                        public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
+                            Bitmap bitmap = BitmapFactory.decodeFile(localfile.getAbsolutePath());
+                            profile.setImageBitmap(bitmap);
+                        }
+                    }).addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            Toast.makeText(c, "Failed to retrieve blogs", Toast.LENGTH_SHORT).show();
+                        }
+                    });
+
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                catch (Exception ex){
+                    Log.d("Load Image Error", "Failed to load image");
+                }
+
             }
         }
 
