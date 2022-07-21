@@ -19,6 +19,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.common.collect.ArrayTable;
@@ -46,7 +47,7 @@ import sg.edu.np.ignight.Objects.UserObject;
 public class NotificationAdapter
                 extends RecyclerView.Adapter<NotificationViewHolder> {
 
-    public ArrayList<BlogCommentObject> bloList;
+    /*public ArrayList<BlogCommentObject> bloList;*/
 
     public static ArrayList<String> likedUser;
     public static ArrayList<UserObject> userList;
@@ -130,7 +131,9 @@ public class NotificationAdapter
 
                 ImageView profile = holder.profile;
 
-                try{
+                Glide.with(c).load(user.getProfilePicUrl()).placeholder(R.drawable.ic_baseline_image_24).into(profile);
+
+                /*try{
                     StorageReference storageReference = storage.getReference("profilePicture").child(uid).child(user.getProfilePicUrl());
                     File localfile = File.createTempFile("tempfile", ".png");
                     storageReference.getFile(localfile).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
@@ -151,7 +154,7 @@ public class NotificationAdapter
                 }
                 catch (Exception ex){
                     Log.d("Load Image Error", "Failed to load image");
-                }
+                }*/
 
             }
         }
