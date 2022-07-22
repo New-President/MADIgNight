@@ -134,9 +134,11 @@ public class ProfileViewActivity extends AppCompatActivity {
 
         // IgNight with the user (starts a chat with them)
         ignightButton = findViewById(R.id.button4);
+        ignightButton.setEnabled(true);  // set enabled by default
         ignightButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                ignightButton.setEnabled(false);  // disable button
                 DatabaseReference chatRequestDB = db.getReference().child("chatRequest");
 
                 userDB.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -254,6 +256,8 @@ public class ProfileViewActivity extends AppCompatActivity {
                             intent.putExtras(bundle);
                             view.getContext().startActivity(intent);
                         }
+
+                        ignightButton.setEnabled(true);  // enable when finished
                     }
 
                     @Override

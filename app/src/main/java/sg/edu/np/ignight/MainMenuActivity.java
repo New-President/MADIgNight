@@ -19,8 +19,10 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -28,6 +30,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.firebase.storage.FileDownloadTask;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
@@ -36,6 +39,8 @@ import java.io.File;
 import java.io.IOException;
 import java.text.ParseException;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 import sg.edu.np.ignight.Objects.TimestampObject;
 
@@ -63,6 +68,7 @@ public class MainMenuActivity extends AppCompatActivity {
             }
         });
         updateConnection();
+        getFCMToken();
 
         Intent intent = getIntent();
         String intentExtra = intent.getStringExtra("showFrag");
@@ -159,6 +165,26 @@ public class MainMenuActivity extends AppCompatActivity {
 //            }
 //        });
 //
+    }
+
+    private void getFCMToken() {
+        FirebaseMessaging.getInstance().getToken().addOnCompleteListener(new OnCompleteListener<String>() {
+            @Override
+            public void onComplete(@NonNull Task<String> task) {
+                if (!task.isSuccessful()) {
+                    Log.w(TAG, "Fetching FCM registration token failed", task.getException());
+                    return;
+                }
+
+                // Get new FCM registration token and put in db
+                String token = task.getResult();
+                DatabaseReference userDB = FirebaseDatabase.getInstance("https://madignight-default-rtdb.asia-southeast1.firebasedatabase.app/").getReference().child("user").child(FirebaseAuth.getInstance().getUid());
+                Map tokenMap = new HashMap<>();
+                tokenMap.put("fcmToken", token);
+                userDB.updateChildren(tokenMap);
+            }
+        });
+
     }
 
     // updates presence system - when user logs on, set connection to true, when user logs off, set connection to null and update last online time

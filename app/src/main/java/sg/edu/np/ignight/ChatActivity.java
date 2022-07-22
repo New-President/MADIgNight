@@ -62,7 +62,6 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.text.ParseException;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
@@ -71,6 +70,7 @@ import java.util.Map;
 import sg.edu.np.ignight.Chat.MediaAdapter;
 import sg.edu.np.ignight.Chat.MessageAdapter;
 import sg.edu.np.ignight.Chat.MessageObject;
+import sg.edu.np.ignight.ChatNotifications.ChatNotificationSender;
 import sg.edu.np.ignight.Objects.TimestampObject;
 import sg.edu.np.ignight.Objects.UserObject;
 
@@ -82,7 +82,7 @@ public class ChatActivity extends AppCompatActivity {
 
     private ArrayList<MessageObject> messageList;
     private ArrayList<String> mediaUriList;
-    private String currentUserUID, targetUserID, chatID;
+    private String currentUserUID, targetUserID, chatID, chatName;
     private final int PICK_IMAGE_INTENT = 1;
 
     private DatabaseReference rootDB, chatDB;
@@ -104,7 +104,7 @@ public class ChatActivity extends AppCompatActivity {
 
         Bundle bundle = getIntent().getExtras();
         chatID = bundle.getString("chatID");
-        String chatName = bundle.getString("chatName");
+        chatName = bundle.getString("chatName");
         targetUserID = bundle.getString("targetUserID");
 
         currentUserUID = FirebaseAuth.getInstance().getUid();
@@ -586,8 +586,7 @@ public class ChatActivity extends AppCompatActivity {
                                         totalMediaUploaded[0] += 1;
 
                                         if (totalMediaUploaded[0] == mediaUriListCopy.size()) {
-
-                                            updateDatabaseWithNewMessage(chatDB, newMessageMap);
+                                            updateDatabaseWithNewMessage(chatDB, newMessageMap, messageId);
                                         }
                                     }
                                 });
@@ -597,7 +596,7 @@ public class ChatActivity extends AppCompatActivity {
                 }
                 else {
                     if (validText) {
-                        updateDatabaseWithNewMessage(chatDB, newMessageMap);
+                        updateDatabaseWithNewMessage(chatDB, newMessageMap, messageId);
                     }
                 }
             }
@@ -610,11 +609,33 @@ public class ChatActivity extends AppCompatActivity {
     }
 
     // update database with new message (from sendMessage()) and remove progress bar when done
-    private void updateDatabaseWithNewMessage(DatabaseReference newMessageDb, Map newMessageMap) {
+    private void updateDatabaseWithNewMessage(DatabaseReference newMessageDb, Map newMessageMap, String messageID) {
         newMessageDb.updateChildren(newMessageMap).addOnCompleteListener(new OnCompleteListener() {
             @Override
             public void onComplete(@NonNull Task task) {
                 showSendMessageProgressBar(false);
+                pushNotification(messageID);
+            }
+        });
+    }
+
+    // send notification to the other user
+    private void pushNotification(String messageID) {
+        Context context = getApplicationContext();
+        rootDB.child("user").child(targetUserID).child("fcmToken").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (snapshot.exists()) {
+                    String fcmToken = snapshot.getValue().toString();
+
+                    ChatNotificationSender sender = new ChatNotificationSender(fcmToken, FirebaseAuth.getInstance().getUid(), chatID, messageID, context);
+                    sender.sendNotification();
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Log.e(TAG, "onCancelled: " + error.getMessage());
             }
         });
     }

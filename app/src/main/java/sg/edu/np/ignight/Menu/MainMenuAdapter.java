@@ -83,9 +83,11 @@ public class MainMenuAdapter extends RecyclerView.Adapter<MainMenuViewHolder>{
             }
         });
 
+        ignight.setEnabled(true);  // set ignight to enabled by default
         ignight.setOnClickListener(new View.OnClickListener() { // start chat with the target user
             @Override
             public void onClick(View view) {
+                ignight.setEnabled(false);  // disable button
                 DatabaseReference rootDB = FirebaseDatabase.getInstance("https://madignight-default-rtdb.asia-southeast1.firebasedatabase.app/").getReference();
                 DatabaseReference chatDB = rootDB.child("chat");
                 DatabaseReference chatRequestDB = rootDB.child("chatRequest");
@@ -214,6 +216,8 @@ public class MainMenuAdapter extends RecyclerView.Adapter<MainMenuViewHolder>{
                             intent.putExtras(bundle);
                             view.getContext().startActivity(intent);
                         }
+
+                        ignight.setEnabled(true);  // enable when finished
                     }
 
                     @Override

@@ -96,6 +96,7 @@ public class ChatRequestReceivedAdapter extends RecyclerView.Adapter<ChatRequest
         holder.acceptButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                enableButtons(holder, false);
                 startChat(holder, chatRequest, true);
             }
         });
@@ -103,6 +104,7 @@ public class ChatRequestReceivedAdapter extends RecyclerView.Adapter<ChatRequest
         holder.rejectButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                enableButtons(holder, false);
                 startChat(holder, chatRequest, false);
             }
         });
@@ -221,6 +223,13 @@ public class ChatRequestReceivedAdapter extends RecyclerView.Adapter<ChatRequest
                 }
             });
         }
+
+        enableButtons(holder, true);
+    }
+
+    private void enableButtons(ChatRequestReceivedViewHolder holder, boolean enable) {
+        holder.acceptButton.setEnabled(enable);
+        holder.rejectButton.setEnabled(enable);
     }
 
     // add animation for the deletion of item
@@ -258,9 +267,10 @@ public class ChatRequestReceivedAdapter extends RecyclerView.Adapter<ChatRequest
         }, 1000);
     }
 
-    // show/hide accept/reject buttons
+    // show/hide accept/reject buttons and enable buttons if show
     private void showButtons(@NonNull ChatRequestReceivedViewHolder holder, boolean show) {
         if (show) {
+            enableButtons(holder, true);
             holder.buttonContainer.setVisibility(View.VISIBLE);
         }
         else {
