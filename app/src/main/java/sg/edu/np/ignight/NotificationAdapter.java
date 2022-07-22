@@ -19,6 +19,9 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
+import com.facebook.drawee.drawable.ProgressBarDrawable;
+import com.facebook.drawee.generic.GenericDraweeHierarchyBuilder;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.common.collect.ArrayTable;
@@ -34,17 +37,21 @@ import com.google.firebase.storage.FileDownloadTask;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.gson.internal.bind.ArrayTypeAdapter;
+import com.stfalcon.frescoimageviewer.ImageViewer;
 
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Collections;
 
 import sg.edu.np.ignight.Objects.BlogObject;
 import sg.edu.np.ignight.Objects.UserObject;
 
 public class NotificationAdapter
                 extends RecyclerView.Adapter<NotificationViewHolder> {
+
+    /*public ArrayList<BlogCommentObject> bloList;*/
 
     public static ArrayList<String> likedUser;
     public static ArrayList<UserObject> userList;
@@ -88,6 +95,8 @@ public class NotificationAdapter
             BlogObject blog = blogList.get(i);
             String blogID = blog.blogID;
 
+
+
 /*
             DatabaseReference databaseReference = FirebaseDatabase.getInstance("https://madignight-default-rtdb.asia-southeast1.firebasedatabase.app/")
                     .getReference("user").child(uid).child("blog").child(blogID);
@@ -97,7 +106,7 @@ public class NotificationAdapter
 
             try{
                 StorageReference storageReference = storage.getReference("blog").child(uid).child(blog.imgID);
-                File localfile = File.createTempFile("tempfile", ".png");
+                File localfile = File.createTempFile("tempfile", "jpeg");
                 storageReference.getFile(localfile).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
                     @Override
                     public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
@@ -126,7 +135,26 @@ public class NotificationAdapter
 
                 ImageView profile = holder.profile;
 
-                try{
+                Glide.with(c).load(user.getProfilePicUrl()).placeholder(R.drawable.ic_baseline_image_24).into(profile);
+
+                profile.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        GenericDraweeHierarchyBuilder hierarchyBuilder = GenericDraweeHierarchyBuilder.newInstance(c.getResources())
+                                .setFailureImage(R.drawable.ic_baseline_error_outline_24)
+                                .setProgressBarImage(new ProgressBarDrawable())
+                                .setPlaceholderImage(R.drawable.ic_baseline_image_24);
+
+                        new ImageViewer.Builder(view.getContext(), Collections.singletonList(user.getProfilePicUrl()))
+                                .setStartPosition(0)
+                                .hideStatusBar(false)
+                                .allowZooming(true)
+                                .allowSwipeToDismiss(true)
+                                .setCustomDraweeHierarchyBuilder(hierarchyBuilder)
+                                .show();
+                    }
+                });
+                /*try{
                     StorageReference storageReference = storage.getReference("profilePicture").child(uid).child(user.getProfilePicUrl());
                     File localfile = File.createTempFile("tempfile", ".png");
                     storageReference.getFile(localfile).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
@@ -147,7 +175,7 @@ public class NotificationAdapter
                 }
                 catch (Exception ex){
                     Log.d("Load Image Error", "Failed to load image");
-                }
+                }*/
 
             }
         }
@@ -186,6 +214,7 @@ public class NotificationAdapter
             }
 
         }*/
+
     }
 
     @Override
