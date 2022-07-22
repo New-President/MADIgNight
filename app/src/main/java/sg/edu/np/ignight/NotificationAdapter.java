@@ -46,8 +46,6 @@ import sg.edu.np.ignight.Objects.UserObject;
 public class NotificationAdapter
                 extends RecyclerView.Adapter<NotificationViewHolder> {
 
-
-
     public static ArrayList<String> likedUser;
     public static ArrayList<UserObject> userList;
     public static ArrayList<BlogObject> blogList;
@@ -89,8 +87,6 @@ public class NotificationAdapter
         for (int i = 0; i < blogList.size(); i++){
             BlogObject blog = blogList.get(i);
             String blogID = blog.blogID;
-
-
 
 /*
             DatabaseReference databaseReference = FirebaseDatabase.getInstance("https://madignight-default-rtdb.asia-southeast1.firebasedatabase.app/")
@@ -190,7 +186,6 @@ public class NotificationAdapter
             }
 
         }*/
-
     }
 
     @Override

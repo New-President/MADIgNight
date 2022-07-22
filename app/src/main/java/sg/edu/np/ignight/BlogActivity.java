@@ -55,8 +55,7 @@ public class BlogActivity extends AppCompatActivity {
         setContentView(R.layout.activity_blog);
         context = this;
 
-        loadingBlogDialog = new LoadingBlogDialog(this);
-
+        loadingScreen();
         FirebaseAuth auth = FirebaseAuth.getInstance();
         FirebaseUser user = auth.getCurrentUser();
 
@@ -150,7 +149,6 @@ public class BlogActivity extends AppCompatActivity {
 //                                commentsList.add(commentSnapshot.getValue().toString());
 //                            }
 //                        }
-
                         ArrayList<String> likedUsers = new ArrayList<>();
 
                         // Stores uid of user who liked the blog
@@ -171,14 +169,6 @@ public class BlogActivity extends AppCompatActivity {
 
                         blogAdapter.notifyDataSetChanged();
 
-                        loadingBlogDialog.startLoadingDialog("Fetching blogs..");
-                        Handler handler = new Handler();
-                        handler.postDelayed(new Runnable() {
-                            @Override
-                            public void run() {
-                                loadingBlogDialog.dismissDialog();
-                            }
-                        }, 2000);
                     }
                 }
             }
@@ -240,10 +230,20 @@ public class BlogActivity extends AppCompatActivity {
             public void onCancelled(@NonNull DatabaseError error) {
                 Log.e(TAG, "onCancelled: " + error.getMessage());
             }
-
-
         });
 
+    }
+
+    public void loadingScreen(){
+        loadingBlogDialog = new LoadingBlogDialog(BlogActivity.this);
+        loadingBlogDialog.startLoadingDialog("Fetching blogs..");
+        Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                loadingBlogDialog.dismissDialog();
+            }
+        }, 1500);
     }
 
 }
