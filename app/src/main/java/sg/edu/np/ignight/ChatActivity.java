@@ -277,7 +277,6 @@ public class ChatActivity extends AppCompatActivity {
                 builder.setView(view1);
                 final AlertDialog alertDialog = builder.create(); //Display video or voice call dialog
 
-                final AlertDialog alertDialog = builder.create(); //Display alert dialog
                 view1.findViewById(R.id.button_yes_delete).setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
