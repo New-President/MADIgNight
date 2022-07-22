@@ -2,10 +2,12 @@ package sg.edu.np.ignight.Blog;
 
 import static android.content.ContentValues.TAG;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.os.Handler;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -68,7 +70,6 @@ public class BlogAdapter extends RecyclerView.Adapter<BlogViewHolder> {
     @NonNull
     @Override
     public BlogViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-
         View item = LayoutInflater.from(parent.getContext()).inflate(R.layout.blog_layout, parent, false);
         return new BlogViewHolder(item);
     }
