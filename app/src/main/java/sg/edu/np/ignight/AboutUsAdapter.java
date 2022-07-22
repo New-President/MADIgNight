@@ -21,16 +21,15 @@ public class AboutUsAdapter extends RecyclerView.Adapter<AboutUsViewHolder>{
     @NonNull
     @Override
     public AboutUsViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View item;
-        item = LayoutInflater.from(parent.getContext()).inflate(R.layout.about_us_recycler, null, false);
-        return new AboutUsViewHolder(item);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_about_us, parent, false);
+        return new AboutUsViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull AboutUsViewHolder holder, int position) {
         AboutUs content = data.get(position);
-        holder.nme.setText(content.Name);
-        holder.desc.setText(content.Description);
+        holder.name.setText(content.Name);
+        holder.description.setText(content.Description);
     }
 
     @Override
