@@ -30,6 +30,6 @@ public class LoadingBlogDialog {
 
     // Destroys loading bar
     public void dismissDialog(){
-        dialog.dismiss();
+        dialog.cancel();
     }
 }
