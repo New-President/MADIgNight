@@ -51,8 +51,6 @@ import sg.edu.np.ignight.Objects.UserObject;
 public class NotificationAdapter
                 extends RecyclerView.Adapter<NotificationViewHolder> {
 
-    /*public ArrayList<BlogCommentObject> bloList;*/
-
     public static ArrayList<String> likedUser;
     public static ArrayList<UserObject> userList;
     public static ArrayList<BlogObject> blogList;
@@ -95,17 +93,14 @@ public class NotificationAdapter
             BlogObject blog = blogList.get(i);
             String blogID = blog.blogID;
 
-
-
 /*
             DatabaseReference databaseReference = FirebaseDatabase.getInstance("https://madignight-default-rtdb.asia-southeast1.firebasedatabase.app/")
                     .getReference("user").child(uid).child("blog").child(blogID);
 */
-
             ImageView blogImage = holder.blogImage;
 
             try{
-                StorageReference storageReference = storage.getReference("blog").child(uid).child(blog.imgID);
+                StorageReference storageReference = storage.getReference("gs://madignight.appspot.com/blog").child(uid).child(blog.imgID);
                 File localfile = File.createTempFile("tempfile", "jpeg");
                 storageReference.getFile(localfile).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
                     @Override
