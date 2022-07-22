@@ -62,7 +62,6 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.text.ParseException;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
@@ -82,7 +81,7 @@ public class ChatActivity extends AppCompatActivity {
 
     private ArrayList<MessageObject> messageList;
     private ArrayList<String> mediaUriList;
-    private String currentUserUID, targetUserID, chatID;
+    private String currentUserUID, targetUserID, chatID, RoomID;
     private final int PICK_IMAGE_INTENT = 1;
 
     private DatabaseReference rootDB, chatDB;
@@ -106,6 +105,7 @@ public class ChatActivity extends AppCompatActivity {
         chatID = bundle.getString("chatID");
         String chatName = bundle.getString("chatName");
         targetUserID = bundle.getString("targetUserID");
+        final Integer count = 1;
 
         currentUserUID = FirebaseAuth.getInstance().getUid();
 
@@ -266,7 +266,7 @@ public class ChatActivity extends AppCompatActivity {
             }
         });
 
-        //Calling button for call function
+        // Calling button for call function
         ImageView call_btn = findViewById(R.id.btn_call);
         call_btn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -274,13 +274,14 @@ public class ChatActivity extends AppCompatActivity {
                 AlertDialog.Builder builder = new AlertDialog.Builder(ChatActivity.this, R.style.AlertDialogTheme);
                 View view1 = LayoutInflater.from(ChatActivity.this).inflate(R.layout.call_confrimation_dialog, (ConstraintLayout)findViewById(R.id.layoutDialogContainer));
                 builder.setView(view1);
+                final AlertDialog alertDialog = builder.create(); //Display video or voice call dialog
 
-                final AlertDialog alertDialog = builder.create(); //Display alert dialog
                 view1.findViewById(R.id.button_yes_delete).setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
                         // Call
                         URL server;
+                        getRoomId();
                         try{
                             server = new URL("https://meet.jit.si");
                             JitsiMeetConferenceOptions defaultOptions= new JitsiMeetConferenceOptions.Builder()
@@ -293,7 +294,7 @@ public class ChatActivity extends AppCompatActivity {
                             e.printStackTrace();
                         }
                         JitsiMeetConferenceOptions options = new JitsiMeetConferenceOptions.Builder()
-                                .setRoom("big_room")// need changing
+                                .setRoom(RoomID)// need changing
                                 .setFeatureFlag("welcomepage.enabled", false)
                                 .build();
                         JitsiMeetActivity.launch(ChatActivity.this,options);
@@ -303,7 +304,6 @@ public class ChatActivity extends AppCompatActivity {
                         call_text.setText("Hey, I started a call come join me!");
                         sendMessage();
                         BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
-                            final Integer count = 1;
                             Integer total_count = 0;
                             @Override
                             public void onReceive(Context context, Intent intent) {
@@ -312,6 +312,7 @@ public class ChatActivity extends AppCompatActivity {
                                     EditText call_text = findViewById(R.id.messageInput);
                                     call_text.setText("The call just ended, let's have another call next time!");
                                     Log.d("Call Ended","Yes");
+                                    changeOnCall();
                                     sendMessage();
                                 }
                             }
@@ -327,6 +328,7 @@ public class ChatActivity extends AppCompatActivity {
                     public void onClick(View view) {
                         // Call
                         URL server;
+                        getRoomId();
                         try{
                             server = new URL("https://meet.jit.si");
                             JitsiMeetConferenceOptions defaultOptions= new JitsiMeetConferenceOptions.Builder()
@@ -339,7 +341,7 @@ public class ChatActivity extends AppCompatActivity {
                             e.printStackTrace();
                         }
                         JitsiMeetConferenceOptions options = new JitsiMeetConferenceOptions.Builder()
-                                .setRoom("big_room")// need changing
+                                .setRoom(RoomID)// need changing
                                 .setFeatureFlag("welcomepage.enabled", false)
                                 .setVideoMuted(true)
                                 .build();
@@ -350,7 +352,6 @@ public class ChatActivity extends AppCompatActivity {
                         call_text.setText("Hey, I started a call come join me!");
                         sendMessage();
                         BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
-                            final Integer count = 1;
                             Integer total_count = 0;
                             @Override
                             public void onReceive(Context context, Intent intent) {
@@ -359,6 +360,7 @@ public class ChatActivity extends AppCompatActivity {
                                     EditText call_text = findViewById(R.id.messageInput);
                                     call_text.setText("The call just ended, let's have another call next time!");
                                     Log.d("Call Ended","Yes");
+                                    changeOnCall();
                                     sendMessage();
                                 }
                             }
@@ -719,5 +721,121 @@ public class ChatActivity extends AppCompatActivity {
         messageAdapter = new MessageAdapter(getApplicationContext(), messageList);
         messageRV.setAdapter(messageAdapter);
         messageRV.setItemAnimator(new DefaultItemAnimator());
+    }
+
+    // Get RoomId
+    private void getRoomId() {
+
+        DatabaseReference userDB = rootDB.child("user");
+        DatabaseReference chatDB = rootDB.child("chat");
+        userDB.child(currentUserUID).child("chats").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (snapshot.exists()) {
+                    for (DataSnapshot chatIDSnapshot : snapshot.getChildren()) {
+                        if (targetUserID.equals(chatIDSnapshot.getValue())) {
+                            String target_chatID = chatIDSnapshot.getKey();
+                            chatDB.child(target_chatID).addValueEventListener(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                    if (Boolean.valueOf(snapshot.child("onCall").getValue().toString())) {
+                                        Log.d("Call Status 1",snapshot.child("onCall").getValue().toString());
+                                        RoomID = targetUserID;
+                                        return;
+                                    }
+                                    else {
+                                        Log.d("Call Status 2",snapshot.child("onCall").getValue().toString());
+                                        chatDB.child(target_chatID).child("onCall").setValue(true);
+                                        userDB.child(targetUserID).child("chats").addValueEventListener(new ValueEventListener() {
+                                            @Override
+                                            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                                for (DataSnapshot chatIDSnapshot : snapshot.getChildren()) {
+                                                    if (currentUserUID.equals(chatIDSnapshot.getValue().toString())) {
+                                                        String current_chatID = chatIDSnapshot.getKey();
+                                                        chatDB.child(current_chatID).child("onCall").setValue(true);
+                                                        Log.d("Call Changed","true");
+                                                        RoomID = currentUserUID;
+                                                        return;
+                                                    }
+                                                }
+                                            }
+
+                                            @Override
+                                            public void onCancelled(@NonNull DatabaseError error) {
+                                                Log.e(TAG, "onCancelled: " + error.getMessage());
+                                            }
+                                        });
+                                    }
+                                }
+
+                                @Override
+                                public void onCancelled(@NonNull DatabaseError error) {
+                                    Log.e(TAG, "onCancelled: " + error.getMessage());
+                                }
+                            });
+                        }
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Log.e(TAG, "onCancelled: " + error.getMessage());
+            }
+        });
+    }
+
+    // Change onCall Status
+    private void changeOnCall() {
+        DatabaseReference userDB = rootDB.child("user");
+        DatabaseReference chatDB = rootDB.child("chat");
+
+        userDB.child(currentUserUID).child("chats").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (snapshot.exists()) {
+                    for (DataSnapshot chatIDSnapshot : snapshot.getChildren()) {
+                        if (targetUserID.equals(chatIDSnapshot.getValue())) {
+                            String target_chatID = chatIDSnapshot.getKey();
+                            chatDB.child(target_chatID).addValueEventListener(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                    if (Boolean.valueOf(snapshot.child("onCall").getValue().toString())) {
+                                        chatDB.child(target_chatID).child("onCall").setValue(false);
+                                        userDB.child(targetUserID).child("chats").addValueEventListener(new ValueEventListener() {
+                                            @Override
+                                            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                                for (DataSnapshot chatIDSnapshot : snapshot.getChildren()) {
+                                                    if (currentUserUID.equals(chatIDSnapshot.getValue())) {
+                                                        chatDB.child(chatIDSnapshot.getKey()).child("onCall").setValue(false);
+                                                        Log.d("Call Changed","false");
+                                                        return;
+                                                    }
+                                                }
+                                            }
+
+                                            @Override
+                                            public void onCancelled(@NonNull DatabaseError error) {
+                                                Log.e(TAG, "onCancelled: " + error.getMessage());
+                                            }
+                                        });
+                                    }
+                                }
+
+                                @Override
+                                public void onCancelled(@NonNull DatabaseError error) {
+                                    Log.e(TAG, "onCancelled: " + error.getMessage());
+                                }
+                            });
+                        }
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Log.e(TAG, "onCancelled: " + error.getMessage());
+            }
+        });
     }
 }
