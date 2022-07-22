@@ -114,6 +114,26 @@ public class ChatNotificationService extends FirebaseMessagingService {
                             PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
                             builder.setContentIntent(pendingIntent);
 
+                            // mark as read quick action
+                            // create intents
+                            Intent markAsReadIntent = new Intent(context, MarkAsReadReceiver.class);
+
+                            // add data to pass to receiver
+                            Bundle markAsReadBundle = new Bundle();
+                            markAsReadBundle.putString("chatID", chatID);
+                            markAsReadBundle.putString("messageID", messageID);
+                            markAsReadBundle.putString("tag", senderID);
+
+                            markAsReadIntent.putExtras(markAsReadBundle);
+
+                            PendingIntent markAsReadPendingIntent = PendingIntent.getBroadcast(context, 0, markAsReadIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+                            // create action
+                            NotificationCompat.Action markAsReadAction = new NotificationCompat.Action(R.drawable.ic_baseline_read_icon_24, "Mark As Read", markAsReadPendingIntent);
+
+                            // add action
+                            builder.addAction(markAsReadAction);
+
                             // send direct replies
                             // create remoteInput
                             RemoteInput remoteInput = new RemoteInput.Builder("direct_reply").setLabel("Reply").build();

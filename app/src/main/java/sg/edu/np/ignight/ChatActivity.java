@@ -536,7 +536,7 @@ public class ChatActivity extends AppCompatActivity {
             showSendMessageProgressBar(true);
         }
 
-        String messageId = chatDB.push().getKey();
+        String messageId = chatDB.child("messages").push().getKey();
 
         final Map newMessageMap = new HashMap<>();
 

@@ -1,5 +1,7 @@
 package sg.edu.np.ignight.ChatNotifications;
 
+import static android.content.ContentValues.TAG;
+
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -9,12 +11,25 @@ import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.service.notification.StatusBarNotification;
+import android.util.Log;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.Person;
 import androidx.core.app.RemoteInput;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.gson.Gson;
+
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 import sg.edu.np.ignight.ChatActivity;
 import sg.edu.np.ignight.R;
@@ -26,6 +41,8 @@ public class ReplyReceiver extends BroadcastReceiver {
     private String chatName;
     private Person myself;
 
+    DatabaseReference rootDB, chatDB;
+
     @Override
     public void onReceive(Context context, Intent intent) {
         Bundle bundle = intent.getExtras();
@@ -34,38 +51,111 @@ public class ReplyReceiver extends BroadcastReceiver {
         chatID = bundle.getString("chatID");
         chatName = bundle.getString("chatName");
 
+        rootDB = FirebaseDatabase.getInstance("https://madignight-default-rtdb.asia-southeast1.firebasedatabase.app/").getReference();
+        chatDB = rootDB.child("chat").child(chatID);
+
         Bundle remoteInput = RemoteInput.getResultsFromIntent(intent);
 
+        // send message if there is text input from the direct reply
         if (remoteInput != null) {
             String replyText = remoteInput.getString("direct_reply");
-            NotificationCompat.MessagingStyle.Message newMessage = new NotificationCompat.MessagingStyle.Message(replyText, System.currentTimeMillis(), myself);
 
-            NotificationCompat.MessagingStyle messagingStyle = getMessagingStyle(context, senderID);
+            sendMessage(replyText, context);
+        }
+    }
 
-            if (messagingStyle != null) {
-                messagingStyle.addMessage(newMessage);
-            }
+    // send message
+    private void sendMessage(String message, Context context) {
+        String messageID = chatDB.child("messages").push().getKey();
 
-            NotificationCompat.Builder builder = createBuilder(context);
+        Map newMessageMap = new HashMap<>();
 
-            if (builder != null) {
-                builder.setStyle(messagingStyle);
+        // put relevant fields and values in a map to be updated to the database
+        newMessageMap.put("messages/" + messageID + "/text", message);
 
-                NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+        String timestamp = new Date().toString();
 
-                // set notification channel for api level > 26
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
-                {
-                    String channelId = "IgnightChat";
-                    NotificationChannel channel = new NotificationChannel(channelId, "Ignight Chat", NotificationManager.IMPORTANCE_DEFAULT);
-                    notificationManager.createNotificationChannel(channel);
-                    builder.setChannelId(channelId);
+        newMessageMap.put("messages/" + messageID + "/creator", FirebaseAuth.getInstance().getUid());
+        newMessageMap.put("messages/" + messageID + "/timestamp", timestamp);
+        newMessageMap.put("messages/" + messageID + "/isSeen", false);
+        newMessageMap.put("lastUsed", timestamp);
+
+        // update unread messages count for the other user
+        chatDB.child("unread").child(senderID).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                int unreadCount = 0;
+                if (snapshot.exists()) {
+                    unreadCount = Integer.parseInt(snapshot.getValue().toString());
                 }
 
-                // send notification
-                // set tag as senderID for easy retrieval
-                notificationManager.notify(senderID, 999, builder.build());
+                newMessageMap.put("unread/" + senderID, unreadCount + 1);
+
+                // update database
+                chatDB.updateChildren(newMessageMap, new DatabaseReference.CompletionListener() {
+                    @Override
+                    public void onComplete(@Nullable DatabaseError error, @NonNull DatabaseReference ref) {
+                        updateNotification(message, context);  // update notification with replied text
+                        pushNotification(messageID, context);  // send notification to the other user as well
+                    }
+                });
             }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Log.e(TAG, "onCancelled: " + error.getMessage());
+            }
+        });
+    }
+
+    // send notification to the other user
+    private void pushNotification(String messageID, Context context) {
+        rootDB.child("user").child(senderID).child("fcmToken").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (snapshot.exists()) {
+                    String fcmToken = snapshot.getValue().toString();
+
+                    ChatNotificationSender sender = new ChatNotificationSender(fcmToken, FirebaseAuth.getInstance().getUid(), chatID, messageID, context);
+                    sender.sendNotification();
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Log.e(TAG, "onCancelled: " + error.getMessage());
+            }
+        });
+    }
+
+    // update notification with replied text
+    private void updateNotification(String replyText, Context context) {
+        NotificationCompat.MessagingStyle.Message newMessage = new NotificationCompat.MessagingStyle.Message(replyText, System.currentTimeMillis(), myself);
+
+        NotificationCompat.MessagingStyle messagingStyle = getMessagingStyle(context, senderID);
+
+        if (messagingStyle != null) {
+            messagingStyle.addMessage(newMessage);
+        }
+
+        NotificationCompat.Builder builder = createBuilder(context);
+
+        if (builder != null) {
+            builder.setStyle(messagingStyle);
+
+            NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+
+            // set notification channel for api level > 26
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
+            {
+                String channelId = "IgnightChat";
+                NotificationChannel channel = new NotificationChannel(channelId, "Ignight Chat", NotificationManager.IMPORTANCE_DEFAULT);
+                notificationManager.createNotificationChannel(channel);
+                builder.setChannelId(channelId);
+            }
+
+            // send notification
+            notificationManager.notify(senderID, 999, builder.build());
         }
     }
 
