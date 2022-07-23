@@ -34,7 +34,7 @@
             android:exported="false" />
         <activity
             android:name=".NotificationActivity"
-            android:exported="true" />
+            android:exported="false" />
         <activity
             android:name=".ChatbotActivity"
             android:exported="false" />
