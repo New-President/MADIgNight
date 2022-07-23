@@ -86,22 +86,19 @@ public class NotificationAdapter
         String liked = likedUser.get(position);
 
         FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
-        FirebaseStorage storage = FirebaseStorage.getInstance();
         String uid = firebaseUser.getUid();
 
         for (int i = 0; i < blogList.size(); i++){
             BlogObject blog = blogList.get(i);
             String blogID = blog.blogID;
-
 /*
             DatabaseReference databaseReference = FirebaseDatabase.getInstance("https://madignight-default-rtdb.asia-southeast1.firebasedatabase.app/")
                     .getReference("user").child(uid).child("blog").child(blogID);
 */
             ImageView blogImage = holder.blogImage;
-
             try{
-                StorageReference storageReference = storage.getReference("gs://madignight.appspot.com/blog").child(uid).child(blog.imgID);
-                File localfile = File.createTempFile("tempfile", "jpeg");
+                StorageReference storageReference = storage.getReference("blog").child(uid).child(blog.imgID);
+                File localfile = File.createTempFile("tempfile", ".png");
                 storageReference.getFile(localfile).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
                     @Override
                     public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
@@ -125,7 +122,9 @@ public class NotificationAdapter
 
         for (int j = 0; j < userList.size(); j++){
             UserObject user = userList.get(j);
+            Log.d("TAG","Hello1: "+ liked);
             if (user.getUid().equals(liked)){
+                Log.d("TAG","Hello1: "+ user.getUsername());
                 holder.description.setText(user.getUsername() + " liked your blog.");
 
                 ImageView profile = holder.profile;

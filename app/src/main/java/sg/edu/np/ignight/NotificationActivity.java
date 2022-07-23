@@ -111,10 +111,10 @@ public class NotificationActivity extends AppCompatActivity {
 
                 if (snapshot.exists()) {
                     if (!blogIDList.contains(snapshot.getKey())) {
-                        Log.d(TAG, "Hello: " + snapshot.getKey());
                         blogIDList.add(snapshot.getKey());
                         String blogID = snapshot.child("blogID").getValue().toString();
                         String description = snapshot.child("description").getValue().toString();
+                        Log.d(TAG, "Hello: " + snapshot.child("imgID").getValue().toString());
                         String imgID = snapshot.child("imgID").getValue().toString();
                         String location = snapshot.child("location").getValue().toString();
                         int likes = Integer.parseInt(snapshot.child("likes").getValue().toString());
@@ -249,8 +249,6 @@ public class NotificationActivity extends AppCompatActivity {
                         }
                     }
                 }
-
-                Log.e(TAG, "Hello1: " + userList);
             }
 
             @Override
