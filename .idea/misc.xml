@@ -164,13 +164,14 @@
         <entry key="..\:/keefe/Desktop/school/2.1/mobile applications development/asg/MADIgNight/app/src/main/res/layout/activity_blog.xml" value="0.3416666666666667" />
         <entry key="..\:/keefe/Desktop/school/2.1/mobile applications development/asg/MADIgNight/app/src/main/res/layout/activity_chat.xml" value="0.3333333333333333" />
         <entry key="..\:/keefe/Desktop/school/2.1/mobile applications development/asg/MADIgNight/app/src/main/res/layout/activity_chat_list.xml" value="0.3416666666666667" />
+        <entry key="..\:/keefe/Desktop/school/2.1/mobile applications development/asg/MADIgNight/app/src/main/res/layout/activity_chat_notification_settings.xml" value="0.3333333333333333" />
         <entry key="..\:/keefe/Desktop/school/2.1/mobile applications development/asg/MADIgNight/app/src/main/res/layout/activity_chat_request.xml" value="0.3333333333333333" />
         <entry key="..\:/keefe/Desktop/school/2.1/mobile applications development/asg/MADIgNight/app/src/main/res/layout/activity_chatbot.xml" value="0.340625" />
         <entry key="..\:/keefe/Desktop/school/2.1/mobile applications development/asg/MADIgNight/app/src/main/res/layout/activity_delete_alert_dialog.xml" value="0.5" />
         <entry key="..\:/keefe/Desktop/school/2.1/mobile applications development/asg/MADIgNight/app/src/main/res/layout/activity_homepage_fragment.xml" value="0.340625" />
         <entry key="..\:/keefe/Desktop/school/2.1/mobile applications development/asg/MADIgNight/app/src/main/res/layout/activity_login.xml" value="0.3416666666666667" />
         <entry key="..\:/keefe/Desktop/school/2.1/mobile applications development/asg/MADIgNight/app/src/main/res/layout/activity_main.xml" value="0.3416666666666667" />
-        <entry key="..\:/keefe/Desktop/school/2.1/mobile applications development/asg/MADIgNight/app/src/main/res/layout/activity_main_menu.xml" value="0.16666666666666666" />
+        <entry key="..\:/keefe/Desktop/school/2.1/mobile applications development/asg/MADIgNight/app/src/main/res/layout/activity_main_menu.xml" value="0.3333333333333333" />
         <entry key="..\:/keefe/Desktop/school/2.1/mobile applications development/asg/MADIgNight/app/src/main/res/layout/activity_map.xml" value="0.340625" />
         <entry key="..\:/keefe/Desktop/school/2.1/mobile applications development/asg/MADIgNight/app/src/main/res/layout/activity_message.xml" value="0.3416666666666667" />
         <entry key="..\:/keefe/Desktop/school/2.1/mobile applications development/asg/MADIgNight/app/src/main/res/layout/activity_notification.xml" value="0.340625" />
@@ -210,11 +211,13 @@
         <entry key="..\:/keefe/Desktop/school/2.1/mobile applications development/asg/MADIgNight/app/src/main/res/layout/item_user.xml" value="0.3416666666666667" />
         <entry key="..\:/keefe/Desktop/school/2.1/mobile applications development/asg/MADIgNight/app/src/main/res/layout/main_menu_layout.xml" value="0.22" />
         <entry key="..\:/keefe/Desktop/school/2.1/mobile applications development/asg/MADIgNight/app/src/main/res/layout/notification_layout.xml" value="0.340625" />
+        <entry key="..\:/keefe/Desktop/school/2.1/mobile applications development/asg/MADIgNight/app/src/main/res/layout/settings_activity.xml" value="0.340625" />
         <entry key="..\:/keefe/Desktop/school/2.1/mobile applications development/asg/MADIgNight/app/src/main/res/layout/testmessagelayout.xml" value="0.340625" />
         <entry key="..\:/keefe/Desktop/school/2.1/mobile applications development/asg/MADIgNight/app/src/main/res/layout/testprogressbar.xml" value="0.340625" />
         <entry key="..\:/keefe/Desktop/school/2.1/mobile applications development/asg/MADIgNight/app/src/main/res/menu/menu_activity_report.xml" value="0.340625" />
         <entry key="..\:/keefe/Desktop/school/2.1/mobile applications development/asg/MADIgNight/app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml" value="0.324" />
         <entry key="..\:/keefe/Desktop/school/2.1/mobile applications development/asg/MADIgNight/app/src/main/res/mipmap-anydpi-v26/ic_launcher_round.xml" value="0.324" />
+        <entry key="..\:/keefe/Desktop/school/2.1/mobile applications development/asg/MADIgNight/app/src/main/res/xml/root_preferences.xml" value="0.340625" />
       </map>
     </option>
   </component>

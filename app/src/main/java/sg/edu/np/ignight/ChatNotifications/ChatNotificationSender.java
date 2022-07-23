@@ -27,7 +27,7 @@ public class ChatNotificationSender {
 
     private RequestQueue requestQueue;
     private final String postUrl = "https://fcm.googleapis.com/fcm/send";
-    private final String fcmServerKey = "";
+    private final String fcmServerKey = "AAAA0fKydBU:APA91bFEsGLkVEtd9n_icYQdlVw20YI11Kvp7imYadZlFwAPZrVIYad7mPmGtvqWZk4cpvCLvJqLH6N_8Qw0rMNzazZakMDgQG4_rWkBiAmjYORPnhV34tS9qnaSuf-C_srwk0QZy-pb";
 
     public ChatNotificationSender(String fcmToken, String senderID, String chatID, String messageID, Context context) {
         this.fcmToken = fcmToken;

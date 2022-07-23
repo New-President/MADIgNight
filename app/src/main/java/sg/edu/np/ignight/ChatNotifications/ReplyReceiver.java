@@ -8,6 +8,8 @@ import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Build;
 import android.os.Bundle;
 import android.service.notification.StatusBarNotification;
@@ -18,6 +20,7 @@ import androidx.annotation.Nullable;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.Person;
 import androidx.core.app.RemoteInput;
+import androidx.core.graphics.drawable.IconCompat;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -45,11 +48,16 @@ public class ReplyReceiver extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        Bundle bundle = intent.getExtras();
-        myself = new Gson().fromJson(bundle.getString("person"), Person.class);
-        senderID = bundle.getString("senderID");
-        chatID = bundle.getString("chatID");
-        chatName = bundle.getString("chatName");
+        Bundle replyBundle = intent.getExtras();
+        senderID = replyBundle.getString("senderID");
+        chatID = replyBundle.getString("chatID");
+        chatName = replyBundle.getString("chatName");
+        String myName = replyBundle.getString("myName");
+
+        byte[] byteArray = replyBundle.getByteArray("bitmapBA");
+        Bitmap myBitmap = BitmapFactory.decodeByteArray(byteArray, 0, byteArray.length);
+
+        myself = new Person.Builder().setIcon(IconCompat.createWithBitmap(myBitmap)).setName(myName).build();
 
         rootDB = FirebaseDatabase.getInstance("https://madignight-default-rtdb.asia-southeast1.firebasedatabase.app/").getReference();
         chatDB = rootDB.child("chat").child(chatID);

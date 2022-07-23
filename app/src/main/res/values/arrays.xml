@@ -1,0 +1,14 @@
+<resources>
+    <string-array name="vibration_preferences">
+        <item>@string/vibration_none</item>
+        <item>@string/vibration_short</item>
+        <item>@string/vibration_default</item>
+        <item>@string/vibration_long</item>
+    </string-array>
+    <string-array name="vibration_preferences_values">
+        <item>@string/vibration_none_value</item>
+        <item>@string/vibration_short_value</item>
+        <item>@string/vibration_default_value</item>
+        <item>@string/vibration_long_value</item>
+    </string-array>
+</resources>

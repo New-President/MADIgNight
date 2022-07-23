@@ -4,7 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".SideMenu">
+    tools:context=".SideMenu"
+    android:background="#ffffff">
 
     <ImageView
         android:id="@+id/profilepic_sidemenu"
@@ -26,7 +27,6 @@
         android:background="@android:color/darker_gray"
         app:layout_constraintBottom_toTopOf="@+id/editprofile_sidemenu"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/profilepic_sidemenu" />
 
@@ -39,7 +39,6 @@
         android:background="@android:color/darker_gray"
         app:layout_constraintBottom_toTopOf="@+id/aboutus_sidemenu"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/editprofile_sidemenu" />
 
@@ -52,7 +51,6 @@
         android:background="@android:color/darker_gray"
         app:layout_constraintBottom_toTopOf="@+id/premium_sidemenu"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/aboutus_sidemenu" />
 
@@ -65,7 +63,6 @@
         android:background="@android:color/darker_gray"
         app:layout_constraintBottom_toTopOf="@+id/map_sidemenu"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/premium_sidemenu" />
 
@@ -78,7 +75,6 @@
         android:background="@android:color/darker_gray"
         app:layout_constraintBottom_toTopOf="@+id/TandC_sidemenu"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/map_sidemenu" />
 
@@ -91,7 +87,6 @@
         android:background="@android:color/darker_gray"
         app:layout_constraintBottom_toTopOf="@+id/menuCreateBlogBtn"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/TandC_sidemenu" />
 
@@ -104,7 +99,6 @@
         android:background="@android:color/darker_gray"
         app:layout_constraintBottom_toTopOf="@+id/activityReport_sidemenu"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/menuCreateBlogBtn" />
 
@@ -115,7 +109,6 @@
         android:layout_marginTop="5dp"
         android:background="@android:color/darker_gray"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/activityReport_sidemenu" />
 
@@ -123,12 +116,11 @@
         android:id="@+id/view4"
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:layout_marginTop="44dp"
+        android:layout_marginTop="5dp"
         android:background="@android:color/darker_gray"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/activityReport_sidemenu" />
+        app:layout_constraintTop_toBottomOf="@+id/logout_sidemenu" />
 
     <View
         android:id="@+id/view18"
@@ -146,7 +138,6 @@
         android:background="@android:color/darker_gray"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent" />
 
     <TextView
@@ -155,9 +146,9 @@
         android:layout_height="wrap_content"
         android:text="Edit Profile"
         android:textSize="20sp"
+        android:textColor="#000000"
         app:layout_constraintBottom_toTopOf="@+id/view11"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/view10" />
 
@@ -167,9 +158,9 @@
         android:layout_height="wrap_content"
         android:text="About Us"
         android:textSize="20sp"
+        android:textColor="#000000"
         app:layout_constraintBottom_toTopOf="@+id/view12"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.501"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/view11" />
 
@@ -179,9 +170,9 @@
         android:layout_height="wrap_content"
         android:text="Premium Service"
         android:textSize="20sp"
+        android:textColor="#000000"
         app:layout_constraintBottom_toTopOf="@+id/view13"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/view12" />
 
@@ -191,9 +182,9 @@
         android:layout_height="wrap_content"
         android:text="Map"
         android:textSize="20sp"
+        android:textColor="#000000"
         app:layout_constraintBottom_toTopOf="@+id/view14"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/view13" />
 
@@ -203,9 +194,9 @@
         android:layout_height="wrap_content"
         android:text="T and C"
         android:textSize="20sp"
+        android:textColor="#000000"
         app:layout_constraintBottom_toTopOf="@+id/view15"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/view14" />
 
@@ -215,6 +206,7 @@
         android:layout_height="wrap_content"
         android:text="Blogs"
         android:textSize="20sp"
+        android:textColor="#000000"
         app:layout_constraintBottom_toTopOf="@+id/view"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -226,10 +218,9 @@
         android:layout_height="wrap_content"
         android:text="Activity Report"
         android:textSize="20sp"
+        android:textColor="#000000"
         app:layout_constraintBottom_toTopOf="@+id/view16"
-        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/view18"
-        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/view" />
 
@@ -237,23 +228,43 @@
         android:id="@+id/logout_sidemenu"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="12dp"
-        android:layout_marginBottom="9dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="10dp"
         android:text="Log Out"
         android:textSize="20sp"
+        android:textColor="#000000"
         app:layout_constraintBottom_toTopOf="@+id/view4"
-        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/view18"
-        app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/activityReport_sidemenu"
-        app:layout_constraintVertical_bias="0.0" />
+        app:layout_constraintTop_toBottomOf="@+id/view19" />
+
+    <View
+        android:id="@+id/view19"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginTop="5dp"
+        android:background="@android:color/darker_gray"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/chatNotificationSettings_sidemenu" />
+
+    <TextView
+        android:id="@+id/chatNotificationSettings_sidemenu"
+        android:text="Notification Settings"
+        android:textSize="20sp"
+        android:textColor="#000000"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/view18"
+        app:layout_constraintTop_toBottomOf="@+id/view16"
+        app:layout_constraintBottom_toTopOf="@+id/view19"
+        android:layout_marginTop="5dp"/>
 
     <Button
         android:id="@+id/delete_acc_btn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="68dp"
         android:background="@drawable/delete_btn_bg"
         android:paddingLeft="70dp"
         android:paddingTop="5dp"
@@ -263,8 +274,8 @@
         android:textColor="@drawable/delete_text_color"
         android:textSize="14sp"
         app:layout_constraintEnd_toStartOf="@+id/view18"
-        app:layout_constraintHorizontal_bias="0.502"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/view4" />
+        app:layout_constraintTop_toBottomOf="@+id/view4"
+        app:layout_constraintBottom_toBottomOf="parent"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

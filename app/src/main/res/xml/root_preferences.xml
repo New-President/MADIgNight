@@ -1,0 +1,35 @@
+<PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <PreferenceCategory app:title="Messages">
+
+        <SwitchPreference
+            app:key="messageNotificationsEnabled"
+            app:title="Push Notifications"
+            app:defaultValue="true"
+            app:persistent="true"/>
+
+        <Preference
+            app:key="messageNotificationRingtone"
+            app:title="Ringtone"
+            app:persistent="true"
+            android:defaultValue=""/>
+
+        <ListPreference
+            app:key="messageNotificationVibration"
+            app:title="Vibration"
+            app:entries="@array/vibration_preferences"
+            app:entryValues="@array/vibration_preferences_values"
+            app:defaultValue="@string/vibration_default_value"
+            app:persistent="true"/>
+
+        <SwitchPreference
+            app:key="messageNotificationPriority"
+            app:title="Use high priority notification"
+            app:summary="Shows heads-up notifications"
+            app:defaultValue="true"
+            app:persistent="true"/>
+
+    </PreferenceCategory>
+
+</PreferenceScreen>

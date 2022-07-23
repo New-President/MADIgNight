@@ -76,6 +76,8 @@ import sg.edu.np.ignight.Objects.UserObject;
 
 public class ChatActivity extends AppCompatActivity {
 
+    public static String currentChatID = "";
+
     private RecyclerView messageRV, mediaRV;
     private RecyclerView.Adapter messageAdapter, mediaAdapter;
     private LinearLayoutManager messageLayoutManager, mediaLayoutManager;
@@ -106,6 +108,7 @@ public class ChatActivity extends AppCompatActivity {
         chatID = bundle.getString("chatID");
         chatName = bundle.getString("chatName");
         targetUserID = bundle.getString("targetUserID");
+
         final Integer count = 1;
 
         currentUserUID = FirebaseAuth.getInstance().getUid();
@@ -388,6 +391,20 @@ public class ChatActivity extends AppCompatActivity {
                 startActivityForResult(proposeDate, 1000);
             }
         });
+    }
+
+    @Override
+    protected void onResume() {  // set currentChatID to received chatID
+        super.onResume();
+
+        currentChatID = chatID;
+    }
+
+    @Override
+    protected void onPause() {  // clear currentChatID
+        super.onPause();
+
+        currentChatID = "";
     }
 
     // update status of other user

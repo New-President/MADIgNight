@@ -24,7 +24,6 @@ public class MarkAsReadReceiver extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
-
         Bundle bundle = intent.getExtras();
         String chatID = bundle.getString("chatID");
         String messageID = bundle.getString("messageID");
@@ -49,12 +48,7 @@ public class MarkAsReadReceiver extends BroadcastReceiver {
                         chatDB.child("unread").child(myUID).addListenerForSingleValueEvent(new ValueEventListener() {
                             @Override
                             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                int unreadCount = 0;
-                                if (snapshot.exists()) {
-                                    unreadCount = Integer.parseInt(snapshot.getValue().toString());
-                                }
-
-                                chatDB.child("unread").child(myUID).setValue((unreadCount == 0)?unreadCount:(unreadCount - 1));
+                                chatDB.child("unread").child(myUID).setValue(0);  // set unread count to 0
                             }
 
                             @Override
