@@ -55,7 +55,7 @@ public class CommentsAdapter extends RecyclerView.Adapter<CommentsAdapter.Commen
         String uid = FirebaseAuth.getInstance().getUid();
         Comment comment = commentList.get(position);
         DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("user").child(blogOwnerUID)
-                .child("blog").child(blogID).child("comment").child(comment.getCommentID());
+                .child("blog").child(blogID).child("commentList").child(comment.getCommentID());
         String targetUid = comment.getUid();
 
         TextView commentContent = holder.commentContent;

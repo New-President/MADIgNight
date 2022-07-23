@@ -135,7 +135,7 @@ public class CommentSectionActivity extends AppCompatActivity {
                         String profUrl = snapshot.child("profileUrl").getValue().toString();
 
                         Comment newComment = new Comment(commentID, blogOwnerUID, username, profUrl, content, timestamp, new ArrayList<String>(), 0);
-                        databaseReference.child("comment").child(commentID).setValue(newComment);
+                        databaseReference.child("commentList").child(commentID).setValue(newComment);
                     }
 
                     @Override
@@ -172,7 +172,7 @@ public class CommentSectionActivity extends AppCompatActivity {
     private void getCommentsList() {
         commentIDList = new ArrayList<>();
 
-        databaseReference.child("comment").addChildEventListener(new ChildEventListener() {
+        databaseReference.child("commentList").addChildEventListener(new ChildEventListener() {
 
             // Updates changes to the activity when a change is made in the database
             @Override
@@ -227,7 +227,6 @@ public class CommentSectionActivity extends AppCompatActivity {
             @Override
             public void onChildRemoved(@NonNull DataSnapshot snapshot) {
                 int index = commentIDList.indexOf(snapshot.getKey());
-                commentIDList.remove(index);
                 commentIDList.remove(index);
                 commentAdapter.notifyDataSetChanged();
             }
