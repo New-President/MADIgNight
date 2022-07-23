@@ -93,9 +93,12 @@
         <entry key="..\:/Users/jason/Desktop/Y2/Sem1/MAD/App/ASG/IgNight/app/src/main/res/drawable/ignight_btn.xml" value="0.1" />
         <entry key="..\:/Users/jason/Desktop/Y2/Sem1/MAD/App/ASG/IgNight/app/src/main/res/drawable/interest_btn.xml" value="0.1845" />
         <entry key="..\:/Users/jason/Desktop/Y2/Sem1/MAD/App/ASG/IgNight/app/src/main/res/drawable/next_btn_bg.xml" value="0.1" />
+        <entry key="..\:/Users/jason/Desktop/Y2/Sem1/MAD/App/ASG/IgNight/app/src/main/res/layout/about_us_recycler.xml" value="0.2" />
+        <entry key="..\:/Users/jason/Desktop/Y2/Sem1/MAD/App/ASG/IgNight/app/src/main/res/layout/activity_about_us.xml" value="0.152" />
         <entry key="..\:/Users/jason/Desktop/Y2/Sem1/MAD/App/ASG/IgNight/app/src/main/res/layout/activity_blog.xml" value="0.264" />
         <entry key="..\:/Users/jason/Desktop/Y2/Sem1/MAD/App/ASG/IgNight/app/src/main/res/layout/activity_chat.xml" value="0.13451086956521738" />
         <entry key="..\:/Users/jason/Desktop/Y2/Sem1/MAD/App/ASG/IgNight/app/src/main/res/layout/activity_chat_list.xml" value="0.25" />
+        <entry key="..\:/Users/jason/Desktop/Y2/Sem1/MAD/App/ASG/IgNight/app/src/main/res/layout/activity_comment_section.xml" value="0.2" />
         <entry key="..\:/Users/jason/Desktop/Y2/Sem1/MAD/App/ASG/IgNight/app/src/main/res/layout/activity_create_blog.xml" value="0.2" />
         <entry key="..\:/Users/jason/Desktop/Y2/Sem1/MAD/App/ASG/IgNight/app/src/main/res/layout/activity_edit_blog.xml" value="0.25" />
         <entry key="..\:/Users/jason/Desktop/Y2/Sem1/MAD/App/ASG/IgNight/app/src/main/res/layout/activity_friend_list.xml" value="0.25" />
@@ -113,6 +116,7 @@
         <entry key="..\:/Users/jason/Desktop/Y2/Sem1/MAD/App/ASG/IgNight/app/src/main/res/layout/activity_view_profile.xml" value="0.22826086956521738" />
         <entry key="..\:/Users/jason/Desktop/Y2/Sem1/MAD/App/ASG/IgNight/app/src/main/res/layout/blog_layout.xml" value="0.176" />
         <entry key="..\:/Users/jason/Desktop/Y2/Sem1/MAD/App/ASG/IgNight/app/src/main/res/layout/blog_likecomment_layout.xml" value="0.264" />
+        <entry key="..\:/Users/jason/Desktop/Y2/Sem1/MAD/App/ASG/IgNight/app/src/main/res/layout/comment_layout.xml" value="0.264" />
         <entry key="..\:/Users/jason/Desktop/Y2/Sem1/MAD/App/ASG/IgNight/app/src/main/res/layout/custom_dialog.xml" value="0.264" />
         <entry key="..\:/Users/jason/Desktop/Y2/Sem1/MAD/App/ASG/IgNight/app/src/main/res/layout/friendlist_layout.xml" value="0.25" />
         <entry key="..\:/Users/jason/Desktop/Y2/Sem1/MAD/App/ASG/IgNight/app/src/main/res/layout/hamburger.xml" value="0.21965579710144928" />
@@ -159,22 +163,19 @@
         <entry key="..\:/keefe/Desktop/school/2.1/mobile applications development/asg/MADIgNight/app/src/main/res/drawable/next_btn_bg.xml" value="0.3465" />
         <entry key="..\:/keefe/Desktop/school/2.1/mobile applications development/asg/MADIgNight/app/src/main/res/drawable/tab_indicator.xml" value="0.3465" />
         <entry key="..\:/keefe/Desktop/school/2.1/mobile applications development/asg/MADIgNight/app/src/main/res/drawable/textview_border.xml" value="0.3465" />
-        <entry key="..\:/keefe/Desktop/school/2.1/mobile applications development/asg/MADIgNight/app/src/main/res/layout/about_us_recycler.xml" value="0.340625" />
-        <entry key="..\:/keefe/Desktop/school/2.1/mobile applications development/asg/MADIgNight/app/src/main/res/layout/activity_about_us.xml" value="0.3333333333333333" />
+        <entry key="..\:/keefe/Desktop/school/2.1/mobile applications development/asg/MADIgNight/app/src/main/res/layout/activity_about_us.xml" value="0.16666666666666666" />
         <entry key="..\:/keefe/Desktop/school/2.1/mobile applications development/asg/MADIgNight/app/src/main/res/layout/activity_blog.xml" value="0.3416666666666667" />
         <entry key="..\:/keefe/Desktop/school/2.1/mobile applications development/asg/MADIgNight/app/src/main/res/layout/activity_chat.xml" value="0.3333333333333333" />
         <entry key="..\:/keefe/Desktop/school/2.1/mobile applications development/asg/MADIgNight/app/src/main/res/layout/activity_chat_list.xml" value="0.3416666666666667" />
-        <entry key="..\:/keefe/Desktop/school/2.1/mobile applications development/asg/MADIgNight/app/src/main/res/layout/activity_chat_notification_settings.xml" value="0.3333333333333333" />
         <entry key="..\:/keefe/Desktop/school/2.1/mobile applications development/asg/MADIgNight/app/src/main/res/layout/activity_chat_request.xml" value="0.3333333333333333" />
         <entry key="..\:/keefe/Desktop/school/2.1/mobile applications development/asg/MADIgNight/app/src/main/res/layout/activity_chatbot.xml" value="0.340625" />
         <entry key="..\:/keefe/Desktop/school/2.1/mobile applications development/asg/MADIgNight/app/src/main/res/layout/activity_delete_alert_dialog.xml" value="0.5" />
         <entry key="..\:/keefe/Desktop/school/2.1/mobile applications development/asg/MADIgNight/app/src/main/res/layout/activity_homepage_fragment.xml" value="0.340625" />
         <entry key="..\:/keefe/Desktop/school/2.1/mobile applications development/asg/MADIgNight/app/src/main/res/layout/activity_login.xml" value="0.3416666666666667" />
         <entry key="..\:/keefe/Desktop/school/2.1/mobile applications development/asg/MADIgNight/app/src/main/res/layout/activity_main.xml" value="0.3416666666666667" />
-        <entry key="..\:/keefe/Desktop/school/2.1/mobile applications development/asg/MADIgNight/app/src/main/res/layout/activity_main_menu.xml" value="0.3333333333333333" />
+        <entry key="..\:/keefe/Desktop/school/2.1/mobile applications development/asg/MADIgNight/app/src/main/res/layout/activity_main_menu.xml" value="0.16666666666666666" />
         <entry key="..\:/keefe/Desktop/school/2.1/mobile applications development/asg/MADIgNight/app/src/main/res/layout/activity_map.xml" value="0.340625" />
         <entry key="..\:/keefe/Desktop/school/2.1/mobile applications development/asg/MADIgNight/app/src/main/res/layout/activity_message.xml" value="0.3416666666666667" />
-        <entry key="..\:/keefe/Desktop/school/2.1/mobile applications development/asg/MADIgNight/app/src/main/res/layout/activity_notification.xml" value="0.340625" />
         <entry key="..\:/keefe/Desktop/school/2.1/mobile applications development/asg/MADIgNight/app/src/main/res/layout/activity_profile_creation.xml" value="0.3416666666666667" />
         <entry key="..\:/keefe/Desktop/school/2.1/mobile applications development/asg/MADIgNight/app/src/main/res/layout/activity_profile_view.xml" value="0.3333333333333333" />
         <entry key="..\:/keefe/Desktop/school/2.1/mobile applications development/asg/MADIgNight/app/src/main/res/layout/activity_registration.xml" value="0.340625" />
@@ -191,11 +192,8 @@
         <entry key="..\:/keefe/Desktop/school/2.1/mobile applications development/asg/MADIgNight/app/src/main/res/layout/fragment_chat_request_sent.xml" value="0.340625" />
         <entry key="..\:/keefe/Desktop/school/2.1/mobile applications development/asg/MADIgNight/app/src/main/res/layout/fragment_chat_request_to_me.xml" value="0.340625" />
         <entry key="..\:/keefe/Desktop/school/2.1/mobile applications development/asg/MADIgNight/app/src/main/res/layout/interest_layout.xml" value="0.340625" />
-        <entry key="..\:/keefe/Desktop/school/2.1/mobile applications development/asg/MADIgNight/app/src/main/res/layout/item_about_us.xml" value="0.340625" />
         <entry key="..\:/keefe/Desktop/school/2.1/mobile applications development/asg/MADIgNight/app/src/main/res/layout/item_chat.xml" value="0.3333333333333333" />
         <entry key="..\:/keefe/Desktop/school/2.1/mobile applications development/asg/MADIgNight/app/src/main/res/layout/item_chat_by_you.xml" value="0.340625" />
-        <entry key="..\:/keefe/Desktop/school/2.1/mobile applications development/asg/MADIgNight/app/src/main/res/layout/item_chat_notification_collapsed.xml" value="0.340625" />
-        <entry key="..\:/keefe/Desktop/school/2.1/mobile applications development/asg/MADIgNight/app/src/main/res/layout/item_chat_notification_expanded.xml" value="0.340625" />
         <entry key="..\:/keefe/Desktop/school/2.1/mobile applications development/asg/MADIgNight/app/src/main/res/layout/item_chat_request.xml" value="0.25" />
         <entry key="..\:/keefe/Desktop/school/2.1/mobile applications development/asg/MADIgNight/app/src/main/res/layout/item_chat_request_received.xml" value="0.4466666666666667" />
         <entry key="..\:/keefe/Desktop/school/2.1/mobile applications development/asg/MADIgNight/app/src/main/res/layout/item_chat_request_sent.xml" value="0.4466666666666667" />
@@ -210,14 +208,9 @@
         <entry key="..\:/keefe/Desktop/school/2.1/mobile applications development/asg/MADIgNight/app/src/main/res/layout/item_suggested_reply.xml" value="0.340625" />
         <entry key="..\:/keefe/Desktop/school/2.1/mobile applications development/asg/MADIgNight/app/src/main/res/layout/item_user.xml" value="0.3416666666666667" />
         <entry key="..\:/keefe/Desktop/school/2.1/mobile applications development/asg/MADIgNight/app/src/main/res/layout/main_menu_layout.xml" value="0.22" />
-        <entry key="..\:/keefe/Desktop/school/2.1/mobile applications development/asg/MADIgNight/app/src/main/res/layout/notification_layout.xml" value="0.340625" />
-        <entry key="..\:/keefe/Desktop/school/2.1/mobile applications development/asg/MADIgNight/app/src/main/res/layout/settings_activity.xml" value="0.340625" />
         <entry key="..\:/keefe/Desktop/school/2.1/mobile applications development/asg/MADIgNight/app/src/main/res/layout/testmessagelayout.xml" value="0.340625" />
         <entry key="..\:/keefe/Desktop/school/2.1/mobile applications development/asg/MADIgNight/app/src/main/res/layout/testprogressbar.xml" value="0.340625" />
         <entry key="..\:/keefe/Desktop/school/2.1/mobile applications development/asg/MADIgNight/app/src/main/res/menu/menu_activity_report.xml" value="0.340625" />
-        <entry key="..\:/keefe/Desktop/school/2.1/mobile applications development/asg/MADIgNight/app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml" value="0.324" />
-        <entry key="..\:/keefe/Desktop/school/2.1/mobile applications development/asg/MADIgNight/app/src/main/res/mipmap-anydpi-v26/ic_launcher_round.xml" value="0.324" />
-        <entry key="..\:/keefe/Desktop/school/2.1/mobile applications development/asg/MADIgNight/app/src/main/res/xml/root_preferences.xml" value="0.340625" />
       </map>
     </option>
   </component>

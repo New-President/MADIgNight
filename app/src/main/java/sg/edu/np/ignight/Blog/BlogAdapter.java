@@ -98,28 +98,11 @@ public class BlogAdapter extends RecyclerView.Adapter<BlogViewHolder> {
         DatabaseReference databaseReference = FirebaseDatabase.getInstance("https://madignight-default-rtdb.asia-southeast1.firebasedatabase.app/")
                 .getReference("user").child(uid).child("blog").child(blogID);
 
-        ImageView blogImage = holder.blogImg; //add fullscreen function
 
-//        blogImage.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                GenericDraweeHierarchyBuilder hierarchyBuilder = GenericDraweeHierarchyBuilder.newInstance(c.getResources())
-//                        .setFailureImage(R.drawable.ic_baseline_error_outline_24)
-//                        .setProgressBarImage(new ProgressBarDrawable())
-//                        .setPlaceholderImage(R.drawable.ic_baseline_image_24);
-//
-//                new ImageViewer.Builder(view.getContext(), Collections.singletonList(""))
-//                        .setStartPosition(0)
-//                        .hideStatusBar(false)
-//                        .allowZooming(true)
-//                        .allowSwipeToDismiss(true)
-//                        .setCustomDraweeHierarchyBuilder(hierarchyBuilder)
-//                        .show();
-//            }
-//        });
-        ImageView likebutton = holder.likesButton; //add fullscreen function
+        ImageView likebutton = holder.likesButton; // like
         ImageView commentButton = holder.commentButton; //comment
-        ImageView editBlogButton = holder.editBlogButton; //comment
+        ImageView editBlogButton = holder.editBlogButton; //edit blog
+        ImageView blogImage = holder.blogImg; //blog image
 
         ImageView editBlogBtn = holder.editBlogButton;
         if (canEdit){

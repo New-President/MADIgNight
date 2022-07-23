@@ -1,6 +1,6 @@
 package sg.edu.np.ignight.Objects;
 
-import java.util.Date;
+import java.util.ArrayList;
 
 public class Comment {
     private String commentID;
@@ -9,6 +9,8 @@ public class Comment {
     private String profUrl;
     private String content;
     private String timestamp;
+    private ArrayList<String> likedUsersList;
+    private int likes;
 
     public String getContent() {
         return content;
@@ -41,12 +43,30 @@ public class Comment {
         this.timestamp = timestamp;
     }
 
-    public Comment(String commentID, String uid, String username, String profUrl, String content, String timestamp){
+    public int getLikes() {
+        return likes;
+    }
+
+    public void setLikes(int likes) {
+        this.likes = likes;
+    }
+
+    public ArrayList<String> getLikedUsersList() {
+        return likedUsersList;
+    }
+
+    public void setLikedUsersList(ArrayList<String> likedUsersList) {
+        this.likedUsersList = likedUsersList;
+    }
+
+    public Comment(String commentID, String uid, String username, String profUrl, String content, String timestamp, ArrayList<String> likedUsers, int likes){
         this.commentID = commentID;
         this.uid = uid;
         this.username = username;
         this.profUrl = profUrl;
         this.content = content;
         this.timestamp = timestamp;
+        this.likedUsersList = likedUsers;
+        this.likes = likes;
     }
 }
