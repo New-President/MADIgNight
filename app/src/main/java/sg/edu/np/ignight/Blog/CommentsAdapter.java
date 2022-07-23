@@ -22,7 +22,6 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.text.ParseException;
 import java.util.ArrayList;
-import java.util.Timer;
 
 import sg.edu.np.ignight.Objects.Comment;
 import sg.edu.np.ignight.Objects.TimestampObject;
@@ -31,14 +30,17 @@ import sg.edu.np.ignight.ProfileViewActivity;
 import sg.edu.np.ignight.R;
 
 public class CommentsAdapter extends RecyclerView.Adapter<CommentsAdapter.CommentsViewHolder> {
-    private TextView commentContent, timestamp, commenterUsername;
-    private ImageView commenterProfPic;
+
     private Context c;
     private ArrayList<Comment> commentList;
+    private String blogID;
+    private String blogOwnerUID;
 
-    public CommentsAdapter(Context c, ArrayList<Comment> commmentList){
+    public CommentsAdapter(Context c, ArrayList<Comment> commmentList, String blogID, String blogOwnerUID){
         this.c = c;
         this.commentList = commmentList;
+        this.blogID = blogID;
+        this.blogOwnerUID = blogOwnerUID;
     }
 
     @NonNull
@@ -50,14 +52,26 @@ public class CommentsAdapter extends RecyclerView.Adapter<CommentsAdapter.Commen
 
     @Override
     public void onBindViewHolder(@NonNull CommentsViewHolder holder, int position) {
+        String uid = FirebaseAuth.getInstance().getUid();
         Comment comment = commentList.get(position);
+        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("user").child(blogOwnerUID)
+                .child("blog").child(blogID).child("comment").child(comment.getCommentID());
         String targetUid = comment.getUid();
+
+        TextView commentContent = holder.commentContent;
+        TextView username = holder.commenterUsername;
+        TextView timestampView = holder.timestamp;
+        TextView likesCount = holder.likesCount;
+        ImageView commenterProfPic = holder.commenterProfPic;
+        ImageView likeCommentBtn = holder.likeCommentBtn;
+
         commentContent.setText(comment.getContent());
-        commenterUsername.setText(comment.getUsername());
+        username.setText(comment.getUsername());
+        likesCount.setText(String.valueOf(comment.getLikes()));
 
         try {
             TimestampObject timestampObject = new TimestampObject(comment.getTimestamp());
-            timestamp.setText(timestampObject.getDate());
+            timestampView.setText(timestampObject.getDate());
 
         } catch (ParseException e) {
             e.printStackTrace();
@@ -73,6 +87,36 @@ public class CommentsAdapter extends RecyclerView.Adapter<CommentsAdapter.Commen
                 viewUserProfile(targetUid);
             }
         });
+
+        if (comment.getLikedUsersList().contains(uid)){
+            likeCommentBtn.setBackgroundResource(R.drawable.heart);
+        }
+        else{
+            likeCommentBtn.setBackgroundResource(R.drawable.heartwithhole);
+        }
+
+        likeCommentBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                int likes = comment.getLikes();
+                if (comment.getLikedUsersList().contains(uid)) {
+                    likes = ((likes - 1) <= 0)?0:(likes -= 1);
+                    databaseReference.child("likedUsersList").child(uid).setValue(false);
+                    databaseReference.child("likes").setValue(likes);
+                    likesCount.setText(String.valueOf(likes));
+                    likeCommentBtn.setBackgroundResource(R.drawable.heartwithhole);
+                    comment.getLikedUsersList().remove(uid);
+                }
+                else {
+                    likes += 1;
+                    databaseReference.child("likedUsersList").child(uid).setValue(true);
+                    databaseReference.child("likes").setValue(likes);
+                    likesCount.setText(String.valueOf(likes));
+                    likeCommentBtn.setBackgroundResource(R.drawable.heart);
+                    comment.getLikedUsersList().add(uid);
+                }
+            }
+        });
     }
 
     @Override
@@ -82,13 +126,16 @@ public class CommentsAdapter extends RecyclerView.Adapter<CommentsAdapter.Commen
 
 
     public class CommentsViewHolder extends RecyclerView.ViewHolder {
-
+        public TextView commentContent, timestamp, commenterUsername, likesCount;
+        public ImageView commenterProfPic, likeCommentBtn;
         public CommentsViewHolder(@NonNull View itemView) {
             super(itemView);
             commentContent = itemView.findViewById(R.id.commentContent);
             timestamp = itemView.findViewById(R.id.commentTimestamp);
             commenterProfPic = itemView.findViewById(R.id.commenterProfPic);
             commenterUsername = itemView.findViewById(R.id.commentUsername);
+            likeCommentBtn = itemView.findViewById(R.id.likeCommentBtn);
+            likesCount = itemView.findViewById(R.id.commentLikes);
         }
     }
 

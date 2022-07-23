@@ -203,7 +203,7 @@ public class ActivityReport_Activity extends AppCompatActivity {
                     timeUsageTestTextView.setText(timeSpentToday);
 
                     // Adds data to barChart list, so that the barChart can show the data
-                    barChartData.add(foregroundTime);
+                    //barChartData.add(foregroundTime);
 
                     // Add time to sharedPreference to save it
                     sPdayEdit.putInt(packageName, hours1 * 60 + minutes1);

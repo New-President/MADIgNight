@@ -10,7 +10,6 @@ import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -35,13 +34,11 @@ import com.google.firebase.storage.StorageReference;
 
 import java.io.File;
 import java.io.IOException;
-import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Date;
 
 import sg.edu.np.ignight.Blog.CommentsAdapter;
 import sg.edu.np.ignight.Objects.Comment;
-import sg.edu.np.ignight.Objects.TimestampObject;
 
 public class CommentSectionActivity extends AppCompatActivity {
     private ArrayList<Comment> commentsList;
@@ -59,7 +56,7 @@ public class CommentSectionActivity extends AppCompatActivity {
         Intent intent = getIntent();
 
         // Retrieves uid who posted the blogs & id of blog
-        String uid = intent.getStringExtra("uid");
+        String blogOwnerUID = intent.getStringExtra("uid");
         String blogID = intent.getStringExtra("blogID");
         String imgID = intent.getStringExtra("imgID");
         int numOfComments = intent.getIntExtra("numOfComments", 0);
@@ -73,11 +70,11 @@ public class CommentSectionActivity extends AppCompatActivity {
         FirebaseAuth auth = FirebaseAuth.getInstance();
         FirebaseStorage firebaseStorage = FirebaseStorage.getInstance();
         database = FirebaseDatabase.getInstance("https://madignight-default-rtdb.asia-southeast1.firebasedatabase.app/");
-        databaseReference = database.getReference("user").child(uid).child("blog").child(blogID);
+        databaseReference = database.getReference("user").child(blogOwnerUID).child("blog").child(blogID);
         DatabaseReference databaseSelf = database.getReference("user").child(auth.getUid());
 
         getCommentsList();
-        initRecyclerView();
+        initRecyclerView(blogID, blogOwnerUID);
 
         // Display own profile picture beside comment input
         databaseSelf.child("profileUrl").addListenerForSingleValueEvent(new ValueEventListener() {
@@ -98,7 +95,7 @@ public class CommentSectionActivity extends AppCompatActivity {
 
         // Display blog image
         try{
-            StorageReference storageReference = firebaseStorage.getReference("blog").child(uid).child(imgID);
+            StorageReference storageReference = firebaseStorage.getReference("blog").child(blogOwnerUID).child(imgID);
             File localfile = File.createTempFile("tempfile", ".png");
             storageReference.getFile(localfile).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
                 @Override
@@ -137,7 +134,7 @@ public class CommentSectionActivity extends AppCompatActivity {
                         String username = snapshot.child("username").getValue().toString();
                         String profUrl = snapshot.child("profileUrl").getValue().toString();
 
-                        Comment newComment = new Comment(commentID, uid, username, profUrl, content, timestamp);
+                        Comment newComment = new Comment(commentID, blogOwnerUID, username, profUrl, content, timestamp, new ArrayList<String>(), 0);
                         databaseReference.child("comment").child(commentID).setValue(newComment);
                     }
 
@@ -159,11 +156,12 @@ public class CommentSectionActivity extends AppCompatActivity {
         });
     }
 
-    private void initRecyclerView() {
+    private void initRecyclerView(String blogID, String blogOwnerUID) {
         commentsList = new ArrayList<>();
         commmentRV = findViewById(R.id.commentsRV);
         commmentRV.setNestedScrollingEnabled(false);
-        commentAdapter = new CommentsAdapter(this, commentsList);
+        commentAdapter = new CommentsAdapter(this, commentsList, blogID, blogOwnerUID);
+        commmentRV.setNestedScrollingEnabled(false);
         commmentRV.setAdapter(commentAdapter);
         commentLayoutManager = new LinearLayoutManager(this);
         commentLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
@@ -181,18 +179,24 @@ public class CommentSectionActivity extends AppCompatActivity {
             public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
 
                 if (snapshot.exists()) {
-                    Log.d("commentAdded", "onChildAdded: True");
                     if (!commentIDList.contains(snapshot.getKey())) {
-                        Log.d("key", snapshot.getKey());
                         commentIDList.add(snapshot.getKey());
-                        Log.d("commentAdded", "onChildAdded: " + snapshot.getKey());
                         String commentID = snapshot.child("commentID").getValue().toString();
                         String uid = snapshot.child("uid").getValue().toString();
                         String username = snapshot.child("username").getValue().toString();
                         String profUrl = snapshot.child("profUrl").getValue().toString();
                         String content = snapshot.child("content").getValue().toString();
                         String timestamp = snapshot.child("timestamp").getValue().toString();
-                        Comment commentObj = new Comment(commentID, uid, username, profUrl, content, timestamp);
+                        int likes = Integer.parseInt(snapshot.child("likes").getValue().toString());
+
+                        ArrayList<String> likedUsers = new ArrayList<String>();
+                        for (DataSnapshot likedUID: snapshot.child("likedUsersList").getChildren()){
+                            if (likedUID.exists() && (boolean) likedUID.getValue()){
+                                likedUsers.add(likedUID.getKey());
+                            }
+                        }
+
+                        Comment commentObj = new Comment(commentID, uid, username, profUrl, content, timestamp, likedUsers, likes);
                         commentsList.add(commentObj);
 
 
@@ -212,8 +216,10 @@ public class CommentSectionActivity extends AppCompatActivity {
 
                         String content = snapshot.child("content").getValue().toString();
                         String timestamp = snapshot.child("timestamp").getValue().toString();
+                        int likes = Integer.parseInt(snapshot.child("likes").getValue().toString());
                         existingComment.setContent(content);
                         existingComment.setTimestamp(timestamp);
+                        existingComment.setLikes(likes);
                     }
                 }
             }
