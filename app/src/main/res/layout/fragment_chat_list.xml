@@ -88,6 +88,7 @@
         android:src="@drawable/ic_baseline_chat_24"
         app:tint="#ffffff"
         android:layout_gravity="bottom|end"
-        android:layout_margin="20dp"/>
+        android:layout_margin="20dp"
+        android:tooltipText="Chat with a bot"/>
 
 </FrameLayout>

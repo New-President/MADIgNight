@@ -19,27 +19,20 @@ public class AboutUsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_about_us);
 
-        ArrayList<AboutUs> usrarry = new ArrayList<>();
-        for (int i = 0; i < 5; i++) {
-            if (i == 0) {
-                usrarry.add(new AboutUs("Lee Wee Kang",""));
+        ArrayList<AboutUs> userList = new ArrayList<AboutUs>() {
+            {
+                // add description
+                add(new AboutUs("Lee Wee Kang",""));
+                add(new AboutUs("Yong Zi Ren",""));
+                add(new AboutUs("Lim Long Teck",""));
+                add(new AboutUs("Han Xihe",""));
+                add(new AboutUs("Keefe Cheong Wenkai",""));
             }
-            else if (i == 1) {
-                usrarry.add(new AboutUs("Yong Zi Ren",""));
-            }
-            else if (i == 2) {
-                usrarry.add(new AboutUs("Lim Long Teck",""));
-            }
-            else if (i == 3) {
-                usrarry.add(new AboutUs("Han Xihe",""));
-            }
-            else if (i == 4) {
-                usrarry.add(new AboutUs("Keefe Choong Wenkai",""));
-            }
-        }
+        };
 
         RecyclerView rv = findViewById(R.id.about_view);
-        AboutUsAdapter adapter = new AboutUsAdapter(usrarry,AboutUsActivity.this);
+        rv.setNestedScrollingEnabled(false);
+        AboutUsAdapter adapter = new AboutUsAdapter(userList,AboutUsActivity.this);
         LinearLayoutManager layout = new LinearLayoutManager(this);
 
         rv.setAdapter(adapter);
@@ -50,7 +43,9 @@ public class AboutUsActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent aboutus_to_main = new Intent(AboutUsActivity.this,MainMenuActivity.class);
+                aboutus_to_main.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 startActivity(aboutus_to_main);
+                finish();
             }
         });
     }

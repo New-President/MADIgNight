@@ -5,56 +5,49 @@ import static android.content.ContentValues.TAG;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.preference.PreferenceManager;
 
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.Toast;
 
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.google.firebase.storage.FileDownloadTask;
-import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.StorageReference;
+import com.google.firebase.messaging.FirebaseMessaging;
 
-import java.io.File;
-import java.io.IOException;
 import java.text.ParseException;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 import sg.edu.np.ignight.Objects.TimestampObject;
 
 public class MainMenuActivity extends AppCompatActivity {
-    private FirebaseStorage storage;
-    private StorageReference storageReference;
 
     private ImageView notificationButton;
 
-    FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-    String Uid = user.getUid();
     final String[] queryName = {""};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_menu);
-        ImageView ownprofile = findViewById(R.id.ownerprofile_menu);
-        ownprofile.setOnClickListener(new View.OnClickListener() {
+        ImageView sidemenuButton = findViewById(R.id.sidemenu_button);
+        sidemenuButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent mainmenu_to_sidemenu = new Intent(MainMenuActivity.this, SideMenu.class);
@@ -63,6 +56,17 @@ public class MainMenuActivity extends AppCompatActivity {
             }
         });
         updateConnection();
+        getFCMToken();
+
+        // save default values
+        PreferenceManager.setDefaultValues(this, R.xml.root_preferences, false);
+
+        // check if there is a ringtone saved in shared preferences and set ringtone to default ringtone if there isn't
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+        String ringtoneUri = sharedPreferences.getString(SettingsActivity.KEY_CHAT_NOTIFICATION_RINGTONE, "no uri");
+        if (ringtoneUri.equals("no uri")) {
+            sharedPreferences.edit().putString(SettingsActivity.KEY_CHAT_NOTIFICATION_RINGTONE, Settings.System.DEFAULT_NOTIFICATION_URI.toString()).apply();
+        }
 
         Intent intent = getIntent();
         String intentExtra = intent.getStringExtra("showFrag");
@@ -101,7 +105,7 @@ public class MainMenuActivity extends AppCompatActivity {
             public void afterTextChanged(Editable editable) {}
         });
 
-        Button home = findViewById(R.id.home_menu);// go back to home menu
+        ImageButton home = findViewById(R.id.home_menu);// go back to home menu
         home.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -111,7 +115,7 @@ public class MainMenuActivity extends AppCompatActivity {
             }
         });
 
-        Button chat = findViewById(R.id.chat_menu);// list of chats with other people (Use fragment view)
+        ImageButton chat = findViewById(R.id.chat_menu);// list of chats with other people (Use fragment view)
         chat.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -120,45 +124,26 @@ public class MainMenuActivity extends AppCompatActivity {
                 ft.commit();
             }
         });
-//        ImageView ownerProfilePic = findViewById(R.id.ownerprofile_menu);
-//
-//        FirebaseDatabase database = FirebaseDatabase.getInstance("https://madignight-default-rtdb.asia-southeast1.firebasedatabase.app/");
-//        DatabaseReference myRef = database.getReference("user");
-//        storage = FirebaseStorage.getInstance("gs://madignight.appspot.com");
-//        myRef.child(Uid).addValueEventListener(new ValueEventListener() {
-//            @Override
-//            public void onDataChange(@NonNull DataSnapshot snapshot) {
-//                String existProfilePic = snapshot.child("Profile Picture").getValue(String.class);
-//                storageReference = storage.getReference().child("profilePicture/" + Uid + "/" + existProfilePic);
-//
-//                try {
-//                    final File localFile = File.createTempFile(existProfilePic, existProfilePic);
-//                    storageReference.getFile(localFile)
-//                            .addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
-//                                @Override
-//                                public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
-//                                    //Toast.makeText(MainMenuActivity.this, "Picture Retrieved", Toast.LENGTH_SHORT).show();
-//                                    Bitmap bitmap = BitmapFactory.decodeFile(localFile.getAbsolutePath());
-//                                    ownerProfilePic.setImageBitmap(bitmap);
-//                                }
-//                            })
-//                            .addOnFailureListener(new OnFailureListener() {
-//                                @Override
-//                                public void onFailure(@NonNull Exception e) {
-//                                    Toast.makeText(MainMenuActivity.this, "Error loading profile picture", Toast.LENGTH_SHORT).show();
-//                                }
-//                            });
-//                } catch (IOException e) {
-//                    e.printStackTrace();
-//                }
-//            }
-//
-//            @Override
-//            public void onCancelled(@NonNull DatabaseError error) {
-//
-//            }
-//        });
-//
+    }
+
+    private void getFCMToken() {
+        FirebaseMessaging.getInstance().getToken().addOnCompleteListener(new OnCompleteListener<String>() {
+            @Override
+            public void onComplete(@NonNull Task<String> task) {
+                if (!task.isSuccessful()) {
+                    Log.w(TAG, "Fetching FCM registration token failed", task.getException());
+                    return;
+                }
+
+                // Get new FCM registration token and put in db
+                String token = task.getResult();
+                DatabaseReference userDB = FirebaseDatabase.getInstance("https://madignight-default-rtdb.asia-southeast1.firebasedatabase.app/").getReference().child("user").child(FirebaseAuth.getInstance().getUid());
+                Map tokenMap = new HashMap<>();
+                tokenMap.put("fcmToken", token);
+                userDB.updateChildren(tokenMap);
+            }
+        });
+
     }
 
     // updates presence system - when user logs on, set connection to true, when user logs off, set connection to null and update last online time

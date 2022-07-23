@@ -159,15 +159,20 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
             // update seen status of messages received
             if (!thisMessage.isSeen()) {
                 messageDB.child("isSeen").setValue(true);
-                chatDB.child("unread").child(FirebaseAuth.getInstance().getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
+
+                String myUID = FirebaseAuth.getInstance().getUid();
+                chatDB.child("unread").child(myUID).addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
                         int unreadCount = 0;
                         if (snapshot.exists()) {
                             unreadCount = Integer.parseInt(snapshot.getValue().toString());
                         }
+                        if (messageList.get(messageList.size() - 1).isSeen()) {  // last message in message list is already seen
+                            unreadCount = 0;  // set unread count to 0
+                        }
 
-                        chatDB.child("unread").child(FirebaseAuth.getInstance().getUid()).setValue((unreadCount == 0)?unreadCount:(unreadCount - 1));
+                        chatDB.child("unread").child(myUID).setValue((unreadCount == 0)?unreadCount:(unreadCount - 1));
                     }
 
                     @Override

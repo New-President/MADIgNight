@@ -164,9 +164,7 @@ public class SideMenu extends Activity {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(getApplicationContext(), ActivityReport_Activity.class);
-                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 startActivity(intent);
-                finish();
             }
         });
 
@@ -179,6 +177,15 @@ public class SideMenu extends Activity {
                 Intent createBlog = new Intent(SideMenu.this, BlogActivity.class);
                 createBlog.putExtra("canEdit", true);
                 startActivity(createBlog);
+            }
+        });
+
+        // go to notification settings
+        TextView notificationSettingsButton = findViewById(R.id.chatNotificationSettings_sidemenu);
+        notificationSettingsButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(getApplicationContext(), SettingsActivity.class));
             }
         });
 
