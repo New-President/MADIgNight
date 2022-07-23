@@ -5,21 +5,15 @@ import static android.app.AppOpsManager.MODE_ALLOWED;
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
 
-import android.Manifest;
+
 import android.annotation.SuppressLint;
-import android.app.AlertDialog;
 import android.app.AppOpsManager;
 import android.app.usage.UsageStats;
 import android.app.usage.UsageStatsManager;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.pm.ApplicationInfo;
-import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
@@ -46,23 +40,12 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.google.firebase.storage.FirebaseStorage;
-import com.google.type.DateTime;
-
-import org.w3c.dom.Text;
-
-import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
-import java.util.SortedMap;
-import java.util.Timer;
-import java.util.TimerTask;
-import java.util.TreeMap;
+import java.util.Map;
+
 
 
 public class ActivityReport_Activity extends AppCompatActivity {
@@ -84,7 +67,8 @@ public class ActivityReport_Activity extends AppCompatActivity {
     private int hours1, hours2, minutes1, minutes2, seconds1, seconds2,
             USAGE_STATS_PERMISSION_CODE, numberOfChats;
 
-    private HashMap<String, String> chatIDtargetUserIDkeypair, targetUserIDtotalNumberOfTextsKeypair;
+    private HashMap<String, String> chatIDtargetUserIDkeypair,
+            targetUserIDtotalNumberOfTextsKeypair;
 
     @SuppressLint("LogNotTimber")
     @Override
@@ -120,30 +104,16 @@ public class ActivityReport_Activity extends AppCompatActivity {
                         Toast.LENGTH_LONG).show();
             }
         }
-// Data entries for charts
+
+        // Fields for charts
         pieChart = findViewById(R.id.PieChart);
         barChart = findViewById(R.id.BarChart);
         barChartData = new ArrayList<>();
         pieChartData = new ArrayList<>();
 
+        topFiveIgNightsByChat();
         getTimeSpentToday();
 
-
-
-        /*
-        // Testing data input for bar chart and pie chart
-        for (int i=1; i<10; i++){
-            float value = (float) (i*10.0);
-            // per bar chart entry
-            BarEntry testBarEntry = new BarEntry(i, value);
-            // add data into list
-            barChartData.add(testBarEntry);
-
-            // per pie chart entry
-            PieEntry testPieEntry = new PieEntry(i, value);
-            // add data into list
-            pieChartData.add(testPieEntry);
-        }*/
 
         // init bar data set
         BarDataSet barDataSet = new BarDataSet(barChartData, "Test1");
@@ -203,7 +173,9 @@ public class ActivityReport_Activity extends AppCompatActivity {
                     timeUsageTestTextView.setText(timeSpentToday);
 
                     // Adds data to barChart list, so that the barChart can show the data
-                    //barChartData.add(foregroundTime);
+                    barChartData.add(new BarEntry(1, foregroundTime));
+                    // The time the user spent will be entered as the second value on the chart
+                    // for comparative purposes to the user's "goal" time
 
                     // Add time to sharedPreference to save it
                     sPdayEdit.putInt(packageName, hours1 * 60 + minutes1);
@@ -273,12 +245,15 @@ public class ActivityReport_Activity extends AppCompatActivity {
             //
             DatabaseReference myRef2 = database.getReference("chat");
             myRef2.child(key).child("messages").addValueEventListener(new ValueEventListener() {
+                @SuppressLint("LogNotTimber")
                 @RequiresApi(api = Build.VERSION_CODES.N)
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                     // Counts the number of texts sent by both users in the chat in total
                     Long totalNumberOfTextsSent = dataSnapshot.getChildrenCount();
-                    targetUserIDtotalNumberOfTextsKeypair.put(key, String.valueOf(targetUserIDtotalNumberOfTextsKeypair));
+                    targetUserIDtotalNumberOfTextsKeypair.put(key,
+                            String.valueOf(totalNumberOfTextsSent));
+                    Log.d("targetUserIDtotalNumberOfTextsKeypair", key + " " + totalNumberOfTextsSent);
                 }
 
                 @Override
@@ -290,11 +265,29 @@ public class ActivityReport_Activity extends AppCompatActivity {
                 }
             });
         }
+
+        // The following hashmaps with their own respective data have now been filled:
+        // chatIDtargetUserIDkeypair and targetUserIDtotalNumberOfTextsKeypair
+
+        // The relevant data from these hashmaps now have to be inserted into
+        // the ArrayList of the pieChart
+        for(Map.Entry<String, String> entry: targetUserIDtotalNumberOfTextsKeypair.entrySet()) {
+            // Finds the associated username with each targetUserID
+
+
+
+
+            //pieChartData.add(new PieEntry())
+        }
+
     }
 
+    // Do NOT invert method.
     private boolean usageStatsPermissionsRequest(Context context){
         AppOpsManager appOps = (AppOpsManager) context.getSystemService(Context.APP_OPS_SERVICE);
-        int mode = appOps.checkOpNoThrow(AppOpsManager.OPSTR_GET_USAGE_STATS, android.os.Process.myUid(), context.getPackageName());
+        int mode = appOps.checkOpNoThrow(AppOpsManager.OPSTR_GET_USAGE_STATS,
+                android.os.Process.myUid(),
+                context.getPackageName());
         return mode == MODE_ALLOWED;
     }
 }
