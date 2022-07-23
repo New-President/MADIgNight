@@ -6,7 +6,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
-
 import android.annotation.SuppressLint;
 import android.app.AppOpsManager;
 import android.app.usage.UsageStats;
@@ -70,6 +69,8 @@ public class ActivityReport_Activity extends AppCompatActivity {
     private HashMap<String, String> chatIDtargetUserIDkeypair,
             targetUserIDtotalNumberOfTextsKeypair;
 
+    private ArrayList<String> targetUserIDusernames;
+
     @SuppressLint("LogNotTimber")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -111,8 +112,26 @@ public class ActivityReport_Activity extends AppCompatActivity {
         barChartData = new ArrayList<>();
         pieChartData = new ArrayList<>();
 
+
+        // After calling the following functions below, the following pieces of data are retrieved:
+        // barChartData.add(new BarEntry(1, foregroundTime)); <- added already in function
+        // chatIDtargetUserIDkeypair,
+        // targetUserIDtotalNumberOfTextsKeypair;
+        // targetUserIDusernames;
         topFiveIgNightsByChat();
         getTimeSpentToday();
+        // call suggestions function here to set text
+
+        // We add the retrieved data to the pieChartData arrayList to display the data
+        for(Map.Entry<String, String> entry: targetUserIDtotalNumberOfTextsKeypair.entrySet()){
+            String targetUserID = entry.getKey();
+
+            // Iterates through targetUserIDusernames hashMap to match the username
+            // to the correct
+            for (int i = 0; i < targetUserIDusernames.size(); i++) {
+
+            }
+        }
 
 
         // init bar data set
@@ -138,6 +157,8 @@ public class ActivityReport_Activity extends AppCompatActivity {
         pieChart.animateXY(1100,1100);
         // hide description
         pieChart.getDescription().setEnabled(false);
+
+
     }
 
     // Obtain time spent on the IgNight app and displays it
@@ -214,7 +235,7 @@ public class ActivityReport_Activity extends AppCompatActivity {
         // Retrieves the number of chat messages sent to each IgNighted user,
         // and stores it in a key:pair dictionary
         // It does it everytime the user opens the activity report so that it refreshes correctly everytime
-        myRef.child(uid).addValueEventListener(new ValueEventListener() {
+        myRef.child(uid).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 // Retrieve the chat IDs of all chats that the user is in
@@ -244,7 +265,7 @@ public class ActivityReport_Activity extends AppCompatActivity {
         for(String key : chatIDtargetUserIDkeypair.keySet()){
             //
             DatabaseReference myRef2 = database.getReference("chat");
-            myRef2.child(key).child("messages").addValueEventListener(new ValueEventListener() {
+            myRef2.child(key).child("messages").addListenerForSingleValueEvent(new ValueEventListener() {
                 @SuppressLint("LogNotTimber")
                 @RequiresApi(api = Build.VERSION_CODES.N)
                 @Override
@@ -273,11 +294,25 @@ public class ActivityReport_Activity extends AppCompatActivity {
         // the ArrayList of the pieChart
         for(Map.Entry<String, String> entry: targetUserIDtotalNumberOfTextsKeypair.entrySet()) {
             // Finds the associated username with each targetUserID
+            // Retrieves the usernames associated with the targetUserIDs and puts
+            // them into an arrayList targetUserIDusernames
+            // targetUserIDusernames will be used for displaying the username on the pieChart
+            myRef.child(entry.getKey()).addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    String targetUsernameRetrieved = snapshot.child("username")
+                            .getValue().toString();
+                    targetUserIDusernames.add(targetUsernameRetrieved);
+                }
 
-
-
-
-            //pieChartData.add(new PieEntry())
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+                    Toast.makeText(ActivityReport_Activity.this,
+                            "Error retrieving chat information",
+                            Toast.LENGTH_LONG)
+                            .show();
+                }
+            });
         }
 
     }
