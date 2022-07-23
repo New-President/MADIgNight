@@ -126,6 +126,7 @@ public class ActivityReport_Activity extends AppCompatActivity {
         barChartData = new ArrayList<>();
         pieChartData = new ArrayList<>();
 
+        topFiveIgNightsByChat();
         getTimeSpentToday();
 
 
