@@ -10,6 +10,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.CalendarContract;
 import android.view.View;
+import android.widget.Adapter;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
@@ -23,6 +24,8 @@ import androidx.core.content.ContextCompat;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+
+import sg.edu.np.ignight.Chat.ChatListAdapter;
 
 public class ProposeDateActivity extends AppCompatActivity {
 
@@ -105,6 +108,10 @@ public class ProposeDateActivity extends AppCompatActivity {
                     dateMessage.putExtra("datetime", startMillis);
                     setResult(1000, dateMessage);
 
+                    /*Intent toChat = new Intent(getApplicationContext(), ChatListAdapter.class);
+                    toChat.putExtra("fromProposeDate", true);
+                    startActivity(toChat);
+*/
                     finish();
 
                 }else{
