@@ -3,6 +3,7 @@ package sg.edu.np.ignight;
 import static android.content.ContentValues.TAG;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.nfc.Tag;
@@ -54,6 +55,7 @@ public class NotificationAdapter
     public static ArrayList<String> likedUser;
     public static ArrayList<UserObject> userList;
     public static ArrayList<BlogObject> blogList;
+    public static ArrayList<LikedCommentObject> likedCommentList;
     Context c;
 
     private FirebaseStorage storage;
@@ -64,9 +66,9 @@ public class NotificationAdapter
     //get the current user's UID
     String Uid = user.getUid();
 
-    public NotificationAdapter(Context c, ArrayList<String> likedUser, ArrayList<UserObject> userList, ArrayList<BlogObject> blogList){
+    public NotificationAdapter(Context c, ArrayList<LikedCommentObject> likedCommentList, ArrayList<UserObject> userList, ArrayList<BlogObject> blogList){
         this.c = c;
-        this.likedUser = likedUser;
+        this.likedCommentList = likedCommentList;
         this.userList = userList;
         this.blogList = blogList;
     }
@@ -76,17 +78,17 @@ public class NotificationAdapter
     public NotificationViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View item = null;
         item = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.notification_layout, null, false);
+                .inflate(R.layout.notification_layout, parent, false);
 
         return new NotificationViewHolder(item);
     }
 
     @Override
     public void onBindViewHolder(@NonNull NotificationViewHolder holder, int position) {
-        String liked = likedUser.get(position);
-
+        LikedCommentObject likedComment = likedCommentList.get(position);
         FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
         String uid = firebaseUser.getUid();
+        FirebaseStorage storage = FirebaseStorage.getInstance();
 
         for (int i = 0; i < blogList.size(); i++){
             BlogObject blog = blogList.get(i);
@@ -98,7 +100,6 @@ public class NotificationAdapter
             try{
                 StorageReference storageReference = storage.getReference("blog").child(uid).child(blog.imgID);
                 File localfile = File.createTempFile("tempfile", ".png");
-                Log.d("TAG","Hello: "+ localfile);
                 storageReference.getFile(localfile).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
                     @Override
                     public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
@@ -118,13 +119,36 @@ public class NotificationAdapter
             catch (Exception ex){
                 Log.d("Load Image Error", "Failed to load image");
             }
+            holder.blogImage.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
+                        Intent blogActivity = new Intent(c, BlogActivity.class);
+                        Intent commentActivity = new Intent(c, CommentSectionActivity.class);
+                        if (likedComment.liked){
+                            c.startActivity(blogActivity);
+                        }
+                        else{
+                            commentActivity.putExtra("uid", likedComment.userUID);
+                            commentActivity.putExtra("blogID", blog.blogID);
+                            c.startActivity(commentActivity);
+                        }
+                    }
+                }
+            });
         }
 
         for (int j = 0; j < userList.size(); j++){
             UserObject user = userList.get(j);
-            if (user.getUid().equals(liked)){
+            if (user.getUid().equals(likedComment.userUID)){
                 /*Log.d("TAG","Hello1: "+ user.getUsername());*/
-                holder.description.setText(user.getUsername() + " liked your blog.");
+                if (likedComment.liked){
+                    holder.description.setText(user.getUsername() + " liked your blog.");
+                }
+                else{
+                    holder.description.setText(user.getUsername() + " commented on your blog: " + likedComment.content);
+                }
+
 
                 ImageView profile = holder.profile;
 
@@ -212,6 +236,6 @@ public class NotificationAdapter
 
     @Override
     public int getItemCount() {
-        return likedUser.size();
+        return likedCommentList.size();
     }
 }

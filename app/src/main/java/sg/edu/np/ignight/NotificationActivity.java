@@ -40,6 +40,7 @@ public class NotificationActivity extends AppCompatActivity {
     public ArrayList<String> blogIDList = new ArrayList<>();
     public ArrayList<String> likedUsers = new ArrayList<>();
     public ArrayList<UserObject> userList = new ArrayList<>();
+    public ArrayList<LikedCommentObject> likedCommentList = new ArrayList<>();
 
     public String phone, username, gender, aboutMe, relationshipPref, genderPref, profilePicUrl;
     public int age;
@@ -68,10 +69,6 @@ public class NotificationActivity extends AppCompatActivity {
         databaseBlogReference = database.getReference("user").child(Unique).child("blog");
         databaseUserReference = database.getReference("user");
 
-        data = new ArrayList<>();
-        likedUsers = new ArrayList<>();
-        userList = new ArrayList<>();
-
         getBlogList();
         getUserList();
 
@@ -83,7 +80,7 @@ public class NotificationActivity extends AppCompatActivity {
 
     public void initRecyclerView(){
         RecyclerView rv = findViewById(R.id.notificationRecyclerView);
-        NotificationAdapter adapter = new NotificationAdapter(NotificationActivity.this, likedUsers, userList, data);
+        NotificationAdapter adapter = new NotificationAdapter(NotificationActivity.this, likedCommentList, userList, data);
         LinearLayoutManager layout = new LinearLayoutManager(this);
 
         rv.setAdapter(adapter);
@@ -109,15 +106,50 @@ public class NotificationActivity extends AppCompatActivity {
                         int likes = Integer.parseInt(snapshot.child("likes").getValue().toString());
                         int comments = Integer.parseInt(snapshot.child("comments").getValue().toString());
 
+                        /*for (DataSnapshot dateLocSnapshot : childSnapshot.child("Date Location").getChildren()) {
+                            dateLocList.add(dateLocSnapshot.getValue().toString());
+                        }*/
+
                         ArrayList<String> commentsList = new ArrayList<>();
+                        // Stores comments into commentlist to be retrieved
+                        if (snapshot.child("commentList").hasChildren()) {
+                            for (DataSnapshot commentSnapshot : snapshot.child("commentList").getChildren()) {
+                                commentsList.add(commentSnapshot.getKey());
+                            }
+                        }
+
+                        for (int i = 0; i < commentsList.size(); i++){
+                            String commentKey = commentsList.get(i);
+                            String userUID = snapshot.child("commentList").child(commentKey).child("uid").getValue().toString();
+                            String content = snapshot.child("commentList").child(commentKey).child("content").getValue().toString();
+                            LikedCommentObject tempLCO = new LikedCommentObject(userUID, false, content);
+                            if (!userUID.equals(Unique)){
+                                likedCommentList.add(tempLCO);
+                            }
+                        }
+
+                        /*if (!commentsList.contains(commentSnapshot.getKey())){
+                                    String commentKey = commentSnapshot.getKey();
+                                    commentsList.add(commentKey);
+                                    String userUID = snapshot.child("commentList").child(commentKey).child("uid").getValue().toString();
+                                    String content = snapshot.child("commentList").child(commentKey).child("content").getValue().toString();
+                                    LikedCommentObject tempLCO = new LikedCommentObject(userUID, false, content);
+                                    Log.d("TAG", "Hello: " + userUID);
+                                    likedCommentList.add(tempLCO);
+                                }*/
+                               /*commentsList.add(commentSnapshot.getKey());
+                               Log.d("TAG", "Hello: " + commentSnapshot.getKey());*/
 
 
                         // Stores uid of user who liked the blog
-
                         if (snapshot.child("likedUsersList").hasChildren()) {
                             for (DataSnapshot likedUsersSnapshot : snapshot.child("likedUsersList").getChildren()) {
                                 if (likedUsersSnapshot.getValue().toString().equals("true") && !likedUsers.contains(likedUsersSnapshot.getKey())) {
                                     likedUsers.add(likedUsersSnapshot.getKey());
+                                    LikedCommentObject tempLCO = new LikedCommentObject(likedUsersSnapshot.getKey(), true, "");
+                                    if (!likedUsersSnapshot.getKey().equals(Unique)){
+                                        likedCommentList.add(tempLCO);
+                                    }
                                 }
                             }
                         }
