@@ -28,6 +28,7 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TextClock;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -186,6 +187,15 @@ public class SideMenu extends Activity {
             @Override
             public void onClick(View view) {
                 startActivity(new Intent(getApplicationContext(), SettingsActivity.class));
+            }
+        });
+
+        // go to profile view customisation
+        TextView profileViewCustomisation = findViewById(R.id.customiseProfleView_sideMenu);
+        profileViewCustomisation.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(getApplicationContext(), ViewProfileCustomisation.class));
             }
         });
 
