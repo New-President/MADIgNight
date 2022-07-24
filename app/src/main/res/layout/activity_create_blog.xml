@@ -88,19 +88,23 @@
                         android:text="Add a location: "
                         android:textStyle="bold"
                         app:layout_constraintEnd_toStartOf="@+id/editBlogLocation"
+                        app:layout_constraintHorizontal_bias="0.5"
                         app:layout_constraintHorizontal_chainStyle="packed"
+                        app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@+id/createBlogDesc" />
 
                     <EditText
                         android:id="@+id/editBlogDesc"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
                         android:layout_marginTop="32dp"
-                        android:layout_marginEnd="24dp"
                         android:ems="10"
                         android:hint="Description"
                         android:inputType="textPersonName"
                         app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintHorizontal_bias="0.5"
+                        app:layout_constraintStart_toEndOf="@+id/createBlogDesc"
                         app:layout_constraintTop_toBottomOf="@+id/uploadBtn" />
 
                     <ImageView
@@ -133,24 +137,29 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="36dp"
-                        android:layout_marginEnd="16dp"
+                        android:layout_marginEnd="8dp"
                         android:background="@drawable/gradient_background"
                         android:elevation="5dp"
                         android:padding="5dp"
                         android:text="Add a description: "
                         android:textStyle="bold"
                         app:layout_constraintEnd_toStartOf="@+id/editBlogDesc"
+                        app:layout_constraintHorizontal_bias="0.5"
+                        app:layout_constraintHorizontal_chainStyle="packed"
+                        app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@+id/uploadBtn" />
 
                     <EditText
                         android:id="@+id/editBlogLocation"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginEnd="24dp"
+                        android:layout_marginStart="18dp"
                         android:ems="10"
                         android:hint="Location"
                         android:inputType="textPersonName"
                         app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintHorizontal_bias="0.5"
+                        app:layout_constraintStart_toEndOf="@+id/createBlogLocation"
                         app:layout_constraintTop_toBottomOf="@+id/editBlogDesc" />
 
                     <TextView
