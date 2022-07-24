@@ -64,12 +64,14 @@
         android:layout_height="wrap_content"
         android:layout_marginEnd="24dp"
         android:layout_marginBottom="24dp"
-        android:background="#FFFFFF"
+        android:background="#00FFFFFF"
         android:clickable="true"
+        android:src="@drawable/plus_5_48"
+        android:tint="#00FF0000"
         app:backgroundTint="#FFC267"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:srcCompat="@drawable/plus_5_48" />
+        app:rippleColor="#00FFFFFF" />
 
     <TextView
         android:id="@+id/noBlogMsg"

@@ -1,47 +1,52 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#373737">
 
     <ImageView
         android:id="@+id/profilepic_menu"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
+        android:layout_width="399dp"
+        android:layout_height="613dp"
         android:layout_margin="30dp"
+        android:scaleType="centerCrop"
+        android:src="@mipmap/ic_launcher"
         app:layout_constraintBottom_toTopOf="@+id/name_placement"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        android:src="@mipmap/ic_launcher"/>
+        app:layout_constraintVertical_bias="0.115" />
 
     <TextView
         android:id="@+id/name_placement"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="20dp"
-        android:background="@drawable/btn_bg"
+        android:background="@drawable/dialog_bg"
         android:includeFontPadding="false"
         android:padding="8dp"
         android:text="John"
         android:textSize="20sp"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/Reject_btn"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/Reject_btn"/>
+        app:layout_constraintStart_toStartOf="parent" />
 
     <Button
         android:id="@+id/IgNight_Btn"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:background="@drawable/ignight_btn"
-        android:text="IgNight"
-        android:textSize="25sp"
         android:layout_margin="20dp"
+        android:background="@drawable/ignight_btn"
+        android:backgroundTint="#00FFFFFF"
+        android:text="IgNight"
+        android:textSize="20sp"
+        app:iconTint="#00FFFFFF"
+        app:layout_constraintBottom_toTopOf="@id/mainMenuLayoutHorizontalGuidelineBottom"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@id/mainMenuLayoutVerticalGuideline"
-        app:layout_constraintTop_toBottomOf="@id/mainMenuLayoutHorizontalGuidelineTop"
-        app:layout_constraintBottom_toTopOf="@id/mainMenuLayoutHorizontalGuidelineBottom"/>
+        app:layout_constraintTop_toBottomOf="@id/mainMenuLayoutHorizontalGuidelineTop" />
 
     <androidx.constraintlayout.widget.Guideline
         android:layout_width="wrap_content"
@@ -67,13 +72,13 @@
         android:id="@+id/Reject_btn"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:background="@drawable/next_btn_bg"
-        android:text="next"
-        android:textSize="25sp"
         android:layout_margin="20dp"
-        app:layout_constraintStart_toStartOf="parent"
+        android:background="@drawable/ignight_btn"
+        android:text="next"
+        android:textSize="20sp"
+        app:layout_constraintBottom_toTopOf="@id/mainMenuLayoutHorizontalGuidelineBottom"
         app:layout_constraintEnd_toStartOf="@id/mainMenuLayoutVerticalGuideline"
-        app:layout_constraintTop_toBottomOf="@id/mainMenuLayoutHorizontalGuidelineTop"
-        app:layout_constraintBottom_toTopOf="@id/mainMenuLayoutHorizontalGuidelineBottom"/>
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/mainMenuLayoutHorizontalGuidelineTop" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

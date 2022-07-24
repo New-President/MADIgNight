@@ -105,13 +105,11 @@
             android:id="@+id/notificationButton"
             android:layout_width="50dp"
             android:layout_height="50dp"
-            android:layout_marginTop="16dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginBottom="6dp"
-            app:layout_constraintBottom_toTopOf="@+id/frameLayout_menu"
+            android:layout_marginTop="12dp"
+            android:layout_marginEnd="12dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/heart" />
+            app:srcCompat="@drawable/ignitelogo" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

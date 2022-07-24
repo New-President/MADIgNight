@@ -140,19 +140,19 @@ public class CommentsAdapter extends RecyclerView.Adapter<CommentsAdapter.Commen
     }
 
     public void viewUserProfile(String targetUid){
+
         DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("user")
                 .child(targetUid);
-        FirebaseAuth auth = FirebaseAuth.getInstance();
-        String ownUID = auth.getUid();
+
         databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 ArrayList<String> dateLocList = new ArrayList<>();
                 ArrayList<String> interestList = new ArrayList<>();
 
-                String uid = snapshot.getKey();
+                String uid = FirebaseAuth.getInstance().getUid();
 
-                if (!uid.equals(ownUID)){
+                if (!uid.equals(targetUid)){
                     String phone = snapshot.child("phone").getValue().toString();
                     String aboutMe = snapshot.child("About Me").getValue().toString();
                     String gender = snapshot.child("Gender").getValue().toString();

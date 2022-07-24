@@ -85,8 +85,7 @@
             android:exported="false" />
         <activity
             android:name=".MainMenuActivity"
-            android:exported="false"
-            android:screenOrientation="portrait" />
+            android:exported="false" />
         <activity
             android:name=".LoginActivity"
             android:exported="true"
