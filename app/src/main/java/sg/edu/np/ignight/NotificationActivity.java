@@ -104,7 +104,6 @@ public class NotificationActivity extends AppCompatActivity {
                         blogIDList.add(snapshot.getKey());
                         String blogID = snapshot.child("blogID").getValue().toString();
                         String description = snapshot.child("description").getValue().toString();
-                        Log.d(TAG, "Hello: " + snapshot.child("imgID").getValue().toString());
                         String imgID = snapshot.child("imgID").getValue().toString();
                         String location = snapshot.child("location").getValue().toString();
                         int likes = Integer.parseInt(snapshot.child("likes").getValue().toString());
