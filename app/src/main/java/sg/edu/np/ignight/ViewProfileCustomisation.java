@@ -1,4 +1,14 @@
 package sg.edu.np.ignight;
 
-public class ViewProfileCustomisation {
+import androidx.appcompat.app.AppCompatActivity;
+
+import android.os.Bundle;
+
+public class ViewProfileCustomisation extends AppCompatActivity {
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_view_profile_customisation);
+    }
 }
