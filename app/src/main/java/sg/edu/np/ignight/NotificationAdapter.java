@@ -85,6 +85,7 @@ public class NotificationAdapter
     public void onBindViewHolder(@NonNull NotificationViewHolder holder, int position) {
         String liked = likedUser.get(position);
 
+        FirebaseStorage storage = FirebaseStorage.getInstance();
         FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
         String uid = firebaseUser.getUid();
 
@@ -95,9 +96,12 @@ public class NotificationAdapter
             DatabaseReference databaseReference = FirebaseDatabase.getInstance("https://madignight-default-rtdb.asia-southeast1.firebasedatabase.app/")
                     .getReference("user").child(uid).child("blog").child(blogID);
 */
+            Log.d("uid", uid);
+            Log.d("blogimgid", blog.imgID);
             ImageView blogImage = holder.blogImage;
             try{
                 StorageReference storageReference = storage.getReference("blog").child(uid).child(blog.imgID);
+
                 File localfile = File.createTempFile("tempfile", ".png");
                 storageReference.getFile(localfile).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
                     @Override
