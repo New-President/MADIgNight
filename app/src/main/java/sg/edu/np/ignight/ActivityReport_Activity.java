@@ -164,17 +164,15 @@ public class ActivityReport_Activity extends AppCompatActivity {
         barChart.getDescription().setTextColor(Color.BLUE);
 
         // init pie data set
-        PieDataSet pieDataSet = new PieDataSet(pieChartData, "Test3");
+        PieDataSet pieDataSet = new PieDataSet(pieChartData, "");
         // set colors and hide draw value
-        pieDataSet.setColors(ColorTemplate.COLORFUL_COLORS);
+        pieDataSet.setColors(ColorTemplate.PASTEL_COLORS);
         // input bar data
         pieChart.setData(new PieData(pieDataSet));
         // set animation
         pieChart.animateXY(1100,1100);
-        // hide description
-        pieChart.getDescription().setEnabled(false);
 
-
+        giveDatingSuggestions();
     }
 
     // Obtain time spent on the IgNight app and displays it
@@ -371,7 +369,16 @@ public class ActivityReport_Activity extends AppCompatActivity {
 
     // Gives dating suggestions based on the statistics
     private void giveDatingSuggestions(){
-
+        TextView suggestionsText = findViewById(R.id.activityReportTitle);
+        if(chatIDtargetUserIDkeypair.size() < 3){
+            suggestionsText.setText("Try Harder!");
+        }
+        else if(chatIDtargetUserIDkeypair.size() > 10){
+            suggestionsText.setText("Slow Down!");
+        }
+        if(hours2 > 5){
+            suggestionsText.setText("You're Addicted! Slow Down!");
+        }
     }
 }
 
