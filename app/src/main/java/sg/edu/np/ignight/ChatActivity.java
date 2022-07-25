@@ -16,6 +16,7 @@ import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewStub;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -100,7 +101,9 @@ public class ChatActivity extends AppCompatActivity {
     private TextView userOnlineStatus;
     private ProgressBar sendMessageProgressBar;
     private LinearLayout messageLayoutHeaderUserInfo;
-    private Button ProposeDateBtn;
+    private Button ProposeDateBtn, acceptButton, declineButton;
+    private ViewStub proposeDateViewStub;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -733,10 +736,17 @@ public class ChatActivity extends AppCompatActivity {
         String dateLocation = data.getStringExtra("dateLocation");
         long dateTime = data.getLongExtra("datetime", 0);
         String dateString = DateFormat.format("dd/MM/yyyy HH:mm", new Date(dateTime)).toString();
+        acceptButton = findViewById(R.id.acceptButton);
+        declineButton = findViewById(R.id.declineButton);
+        proposeDateViewStub = findViewById(R.id.proposeDateViewStub);
+        proposeDateViewStub.inflate();
+        proposeDateViewStub.setVisibility(View.INVISIBLE);
+
         if(fromProposeDate) {
             EditText call_text = findViewById(R.id.messageInput);
             call_text.setText("Date Description: " + dateDescription +"\nDate Location: " + dateLocation + "\nDate and Time: " + dateString);
             sendMessage();
+            proposeDateViewStub.setVisibility(View.VISIBLE);
         }
     }
 

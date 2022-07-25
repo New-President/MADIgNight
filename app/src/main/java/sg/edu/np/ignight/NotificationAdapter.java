@@ -129,8 +129,9 @@ public class NotificationAdapter
                             c.startActivity(blogActivity);
                         }
                         else{
-                            commentActivity.putExtra("uid", likedComment.userUID);
+                            commentActivity.putExtra("uid", uid);
                             commentActivity.putExtra("blogID", blog.blogID);
+                            commentActivity.putExtra("imgID", blog.imgID);
                             c.startActivity(commentActivity);
                         }
                     }
