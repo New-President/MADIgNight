@@ -15,7 +15,7 @@ public class ViewProfileCustomisation extends AppCompatActivity {
     private boolean customiseProfileFont;
     private boolean customiseProfileAccentTheme;
 
-    String[] FontDropdownOptions = {"Poppins", "Roboto", ""}
+    String[] FontDropdownOptions = {"Amaranth", "Cormorant", "Poppins", "Ropa", "Square Peg"};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
