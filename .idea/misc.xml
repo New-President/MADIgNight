@@ -96,7 +96,7 @@
         <entry key="..\:/AndroidStudioProjects/MADIgNightFinaleDemo8/app/src/main/res/layout/activity_propose_date.xml" value="0.4" />
         <entry key="..\:/AndroidStudioProjects/MADIgNightFinaleDemo8/app/src/main/res/layout/activity_side_menu.xml" value="0.5081081081081081" />
         <entry key="..\:/AndroidStudioProjects/MADIgNightFinaleDemo8/app/src/main/res/layout/activity_tnc.xml" value="0.2980072463768116" />
-        <entry key="..\:/AndroidStudioProjects/MADIgNightFinaleDemo8/app/src/main/res/layout/activity_view_profile_customisation.xml" value="0.176" />
+        <entry key="..\:/AndroidStudioProjects/MADIgNightFinaleDemo8/app/src/main/res/layout/activity_view_profile_customisation.xml" value="0.33283730158730157" />
         <entry key="..\:/AndroidStudioProjects/MADIgNightFinaleDemo8/app/src/main/res/layout/activityreport_activity.xml" value="0.264" />
         <entry key="..\:/AndroidStudioProjects/MADIgNightFinaleDemo8/app/src/main/res/layout/blog_layout.xml" value="0.1" />
         <entry key="..\:/AndroidStudioProjects/MADIgNightFinaleDemo8/app/src/main/res/layout/call_confrimation_dialog.xml" value="0.2980072463768116" />
@@ -119,8 +119,13 @@
         <entry key="..\:/AndroidStudioProjects/MADIgNightFinaleDemo8/app/src/main/res/layout/map_layout.xml" value="0.2980072463768116" />
         <entry key="..\:/AndroidStudioProjects/MADIgNightFinaleDemo8/app/src/main/res/layout/notification_layout.xml" value="0.2980072463768116" />
         <entry key="..\:/AndroidStudioProjects/MADIgNightFinaleDemo8/app/src/main/res/layout/permissions_activity.xml" value="0.2980072463768116" />
+        <entry key="..\:/AndroidStudioProjects/MADIgNightFinaleDemo8/app/src/main/res/layout/profile_creation_interest_layout.xml" value="0.31521739130434784" />
         <entry key="..\:/AndroidStudioProjects/MADIgNightFinaleDemo8/app/src/main/res/layout/profile_view_recycler_layout.xml" value="0.2980072463768116" />
         <entry key="..\:/AndroidStudioProjects/MADIgNightFinaleDemo8/app/src/main/res/layout/settings_activity.xml" value="0.2980072463768116" />
+        <entry key="..\:/AndroidStudioProjects/MADIgNightFinaleDemo8/app/src/main/res/layout/toast_message_bg.xml" value="0.2966485507246377" />
+        <entry key="..\:/AndroidStudioProjects/MADIgNightFinaleDemo8/app/src/main/res/menu/menu_activity_report.xml" value="0.3494791666666667" />
+        <entry key="..\:/AndroidStudioProjects/MADIgNightFinaleDemo8/app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml" value="0.1" />
+        <entry key="..\:/AndroidStudioProjects/MADIgNightFinaleDemo8/app/src/main/res/xml/root_preferences.xml" value="0.2966485507246377" />
         <entry key="..\:/School/Y2S1/MAD/ASG/MADIgNight/app/src/main/res/layout/activity_chat.xml" value="0.25" />
         <entry key="..\:/School/Y2S1/MAD/ASG/MADIgNight/app/src/main/res/layout/activity_delete_alert_dialog.xml" value="0.25" />
         <entry key="..\:/School/Y2S1/MAD/ASG/MADIgNight/app/src/main/res/layout/activity_profile_view.xml" value="0.22826086956521738" />
