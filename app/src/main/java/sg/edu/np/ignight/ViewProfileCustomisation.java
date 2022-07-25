@@ -20,10 +20,11 @@ public class ViewProfileCustomisation extends AppCompatActivity implements Adapt
     private boolean customiseProfileAccentTheme;
     private Spinner fontSpinner, accentThemeSpinner ;
 
-    // Spinner options for fonts
+    // Spinner options for fonts and accent theme
     private String[] fontDropdownOptions = {"Amaranth", "Cormorant", "Poppins", "Ropa", "Square Peg"};
     private String[] accentThemeDropdownOptions = {"Green", "IgNight Yellow", "Black", "Purple",
             "Blue", "Red", "Brown"};
+    private ArrayAdapter<String> fontArrayAdapter,accentThemeArrayAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,7 +60,7 @@ public class ViewProfileCustomisation extends AppCompatActivity implements Adapt
         // Init spinner for font change
         // Font spinner drop down list
         fontSpinner = (Spinner)findViewById(R.id.FontDropdown);
-        ArrayAdapter<String>fontArrayAdapter = new ArrayAdapter<String>(
+        fontArrayAdapter = new ArrayAdapter<String>(
                 ViewProfileCustomisation.this,
                 android.R.layout.simple_spinner_item,
                 fontDropdownOptions);
@@ -75,7 +76,7 @@ public class ViewProfileCustomisation extends AppCompatActivity implements Adapt
 
         // - Change the accent theme of their own profile
         accentThemeSpinner = (Spinner) findViewById(R.id.ChangeAccentThemeDropdown1);
-        ArrayAdapter<String>accentThemeArrayAdapter = new ArrayAdapter<String>(
+        accentThemeArrayAdapter = new ArrayAdapter<String>(
                 ViewProfileCustomisation.this,
                 android.R.layout.simple_spinner_item,
                 accentThemeDropdownOptions);
@@ -90,6 +91,55 @@ public class ViewProfileCustomisation extends AppCompatActivity implements Adapt
     public void onItemSelected(AdapterView<?> adapterView, View view, int position, long l) {
         String text = adapterView.getItemAtPosition(position).toString();
         Toast.makeText(adapterView.getContext(), text, Toast.LENGTH_SHORT).show();
+
+        if(adapterView.getId() == R.id.FontDropdown){
+            switch (position) {
+                case 0:
+                    // Amaranth font selected
+                    // Set font option in database for the user
+
+
+                    break;
+                case 1:
+                    // Cormorant font selected
+                    break;
+                case 2:
+                    // Poppins font selected
+                    break;
+                case 3:
+                    // Ropa font selected
+                    break;
+                case 4:
+                    // Square Peg font selected
+                    break;
+            }
+        }
+
+        if(adapterView.getId() == R.id.ChangeAccentThemeDropdown1){
+            switch (position) {
+                case 0:
+                    // Green accent theme selected
+                    break;
+                case 1:
+                    // IgNight Yellow accent theme selected
+                    break;
+                case 2:
+                    // Black accent theme selected
+                    break;
+                case 3:
+                    // Purple accent theme selected
+                    break;
+                case 4:
+                    // Square Peg accent theme selected
+                    break;
+                case 5:
+                    // Square Peg accent theme selected
+                    break;
+                case 6:
+                    // Square Peg accent theme selected
+                    break;
+            }
+        }
     }
 
     @Override
