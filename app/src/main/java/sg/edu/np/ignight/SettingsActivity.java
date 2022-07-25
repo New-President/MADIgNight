@@ -9,10 +9,15 @@ import androidx.appcompat.app.AppCompatActivity;
 
 public class SettingsActivity extends AppCompatActivity {
 
-    public static final String KEY_CHAT_NOTIFICATION_ENABLED = "messageNotificationsEnabled";
-    public static final String KEY_CHAT_NOTIFICATION_RINGTONE = "messageNotificationRingtone";
-    public static final String KEY_CHAT_NOTIFICATION_VIBRATION = "messageNotificationVibration";
-    public static final String KEY_CHAT_NOTIFICATION_PRIORITY = "messageNotificationPriority";
+    public static final String KEY_MESSAGE_NOTIFICATION_ENABLED = "messageNotificationsEnabled";
+    public static final String KEY_MESSAGE_NOTIFICATION_RINGTONE = "messageNotificationRingtone";
+    public static final String KEY_MESSAGE_NOTIFICATION_VIBRATION = "messageNotificationVibration";
+    public static final String KEY_MESSAGE_NOTIFICATION_PRIORITY = "messageNotificationPriority";
+    public static final String KEY_CHAT_REQUEST_NOTIFICATION_ENABLED = "chatRequestNotificationsEnabled";
+    public static final String KEY_CHAT_REQUEST_NOTIFICATION_RINGTONE = "chatRequestNotificationRingtone";
+    public static final String KEY_CHAT_REQUEST_NOTIFICATION_VIBRATION = "chatRequestNotificationVibration";
+    public static final String KEY_CHAT_REQUEST_NOTIFICATION_PRIORITY = "chatRequestNotificationPriority";
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

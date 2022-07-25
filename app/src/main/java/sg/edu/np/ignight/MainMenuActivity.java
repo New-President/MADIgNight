@@ -63,9 +63,14 @@ public class MainMenuActivity extends AppCompatActivity {
 
         // check if there is a ringtone saved in shared preferences and set ringtone to default ringtone if there isn't
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
-        String ringtoneUri = sharedPreferences.getString(SettingsActivity.KEY_CHAT_NOTIFICATION_RINGTONE, "no uri");
-        if (ringtoneUri.equals("no uri")) {
-            sharedPreferences.edit().putString(SettingsActivity.KEY_CHAT_NOTIFICATION_RINGTONE, Settings.System.DEFAULT_NOTIFICATION_URI.toString()).apply();
+        String messageRingtoneUri = sharedPreferences.getString(SettingsActivity.KEY_MESSAGE_NOTIFICATION_RINGTONE, "no uri");
+        if (messageRingtoneUri.equals("no uri")) {
+            sharedPreferences.edit().putString(SettingsActivity.KEY_MESSAGE_NOTIFICATION_RINGTONE, Settings.System.DEFAULT_NOTIFICATION_URI.toString()).apply();
+        }
+
+        String chatRequestRingtoneUri = sharedPreferences.getString(SettingsActivity.KEY_CHAT_REQUEST_NOTIFICATION_RINGTONE, "no uri");
+        if (chatRequestRingtoneUri.equals("no uri")) {
+            sharedPreferences.edit().putString(SettingsActivity.KEY_CHAT_REQUEST_NOTIFICATION_RINGTONE, Settings.System.DEFAULT_NOTIFICATION_URI.toString()).apply();
         }
 
         Intent intent = getIntent();

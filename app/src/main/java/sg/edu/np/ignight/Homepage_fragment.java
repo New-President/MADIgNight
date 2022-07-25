@@ -25,6 +25,7 @@ import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 import sg.edu.np.ignight.Menu.MainMenuAdapter;
 import sg.edu.np.ignight.Objects.UserObject;
@@ -173,9 +174,6 @@ public class Homepage_fragment extends Fragment {
         if (queryName != "" || queryName != null) {
             Query query  = myRef.orderByChild("username").startAt(queryName);
             query.addValueEventListener(getUserListListener);
-        }
-        else {
-            myRef.addValueEventListener(getUserListListener);
         }
     }
 

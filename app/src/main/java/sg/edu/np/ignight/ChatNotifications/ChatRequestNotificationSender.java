@@ -15,34 +15,35 @@ import org.json.JSONObject;
 import java.util.HashMap;
 import java.util.Map;
 
-public class ChatNotificationSender {
+public class ChatRequestNotificationSender {
 
     private String fcmToken;
-    private String senderID;
-    private String chatID;
-    private String messageID;
     private Context context;
-    private String type;
+    private String chatRequestID;
+    private boolean pending;
+    private boolean accepted;
 
     private RequestQueue requestQueue;
     private final String postUrl = "https://fcm.googleapis.com/fcm/send";
     private final String fcmServerKey = "AAAA0fKydBU:APA91bFEsGLkVEtd9n_icYQdlVw20YI11Kvp7imYadZlFwAPZrVIYad7mPmGtvqWZk4cpvCLvJqLH6N_8Qw0rMNzazZakMDgQG4_rWkBiAmjYORPnhV34tS9qnaSuf-C_srwk0QZy-pb";
 
-    public ChatNotificationSender(String fcmToken, String senderID, String chatID, String messageID, Context context, String type) {
+    public ChatRequestNotificationSender(String fcmToken, Context context, String chatRequestID) {  // for sending new chat request
         this.fcmToken = fcmToken;
-        this.senderID = senderID;
-        this.chatID = chatID;
-        this.messageID = messageID;
         this.context = context;
-        this.type = type;
+        this.chatRequestID = chatRequestID;
+        this.pending = true;
+    }
+
+    public ChatRequestNotificationSender(String fcmToken, Context context, String chatRequestID, boolean accepted) {  // for responding to a chat request (accept/reject)
+        this.fcmToken = fcmToken;
+        this.context = context;
+        this.chatRequestID = chatRequestID;
+        this.accepted = accepted;
+        this.pending = false;
     }
 
     // send notification using Volley
     public void sendNotification() {
-        if (!type.equals("message")) {
-            return;
-        }
-
         requestQueue = Volley.newRequestQueue(context);
         JSONObject jsonObject = new JSONObject();
 
@@ -51,10 +52,13 @@ public class ChatNotificationSender {
             jsonObject.put("to", fcmToken);
 
             JSONObject data = new JSONObject();  // add custom data
-            data.put("purpose", "message");
-            data.put("senderID", senderID);
-            data.put("chatID", chatID);
-            data.put("messageID", messageID);
+            data.put("purpose", "request");
+            data.put("requestID", chatRequestID);
+            data.put("pending", pending);
+
+            if (!pending) {
+                data.put("response", accepted);
+            }
 
             jsonObject.put("data", data);
 

@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.CheckedTextView;
 import android.widget.ImageView;
 import android.widget.Toast;
 
@@ -33,6 +34,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import sg.edu.np.ignight.ChatActivity;
+import sg.edu.np.ignight.ChatNotifications.ChatRequestNotificationSender;
 import sg.edu.np.ignight.ProfileViewActivity;
 import sg.edu.np.ignight.R;
 import sg.edu.np.ignight.Objects.UserObject;
@@ -114,6 +116,13 @@ public class MainMenuAdapter extends RecyclerView.Adapter<MainMenuViewHolder>{
                         }
 
                         if (!chatExists) {  // chat does not exist between the two users
+
+                            // get the other user's fcm token
+                            String fcmToken = null;
+                            if (snapshot.child(targetUserUID).child("fcmToken").exists()) {
+                                 fcmToken = snapshot.child(targetUserUID).child("fcmToken").getValue().toString();
+                            }
+
                             boolean requestSent = false;
                             String sentRequestID = "";
 
@@ -147,6 +156,7 @@ public class MainMenuAdapter extends RecyclerView.Adapter<MainMenuViewHolder>{
                                 boolean finalRequestReceived = requestReceived;  // to use in inner class
                                 String finalReceivedRequestID = receivedRequestID;  // to use in inner class
 
+                                String finalFcmToken = fcmToken;  // to use within inner class
                                 chatRequestDB.child(sentRequestID).addListenerForSingleValueEvent(new ValueEventListener() {
                                     @Override
                                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -170,11 +180,11 @@ public class MainMenuAdapter extends RecyclerView.Adapter<MainMenuViewHolder>{
                                                 dataMap.put("chatName", user.getUsername());
                                                 dataMap.put("view", view);
 
-                                                startChat(dataMap);
+                                                startChat(dataMap, finalFcmToken);
                                             }
                                             else {  // request is sent (inactive) and no request is received
                                                 // send a new request
-                                                sendNewRequest(userDB, chatRequestDB, snapshot, targetUserUID);
+                                                sendNewRequest(userDB, chatRequestDB, snapshot, targetUserUID, finalFcmToken);
                                             }
                                         }
                                     }
@@ -199,11 +209,11 @@ public class MainMenuAdapter extends RecyclerView.Adapter<MainMenuViewHolder>{
                                     dataMap.put("chatName", user.getUsername());
                                     dataMap.put("view", view);
 
-                                    startChat(dataMap);
+                                    startChat(dataMap, fcmToken);
                                 }
                                 else {  // no request is received
                                     // send new request
-                                    sendNewRequest(userDB, chatRequestDB, snapshot, targetUserUID);
+                                    sendNewRequest(userDB, chatRequestDB, snapshot, targetUserUID, fcmToken);
                                 }
                             }
                         }
@@ -245,7 +255,7 @@ public class MainMenuAdapter extends RecyclerView.Adapter<MainMenuViewHolder>{
     }
 
     // create new request and update database
-    private void sendNewRequest(DatabaseReference userDB, DatabaseReference chatRequestDB, DataSnapshot snapshot, String targetUserUID) {
+    private void sendNewRequest(DatabaseReference userDB, DatabaseReference chatRequestDB, DataSnapshot snapshot, String targetUserUID, String fcmToken) {
         String currentUserUID = FirebaseAuth.getInstance().getUid();
         String newRequestID = chatRequestDB.push().getKey();
         Map newRequestMap = new HashMap<>();
@@ -265,6 +275,11 @@ public class MainMenuAdapter extends RecyclerView.Adapter<MainMenuViewHolder>{
             @Override
             public void onComplete(@NonNull Task task) {
                 if (task.isSuccessful()) {
+                    if (fcmToken != null) {
+                        ChatRequestNotificationSender sender = new ChatRequestNotificationSender(fcmToken, c, newRequestID);
+                        sender.sendNotification();
+                    }
+
                     Toast.makeText(c, "Request sent.", Toast.LENGTH_SHORT).show();
                 }
             }
@@ -272,7 +287,7 @@ public class MainMenuAdapter extends RecyclerView.Adapter<MainMenuViewHolder>{
     }
 
     // update existing request and start new chat
-    private void startChat(Map dataMap) {
+    private void startChat(Map dataMap, String fcmToken) {
         DatabaseReference chatDB = (DatabaseReference) dataMap.get("chatDB");
         DatabaseReference userDB = (DatabaseReference) dataMap.get("userDB");
         DatabaseReference chatRequestDB = (DatabaseReference) dataMap.get("chatRequestDB");
@@ -310,7 +325,15 @@ public class MainMenuAdapter extends RecyclerView.Adapter<MainMenuViewHolder>{
             @Override
             public void onComplete(@NonNull Task task) {
                 if (task.isSuccessful()) {
-                    userDB.updateChildren(updateUserMap);
+                    userDB.updateChildren(updateUserMap).addOnCompleteListener(new OnCompleteListener() {
+                        @Override
+                        public void onComplete(@NonNull Task task) {
+                            if (fcmToken != null) {
+                                ChatRequestNotificationSender sender = new ChatRequestNotificationSender(fcmToken, c, requestID, true);
+                                sender.sendNotification();
+                            }
+                        }
+                    });
 
                     Toast.makeText(c, "Request accepted, Chat created.", Toast.LENGTH_SHORT).show();
 
