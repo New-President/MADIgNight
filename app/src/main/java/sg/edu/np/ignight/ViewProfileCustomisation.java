@@ -15,10 +15,14 @@ public class ViewProfileCustomisation extends AppCompatActivity {
     private boolean customiseProfileFont;
     private boolean customiseProfileAccentTheme;
 
+    String[] FontDropdownOptions = {"Poppins", "Roboto", ""}
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_view_profile_customisation);
+
+
 
         // Return back to main menu
         backButton3 = findViewById(R.id.backButton2);
@@ -33,17 +37,17 @@ public class ViewProfileCustomisation extends AppCompatActivity {
         });
 
         // There are three kinds of customisations for a user to personalize their own profile view:
-        // - Change profile background to a video or photo
         // - Change font used in profile view
+        // - Change profile background to a video or photo
         // - Change the accent theme of their own profile
 
 
         // Init customisation fields
 
 
-        // - Change profile background to a video or photo
+        // - Change font used in profile view
+        // Set dropdown and its hints
 
-        // User has to upload their profile picture here
 
     }
 }
