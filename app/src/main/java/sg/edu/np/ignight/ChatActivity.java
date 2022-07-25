@@ -288,7 +288,6 @@ public class ChatActivity extends AppCompatActivity {
                         chatDB.child(chatID).child("onCall").setValue(true);
                         // Call
                         URL server;
-                        JitsiMeetActivity session = new JitsiMeetActivity();
                         try{
                             server = new URL("https://meet.jit.si");
                             JitsiMeetConferenceOptions defaultOptions= new JitsiMeetConferenceOptions.Builder()
@@ -304,7 +303,7 @@ public class ChatActivity extends AppCompatActivity {
                                 .setRoom(chatID)// Unique ID
                                 .setFeatureFlag("welcomepage.enabled", false)
                                 .build();
-                        session.launch(ChatActivity.this,options);
+                        JitsiMeetActivity.launch(ChatActivity.this,options);
                         alertDialog.dismiss();
                         // Calling message notification
                         EditText call_text = findViewById(R.id.messageInput);
@@ -351,7 +350,6 @@ public class ChatActivity extends AppCompatActivity {
                         DatabaseReference chatDB = rootDB.child("chat");
                         chatDB.child(chatID).child("onCall").setValue(true);
                         URL server;
-                        JitsiMeetActivity session = new JitsiMeetActivity();
                         try{
                             server = new URL("https://meet.jit.si");
                             JitsiMeetConferenceOptions defaultOptions= new JitsiMeetConferenceOptions.Builder()
@@ -368,7 +366,7 @@ public class ChatActivity extends AppCompatActivity {
                                 .setFeatureFlag("welcomepage.enabled", false)
                                 .setVideoMuted(true)
                                 .build();
-                        session.launch(ChatActivity.this,options);
+                        JitsiMeetActivity.launch(ChatActivity.this,options);
                         alertDialog.dismiss();
                         // Calling message notification
                         EditText call_text = findViewById(R.id.messageInput);
