@@ -99,6 +99,8 @@ public class ChatActivity extends AppCompatActivity {
     private LinearLayout messageLayoutHeaderUserInfo;
     private Button ProposeDateBtn;
 
+    private ChildEventListener messagesListener;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -131,7 +133,7 @@ public class ChatActivity extends AppCompatActivity {
         headerChatName.setText(chatName);
 
         showTargetUserStatus();
-        getChatMessages();
+        initMessagesListener();
         initializeMessage();
         initializeMedia();
 
@@ -139,7 +141,7 @@ public class ChatActivity extends AppCompatActivity {
         sendMessageButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                sendMessage();
+                sendMessage("message");
             }
         });
 
@@ -306,7 +308,7 @@ public class ChatActivity extends AppCompatActivity {
                         // Calling message notification
                         EditText call_text = findViewById(R.id.messageInput);
                         call_text.setText("Hey, I started a call come join me!");
-                        sendMessage();
+                        sendMessage("");
                         BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
                             final Integer count = 1;
                             Integer total_count = 0;
@@ -318,7 +320,7 @@ public class ChatActivity extends AppCompatActivity {
                                     call_text.setText("The call just ended, let's have another call next time!");
                                     Log.d("Call Ended","Yes");
                                     changeOnCall();
-                                    sendMessage();
+                                    sendMessage("");
                                 }
                             }
                         };
@@ -355,7 +357,7 @@ public class ChatActivity extends AppCompatActivity {
                         // Calling message notification
                         EditText call_text = findViewById(R.id.messageInput);
                         call_text.setText("Hey, I started a call come join me!");
-                        sendMessage();
+                        sendMessage("");
                         BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
                             Integer total_count = 0;
                             @Override
@@ -366,7 +368,7 @@ public class ChatActivity extends AppCompatActivity {
                                     call_text.setText("The call just ended, let's have another call next time!");
                                     Log.d("Call Ended","Yes");
                                     changeOnCall();
-                                    sendMessage();
+                                    sendMessage("");
                                 }
                             }
                         };
@@ -394,17 +396,19 @@ public class ChatActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onResume() {  // set currentChatID to received chatID
+    protected void onResume() {
         super.onResume();
 
-        currentChatID = chatID;
+        chatDB.child("messages").addChildEventListener(messagesListener);  // attach listener
+        currentChatID = chatID;  // set currentChatID to received chatID
     }
 
     @Override
-    protected void onPause() {  // clear currentChatID
+    protected void onPause() {
         super.onPause();
 
-        currentChatID = "";
+        chatDB.child("messages").removeEventListener(messagesListener);  // remove listener
+        currentChatID = "";  // clear currentChatID
     }
 
     // update status of other user
@@ -459,12 +463,12 @@ public class ChatActivity extends AppCompatActivity {
         scrollToChatBottomButton.setClickable(toEnable);
     }
 
-    // get list of chat messages
-    private void getChatMessages() {
-        chatDB.child("messages").addChildEventListener(new ChildEventListener() {
+    // define child event listener to get new messages
+    private void initMessagesListener() {
+        ArrayList<String> messageIDList = new ArrayList<>();
+        messagesListener = new ChildEventListener() {
             @Override
             public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {  // initialize messages and add to the list when new messages are sent
-                ArrayList<String> messageIDList = new ArrayList<>();
 
                 if (snapshot.exists()) {
                     if (!messageIDList.contains(snapshot.getKey())) {
@@ -497,12 +501,24 @@ public class ChatActivity extends AppCompatActivity {
 
                         message.setFirstMessage(messageList);
                         message.setSent(true);
-                        message.setSeen(snapshot.child("isSeen").getValue().toString().equals("true"));
+
+                        boolean isSeen = snapshot.child("isSeen").getValue().toString().equals("true");
+
+                        if (!creatorId.equals(currentUserUID)) {  // if message is received then set isSeen to true
+                            if (!isSeen) {
+                                snapshot.child("isSeen").getRef().setValue(true);
+                                isSeen = true;
+                            }
+                        }
+
+                        message.setSeen(isSeen);
 
                         messageList.add(message);
                         messageLayoutManager.smoothScrollToPosition(messageRV, new RecyclerView.State(), messageList.size() - 1);
 
                         messageAdapter.notifyDataSetChanged();
+
+                        chatDB.child("unread").child(currentUserUID).setValue(0);  // set unread count to 0
                     }
                 }
             }
@@ -529,7 +545,7 @@ public class ChatActivity extends AppCompatActivity {
             public void onCancelled(@NonNull DatabaseError error) {
                 Log.e(TAG, "onCancelled: " + error.getMessage());
             }
-        });
+        };
     }
 
     // show loading progress bar for sending messages
@@ -539,7 +555,7 @@ public class ChatActivity extends AppCompatActivity {
     }
 
     // send message
-    private void sendMessage() {
+    private void sendMessage(String type) {
 
         // checks if the text entered is valid (gets rid of leading and trailing spaces and checks length is not 0)
         String messageText = messageInput.getText().toString().trim();
@@ -607,7 +623,7 @@ public class ChatActivity extends AppCompatActivity {
                                         totalMediaUploaded[0] += 1;
 
                                         if (totalMediaUploaded[0] == mediaUriListCopy.size()) {
-                                            updateDatabaseWithNewMessage(chatDB, newMessageMap, messageId);
+                                            updateDatabaseWithNewMessage(chatDB, newMessageMap, messageId, type);
                                         }
                                     }
                                 });
@@ -617,7 +633,7 @@ public class ChatActivity extends AppCompatActivity {
                 }
                 else {
                     if (validText) {
-                        updateDatabaseWithNewMessage(chatDB, newMessageMap, messageId);
+                        updateDatabaseWithNewMessage(chatDB, newMessageMap, messageId, type);
                     }
                 }
             }
@@ -630,18 +646,18 @@ public class ChatActivity extends AppCompatActivity {
     }
 
     // update database with new message (from sendMessage()) and remove progress bar when done
-    private void updateDatabaseWithNewMessage(DatabaseReference newMessageDb, Map newMessageMap, String messageID) {
+    private void updateDatabaseWithNewMessage(DatabaseReference newMessageDb, Map newMessageMap, String messageID, String type) {
         newMessageDb.updateChildren(newMessageMap).addOnCompleteListener(new OnCompleteListener() {
             @Override
             public void onComplete(@NonNull Task task) {
                 showSendMessageProgressBar(false);
-                pushNotification(messageID);
+                pushNotification(messageID, type);
             }
         });
     }
 
     // send notification to the other user
-    private void pushNotification(String messageID) {
+    private void pushNotification(String messageID, String type) {
         Context context = getApplicationContext();
         rootDB.child("user").child(targetUserID).child("fcmToken").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -649,7 +665,7 @@ public class ChatActivity extends AppCompatActivity {
                 if (snapshot.exists()) {
                     String fcmToken = snapshot.getValue().toString();
 
-                    ChatNotificationSender sender = new ChatNotificationSender(fcmToken, FirebaseAuth.getInstance().getUid(), chatID, messageID, context);
+                    ChatNotificationSender sender = new ChatNotificationSender(fcmToken, FirebaseAuth.getInstance().getUid(), chatID, messageID, context, type);
                     sender.sendNotification();
                 }
             }
@@ -704,7 +720,7 @@ public class ChatActivity extends AppCompatActivity {
         if(fromProposeDate) {
             EditText call_text = findViewById(R.id.messageInput);
             call_text.setText("Date Description: " + dateDescription +"\nDate Location: " + dateLocation + "\nDate and Time: " + dateString);
-            sendMessage();
+            sendMessage("");
         }
     }
 

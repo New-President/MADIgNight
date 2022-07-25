@@ -24,21 +24,27 @@ public class ChatNotificationSender {
     private String chatID;
     private String messageID;
     private Context context;
+    private String type;
 
     private RequestQueue requestQueue;
     private final String postUrl = "https://fcm.googleapis.com/fcm/send";
     private final String fcmServerKey = "AAAA0fKydBU:APA91bFEsGLkVEtd9n_icYQdlVw20YI11Kvp7imYadZlFwAPZrVIYad7mPmGtvqWZk4cpvCLvJqLH6N_8Qw0rMNzazZakMDgQG4_rWkBiAmjYORPnhV34tS9qnaSuf-C_srwk0QZy-pb";
 
-    public ChatNotificationSender(String fcmToken, String senderID, String chatID, String messageID, Context context) {
+    public ChatNotificationSender(String fcmToken, String senderID, String chatID, String messageID, Context context, String type) {
         this.fcmToken = fcmToken;
         this.senderID = senderID;
         this.chatID = chatID;
         this.messageID = messageID;
         this.context = context;
+        this.type = type;
     }
 
     // send notification using Volley
     public void sendNotification() {
+        if (!type.equals("message")) {
+            return;
+        }
+
         requestQueue = Volley.newRequestQueue(context);
         JSONObject jsonObject = new JSONObject();
 

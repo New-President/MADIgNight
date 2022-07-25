@@ -167,7 +167,6 @@ public class ChatNotificationService extends FirebaseMessagingService {
                                 // add data to pass to receiver
                                 Bundle markAsReadBundle = new Bundle();
                                 markAsReadBundle.putString("chatID", chatID);
-                                markAsReadBundle.putString("messageID", messageID);
                                 markAsReadBundle.putString("tag", senderID);
 
                                 markAsReadIntent.putExtras(markAsReadBundle);
@@ -194,19 +193,17 @@ public class ChatNotificationService extends FirebaseMessagingService {
                                 Intent replyIntent = new Intent(context, ReplyReceiver.class);
 
                                 // add data to pass to receiver
-                                Bundle replyBundle = new Bundle();
-                                replyBundle.putString("senderID", senderID);
-                                replyBundle.putString("chatID", chatID);
-                                replyBundle.putString("chatName", senderName);
-                                replyBundle.putString("myName", myDisplayName);
+                                replyIntent.putExtra("senderID", senderID);
+                                replyIntent.putExtra("chatID", chatID);
+                                replyIntent.putExtra("chatName", senderName);
+                                replyIntent.putExtra("myName", myDisplayName);
 
                                 ByteArrayOutputStream stream = new ByteArrayOutputStream();
                                 myProfileBitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
-                                replyBundle.putByteArray("bitmapBA", stream.toByteArray());
+                                replyIntent.putExtra("bitmapBA", stream.toByteArray());
+                                replyIntent.addFlags(Intent.FLAG_RECEIVER_FOREGROUND);
 
-                                replyIntent.putExtras(replyBundle);
-
-                                PendingIntent replyPendingIntent = PendingIntent.getBroadcast(context, 0, replyIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+                                PendingIntent replyPendingIntent = PendingIntent.getBroadcast(context, 1, replyIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
                                 // create action
                                 NotificationCompat.Action replyAction = new NotificationCompat.Action.Builder(R.drawable.ic_baseline_reply_24, "Reply", replyPendingIntent).addRemoteInput(remoteInput).build();
