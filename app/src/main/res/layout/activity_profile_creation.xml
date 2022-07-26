@@ -111,7 +111,7 @@
                                 android:layout_height="match_parent">
 
                                 <TextView
-                                    android:id="@+id/Preferences"
+                                    android:id="@+id/ChangeAccentThemeTitle"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_marginStart="32dp"
@@ -132,7 +132,7 @@
                                     android:textSize="20sp"
                                     android:textStyle="bold"
                                     app:layout_constraintStart_toStartOf="parent"
-                                    app:layout_constraintTop_toBottomOf="@+id/Preferences" />
+                                    app:layout_constraintTop_toBottomOf="@+id/ChangeAccentThemeTitle" />
 
                                 <Spinner
                                     android:id="@+id/RelationshipPrefDropdown"
@@ -251,7 +251,7 @@
                         android:background="#FFE3BA">
 
                         <TextView
-                            android:id="@+id/Username"
+                            android:id="@+id/ChangeFontTitle"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="32dp"
@@ -273,7 +273,7 @@
                             android:inputType="textPersonName"
                             android:textSize="15sp"
                             app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toBottomOf="@+id/Username" />
+                            app:layout_constraintTop_toBottomOf="@+id/ChangeFontTitle" />
 
                         <TextView
                             android:id="@+id/Gender"
@@ -410,7 +410,7 @@
                         android:layout_height="match_parent">
 
                         <TextView
-                            android:id="@+id/textView4"
+                            android:id="@+id/UploadCustomBackgroundTitle"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="32dp"
@@ -428,11 +428,11 @@
                             android:layout_marginTop="25dp"
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toBottomOf="@+id/textView4"
+                            app:layout_constraintTop_toBottomOf="@+id/UploadCustomBackgroundTitle"
                             app:srcCompat="@drawable/pngwing" />
 
                         <Button
-                            android:id="@+id/ProfilePicUpload"
+                            android:id="@+id/CustomBackgroundUpload"
                             android:layout_width="150dp"
                             android:layout_height="55dp"
                             android:layout_marginTop="25dp"

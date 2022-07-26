@@ -1,20 +1,14 @@
 package sg.edu.np.ignight;
 
-import static android.content.ContentValues.TAG;
-
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -39,15 +33,12 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.google.firebase.storage.FileDownloadTask;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.ListResult;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
-import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -103,7 +94,7 @@ public class ProfileCreationActivity extends AppCompatActivity {
         genderPrefDropdown = findViewById(R.id.GenderPrefDropdown);
         relationshipPrefDropdown = findViewById(R.id.RelationshipPrefDropdown);
         imgGallery = findViewById(R.id.ProfileCreationImage);
-        uploadButton = findViewById(R.id.ProfilePicUpload);
+        uploadButton = findViewById(R.id.CustomBackgroundUpload);
         interestRV = findViewById(R.id.interestRecyclerView);
 
         // Initialise the input for users
