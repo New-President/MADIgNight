@@ -3,7 +3,6 @@ package sg.edu.np.ignight;
 import static android.app.AppOpsManager.MODE_ALLOWED;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.annotation.SuppressLint;
@@ -14,7 +13,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
-import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.util.Log;
@@ -22,8 +20,6 @@ import android.view.View;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import com.facebook.infer.annotation.FalseOnNull;
 import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.charts.PieChart;
 import com.github.mikephil.charting.data.BarData;
@@ -47,7 +43,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.PriorityQueue;
-import java.util.concurrent.CountDownLatch;
 
 
 public class ActivityReport_Activity extends AppCompatActivity {
@@ -124,11 +119,37 @@ public class ActivityReport_Activity extends AppCompatActivity {
         generateIgNightChatData(chatIDtargetUserIDkeypair,
                 targetUserIDusernamesTargetUserIDkeypair,
                 targetUserIDtotalNumberOfTextsKeypair);
-
         getTimeSpentToday();
 
 
-        // barChart and pieChart display here
+        // We add the retrieved data to the pieChartData arrayList to display the data
+        // However, we only want the top 3 IgNights, so we filter the
+        // targetUserIDtotalNumberOfTextsKeypair hashMap for top 3 most texts first
+        List<Map.Entry<String, Integer>> targetUserIDtotalNumberOfTextsKeypair2 = topThreeIgNightUserChats(targetUserIDtotalNumberOfTextsKeypair);
+        for (Map.Entry<String, Integer> entry : targetUserIDtotalNumberOfTextsKeypair2){
+            String targetUserID = entry.getKey();
+            Integer totalNumberOfTexts = entry.getValue();
+            Log.d("targetUserID", entry.getKey());
+            Log.d("totalNumberOfTexts", entry.getValue().toString());
+            // Iterates through targetUserIDusernames hashMap to match the username
+            // to the correct targetUserID
+            String targetUsername = "";
+            for(Map.Entry<String, String> entry2: targetUserIDusernamesTargetUserIDkeypair.entrySet()) {
+                // If the right username is found,
+                if(entry2.getValue().equals(targetUserID)){
+                    // Set username value
+                    targetUsername = entry2.getKey().toString();
+                }
+            }
+
+            // We now have the targetUsername and the respective totalNumberOfTexts between
+            // the currentUser and the targetUser
+            // Adds data here to the pieChart ArrayList
+            pieChartData.add(new PieEntry(totalNumberOfTexts, targetUsername));
+            Log.d("pieChartData", totalNumberOfTexts.toString()  + " " + targetUsername);
+        }
+
+
 
         // init bar data set
         BarDataSet barDataSet = new BarDataSet(barChartData, "Test1");
@@ -229,6 +250,7 @@ public class ActivityReport_Activity extends AppCompatActivity {
         return topThreeIgNightUserChatsHashMap;
     }
 
+    @SuppressLint("LogNotTimber")
     private void generateIgNightChatData(HashMap<String, String> chatIDtargetUserIDkeypair,
                                          HashMap<String, String> targetUserIDusernamesTargetUserIDkeypair,
                                          HashMap<String, Integer> targetUserIDtotalNumberOfTextsKeypair) {
@@ -248,7 +270,7 @@ public class ActivityReport_Activity extends AppCompatActivity {
         // Retrieves the number of chat messages sent to each IgNighted user,
         // and stores it in a key:pair dictionary
         // It does it everytime the user opens the activity report so that it refreshes correctly everytime
-        myRef.addValueEventListener(new ValueEventListener() {
+        myRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 // Retrieve the chat IDs of all chats that the user is in
@@ -297,32 +319,6 @@ public class ActivityReport_Activity extends AppCompatActivity {
                 Log.d("onCancelled", "Error retrieving chat information");
             }
         });
-
-        // We add the retrieved data to the pieChartData arrayList to display the data
-        // However, we only want the top 3 IgNights, so we filter the
-        // targetUserIDtotalNumberOfTextsKeypair hashMap for top 3 most texts first
-        List<Map.Entry<String, Integer>> targetUserIDtotalNumberOfTextsKeypair2 = topThreeIgNightUserChats(targetUserIDtotalNumberOfTextsKeypair);
-        for (Map.Entry<String, Integer> entry : targetUserIDtotalNumberOfTextsKeypair2){
-            String targetUserID = entry.getKey();
-            Integer totalNumberOfTexts = entry.getValue();
-
-            // Iterates through targetUserIDusernames hashMap to match the username
-            // to the correct targetUserID
-            String targetUsername = "";
-            for(Map.Entry<String, String> entry2: targetUserIDusernamesTargetUserIDkeypair.entrySet()) {
-                // If the right username is found,
-                if(entry2.getValue().equals(targetUserID)){
-                    // Set username value
-                    targetUsername = entry2.getKey().toString();
-                }
-            }
-
-            // We now have the targetUsername and the respective totalNumberOfTexts between
-            // the currentUser and the targetUser
-            // Adds data here to the pieChart ArrayList
-            pieChartData.add(new PieEntry(totalNumberOfTexts, targetUsername));
-            Log.d("pieChartData", totalNumberOfTexts + " " + targetUsername);
-        }
     }
 
     // Do NOT invert method.
@@ -333,8 +329,6 @@ public class ActivityReport_Activity extends AppCompatActivity {
                 context.getPackageName());
         return mode == MODE_ALLOWED;
     }
-
-
 
     // Gives dating suggestions based on the statistics
     private void giveDatingSuggestions(HashMap<String, String> chatIDtargetUserIDkeypair){
