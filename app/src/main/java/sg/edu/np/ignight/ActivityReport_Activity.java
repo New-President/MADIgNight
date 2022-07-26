@@ -122,9 +122,6 @@ public class ActivityReport_Activity extends AppCompatActivity {
                 targetUserIDtotalNumberOfTextsKeypair);
         getTimeSpentToday();
 
-
-        Log.d("runAfter", "success");
-
         // init bar data set
         BarDataSet barDataSet = new BarDataSet(barChartData, "");
         // set colors and hide draw value
@@ -166,10 +163,6 @@ public class ActivityReport_Activity extends AppCompatActivity {
                     // Time unit conversion logic
                     hours1 = (int) ((foregroundTime / (1000 * 60 * 60)) % 24);
                     minutes1 = (int) ((foregroundTime / (1000 * 60)) % 60);
-
-                    // Testing to check if the phone detects other packages and thus sg.edu.np.ignight
-                    // Log.d line here sees if the permissions are enabled so all stats can be seen
-                    Log.d("PackageName", packageName + hours1 + "h," + minutes1 + "min");
 
                     // Show time spent in textView below bar chart
                     timeSpentToday = "You spent " + hours1 + "h," + minutes1 + "min" + " on IgNight today.";
@@ -228,12 +221,9 @@ public class ActivityReport_Activity extends AppCompatActivity {
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         //get the current user's UID
         uid = user.getUid();
-        Log.d("user.getUid();", uid);
         FirebaseDatabase database = FirebaseDatabase.getInstance("https://madignight-default-rtdb.asia-southeast1.firebasedatabase.app/");
-        Log.d("FirebaseDatabase database", database.toString());
         // getting the reference
         DatabaseReference myRef = database.getReference("");
-        Log.d("DatabaseReference myRef", myRef.toString());
         // Retrieves the number of chat messages sent to each IgNighted user,
         // and stores it in a key:pair dictionary
         // It does it everytime the user opens the activity report so that it refreshes correctly everytime
@@ -243,16 +233,13 @@ public class ActivityReport_Activity extends AppCompatActivity {
                 // Retrieve the chat IDs of all chats that the user is in
                 // Puts all of the chat IDs and associated target user IDs into a hashMap
                 // targetUserId refers to the ID of the other user that the current user chats with\
-                Log.d("onDataChange", "onDataChange");
                 for (DataSnapshot dataSnapshot : snapshot.child("user")
                         .child(uid)
                         .child("chats")
                         .getChildren()){
 
                     String chatId = dataSnapshot.getKey();
-                    Log.d("chatId", chatId);
                     String targetUserId = (String) dataSnapshot.getValue();
-                    Log.d("targetUserId", targetUserId);
                     chatIDtargetUserIDkeypair.put(chatId, targetUserId);
                 }
                 for(Map.Entry<String,String> entry: chatIDtargetUserIDkeypair.entrySet()){
@@ -262,7 +249,6 @@ public class ActivityReport_Activity extends AppCompatActivity {
                             .child("messages")
                             .getChildrenCount();
                     targetUserIDtotalNumberOfTextsKeypair.put(entry.getValue(), totalNumberOfTextsSent);
-                    Log.d("targetUserIDtotalNumberOfTextsKeypair", entry.getValue() + " " + totalNumberOfTextsSent);
                 }
 
                 for(Map.Entry<String, Integer> entry: targetUserIDtotalNumberOfTextsKeypair.entrySet()){
@@ -272,7 +258,6 @@ public class ActivityReport_Activity extends AppCompatActivity {
                             .child("username")
                             .getValue().toString();
                     targetUserIDusernamesTargetUserIDkeypair.put(targetUsernameRetrieved, entry.getKey());
-                    Log.d("targetUserIDusernamesTargetUserIDkeypair", targetUsernameRetrieved + " " + entry.getKey());
                 }
 
                 // We add the retrieved data to the pieChartData arrayList to display the data
@@ -282,8 +267,6 @@ public class ActivityReport_Activity extends AppCompatActivity {
                 for (Map.Entry<String, Integer> entry : targetUserIDtotalNumberOfTextsKeypair2){
                     String targetUserID = entry.getKey();
                     Integer totalNumberOfTexts = entry.getValue();
-                    Log.d("targetUserID", entry.getKey());
-                    Log.d("totalNumberOfTexts", entry.getValue().toString());
                     // Iterates through targetUserIDusernames hashMap to match the username
                     // to the correct targetUserID
                     String targetUsername = "";
@@ -299,7 +282,6 @@ public class ActivityReport_Activity extends AppCompatActivity {
                     // the currentUser and the targetUser
                     // Adds data here to the pieChart ArrayList
                     pieChartData.add(new PieEntry(totalNumberOfTexts, targetUsername));
-                    Log.d("pieChartData", totalNumberOfTexts.toString()  + " " + targetUsername);
                 }
 
                 // init pie data set
@@ -331,7 +313,6 @@ public class ActivityReport_Activity extends AppCompatActivity {
                         "Error retrieving chat information",
                         Toast.LENGTH_LONG)
                         .show();
-                Log.d("onCancelled", "Error retrieving chat information");
             }
         });
     }
