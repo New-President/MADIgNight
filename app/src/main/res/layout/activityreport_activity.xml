@@ -22,8 +22,8 @@
 
     <TextView
         android:id="@+id/activityReportTitle"
-        android:layout_width="250dp"
-        android:layout_height="96dp"
+        android:layout_width="274dp"
+        android:layout_height="52dp"
         android:layout_marginTop="92dp"
         android:fontFamily="@font/poppins"
         android:text="Insert General Advice Here!"
@@ -31,7 +31,7 @@
         android:textSize="34sp"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.149"
+        app:layout_constraintHorizontal_bias="0.175"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -64,15 +64,13 @@
         app:layout_constraintTop_toBottomOf="@+id/activityReportTitle" />
 
     <ScrollView
-        android:layout_width="0dp"
-        android:layout_height="470dp"
+        android:layout_width="389dp"
+        android:layout_height="555dp"
         android:layout_marginTop="8dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/activityTitle2"
-        app:layout_constraintVertical_bias="0.0">
+        app:layout_constraintTop_toBottomOf="@+id/activityTitle2">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
@@ -92,7 +90,7 @@
                 android:id="@+id/timeSpentTitle"
                 android:layout_width="187dp"
                 android:layout_height="23dp"
-                android:layout_marginTop="100dp"
+                android:layout_marginTop="50dp"
                 android:fontFamily="@font/poppins"
                 android:text="Total time spent daily:"
                 android:textColor="#000"
@@ -104,8 +102,8 @@
 
             <com.github.mikephil.charting.charts.PieChart
                 android:id="@+id/PieChart"
-                android:layout_width="216dp"
-                android:layout_height="239dp"
+                android:layout_width="361dp"
+                android:layout_height="308dp"
                 android:layout_marginTop="16dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.497"
@@ -131,7 +129,7 @@
                 android:layout_width="39dp"
                 android:layout_height="25dp"
                 android:layout_marginStart="16dp"
-                android:layout_marginTop="100dp"
+                android:layout_marginTop="50dp"
                 android:contentDescription="imageView2"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/PieChart"
@@ -140,11 +138,11 @@
             <TextView
                 android:id="@+id/topIgNightChatsTitle"
                 android:layout_width="155dp"
-                android:layout_height="24dp"
+                android:layout_height="43dp"
                 android:layout_marginStart="4dp"
                 android:layout_marginTop="32dp"
                 android:fontFamily="@font/poppins"
-                android:text="Your top 3 IgNights:"
+                android:text="Your top 3 IgNights by no. of texts sent:"
                 android:textColor="#000"
                 android:textSize="16sp"
                 app:layout_constraintStart_toEndOf="@+id/imageView3"
