@@ -28,6 +28,7 @@ import com.github.mikephil.charting.data.BarEntry;
 import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.data.PieEntry;
+import com.github.mikephil.charting.formatter.ValueFormatter;
 import com.github.mikephil.charting.utils.ColorTemplate;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -309,6 +310,20 @@ public class ActivityReport_Activity extends AppCompatActivity {
                 pieChart.setData(new PieData(pieDataSet));
                 // set animation
                 pieChart.animateXY(1100,1100);
+                // remove description label
+                pieChart.getDescription().setEnabled(false);
+                // adjust font & formatting
+                pieChart.getLegend().setEnabled(false);
+                pieDataSet.setValueFormatter(new ValueFormatter() {
+                    @Override
+                    public String getFormattedValue(float value) {
+                        return String.valueOf((int) Math.floor(value)) + " texts";
+                    }
+                });
+                pieChart.setEntryLabelTextSize(23f);
+                pieChart.setEntryLabelColor(Color.rgb(0,0,0));
+                pieDataSet.setValueTextSize(23);
+                pieDataSet.setValueTextColor(Color.rgb(0,0,0));
             }
             @Override
             public void onCancelled(@NonNull DatabaseError error) {

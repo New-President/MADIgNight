@@ -64,15 +64,13 @@
         app:layout_constraintTop_toBottomOf="@+id/activityReportTitle" />
 
     <ScrollView
-        android:layout_width="0dp"
-        android:layout_height="470dp"
+        android:layout_width="389dp"
+        android:layout_height="555dp"
         android:layout_marginTop="8dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/activityTitle2"
-        app:layout_constraintVertical_bias="0.0">
+        app:layout_constraintTop_toBottomOf="@+id/activityTitle2">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
@@ -92,7 +90,7 @@
                 android:id="@+id/timeSpentTitle"
                 android:layout_width="187dp"
                 android:layout_height="23dp"
-                android:layout_marginTop="100dp"
+                android:layout_marginTop="50dp"
                 android:fontFamily="@font/poppins"
                 android:text="Total time spent daily:"
                 android:textColor="#000"
@@ -104,8 +102,8 @@
 
             <com.github.mikephil.charting.charts.PieChart
                 android:id="@+id/PieChart"
-                android:layout_width="281dp"
-                android:layout_height="309dp"
+                android:layout_width="361dp"
+                android:layout_height="308dp"
                 android:layout_marginTop="16dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.497"
@@ -131,7 +129,7 @@
                 android:layout_width="39dp"
                 android:layout_height="25dp"
                 android:layout_marginStart="16dp"
-                android:layout_marginTop="100dp"
+                android:layout_marginTop="50dp"
                 android:contentDescription="imageView2"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/PieChart"
