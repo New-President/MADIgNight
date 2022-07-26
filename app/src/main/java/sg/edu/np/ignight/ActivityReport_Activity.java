@@ -125,7 +125,7 @@ public class ActivityReport_Activity extends AppCompatActivity {
         Log.d("runAfter", "success");
 
         // init bar data set
-        BarDataSet barDataSet = new BarDataSet(barChartData, "Test1");
+        BarDataSet barDataSet = new BarDataSet(barChartData, "");
         // set colors and hide draw value
         barDataSet.setColors(ColorTemplate.COLORFUL_COLORS);
         barDataSet.setDrawValues(false);
@@ -302,9 +302,9 @@ public class ActivityReport_Activity extends AppCompatActivity {
                 }
 
                 // init pie data set
-                PieDataSet pieDataSet = new PieDataSet(pieChartData, "Top Chats");
+                PieDataSet pieDataSet = new PieDataSet(pieChartData, "");
                 // set colors and hide draw value
-                pieDataSet.setColors(ColorTemplate.PASTEL_COLORS);
+                pieDataSet.setColors(ColorTemplate.COLORFUL_COLORS);
                 // input bar data
                 pieChart.setData(new PieData(pieDataSet));
                 // set animation
@@ -340,7 +340,7 @@ public class ActivityReport_Activity extends AppCompatActivity {
             suggestionsText.setText("Slow Down!");
         }
         if(hours2 > 5){
-            suggestionsText.setText("You're Addicted! Slow Down!");
+            suggestionsText.setText("You're Addicted!");
         }
     }
 }
