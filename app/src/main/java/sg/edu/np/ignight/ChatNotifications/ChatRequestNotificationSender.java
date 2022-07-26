@@ -15,6 +15,8 @@ import org.json.JSONObject;
 import java.util.HashMap;
 import java.util.Map;
 
+import sg.edu.np.ignight.R;
+
 public class ChatRequestNotificationSender {
 
     private String fcmToken;
@@ -25,7 +27,7 @@ public class ChatRequestNotificationSender {
 
     private RequestQueue requestQueue;
     private final String postUrl = "https://fcm.googleapis.com/fcm/send";
-    private final String fcmServerKey = "AAAA0fKydBU:APA91bFEsGLkVEtd9n_icYQdlVw20YI11Kvp7imYadZlFwAPZrVIYad7mPmGtvqWZk4cpvCLvJqLH6N_8Qw0rMNzazZakMDgQG4_rWkBiAmjYORPnhV34tS9qnaSuf-C_srwk0QZy-pb";
+    private String fcmServerKey;
 
     public ChatRequestNotificationSender(String fcmToken, Context context, String chatRequestID) {  // for sending new chat request
         this.fcmToken = fcmToken;
@@ -44,6 +46,8 @@ public class ChatRequestNotificationSender {
 
     // send notification using Volley
     public void sendNotification() {
+        fcmServerKey = context.getResources().getString(R.string.fcm_server_key);
+
         requestQueue = Volley.newRequestQueue(context);
         JSONObject jsonObject = new JSONObject();
 
