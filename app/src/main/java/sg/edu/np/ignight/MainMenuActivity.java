@@ -40,7 +40,10 @@ public class MainMenuActivity extends AppCompatActivity {
 
     private ImageView notificationButton;
 
-    final String[] queryName = {""};
+    public static String queryName;
+
+    ChatListFragment chatListFragment = new ChatListFragment();
+    Homepage_fragment homepage_fragment = new Homepage_fragment();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -79,10 +82,10 @@ public class MainMenuActivity extends AppCompatActivity {
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
 
         if (intentExtra != null && intentExtra.equals("chatlist")) {
-            ft.replace(R.id.frameLayout_menu, new ChatListFragment());
+            ft.replace(R.id.frameLayout_menu, chatListFragment);
         }
         else {
-            ft.replace(R.id.frameLayout_menu, new Homepage_fragment());
+            ft.replace(R.id.frameLayout_menu, homepage_fragment);
         }
         ft.commit();
 
@@ -94,16 +97,13 @@ public class MainMenuActivity extends AppCompatActivity {
             // set queryName to the text in search box and update Homepagefragment when text changes in the search box
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                if (searchUsername.getText().toString().length() == 0) {
-                    queryName[0] = "";
+                if (searchUsername.getText().toString().trim().length() == 0) {
+                    queryName = "";
                 }
                 else {
-                    queryName[0] = searchUsername.getText().toString();
+                    queryName = searchUsername.getText().toString().trim();
+                    homepage_fragment.getCallBack().onQueryChanged();
                 }
-
-                FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-                ft.replace(R.id.frameLayout_menu, new Homepage_fragment());
-                ft.commit();
             }
 
             @Override
@@ -115,7 +115,7 @@ public class MainMenuActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-                ft.replace(R.id.frameLayout_menu, new Homepage_fragment());
+                ft.replace(R.id.frameLayout_menu, homepage_fragment);
                 ft.commit();
             }
         });
@@ -125,7 +125,7 @@ public class MainMenuActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-                ft.replace(R.id.frameLayout_menu, new ChatListFragment());
+                ft.replace(R.id.frameLayout_menu, chatListFragment);
                 ft.commit();
             }
         });
@@ -196,10 +196,6 @@ public class MainMenuActivity extends AppCompatActivity {
             }
         });
 
-    }
-
-    public String getQueryName() {
-        return queryName[0];
     }
 
     private void Refresh(){

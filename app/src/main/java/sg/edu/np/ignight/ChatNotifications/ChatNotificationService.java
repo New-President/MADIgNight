@@ -109,7 +109,7 @@ public class ChatNotificationService extends FirebaseMessagingService {
         boolean pending = data.get("pending").equals("true");
         boolean accepted = false;
         if (!pending) {
-            accepted = data.get("accepted").equals("true");
+            accepted = data.get("response").equals("true");
         }
 
         DatabaseReference requestDB = rootDB.child("chatRequest");
@@ -120,16 +120,23 @@ public class ChatNotificationService extends FirebaseMessagingService {
                 public void onDataChange(@NonNull DataSnapshot snapshot) {
                     if (snapshot.exists()) {
                         try {
-                            String creatorProfile = snapshot.child("creatorProfile").getValue().toString();
+                            String profile;
+                            String username;
+                            if (!pending) {  // not pending means responded to (show receiver details)
+                                profile = snapshot.child("receiverProfile").getValue().toString();
+                                username = snapshot.child("receiverName").getValue().toString();
+                            }
+                            else {
+                                profile = snapshot.child("creatorProfile").getValue().toString();
+                                username = snapshot.child("creatorName").getValue().toString();
+                            }
 
-                            // get creator profile picture as bitmaps
+                            // get profile picture as bitmap
                             ExecutorService executorService = Executors.newFixedThreadPool(2);
 
-                            Future<Bitmap> futureSenderProfile = executorService.submit(new UrlToBitmap(new URL(creatorProfile)));
+                            Future<Bitmap> futureSenderProfile = executorService.submit(new UrlToBitmap(new URL(profile)));
 
                             // do other tasks while waiting for bitmap
-                            String creatorName = snapshot.child("creatorName").getValue().toString();
-                            String creatorID = snapshot.child("creatorId").getValue().toString();
 
                             // start to create notification
                             NotificationCompat.Builder builder = new NotificationCompat.Builder(context, "Ignight");
@@ -147,7 +154,7 @@ public class ChatNotificationService extends FirebaseMessagingService {
                             }
                             builder.setVibrate(vibrationPattern);
 
-                            builder.setContentTitle(creatorName);
+                            builder.setContentTitle(username);
 
                             if (pending) {
                                 builder.setContentText("Sent you a chat request. Tap to view.");
@@ -167,7 +174,7 @@ public class ChatNotificationService extends FirebaseMessagingService {
                             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
 
                             // add data to pass to ChatRequestActivity
-                            intent.putExtra("position", (creatorID.equals(FirebaseAuth.getInstance().getUid()))?1:0);
+                            intent.putExtra("position", pending?0:1);
 
                             // set pendingIntent
                             PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);

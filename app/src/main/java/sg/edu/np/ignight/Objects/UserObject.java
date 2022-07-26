@@ -3,7 +3,9 @@ package sg.edu.np.ignight.Objects;
 import java.io.Serializable;
 import java.util.ArrayList;
 
-public class UserObject implements Serializable {
+import sg.edu.np.ignight.MainMenuActivity;
+
+public class UserObject implements Serializable, Comparable<UserObject> {
     private String uid;
     private String phone;
     private String username;
@@ -104,5 +106,22 @@ public class UserObject implements Serializable {
     }
     public void setAge(int age) {
         this.age = age;
+    }
+
+    @Override
+    public int compareTo(UserObject userObject) {
+        String queryString = MainMenuActivity.queryName;
+        boolean currentUserTrue = this.getUsername().toLowerCase().contains(queryString.toLowerCase());
+        boolean otherUserTrue = userObject.getUsername().toLowerCase().contains(queryString.toLowerCase());
+
+        if (currentUserTrue && !otherUserTrue) {
+            return -1;
+        }
+        else if (!currentUserTrue && otherUserTrue) {
+            return 1;
+        }
+        else {
+            return 0;
+        }
     }
 }

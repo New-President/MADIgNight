@@ -80,8 +80,6 @@ public class MainMenuAdapter extends RecyclerView.Adapter<MainMenuViewHolder>{
                 else {
                     layoutManager.scrollToPosition(0);
                 }
-
-                Toast.makeText(c,"Thank you for your feedback! we will try not to recommend you this type of people next time!",Toast.LENGTH_SHORT ).show();
             }
         });
 
