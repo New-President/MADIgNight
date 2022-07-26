@@ -118,6 +118,8 @@ public class ActivityReport_Activity extends AppCompatActivity {
         // targetUserIDtotalNumberOfTextsKeypair;
         // targetUserIDusernames;
         generateIgNightChatData();
+        // Number of chats here determine the number of entries in the pieChart display later on
+        numberOfChats = chatIDtargetUserIDkeypair.size();
         getTimeSpentToday();
         // call suggestions function here to set text
 
@@ -227,9 +229,12 @@ public class ActivityReport_Activity extends AppCompatActivity {
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         //get the current user's UID
         uid = user.getUid();
+        Log.d("user.getUid();", uid);
         FirebaseDatabase database = FirebaseDatabase.getInstance("https://madignight-default-rtdb.asia-southeast1.firebasedatabase.app/");
+        Log.d("FirebaseDatabase database", database.toString());
         // getting the child user
         DatabaseReference myRef = database.getReference("user");
+        Log.d("DatabaseReference myRef", myRef.toString());
         // Retrieves the number of chat messages sent to each IgNighted user,
         // and stores it in a key:pair dictionary
         // It does it everytime the user opens the activity report so that it refreshes correctly everytime
@@ -241,7 +246,9 @@ public class ActivityReport_Activity extends AppCompatActivity {
                 // targetUserId refers to the ID of the other user that the current user chats with
                 for (DataSnapshot dataSnapshot : snapshot.getChildren()){
                     String chatId = dataSnapshot.getKey();
+                    Log.d("chatId", chatId);
                     String targetUserId = (String) dataSnapshot.getValue();
+                    Log.d("targetUserId", targetUserId);
                     chatIDtargetUserIDkeypair.put(chatId, targetUserId);
                 }
             }
@@ -253,10 +260,10 @@ public class ActivityReport_Activity extends AppCompatActivity {
                         Toast.LENGTH_LONG)
                         .show();
             }
+
         });
 
-        // Number of chats here determine the number of entries in the pieChart display later on
-        numberOfChats = chatIDtargetUserIDkeypair.size();
+
 
         // Retrieve each chat via chatID with a loop to find the number of texts in total
         // ChatID are keys in chatIDtargetUserIDkeypair hashmap, so we loop through the keys in the hashMap
