@@ -123,7 +123,7 @@ public class ReplyReceiver extends BroadcastReceiver {
                 if (snapshot.exists()) {
                     String fcmToken = snapshot.getValue().toString();
 
-                    ChatNotificationSender sender = new ChatNotificationSender(fcmToken, FirebaseAuth.getInstance().getUid(), chatID, messageID, context, "message");
+                    ChatNotificationSender sender = new ChatNotificationSender(fcmToken, FirebaseAuth.getInstance().getUid(), chatID, messageID, context);
                     sender.sendNotification();
                 }
             }
