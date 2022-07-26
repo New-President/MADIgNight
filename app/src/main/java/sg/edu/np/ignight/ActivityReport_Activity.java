@@ -122,34 +122,7 @@ public class ActivityReport_Activity extends AppCompatActivity {
         getTimeSpentToday();
 
 
-        // We add the retrieved data to the pieChartData arrayList to display the data
-        // However, we only want the top 3 IgNights, so we filter the
-        // targetUserIDtotalNumberOfTextsKeypair hashMap for top 3 most texts first
-        List<Map.Entry<String, Integer>> targetUserIDtotalNumberOfTextsKeypair2 = topThreeIgNightUserChats(targetUserIDtotalNumberOfTextsKeypair);
-        for (Map.Entry<String, Integer> entry : targetUserIDtotalNumberOfTextsKeypair2){
-            String targetUserID = entry.getKey();
-            Integer totalNumberOfTexts = entry.getValue();
-            Log.d("targetUserID", entry.getKey());
-            Log.d("totalNumberOfTexts", entry.getValue().toString());
-            // Iterates through targetUserIDusernames hashMap to match the username
-            // to the correct targetUserID
-            String targetUsername = "";
-            for(Map.Entry<String, String> entry2: targetUserIDusernamesTargetUserIDkeypair.entrySet()) {
-                // If the right username is found,
-                if(entry2.getValue().equals(targetUserID)){
-                    // Set username value
-                    targetUsername = entry2.getKey().toString();
-                }
-            }
-
-            // We now have the targetUsername and the respective totalNumberOfTexts between
-            // the currentUser and the targetUser
-            // Adds data here to the pieChart ArrayList
-            pieChartData.add(new PieEntry(totalNumberOfTexts, targetUsername));
-            Log.d("pieChartData", totalNumberOfTexts.toString()  + " " + targetUsername);
-        }
-
-
+        Log.d("runAfter", "success");
 
         // init bar data set
         BarDataSet barDataSet = new BarDataSet(barChartData, "Test1");
@@ -164,16 +137,9 @@ public class ActivityReport_Activity extends AppCompatActivity {
         barChart.getDescription().setText("Test2");
         barChart.getDescription().setTextColor(Color.BLUE);
 
-        // init pie data set
-        PieDataSet pieDataSet = new PieDataSet(pieChartData, "");
-        // set colors and hide draw value
-        pieDataSet.setColors(ColorTemplate.PASTEL_COLORS);
-        // input bar data
-        pieChart.setData(new PieData(pieDataSet));
-        // set animation
-        pieChart.animateXY(1100,1100);
 
-        //giveDatingSuggestions();
+        // Give dating suggestions based on a few parameters
+        giveDatingSuggestions(chatIDtargetUserIDkeypair);
     }
 
     // Obtain time spent on the IgNight app and displays it
@@ -308,8 +274,42 @@ public class ActivityReport_Activity extends AppCompatActivity {
                     Log.d("targetUserIDusernamesTargetUserIDkeypair", targetUsernameRetrieved + " " + entry.getKey());
                 }
 
-            }
+                // We add the retrieved data to the pieChartData arrayList to display the data
+                // However, we only want the top 3 IgNights, so we filter the
+                // targetUserIDtotalNumberOfTextsKeypair hashMap for top 3 most texts first
+                List<Map.Entry<String, Integer>> targetUserIDtotalNumberOfTextsKeypair2 = topThreeIgNightUserChats(targetUserIDtotalNumberOfTextsKeypair);
+                for (Map.Entry<String, Integer> entry : targetUserIDtotalNumberOfTextsKeypair2){
+                    String targetUserID = entry.getKey();
+                    Integer totalNumberOfTexts = entry.getValue();
+                    Log.d("targetUserID", entry.getKey());
+                    Log.d("totalNumberOfTexts", entry.getValue().toString());
+                    // Iterates through targetUserIDusernames hashMap to match the username
+                    // to the correct targetUserID
+                    String targetUsername = "";
+                    for(Map.Entry<String, String> entry2: targetUserIDusernamesTargetUserIDkeypair.entrySet()) {
+                        // If the right username is found,
+                        if(entry2.getValue().equals(targetUserID)){
+                            // Set username value
+                            targetUsername = entry2.getKey().toString();
+                        }
+                    }
 
+                    // We now have the targetUsername and the respective totalNumberOfTexts between
+                    // the currentUser and the targetUser
+                    // Adds data here to the pieChart ArrayList
+                    pieChartData.add(new PieEntry(totalNumberOfTexts, targetUsername));
+                    Log.d("pieChartData", totalNumberOfTexts.toString()  + " " + targetUsername);
+                }
+
+                // init pie data set
+                PieDataSet pieDataSet = new PieDataSet(pieChartData, "Top Chats");
+                // set colors and hide draw value
+                pieDataSet.setColors(ColorTemplate.PASTEL_COLORS);
+                // input bar data
+                pieChart.setData(new PieData(pieDataSet));
+                // set animation
+                pieChart.animateXY(1100,1100);
+            }
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
                 Toast.makeText(ActivityReport_Activity.this,
