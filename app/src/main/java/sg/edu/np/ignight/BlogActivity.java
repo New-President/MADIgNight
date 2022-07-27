@@ -76,12 +76,16 @@ public class BlogActivity extends AppCompatActivity {
 
         // Only show the create blogs button when viewing own profile
         FloatingActionButton createBlogBtn = findViewById(R.id.createBlogBtn);
+        TextView header = findViewById(R.id.blogActivityHeader);
         canEdit = getIntent().getBooleanExtra("canEdit", false);
         if(!canEdit){
             createBlogBtn.setVisibility(View.GONE);
+            header.setText("Blog Posts");
+
         }
         else{
             createBlogBtn.setVisibility(View.VISIBLE);
+            header.setText("My Blog Posts");
         }
 
         initRecyclerView();

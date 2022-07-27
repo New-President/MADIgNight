@@ -86,7 +86,6 @@ public class CommentSectionActivity extends AppCompatActivity {
                         .load(profileUrl).placeholder(R.drawable.failed)
                         .into(commentProfilePic);
             }
-
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
                 Log.d("CommentPFPfail", "Failed to load profile picture");

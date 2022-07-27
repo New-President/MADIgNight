@@ -89,7 +89,7 @@
         <entry key="..\:/AndroidStudioProjects/MADIgNightFinaleDemo8/app/src/main/res/layout/activity_delete_alert_dialog.xml" value="0.2980072463768116" />
         <entry key="..\:/AndroidStudioProjects/MADIgNightFinaleDemo8/app/src/main/res/layout/activity_homepage_fragment.xml" value="0.2980072463768116" />
         <entry key="..\:/AndroidStudioProjects/MADIgNightFinaleDemo8/app/src/main/res/layout/activity_login.xml" value="0.2980072463768116" />
-        <entry key="..\:/AndroidStudioProjects/MADIgNightFinaleDemo8/app/src/main/res/layout/activity_main_menu.xml" value="0.176" />
+        <entry key="..\:/AndroidStudioProjects/MADIgNightFinaleDemo8/app/src/main/res/layout/activity_main_menu.xml" value="0.264" />
         <entry key="..\:/AndroidStudioProjects/MADIgNightFinaleDemo8/app/src/main/res/layout/activity_map.xml" value="0.1" />
         <entry key="..\:/AndroidStudioProjects/MADIgNightFinaleDemo8/app/src/main/res/layout/activity_notification.xml" value="0.1" />
         <entry key="..\:/AndroidStudioProjects/MADIgNightFinaleDemo8/app/src/main/res/layout/activity_profile_creation.xml" value="0.2" />
@@ -97,7 +97,8 @@
         <entry key="..\:/AndroidStudioProjects/MADIgNightFinaleDemo8/app/src/main/res/layout/activity_propose_date.xml" value="0.4" />
         <entry key="..\:/AndroidStudioProjects/MADIgNightFinaleDemo8/app/src/main/res/layout/activity_side_menu.xml" value="0.5081081081081081" />
         <entry key="..\:/AndroidStudioProjects/MADIgNightFinaleDemo8/app/src/main/res/layout/activity_tnc.xml" value="0.2980072463768116" />
-        <entry key="..\:/AndroidStudioProjects/MADIgNightFinaleDemo8/app/src/main/res/layout/activity_view_profile_customisation.xml" value="0.176" />
+        <entry key="..\:/AndroidStudioProjects/MADIgNightFinaleDemo8/app/src/main/res/layout/activity_view_location.xml" value="0.1" />
+        <entry key="..\:/AndroidStudioProjects/MADIgNightFinaleDemo8/app/src/main/res/layout/activity_view_profile_customisation.xml" value="0.264" />
         <entry key="..\:/AndroidStudioProjects/MADIgNightFinaleDemo8/app/src/main/res/layout/activityreport_activity.xml" value="0.264" />
         <entry key="..\:/AndroidStudioProjects/MADIgNightFinaleDemo8/app/src/main/res/layout/blog_layout.xml" value="0.1" />
         <entry key="..\:/AndroidStudioProjects/MADIgNightFinaleDemo8/app/src/main/res/layout/call_confrimation_dialog.xml" value="0.2980072463768116" />
@@ -116,7 +117,7 @@
         <entry key="..\:/AndroidStudioProjects/MADIgNightFinaleDemo8/app/src/main/res/layout/item_chat_request_sent.xml" value="0.2980072463768116" />
         <entry key="..\:/AndroidStudioProjects/MADIgNightFinaleDemo8/app/src/main/res/layout/item_chatbot_message_received.xml" value="0.2980072463768116" />
         <entry key="..\:/AndroidStudioProjects/MADIgNightFinaleDemo8/app/src/main/res/layout/item_chatbot_message_sent.xml" value="0.2980072463768116" />
-        <entry key="..\:/AndroidStudioProjects/MADIgNightFinaleDemo8/app/src/main/res/layout/main_menu_layout.xml" value="0.2980072463768116" />
+        <entry key="..\:/AndroidStudioProjects/MADIgNightFinaleDemo8/app/src/main/res/layout/main_menu_layout.xml" value="0.4" />
         <entry key="..\:/AndroidStudioProjects/MADIgNightFinaleDemo8/app/src/main/res/layout/map_layout.xml" value="0.2980072463768116" />
         <entry key="..\:/AndroidStudioProjects/MADIgNightFinaleDemo8/app/src/main/res/layout/notification_layout.xml" value="0.2980072463768116" />
         <entry key="..\:/AndroidStudioProjects/MADIgNightFinaleDemo8/app/src/main/res/layout/permissions_activity.xml" value="0.2980072463768116" />
@@ -183,7 +184,6 @@
         <entry key="..\:/Users/limlo/Downloads/MAD/Assignment/Assignment/app/src/main/res/layout/activity_create_blog.xml" value="0.12158054711246201" />
         <entry key="..\:/Users/limlo/Downloads/MAD/Assignment/Assignment/app/src/main/res/layout/activity_login.xml" value="0.12158054711246201" />
         <entry key="..\:/Users/limlo/Downloads/MAD/Assignment/Assignment/app/src/main/res/layout/activity_main_menu.xml" value="0.22780797101449277" />
-        <entry key="..\:/Users/limlo/Downloads/MAD/Assignment/Assignment/app/src/main/res/layout/activity_notification.xml" value="0.264" />
         <entry key="..\:/Users/limlo/Downloads/MAD/Assignment/Assignment/app/src/main/res/layout/activity_profile_creation.xml" value="0.23738872403560832" />
         <entry key="..\:/Users/limlo/Downloads/MAD/Assignment/Assignment/app/src/main/res/layout/activity_profile_view.xml" value="0.2" />
         <entry key="..\:/Users/limlo/Downloads/MAD/Assignment/Assignment/app/src/main/res/layout/blog_layout.xml" value="0.2246376811594203" />
@@ -191,7 +191,7 @@
         <entry key="..\:/Users/limlo/Downloads/MAD/Assignment/Assignment/app/src/main/res/layout/interest_layout.xml" value="0.6" />
         <entry key="..\:/Users/limlo/Downloads/MAD/Assignment/Assignment/app/src/main/res/layout/item_chat.xml" value="0.2246376811594203" />
         <entry key="..\:/Users/limlo/Downloads/MAD/Assignment/Assignment/app/src/main/res/layout/item_media.xml" value="0.2246376811594203" />
-        <entry key="..\:/Users/limlo/Downloads/MAD/Assignment/Assignment/app/src/main/res/layout/item_message_by_you.xml" value="1.2" />
+        <entry key="..\:/Users/limlo/Downloads/MAD/Assignment/Assignment/app/src/main/res/layout/item_message_by_you.xml" value="0.21240942028985507" />
         <entry key="..\:/Users/limlo/Downloads/MAD/Assignment/Assignment/app/src/main/res/layout/item_message_to_you.xml" value="0.2246376811594203" />
         <entry key="..\:/Users/limlo/Downloads/MAD/Assignment/Assignment/app/src/main/res/layout/item_propose_to_you.xml" value="0.21240942028985507" />
         <entry key="..\:/Users/limlo/Downloads/MAD/Assignment/Assignment/app/src/main/res/layout/item_suggested_reply.xml" value="0.21240942028985507" />

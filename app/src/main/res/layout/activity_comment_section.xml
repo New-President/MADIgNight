@@ -92,11 +92,13 @@
                 <EditText
                     andriod:id="@+id/commentInputField"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_height="50dp"
                     android:layout_marginBottom="8dp"
+                    android:background="@drawable/custom_input"
                     andriod:ems="10"
                     android:hint="Share your thoughts"
                     andriod:inputType="textPersonName"
+                    android:paddingLeft="10dp"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent" />
@@ -124,7 +126,7 @@
                     android:layout_width="36dp"
                     android:layout_height="36dp"
                     android:layout_marginStart="16dp"
-                    android:layout_marginBottom="10dp"
+                    android:layout_marginBottom="16dp"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toEndOf="@+id/commentInputField"
                     app:srcCompat="@drawable/ic_baseline_send_24" />
