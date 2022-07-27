@@ -124,7 +124,7 @@
         </service>
 
         <service
-            android:name=".BlogNotificationService"
+            android:name=".Notification.BlogNotificationService"
             android:exported="false"
             android:permission="com.google.android.c2dm.permission.SEND" >
             <intent-filter>

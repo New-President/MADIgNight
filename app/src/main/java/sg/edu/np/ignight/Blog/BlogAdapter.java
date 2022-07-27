@@ -39,7 +39,7 @@ import sg.edu.np.ignight.CreateBlogActivity;
 import sg.edu.np.ignight.Objects.BlogObject;
 import sg.edu.np.ignight.Objects.UserObject;
 import sg.edu.np.ignight.R;
-import sg.edu.np.ignight.SendBlogNotification;
+import sg.edu.np.ignight.Notification.SendBlogNotification;
 
 public class BlogAdapter extends RecyclerView.Adapter<BlogViewHolder> {
 
@@ -196,7 +196,6 @@ public class BlogAdapter extends RecyclerView.Adapter<BlogViewHolder> {
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if (snapshot.exists()) {
                     String fcmToken = snapshot.getValue().toString();
-
                     SendBlogNotification sender = new SendBlogNotification(fcmToken, FirebaseAuth.getInstance().getUid(), "hi", "hi", c);
                     sender.sendNotification();
                 }
