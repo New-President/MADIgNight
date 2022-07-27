@@ -2,18 +2,28 @@ package sg.edu.np.ignight;
 
 import static android.content.ContentValues.TAG;
 
+import android.app.Notification;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.gms.iid.InstanceID;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.ChildEventListener;
@@ -22,6 +32,9 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.iid.FirebaseInstanceIdReceiver;
+import com.google.firebase.installations.FirebaseInstallations;
+import com.google.firebase.messaging.FirebaseMessaging;
 
 import java.util.ArrayList;
 
@@ -44,6 +57,10 @@ public class NotificationActivity extends AppCompatActivity {
 
     public String phone, username, gender, aboutMe, relationshipPref, genderPref, profilePicUrl;
     public int age;
+
+    public static final String CHANNEL_ID = "simplified_coding";
+    private static final String CHANNEL_NAME = "simplified_coding";
+    private static final String CHANNEL_DESC = "simplified Coding Notifications";
 
     // Get the current user
     FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
@@ -74,9 +91,33 @@ public class NotificationActivity extends AppCompatActivity {
 
         initRecyclerView();
 
-        /*editTextTitle = findViewById(R.id.edit_text_title);
-        editTextMessage = findViewById(R.id.edit_text_message);*/
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
+            NotificationChannel channel = new NotificationChannel(CHANNEL_ID, CHANNEL_NAME, NotificationManager.IMPORTANCE_DEFAULT);
+            channel.setDescription(CHANNEL_DESC);
+            NotificationManager manager = getSystemService(NotificationManager.class);
+            manager.createNotificationChannel(channel);
+        }
+
+        TextView textView = findViewById(R.id.textViewToken);
+        FirebaseMessaging.getInstance().getToken()
+                .addOnCompleteListener(new OnCompleteListener<String>() {
+                    @Override
+                    public void onComplete(@NonNull Task<String> task) {
+                        if(task.isSuccessful()){
+                            String token = task.getResult();
+                            DatabaseReference nested = databaseUserReference.child(FirebaseAuth.getInstance().getUid());
+                            nested.child("fcmToken").setValue(token);
+                            Toast.makeText(NotificationActivity.this, "token saved", Toast.LENGTH_SHORT).show();
+                            textView.setText("Token: " + token);
+                        }
+                        else{
+                            textView.setText(task.getException().getMessage());
+                        }
+                    }
+                });
+
     }
+
 
     public void initRecyclerView(){
         RecyclerView rv = findViewById(R.id.notificationRecyclerView);
@@ -99,6 +140,7 @@ public class NotificationActivity extends AppCompatActivity {
                 if (snapshot.exists()) {
                     if (!blogIDList.contains(snapshot.getKey())) {
                         blogIDList.add(snapshot.getKey());
+                        Log.d("TAG", "Hello" + snapshot.getKey());
                         String blogID = snapshot.child("blogID").getValue().toString();
                         String description = snapshot.child("description").getValue().toString();
                         String imgID = snapshot.child("imgID").getValue().toString();
@@ -122,7 +164,7 @@ public class NotificationActivity extends AppCompatActivity {
                             String commentKey = commentsList.get(i);
                             String userUID = snapshot.child("commentList").child(commentKey).child("uid").getValue().toString();
                             String content = snapshot.child("commentList").child(commentKey).child("content").getValue().toString();
-                            LikedCommentObject tempLCO = new LikedCommentObject(userUID, false, content);
+                            LikedCommentObject tempLCO = new LikedCommentObject(userUID, imgID,false, content);
                             if (!userUID.equals(Unique)){
                                 likedCommentList.add(tempLCO);
                             }
@@ -144,15 +186,17 @@ public class NotificationActivity extends AppCompatActivity {
                         // Stores uid of user who liked the blog
                         if (snapshot.child("likedUsersList").hasChildren()) {
                             for (DataSnapshot likedUsersSnapshot : snapshot.child("likedUsersList").getChildren()) {
-                                if (likedUsersSnapshot.getValue().toString().equals("true") && !likedUsers.contains(likedUsersSnapshot.getKey())) {
+                                Log.d("TAG", "Hello1 " + !likedUsers.contains(likedUsersSnapshot.getKey()));
+                                if (likedUsersSnapshot.getValue().toString().equals("true")) {
                                     likedUsers.add(likedUsersSnapshot.getKey());
-                                    LikedCommentObject tempLCO = new LikedCommentObject(likedUsersSnapshot.getKey(), true, "");
+                                    LikedCommentObject tempLCO = new LikedCommentObject(likedUsersSnapshot.getKey(), imgID, true, "");
                                     if (!likedUsersSnapshot.getKey().equals(Unique)){
                                         likedCommentList.add(tempLCO);
                                     }
                                 }
                             }
                         }
+                        Log.d("TAG", "Hello" + likedCommentList.size());
 
                         BlogObject blogObject = new BlogObject(description, location, imgID, blogID, likes, comments, likedUsers);
                         data.add(blogObject);
@@ -173,12 +217,35 @@ public class NotificationActivity extends AppCompatActivity {
                         int likes = Integer.parseInt(snapshot.child("likes").getValue().toString());
                         int comments = Integer.parseInt(snapshot.child("comments").getValue().toString());
 
+                        ArrayList<String> commentsList = new ArrayList<>();
+                        // Stores comments into commentlist to be retrieved
+                        if (snapshot.child("commentList").hasChildren()) {
+                            for (DataSnapshot commentSnapshot : snapshot.child("commentList").getChildren()) {
+                                commentsList.add(commentSnapshot.getKey());
+                            }
+                        }
+
+                        for (int i = 0; i < commentsList.size(); i++){
+                            String commentKey = commentsList.get(i);
+                            String userUID = snapshot.child("commentList").child(commentKey).child("uid").getValue().toString();
+                            String content = snapshot.child("commentList").child(commentKey).child("content").getValue().toString();
+                            LikedCommentObject tempLCO = new LikedCommentObject(userUID, imgID,false, content);
+                            if (!userUID.equals(Unique)){
+                                likedCommentList.add(tempLCO);
+                            }
+                        }
+
+
                         likedUsers = new ArrayList<>();
 
                         if (snapshot.child("likedUsersList").hasChildren()) {
                             for (DataSnapshot likedUsersSnapshot : snapshot.child("likedUsersList").getChildren()) {
-                                if (likedUsersSnapshot.getValue().toString().equals("true") && !likedUsers.contains(likedUsersSnapshot.getKey())) {
+                                if (likedUsersSnapshot.getValue().toString().equals("true")) {
                                     likedUsers.add(likedUsersSnapshot.getKey());
+                                    LikedCommentObject tempLCO = new LikedCommentObject(likedUsersSnapshot.getKey(), imgID, true, "");
+                                    if (!likedUsersSnapshot.getKey().equals(Unique)){
+                                        likedCommentList.add(tempLCO);
+                                    }
                                 }
                             }
                         }

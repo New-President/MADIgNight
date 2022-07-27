@@ -7,6 +7,7 @@ import androidx.fragment.app.FragmentActivity;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 import androidx.viewpager2.widget.ViewPager2;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageButton;
@@ -29,6 +30,9 @@ public class ChatRequestActivity extends AppCompatActivity {
 
         Fresco.initialize(this);
 
+        Intent intent = getIntent();
+        int position = intent.getIntExtra("position", 0);
+
         ImageButton backButton = findViewById(R.id.chatRequestsBackButton);
         backButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -41,6 +45,7 @@ public class ChatRequestActivity extends AppCompatActivity {
         ViewPager2 viewPager = findViewById(R.id.chatRequestsViewPager);
 
         viewPager.setAdapter(new fragmentAdapter(this));
+        viewPager.setCurrentItem(position);
 
         new TabLayoutMediator(
                 tabLayout,

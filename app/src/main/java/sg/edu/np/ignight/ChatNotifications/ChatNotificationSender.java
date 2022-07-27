@@ -1,10 +1,8 @@
 package sg.edu.np.ignight.ChatNotifications;
 
-import android.app.Activity;
 import android.content.Context;
 import android.util.Log;
 
-import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -17,6 +15,8 @@ import org.json.JSONObject;
 import java.util.HashMap;
 import java.util.Map;
 
+import sg.edu.np.ignight.R;
+
 public class ChatNotificationSender {
 
     private String fcmToken;
@@ -27,7 +27,7 @@ public class ChatNotificationSender {
 
     private RequestQueue requestQueue;
     private final String postUrl = "https://fcm.googleapis.com/fcm/send";
-    private final String fcmServerKey = "AAAA0fKydBU:APA91bFEsGLkVEtd9n_icYQdlVw20YI11Kvp7imYadZlFwAPZrVIYad7mPmGtvqWZk4cpvCLvJqLH6N_8Qw0rMNzazZakMDgQG4_rWkBiAmjYORPnhV34tS9qnaSuf-C_srwk0QZy-pb";
+    private String fcmServerKey;
 
     public ChatNotificationSender(String fcmToken, String senderID, String chatID, String messageID, Context context) {
         this.fcmToken = fcmToken;
@@ -39,6 +39,8 @@ public class ChatNotificationSender {
 
     // send notification using Volley
     public void sendNotification() {
+        fcmServerKey = context.getResources().getString(R.string.fcm_server_key);
+
         requestQueue = Volley.newRequestQueue(context);
         JSONObject jsonObject = new JSONObject();
 
@@ -47,6 +49,7 @@ public class ChatNotificationSender {
             jsonObject.put("to", fcmToken);
 
             JSONObject data = new JSONObject();  // add custom data
+            data.put("purpose", "message");
             data.put("senderID", senderID);
             data.put("chatID", chatID);
             data.put("messageID", messageID);

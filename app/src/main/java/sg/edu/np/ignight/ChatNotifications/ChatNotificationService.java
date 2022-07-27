@@ -8,7 +8,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.media.AudioAttributes;
 import android.net.Uri;
 import android.os.Build;
@@ -36,36 +35,203 @@ import java.io.ByteArrayOutputStream;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
 import sg.edu.np.ignight.ChatActivity;
+import sg.edu.np.ignight.ChatRequestActivity;
 import sg.edu.np.ignight.R;
 import sg.edu.np.ignight.SettingsActivity;
 
 public class ChatNotificationService extends FirebaseMessagingService {
 
     private DatabaseReference rootDB = FirebaseDatabase.getInstance("https://madignight-default-rtdb.asia-southeast1.firebasedatabase.app/").getReference();
+    private Context context;
+    private SharedPreferences sharedPreferences;
 
     @Override
     public void onMessageReceived(@NonNull RemoteMessage message) {
         super.onMessageReceived(message);
 
-        // get sharedPreferences for notification settings
-        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
-        boolean pushNotifications = sharedPreferences.getBoolean(SettingsActivity.KEY_CHAT_NOTIFICATION_ENABLED, true);
+        // get data
+        Map<String, String> data = message.getData();
+
+        String purpose = data.get("purpose");
+        context = this;
+        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+
+        if (purpose != null) {
+            if (purpose.equals("message")) {
+                displayChatNotification(data);
+            }
+            else if (purpose.equals("request")) {
+                displayChatRequestNotification(data);
+            }
+        }
+
+    }
+
+    @Override
+    public void onNewToken(@NonNull String token) {
+        super.onNewToken(token);
+
+        // update database with new fcmtoken
+        DatabaseReference userDB = rootDB.child("user").child(FirebaseAuth.getInstance().getUid());
+        Map tokenMap = new HashMap<>();
+        tokenMap.put("fcmToken", token);
+        userDB.updateChildren(tokenMap);
+    }
+
+    private void displayChatRequestNotification(Map<String, String> data) {
+
+        // get sharedPreferences for chat request notification settings
+        boolean pushNotifications = sharedPreferences.getBoolean(SettingsActivity.KEY_CHAT_REQUEST_NOTIFICATION_ENABLED, true);
 
         if (!pushNotifications) {  // don't send notifications if user disabled them from settings
             return;
         }
 
-        Context context = this;
+        boolean highPriority = sharedPreferences.getBoolean(SettingsActivity.KEY_CHAT_REQUEST_NOTIFICATION_PRIORITY, true);
+        String ringtone = sharedPreferences.getString(SettingsActivity.KEY_CHAT_REQUEST_NOTIFICATION_RINGTONE, Settings.System.DEFAULT_NOTIFICATION_URI.toString());
+        String vibration = sharedPreferences.getString(SettingsActivity.KEY_CHAT_REQUEST_NOTIFICATION_VIBRATION, context.getResources().getStringArray(R.array.vibration_preferences_values)[2]);
 
-        boolean highPriority = sharedPreferences.getBoolean(SettingsActivity.KEY_CHAT_NOTIFICATION_PRIORITY, true);
-        String ringtone = sharedPreferences.getString(SettingsActivity.KEY_CHAT_NOTIFICATION_RINGTONE, Settings.System.DEFAULT_NOTIFICATION_URI.toString());
-        String vibration = sharedPreferences.getString(SettingsActivity.KEY_CHAT_NOTIFICATION_VIBRATION, context.getResources().getStringArray(R.array.vibration_preferences_values)[2]);
+        String[] vibrationPatternString = vibration.split(",");
+
+        long[] vibrationPattern = new long[vibrationPatternString.length];
+
+        for (int i = 0; i < vibrationPatternString.length; i++) {
+            vibrationPattern[i] = Long.parseLong(vibrationPatternString[i]);
+        }
+
+
+        String requestID = data.get("requestID");
+        boolean pending = data.get("pending").equals("true");
+        boolean accepted = false;
+        if (!pending) {
+            accepted = data.get("response").equals("true");
+        }
+
+        DatabaseReference requestDB = rootDB.child("chatRequest");
+        if (requestID != null) {
+            boolean finalAccepted = accepted;  // to use within inner class
+            requestDB.child(requestID).addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    if (snapshot.exists()) {
+                        try {
+                            String profile;
+                            String username;
+                            if (!pending) {  // not pending means responded to (show receiver details)
+                                profile = snapshot.child("receiverProfile").getValue().toString();
+                                username = snapshot.child("receiverName").getValue().toString();
+                            }
+                            else {
+                                profile = snapshot.child("creatorProfile").getValue().toString();
+                                username = snapshot.child("creatorName").getValue().toString();
+                            }
+
+                            // get profile picture as bitmap
+                            ExecutorService executorService = Executors.newFixedThreadPool(2);
+
+                            Future<Bitmap> futureSenderProfile = executorService.submit(new UrlToBitmap(new URL(profile)));
+
+                            // do other tasks while waiting for bitmap
+
+                            // start to create notification
+                            NotificationCompat.Builder builder = new NotificationCompat.Builder(context, "Ignight");
+
+                            // general settings for notification
+                            builder.setSmallIcon(R.mipmap.ic_launcher_round);  // set icon
+                            builder.setAutoCancel(true);
+                            builder.setOnlyAlertOnce(true);
+                            builder.setPriority(highPriority?NotificationCompat.PRIORITY_HIGH: NotificationCompat.PRIORITY_DEFAULT);
+                            if (!ringtone.isEmpty()) {
+                                builder.setSound(Uri.parse(ringtone));
+                            }
+                            else {
+                                builder.setSound(null);
+                            }
+                            builder.setVibrate(vibrationPattern);
+
+                            builder.setContentTitle(username);
+
+                            if (pending) {
+                                builder.setContentText("Sent you a chat request. Tap to view.");
+                            }
+                            else {
+                                if (finalAccepted) {
+                                    builder.setContentText("Accepted your chat request. Tap to view.");
+                                }
+                                else {
+                                    builder.setContentText("Rejected your chat request. Tap to view.");
+                                }
+                            }
+
+                            // open chatRequestActivity on click
+                            // set intent
+                            Intent intent = new Intent(context, ChatRequestActivity.class);
+                            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+
+                            // add data to pass to ChatRequestActivity
+                            intent.putExtra("position", pending?0:1);
+
+                            // set pendingIntent
+                            PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+                            builder.setContentIntent(pendingIntent);
+
+                            builder.setLargeIcon(futureSenderProfile.get());
+
+                            NotificationManager notificationManager = (NotificationManager) getApplicationContext().getSystemService(Context.NOTIFICATION_SERVICE);
+
+                            // set notification channel for api level > 26
+                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                                String channelId = "IgnightChatRequest";
+                                NotificationChannel channel = new NotificationChannel(channelId, "Ignight Chat Request", highPriority?NotificationManager.IMPORTANCE_HIGH:NotificationManager.IMPORTANCE_DEFAULT);
+                                if (!ringtone.isEmpty()) {
+                                    channel.setSound(Uri.parse(ringtone), new AudioAttributes.Builder().setUsage(AudioAttributes.USAGE_NOTIFICATION).setContentType(AudioAttributes.CONTENT_TYPE_UNKNOWN).build());
+                                }
+                                else {
+                                    channel.setSound(null, null);
+                                }
+                                channel.setShowBadge(true);
+                                channel.setLockscreenVisibility(Notification.VISIBILITY_PRIVATE);
+                                channel.enableVibration(true);
+                                channel.setVibrationPattern(vibrationPattern);
+
+                                notificationManager.createNotificationChannel(channel);
+                                builder.setChannelId(channelId);
+                            }
+
+                            // send notification
+                            notificationManager.notify(1000, builder.build());
+                        }
+                        catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+                    Log.e("onMessageReceived", "onCancelled: " + error.getMessage());
+                }
+            });
+        }
+    }
+
+    private void displayChatNotification(Map<String, String> data) {
+
+        // get sharedPreferences for chat notification settings
+        boolean pushNotifications = sharedPreferences.getBoolean(SettingsActivity.KEY_MESSAGE_NOTIFICATION_ENABLED, true);
+
+        if (!pushNotifications) {  // don't send notifications if user disabled them from settings
+            return;
+        }
+
+        boolean highPriority = sharedPreferences.getBoolean(SettingsActivity.KEY_MESSAGE_NOTIFICATION_PRIORITY, true);
+        String ringtone = sharedPreferences.getString(SettingsActivity.KEY_MESSAGE_NOTIFICATION_RINGTONE, Settings.System.DEFAULT_NOTIFICATION_URI.toString());
+        String vibration = sharedPreferences.getString(SettingsActivity.KEY_MESSAGE_NOTIFICATION_VIBRATION, context.getResources().getStringArray(R.array.vibration_preferences_values)[2]);
 
         String[] vibrationPatternString = vibration.split(",");
 
@@ -76,8 +242,6 @@ public class ChatNotificationService extends FirebaseMessagingService {
         }
 
         // get data
-        Map<String, String> data = message.getData();
-
         String senderID = data.get("senderID");
         String chatID = data.get("chatID");
         String messageID = data.get("messageID");
@@ -121,8 +285,8 @@ public class ChatNotificationService extends FirebaseMessagingService {
                                 // get profile pictures as bitmaps
                                 ExecutorService executorService = Executors.newFixedThreadPool(2);
 
-                                Future<Bitmap> futureSenderProfile = executorService.submit(new Task(new URL(senderProfile)));
-                                Future<Bitmap> futureMyProfile = executorService.submit(new Task(new URL(myProfile)));
+                                Future<Bitmap> futureSenderProfile = executorService.submit(new UrlToBitmap(new URL(senderProfile)));
+                                Future<Bitmap> futureMyProfile = executorService.submit(new UrlToBitmap(new URL(myProfile)));
 
                                 // do other tasks while waiting for bitmaps
 
@@ -167,7 +331,6 @@ public class ChatNotificationService extends FirebaseMessagingService {
                                 // add data to pass to receiver
                                 Bundle markAsReadBundle = new Bundle();
                                 markAsReadBundle.putString("chatID", chatID);
-                                markAsReadBundle.putString("messageID", messageID);
                                 markAsReadBundle.putString("tag", senderID);
 
                                 markAsReadIntent.putExtras(markAsReadBundle);
@@ -194,19 +357,17 @@ public class ChatNotificationService extends FirebaseMessagingService {
                                 Intent replyIntent = new Intent(context, ReplyReceiver.class);
 
                                 // add data to pass to receiver
-                                Bundle replyBundle = new Bundle();
-                                replyBundle.putString("senderID", senderID);
-                                replyBundle.putString("chatID", chatID);
-                                replyBundle.putString("chatName", senderName);
-                                replyBundle.putString("myName", myDisplayName);
+                                replyIntent.putExtra("senderID", senderID);
+                                replyIntent.putExtra("chatID", chatID);
+                                replyIntent.putExtra("chatName", senderName);
+                                replyIntent.putExtra("myName", myDisplayName);
 
                                 ByteArrayOutputStream stream = new ByteArrayOutputStream();
                                 myProfileBitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
-                                replyBundle.putByteArray("bitmapBA", stream.toByteArray());
+                                replyIntent.putExtra("bitmapBA", stream.toByteArray());
+                                replyIntent.addFlags(Intent.FLAG_RECEIVER_FOREGROUND);
 
-                                replyIntent.putExtras(replyBundle);
-
-                                PendingIntent replyPendingIntent = PendingIntent.getBroadcast(context, 0, replyIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+                                PendingIntent replyPendingIntent = PendingIntent.getBroadcast(context, 1, replyIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
                                 // create action
                                 NotificationCompat.Action replyAction = new NotificationCompat.Action.Builder(R.drawable.ic_baseline_reply_24, "Reply", replyPendingIntent).addRemoteInput(remoteInput).build();
@@ -278,29 +439,5 @@ public class ChatNotificationService extends FirebaseMessagingService {
             });
         }
     }
-
-    @Override
-    public void onNewToken(@NonNull String token) {
-        super.onNewToken(token);
-
-        // update database with new fcmtoken
-        DatabaseReference userDB = rootDB.child("user").child(FirebaseAuth.getInstance().getUid());
-        Map tokenMap = new HashMap<>();
-        tokenMap.put("fcmToken", token);
-        userDB.updateChildren(tokenMap);
-    }
 }
 
-class Task implements Callable<Bitmap> {
-
-    private URL url;
-
-    public Task(URL url) {
-        this.url = url;
-    }
-
-    @Override
-    public Bitmap call() throws Exception {
-        return BitmapFactory.decodeStream(url.openStream());
-    }
-}

@@ -48,13 +48,12 @@ public class ReplyReceiver extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        Bundle replyBundle = intent.getExtras();
-        senderID = replyBundle.getString("senderID");
-        chatID = replyBundle.getString("chatID");
-        chatName = replyBundle.getString("chatName");
-        String myName = replyBundle.getString("myName");
+        senderID = intent.getStringExtra("senderID");
+        chatID = intent.getStringExtra("chatID");
+        chatName = intent.getStringExtra("chatName");
+        String myName = intent.getStringExtra("myName");
 
-        byte[] byteArray = replyBundle.getByteArray("bitmapBA");
+        byte[] byteArray = intent.getByteArrayExtra("bitmapBA");
         Bitmap myBitmap = BitmapFactory.decodeByteArray(byteArray, 0, byteArray.length);
 
         myself = new Person.Builder().setIcon(IconCompat.createWithBitmap(myBitmap)).setName(myName).build();

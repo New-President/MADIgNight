@@ -90,53 +90,53 @@ public class NotificationAdapter
         String uid = firebaseUser.getUid();
         FirebaseStorage storage = FirebaseStorage.getInstance();
 
-        for (int i = 0; i < blogList.size(); i++){
-            BlogObject blog = blogList.get(i);
-            /*
-            DatabaseReference databaseReference = FirebaseDatabase.getInstance("https://madignight-default-rtdb.asia-southeast1.firebasedatabase.app/")
-                    .getReference("user").child(uid).child("blog").child(blogID);
-*/
-            /*ImageView blogImage = holder.blogImage;*/
-            try{
-                StorageReference storageReference = storage.getReference("blog").child(uid).child(blog.imgID);
-                File localfile = File.createTempFile("tempfile", ".png");
-                storageReference.getFile(localfile).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
-                    @Override
-                    public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
-                        Bitmap bitmap = BitmapFactory.decodeFile(localfile.getAbsolutePath());
-                        holder.blogImage.setImageBitmap(bitmap);
-                    }
-                }).addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Toast.makeText(c, "Failed to retrieve blogs", Toast.LENGTH_SHORT).show();
-                    }
-                });
-
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            catch (Exception ex){
-                Log.d("Load Image Error", "Failed to load image");
-            }
-            holder.blogImage.setOnClickListener(new View.OnClickListener() {
+        try{
+            StorageReference storageReference = storage.getReference("blog").child(uid).child(likedComment.imgID);
+            File localfile = File.createTempFile("tempfile", ".png");
+            storageReference.getFile(localfile).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
                 @Override
-                public void onClick(View view) {
-                    if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
-                        Intent blogActivity = new Intent(c, BlogActivity.class);
-                        Intent commentActivity = new Intent(c, CommentSectionActivity.class);
-                        if (likedComment.liked){
-                            c.startActivity(blogActivity);
-                        }
-                        else{
-                            commentActivity.putExtra("uid", likedComment.userUID);
-                            commentActivity.putExtra("blogID", blog.blogID);
-                            c.startActivity(commentActivity);
-                        }
-                    }
+                public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
+                    Bitmap bitmap = BitmapFactory.decodeFile(localfile.getAbsolutePath());
+                    holder.blogImage.setImageBitmap(bitmap);
+                }
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    Toast.makeText(c, "Failed to retrieve blogs", Toast.LENGTH_SHORT).show();
                 }
             });
+
+        } catch (IOException e) {
+            e.printStackTrace();
         }
+        catch (Exception ex){
+            Log.d("Load Image Error", "Failed to load image");
+        }
+        for(int i = 0; i<blogList.size(); i++){
+            BlogObject blog = blogList.get(i);
+            if (blog.imgID == likedComment.imgID){
+                holder.blogImage.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
+                            Intent blogActivity = new Intent(c, BlogActivity.class);
+                            Intent commentActivity = new Intent(c, CommentSectionActivity.class);
+                            if (likedComment.liked){
+                                c.startActivity(blogActivity);
+                            }
+                            else{
+                                commentActivity.putExtra("uid", uid);
+                                commentActivity.putExtra("blogID", blog.blogID);
+                                commentActivity.putExtra("imgID", likedComment.imgID);
+                                c.startActivity(commentActivity);
+                            }
+                        }
+                    }
+                });
+            }
+        }
+
+
 
         for (int j = 0; j < userList.size(); j++){
             UserObject user = userList.get(j);

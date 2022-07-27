@@ -4,6 +4,7 @@ import static android.content.ContentValues.TAG;
 
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -14,6 +15,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -35,6 +37,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
+import sg.edu.np.ignight.ChatNotifications.ChatRequestNotificationSender;
 import sg.edu.np.ignight.Objects.UserObject;
 import sg.edu.np.ignight.ProfileView.ProfileViewInterestsAdapter;
 
@@ -122,6 +125,7 @@ public class ProfileViewActivity extends AppCompatActivity {
         // View the profile's blogs
         viewBlogsButton = findViewById(R.id.ViewBlogsBtn);
         viewBlogsButton.setOnClickListener(new View.OnClickListener() {
+            @RequiresApi(api = Build.VERSION_CODES.N)
             @Override
             public void onClick(View view) {
                 // Pass user object to blog for blog to retrieve user info
@@ -159,6 +163,13 @@ public class ProfileViewActivity extends AppCompatActivity {
                         }
 
                         if (!chatExists) {  // chat does not exist between the two users
+
+                            // get the other user's fcm token
+                            String fcmToken = null;
+                            if (snapshot.child(targetUserUID).child("fcmToken").exists()) {
+                                fcmToken = snapshot.child(targetUserUID).child("fcmToken").getValue().toString();
+                            }
+
                             boolean requestSent = false;
                             String sentRequestID = "";
 
@@ -192,6 +203,7 @@ public class ProfileViewActivity extends AppCompatActivity {
                                 boolean finalRequestReceived = requestReceived;  // to use in inner class
                                 String finalReceivedRequestID = receivedRequestID;  // to use in inner class
 
+                                String finalFcmToken = fcmToken;  // to use within inner class
                                 chatRequestDB.child(sentRequestID).addListenerForSingleValueEvent(new ValueEventListener() {
                                     @Override
                                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -212,11 +224,11 @@ public class ProfileViewActivity extends AppCompatActivity {
                                                 dataMap.put("chatName", user.getUsername());
                                                 dataMap.put("view", view);
 
-                                                startChat(dataMap);
+                                                startChat(dataMap, finalFcmToken);
                                             }
                                             else {  // request is sent (inactive) and no request is received
                                                 // send a new request
-                                                sendNewRequest(chatRequestDB, snapshot);
+                                                sendNewRequest(chatRequestDB, snapshot, finalFcmToken);
                                             }
                                         }
                                     }
@@ -239,11 +251,11 @@ public class ProfileViewActivity extends AppCompatActivity {
                                     dataMap.put("chatName", user.getUsername());
                                     dataMap.put("view", view);
 
-                                    startChat(dataMap);
+                                    startChat(dataMap, fcmToken);
                                 }
                                 else {  // no request is received
                                     // send new request
-                                    sendNewRequest(chatRequestDB, snapshot);
+                                    sendNewRequest(chatRequestDB, snapshot, fcmToken);
                                 }
                             }
                         }
@@ -314,7 +326,7 @@ public class ProfileViewActivity extends AppCompatActivity {
     }
 
     // create new request and update database
-    private void sendNewRequest(DatabaseReference chatRequestDB, DataSnapshot snapshot) {
+    private void sendNewRequest(DatabaseReference chatRequestDB, DataSnapshot snapshot, String fcmToken) {
         String newRequestID = chatRequestDB.push().getKey();
 
         Map newRequestMap = new HashMap<>();
@@ -334,6 +346,11 @@ public class ProfileViewActivity extends AppCompatActivity {
             @Override
             public void onComplete(@NonNull Task task) {
                 if (task.isSuccessful()) {
+                    if (fcmToken != null) {
+                        ChatRequestNotificationSender sender = new ChatRequestNotificationSender(fcmToken, getApplicationContext(), newRequestID);
+                        sender.sendNotification();
+                    }
+
                     Toast.makeText(getApplicationContext(), "Request sent.", Toast.LENGTH_SHORT).show();
                 }
             }
@@ -341,7 +358,7 @@ public class ProfileViewActivity extends AppCompatActivity {
     }
 
     // update existing request and start new chat
-    private void startChat(Map dataMap) {
+    private void startChat(Map dataMap, String fcmToken) {
         DatabaseReference chatRequestDB = (DatabaseReference) dataMap.get("chatRequestDB");
         DataSnapshot snapshot = (DataSnapshot) dataMap.get("snapshot");
         String requestID = (String) dataMap.get("requestID");
@@ -375,7 +392,15 @@ public class ProfileViewActivity extends AppCompatActivity {
             @Override
             public void onComplete(@NonNull Task task) {
                 if (task.isSuccessful()) {
-                    userDB.updateChildren(updateUserMap);
+                    userDB.updateChildren(updateUserMap).addOnCompleteListener(new OnCompleteListener() {
+                        @Override
+                        public void onComplete(@NonNull Task task) {
+                            if (fcmToken != null) {
+                                ChatRequestNotificationSender sender = new ChatRequestNotificationSender(fcmToken, getApplicationContext(), requestID, true);
+                                sender.sendNotification();
+                            }
+                        }
+                    });
 
                     Toast.makeText(getApplicationContext(), "Request accepted, Chat created.", Toast.LENGTH_SHORT).show();
 

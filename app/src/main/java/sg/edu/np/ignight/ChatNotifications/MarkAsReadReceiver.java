@@ -16,6 +16,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 public class MarkAsReadReceiver extends BroadcastReceiver {
@@ -26,37 +27,28 @@ public class MarkAsReadReceiver extends BroadcastReceiver {
     public void onReceive(Context context, Intent intent) {
         Bundle bundle = intent.getExtras();
         String chatID = bundle.getString("chatID");
-        String messageID = bundle.getString("messageID");
         tag = bundle.getString("tag");
 
-        dismissNotification(context);
 
         DatabaseReference chatDB = FirebaseDatabase.getInstance("https://madignight-default-rtdb.asia-southeast1.firebasedatabase.app/").getReference().child("chat").child(chatID);
-        DatabaseReference messageDB = chatDB.child("messages").child(messageID);
 
-        // update seen status of messages received
-        messageDB.child("isSeen").addListenerForSingleValueEvent(new ValueEventListener() {
+        String currentUserUID = FirebaseAuth.getInstance().getUid();
+
+        // set all received messages as read
+        Query query = chatDB.child("messages").orderByChild("isSeen");
+        query.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if (snapshot.exists()) {
-                    boolean isSeen = snapshot.getValue().toString().equals("true");
-
-                    if (!isSeen) {
-                        messageDB.child("isSeen").setValue(true);
-
-                        String myUID = FirebaseAuth.getInstance().getUid();
-                        chatDB.child("unread").child(myUID).addListenerForSingleValueEvent(new ValueEventListener() {
-                            @Override
-                            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                chatDB.child("unread").child(myUID).setValue(0);  // set unread count to 0
+                    for (DataSnapshot childSnapshot : snapshot.getChildren()) {
+                        if (childSnapshot.child("isSeen").getValue().toString().equals("false")) {
+                            if (!childSnapshot.child("creator").getValue().toString().equals(currentUserUID)) {
+                                childSnapshot.getRef().child("isSeen").setValue(true);
                             }
-
-                            @Override
-                            public void onCancelled(@NonNull DatabaseError error) {
-                                Log.e(TAG, "onCancelled: " + error.getMessage());
-                            }
-                        });
+                        }
                     }
+
+                    chatDB.child("unread").child(currentUserUID).setValue(0);
                 }
             }
 
@@ -65,6 +57,8 @@ public class MarkAsReadReceiver extends BroadcastReceiver {
                 Log.e(TAG, "onCancelled: " + error.getMessage());
             }
         });
+
+        dismissNotification(context);
     }
 
     // cancel notification

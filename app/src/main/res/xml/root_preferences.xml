@@ -32,4 +32,35 @@
 
     </PreferenceCategory>
 
+    <PreferenceCategory app:title="Chat Requests">
+
+        <SwitchPreference
+            app:key="chatRequestNotificationsEnabled"
+            app:title="Push Notifications"
+            app:defaultValue="true"
+            app:persistent="true"/>
+
+        <Preference
+            app:key="chatRequestNotificationRingtone"
+            app:title="Ringtone"
+            app:persistent="true"
+            android:defaultValue=""/>
+
+        <ListPreference
+            app:key="chatRequestNotificationVibration"
+            app:title="Vibration"
+            app:entries="@array/vibration_preferences"
+            app:entryValues="@array/vibration_preferences_values"
+            app:defaultValue="@string/vibration_default_value"
+            app:persistent="true"/>
+
+        <SwitchPreference
+            app:key="chatRequestNotificationPriority"
+            app:title="Use high priority notification"
+            app:summary="Shows heads-up notifications"
+            app:defaultValue="true"
+            app:persistent="true"/>
+
+    </PreferenceCategory>
+
 </PreferenceScreen>

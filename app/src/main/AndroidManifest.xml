@@ -21,13 +21,23 @@
     <uses-permission android:name="android.permission.VIBRATE" />
 
     <application
-        android:name=".Notification"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.IgNight">
+        <service
+            android:name=".BlogNotificationService"
+            android:enabled="false"
+            android:exported="false"
+            android:permission="com.google.android.c2dm.permission.SEND">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+                <action android:name="com.google.android.c2dm.intent.RECEIVE" />
+            </intent-filter>
+        </service>
+
         <activity
             android:name=".ViewProfileCustomisation"
             android:exported="false" />

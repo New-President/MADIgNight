@@ -38,6 +38,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
+import sg.edu.np.ignight.ChatNotifications.ChatRequestNotificationSender;
 import sg.edu.np.ignight.Objects.UserObject;
 import sg.edu.np.ignight.ProfileViewActivity;
 import sg.edu.np.ignight.R;
@@ -178,51 +179,82 @@ public class ChatRequestReceivedAdapter extends RecyclerView.Adapter<ChatRequest
         Map updateUserMap = new HashMap<>();
         updateUserMap.put(currentUserUID + "/chatRequests/received/" + requestID, null);
 
-        if (accepted) {
-            DatabaseReference chatDB = rootDB.child("chat");
-            String targetUserUID = request.getCreatorID();
+        String targetUserUID = request.getCreatorID();
 
-            // start chat and update existing request
-            String newChatID = chatDB.push().getKey();
+        userDB.child(targetUserUID).child("fcmToken").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                ChatRequestNotificationSender sender = null;
+                if (snapshot.exists()) {  // create sender if the other user has fcmToken
+                    String fcmToken = snapshot.getValue().toString();
 
-            updateUserMap.put(currentUserUID + "/chats/" + newChatID, targetUserUID);
-            updateUserMap.put(targetUserUID + "/chats/" + newChatID, currentUserUID);
-
-            Map newChatMap = new HashMap<>();
-            newChatMap.put("users/" + currentUserUID, request.getReceiverName());
-            newChatMap.put("users/" + targetUserUID, request.getCreatorName());
-            newChatMap.put("newChat/" + currentUserUID, true);
-            newChatMap.put("newChat/" + targetUserUID, true);
-            newChatMap.put("lastUsed", currentTimestamp);
-            newChatMap.put("onCall", false);
-
-            chatRequestDB.child(requestID).updateChildren(updateRequestMap);
-
-            chatDB.child(newChatID).updateChildren(newChatMap).addOnCompleteListener(new OnCompleteListener() {
-                @Override
-                public void onComplete(@NonNull Task task) {
-                    if (task.isSuccessful()) {
-                        userDB.updateChildren(updateUserMap);
-
-                        deleteItem(holder, request, true);
-                    }
-                    else {
-                        task.getException().printStackTrace();
-                    }
+                    sender = new ChatRequestNotificationSender(fcmToken, context, requestID, accepted);
                 }
-            });
-        }
-        else {
-            userDB.updateChildren(updateUserMap);
-            chatRequestDB.child(requestID).updateChildren(updateRequestMap).addOnCompleteListener(new OnCompleteListener() {
-                @Override
-                public void onComplete(@NonNull Task task) {
-                    if (task.isSuccessful()) {
-                        deleteItem(holder, request, false);
-                    }
+
+                ChatRequestNotificationSender finalSender = sender;  // to use in inner class
+                if (accepted) {
+                    DatabaseReference chatDB = rootDB.child("chat");
+
+                    // start chat and update existing request
+                    String newChatID = chatDB.push().getKey();
+
+                    updateUserMap.put(currentUserUID + "/chats/" + newChatID, targetUserUID);
+                    updateUserMap.put(targetUserUID + "/chats/" + newChatID, currentUserUID);
+
+                    Map newChatMap = new HashMap<>();
+                    newChatMap.put("users/" + currentUserUID, request.getReceiverName());
+                    newChatMap.put("users/" + targetUserUID, request.getCreatorName());
+                    newChatMap.put("newChat/" + currentUserUID, true);
+                    newChatMap.put("newChat/" + targetUserUID, true);
+                    newChatMap.put("lastUsed", currentTimestamp);
+                    newChatMap.put("onCall", false);
+
+                    chatRequestDB.child(requestID).updateChildren(updateRequestMap);
+
+                    chatDB.child(newChatID).updateChildren(newChatMap).addOnCompleteListener(new OnCompleteListener() {
+                        @Override
+                        public void onComplete(@NonNull Task task) {
+                            if (task.isSuccessful()) {
+                                userDB.updateChildren(updateUserMap).addOnCompleteListener(new OnCompleteListener() {
+                                    @Override
+                                    public void onComplete(@NonNull Task task) {
+                                        if (finalSender != null) {
+                                            finalSender.sendNotification();
+                                        }
+                                    }
+                                });
+
+                                deleteItem(holder, request, true);
+                            }
+                            else {
+                                task.getException().printStackTrace();
+                            }
+                        }
+                    });
                 }
-            });
-        }
+                else {
+                    userDB.updateChildren(updateUserMap);
+                    chatRequestDB.child(requestID).updateChildren(updateRequestMap).addOnCompleteListener(new OnCompleteListener() {
+                        @Override
+                        public void onComplete(@NonNull Task task) {
+                            if (task.isSuccessful()) {
+                                if (finalSender != null) {
+                                    finalSender.sendNotification();
+                                }
+
+                                deleteItem(holder, request, false);
+                            }
+                        }
+                    });
+                }
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Log.e(TAG, "onCancelled: " + error.getMessage());
+            }
+        });
 
         enableButtons(holder, true);
     }
