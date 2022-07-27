@@ -1,4 +1,4 @@
-package sg.edu.np.ignight;
+package sg.edu.np.ignight.Notification;
 
 import android.content.Context;
 import android.util.Log;
@@ -14,6 +14,8 @@ import org.json.JSONObject;
 
 import java.util.HashMap;
 import java.util.Map;
+
+import sg.edu.np.ignight.R;
 
 public class SendBlogNotification {
 
@@ -47,7 +49,6 @@ public class SendBlogNotification {
             jsonObject.put("to", fcmToken);
 
             JSONObject data = new JSONObject();  // add custom data
-            data.put("activity", "Blog");
             data.put("title", title);
             data.put("senderID", senderID);
             data.put("body", body);
@@ -57,7 +58,7 @@ public class SendBlogNotification {
             JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, postUrl, jsonObject, new Response.Listener<JSONObject>() {
                 @Override
                 public void onResponse(JSONObject response) {
-                    Log.v("sendRequest", "got response" + jsonObject);
+                    Log.v("sendRequest", "got response");
                 }
             }, new Response.ErrorListener() {
                 @Override
@@ -73,8 +74,8 @@ public class SendBlogNotification {
                     return header;
                 }
             };
-
             requestQueue.add(request);
+
         }
         catch (Exception e) {
             e.printStackTrace();
