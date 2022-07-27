@@ -7,6 +7,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewStub;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -194,6 +195,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
         public TextView messageText, mediaCount, messageTime, messageDate;
         public ImageView mediaHolder, messageStatus;
         public ConstraintLayout messageLayout;
+        public ViewStub proposeDateViewStub;
 
         public MessageViewHolder(View itemView) {
             super(itemView);
@@ -205,6 +207,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
             messageDate = itemView.findViewById(R.id.messageDate);
             messageLayout = itemView.findViewById(R.id.messageLayout);
             messageStatus = itemView.findViewById(R.id.messageStatus);
+            proposeDateViewStub = itemView.findViewById(R.id.proposeDateViewStub);
         }
     }
 }

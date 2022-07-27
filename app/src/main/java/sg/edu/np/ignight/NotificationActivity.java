@@ -58,9 +58,6 @@ public class NotificationActivity extends AppCompatActivity {
     public String phone, username, gender, aboutMe, relationshipPref, genderPref, profilePicUrl;
     public int age;
 
-    public static final String CHANNEL_ID = "simplified_coding";
-    private static final String CHANNEL_NAME = "simplified_coding";
-    private static final String CHANNEL_DESC = "simplified Coding Notifications";
 
     // Get the current user
     FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
@@ -91,12 +88,7 @@ public class NotificationActivity extends AppCompatActivity {
 
         initRecyclerView();
 
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
-            NotificationChannel channel = new NotificationChannel(CHANNEL_ID, CHANNEL_NAME, NotificationManager.IMPORTANCE_DEFAULT);
-            channel.setDescription(CHANNEL_DESC);
-            NotificationManager manager = getSystemService(NotificationManager.class);
-            manager.createNotificationChannel(channel);
-        }
+        // NotificationHelper.displayNotification(this, "title", "body");
 
         TextView textView = findViewById(R.id.textViewToken);
         FirebaseMessaging.getInstance().getToken()
