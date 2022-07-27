@@ -3,6 +3,7 @@ package sg.edu.np.ignight;
 import static android.content.ContentValues.TAG;
 
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -32,6 +33,7 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.bumptech.glide.Glide;
 
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -71,6 +73,8 @@ public class ProfileViewActivity extends AppCompatActivity {
     private StorageReference storageProfilePic;
     private UploadTask uploadTask;
 
+    private Typeface amaranthFont,cormorantFont, poppinsFont, ropaFont, squarePegFont;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -105,6 +109,13 @@ public class ProfileViewActivity extends AppCompatActivity {
         targetUserUID = user.getUid();
         interestsDisplay = new ArrayList<>();
         interestsDisplay = user.getInterestList();
+
+        // custom font type init
+        amaranthFont = Typeface.createFromAsset(getAssets(), "font/amaranth_bold.xml");
+        cormorantFont = Typeface.createFromAsset(getAssets(), "font/cormorant.ttf");
+        poppinsFont = Typeface.createFromAsset(getAssets(), "font/poppins.ttf");
+        ropaFont = Typeface.createFromAsset(getAssets(), "font/ropa.ttf");
+        squarePegFont = Typeface.createFromAsset(getAssets(), "font/squarepeg.ttf");
 
         // Show user information
         ShowInformation(user);
@@ -414,5 +425,72 @@ public class ProfileViewActivity extends AppCompatActivity {
                 }
             }
         });
+    }
+
+    // profile view customisation check & application of themes, if any
+    private boolean profileCustomisation(){
+        boolean returnValue = false;
+        userDB.child(targetUserUID).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                // If the target user chose to do font customisation
+                if(snapshot.child("FontOption").exists()){
+                    // Obtain the user's font
+                    String targetUserFontOption = snapshot.child("FontOption")
+                            .getValue()
+                            .toString();
+                    // Set the target user's font choice
+                    TextView personalInfoText = (TextView) findViewById(R.id.PersonalInfo);
+                    TextView nameAndAgeTextView = (TextView) findViewById(R.id.NameAndAgeTextView);
+                    // Sets the font according to the option in the database
+                    if(targetUserFontOption.equals("amaranthFont")){
+                        personalInfoText.setTypeface(amaranthFont);
+                        nameAndAgeTextView.setTypeface(amaranthFont);
+                    }
+                    else if(targetUserFontOption.equals("cormorantFont")){
+                        personalInfoText.setTypeface(cormorantFont);
+                        nameAndAgeTextView.setTypeface(cormorantFont);
+                    }
+                    else if(targetUserFontOption.equals("poppinsFont")){
+                        personalInfoText.setTypeface(poppinsFont);
+                        nameAndAgeTextView.setTypeface(poppinsFont);
+                    }
+                    else if(targetUserFontOption.equals("ropaFont")){
+                        personalInfoText.setTypeface(ropaFont);
+                        nameAndAgeTextView.setTypeface(ropaFont);
+                    }
+                    else if(targetUserFontOption.equals("squarePegFont")){
+                        personalInfoText.setTypeface(squarePegFont);
+                        nameAndAgeTextView.setTypeface(squarePegFont);
+                    }
+
+                }
+                // If the target user chose to do accent theme customisation
+                if(snapshot.child("AccentThemeOption").exists()){
+                    // Obtain the user's font
+                    String targetUserAccentThemeOption = snapshot.child("AccentThemeOption")
+                            .getValue()
+                            .toString();
+                    // Set the target user's aacent theme choice
+
+
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Toast.makeText(ProfileViewActivity.this,
+                        "Error retrieving customisation information",
+                        Toast.LENGTH_LONG)
+                        .show();
+            }
+        });
+        return returnValue;
+    }
+
+    // Revert the target user's customisation settings once the activity is exited
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
     }
 }
