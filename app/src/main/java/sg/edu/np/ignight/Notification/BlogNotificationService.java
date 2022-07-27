@@ -27,6 +27,9 @@ import androidx.core.app.RemoteInput;
 import androidx.core.graphics.drawable.IconCompat;
 import androidx.preference.PreferenceManager;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.api.client.json.Json;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -64,11 +67,21 @@ public class BlogNotificationService extends FirebaseMessagingService {
 
         Log.d("TAG", "Hello" + remoteMessage);
         // get data
-        Map<String, String> data = remoteMessage.getData();
-        Log.d("TAG", "Hello1" + data);
+        Map<String, String> data123 = remoteMessage.getData();
+        Log.d("TAG", "Hello1" + data123);
 
-        String body = data.get("body");
-        String title = data.get("title");
+        ObjectMapper mapper = new ObjectMapper();
+        String json = "";
+        try {
+            json = mapper.writeValueAsString(data123);
+            System.out.println(json);
+            Log.d("TAG", "Hello" + json);
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
+
+        String body = data123.get("body");
+        String title = data123.get("title");
         Log.d("TAG", "Hello1" + body);
         NotificationHelper.displayNotification(getApplicationContext(), title, body);
 
