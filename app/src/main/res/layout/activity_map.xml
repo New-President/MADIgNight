@@ -53,9 +53,15 @@
         android:id="@+id/tabLayout"
         android:layout_width="409dp"
         android:layout_height="wrap_content"
+        android:background="#fcc267"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent">
+        app:layout_constraintStart_toStartOf="parent"
+        app:tabGravity="center"
+        app:tabIndicatorColor="#FFFF"
+        app:tabIndicatorHeight="4dp"
+        app:tabInlineLabel="false"
+        app:tabTextColor="#FFFFFF">
 
         <com.google.android.material.tabs.TabItem
             android:id="@+id/userPreferred"
