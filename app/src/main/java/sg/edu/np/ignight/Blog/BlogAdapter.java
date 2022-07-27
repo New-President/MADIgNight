@@ -2,12 +2,10 @@ package sg.edu.np.ignight.Blog;
 
 import static android.content.ContentValues.TAG;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.os.Handler;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,8 +16,6 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.facebook.drawee.drawable.ProgressBarDrawable;
-import com.facebook.drawee.generic.GenericDraweeHierarchyBuilder;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
@@ -32,26 +28,18 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FileDownloadTask;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
-import com.nostra13.universalimageloader.cache.memory.impl.WeakMemoryCache;
-import com.nostra13.universalimageloader.core.DisplayImageOptions;
-import com.nostra13.universalimageloader.core.ImageLoader;
-import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
-import com.nostra13.universalimageloader.core.assist.ImageScaleType;
-import com.nostra13.universalimageloader.core.display.FadeInBitmapDisplayer;
-import com.stfalcon.frescoimageviewer.ImageViewer;
 
 import java.io.File;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Collections;
 
-import sg.edu.np.ignight.BlogActivity;
 import sg.edu.np.ignight.CommentSectionActivity;
 import sg.edu.np.ignight.CreateBlogActivity;
 import sg.edu.np.ignight.Objects.BlogObject;
 import sg.edu.np.ignight.Objects.UserObject;
 import sg.edu.np.ignight.R;
+import sg.edu.np.ignight.SendBlogNotification;
 
 public class BlogAdapter extends RecyclerView.Adapter<BlogViewHolder> {
 
@@ -59,6 +47,7 @@ public class BlogAdapter extends RecyclerView.Adapter<BlogViewHolder> {
     private Context c;
     private UserObject userObject;
     private Boolean canEdit;
+    public String token;
 
     public BlogAdapter(Context c, ArrayList<BlogObject> data, UserObject userObject, Boolean canEdit){
         this.c = c;
@@ -142,6 +131,7 @@ public class BlogAdapter extends RecyclerView.Adapter<BlogViewHolder> {
                     databaseReference.child("likes").setValue(blog.likes);
                     holder.likes.setText(String.valueOf(blog.likes));
                     likebutton.setBackgroundResource(R.drawable.heart);
+                    pushNotification(uid, blogID, "liked");
                 }
             }
         });
@@ -196,5 +186,75 @@ public class BlogAdapter extends RecyclerView.Adapter<BlogViewHolder> {
     public int getItemCount() {
         return data.size();
     }
+
+    private void pushNotification(String userUID, String blogID, String message) {
+
+        DatabaseReference myRef = FirebaseDatabase.getInstance("https://madignight-default-rtdb.asia-southeast1.firebasedatabase.app/").getReference();
+
+        myRef.child("user").child(userUID).child("fcmToken").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (snapshot.exists()) {
+                    String fcmToken = snapshot.getValue().toString();
+
+                    SendBlogNotification sender = new SendBlogNotification(fcmToken, FirebaseAuth.getInstance().getUid(), "hi", "hi", c);
+                    sender.sendNotification();
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Log.e(TAG, "onCancelled: " + error.getMessage());
+            }
+        });
+    }
+
+    /*private void sendNotification(String uid){
+
+        DatabaseReference databaseReference = FirebaseDatabase.getInstance("https://madignight-default-rtdb.asia-southeast1.firebasedatabase.app/")
+                .getReference("user").child(uid).child("fcmToken");
+        databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                token = snapshot.getValue().toString();
+                String title = "Liked message";
+                String body = "John";
+
+
+                Retrofit retrofit = new Retrofit.Builder()
+                        .baseUrl("https://fcm.googleapis.com/fcm/send/")
+                        .addConverterFactory(GsonConverterFactory.create())
+                        .build();
+
+                BlogApi api = retrofit.create(BlogApi.class);
+                Log.d("TAG", "Hello" + token);
+                Call<ResponseBody> call = api.sendNotification(token, title, body);
+
+                call.enqueue(new Callback<ResponseBody>() {
+                    @Override
+                    public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                        *//*try{
+                           Toast.makeText(c, response.body().string(), Toast.LENGTH_SHORT).show();
+                        }catch(IOException e){
+                            e.printStackTrace();
+                        }*//*
+                    }
+
+                    @Override
+                    public void onFailure(Call<ResponseBody> call, Throwable t) {
+
+                    }
+                });
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
+
+    }*/
 
 }
