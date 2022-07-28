@@ -111,11 +111,11 @@ public class ProfileViewActivity extends AppCompatActivity {
         interestsDisplay = user.getInterestList();
 
         // custom font type init
-        amaranthFont = Typeface.createFromAsset(getAssets(), "font/amaranth_bold.xml");
-        cormorantFont = Typeface.createFromAsset(getAssets(), "font/cormorant.ttf");
-        poppinsFont = Typeface.createFromAsset(getAssets(), "font/poppins.ttf");
-        ropaFont = Typeface.createFromAsset(getAssets(), "font/ropa.ttf");
-        squarePegFont = Typeface.createFromAsset(getAssets(), "font/squarepeg.ttf");
+        //amaranthFont = Typeface.createFromAsset(getAssets(), "font/amaranth_bold.xml");
+        //cormorantFont = Typeface.createFromAsset(getAssets(), "font/cormorant.ttf");
+        //poppinsFont = Typeface.createFromAsset(getAssets(), "font/poppins.ttf");
+        //ropaFont = Typeface.createFromAsset(getAssets(), "font/ropa.ttf");
+        //squarePegFont = Typeface.createFromAsset(getAssets(), "font/squarepeg.ttf");
 
         // Show user information
         ShowInformation(user);
