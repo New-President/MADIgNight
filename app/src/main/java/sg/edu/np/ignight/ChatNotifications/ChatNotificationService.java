@@ -8,21 +8,27 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.media.AudioAttributes;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.util.Log;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.Person;
 import androidx.core.app.RemoteInput;
 import androidx.core.graphics.drawable.IconCompat;
 import androidx.preference.PreferenceManager;
 
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -30,8 +36,13 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
+import com.google.firebase.storage.FileDownloadTask;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.IOException;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
@@ -39,8 +50,10 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
+import sg.edu.np.ignight.BlogActivity;
 import sg.edu.np.ignight.ChatActivity;
 import sg.edu.np.ignight.ChatRequestActivity;
+import sg.edu.np.ignight.CommentSectionActivity;
 import sg.edu.np.ignight.R;
 import sg.edu.np.ignight.SettingsActivity;
 
@@ -54,12 +67,11 @@ public class ChatNotificationService extends FirebaseMessagingService {
     public void onMessageReceived(@NonNull RemoteMessage message) {
         super.onMessageReceived(message);
 
-        Log.d("TAG", " Hello"+message);
         // get data
         Map<String, String> data = message.getData();
-        Log.d("TAG", "Hello1" + data);
-        String purpose = data.get("purpose");
         context = this;
+
+        String purpose = data.get("purpose");
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
 
         if (purpose != null) {
@@ -69,8 +81,13 @@ public class ChatNotificationService extends FirebaseMessagingService {
             else if (purpose.equals("request")) {
                 displayChatRequestNotification(data);
             }
+            else if(purpose.equals("blog")){
+                displayBlogNotification(data);
+            }
+            else if(purpose.equals("comment")){
+                displayCommentNotification(data);
+            }
         }
-
     }
 
     @Override
@@ -244,7 +261,6 @@ public class ChatNotificationService extends FirebaseMessagingService {
 
         // get data
         String senderID = data.get("senderID");
-        Log.d("TAG", "Hello1" + senderID);
         String chatID = data.get("chatID");
         String messageID = data.get("messageID");
 
@@ -440,6 +456,173 @@ public class ChatNotificationService extends FirebaseMessagingService {
                 }
             });
         }
+    }
+
+    private void displayBlogNotification(Map<String, String> data) {
+        FirebaseUser firebaseAuth = FirebaseAuth.getInstance().getCurrentUser();
+        String uid = firebaseAuth.getUid();
+        FirebaseStorage storage = FirebaseStorage.getInstance();
+        String senderID = data.get("senderID");
+        String blogID = data.get("blogID");
+
+        rootDB.child("user").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                String imgID = snapshot.child(uid).child("blog").child(blogID).child("imgID").getValue().toString();
+                NotificationCompat.Builder builder = new NotificationCompat.Builder(context, "Ignight");
+                builder.setSmallIcon(R.mipmap.ic_launcher_round);
+
+                String senderUsername = snapshot.child(senderID).child("username").getValue().toString();
+
+                try{
+                    StorageReference storageReference = storage.getReference("blog").child(uid).child(imgID);
+                    File localfile = File.createTempFile("tempfile", ".png");
+                    storageReference.getFile(localfile).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
+                        @RequiresApi(api = Build.VERSION_CODES.N)
+                        @Override
+                        public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
+                            Bitmap bitmap = BitmapFactory.decodeFile(localfile.getAbsolutePath());
+                            builder.setLargeIcon(bitmap);
+                            builder.setContentTitle("IgNight");
+                            builder.setContentText(senderUsername + " liked you blog.");
+                            builder.setAutoCancel(true);
+
+
+                            Intent intent = new Intent(context, BlogActivity.class);
+                            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+
+                            PendingIntent pendingIntent = PendingIntent.getActivity(
+                                    context,
+                                    100,
+                                    intent,
+                                    PendingIntent.FLAG_UPDATE_CURRENT
+                            );
+
+                            builder.setContentIntent(pendingIntent);
+                            NotificationManager mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                                String channelId = "IgnightBlogs";
+                                NotificationChannel channel = new NotificationChannel(channelId, "Blogs", NotificationManager.IMPORTANCE_HIGH);
+                                channel.setShowBadge(true);
+                                channel.setLockscreenVisibility(Notification.VISIBILITY_PRIVATE);
+                                channel.enableVibration(true);
+
+                                mNotificationManager.createNotificationChannel(channel);
+                                builder.setChannelId(channelId);
+                            }
+
+
+                            mNotificationManager.notify(999, builder.build());
+                        }
+                    }).addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            Toast.makeText(context, "Failed to retrieve blog image", Toast.LENGTH_SHORT).show();
+                        }
+                    });
+
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                catch (Exception ex){
+                    Log.d("Load Image Error", "Failed to load image");
+                }
+
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
+
+    public void displayCommentNotification(Map<String, String> data){
+        FirebaseUser firebaseAuth = FirebaseAuth.getInstance().getCurrentUser();
+        String uid = firebaseAuth.getUid();
+        FirebaseStorage storage = FirebaseStorage.getInstance();
+        String senderID = data.get("senderID");
+        String blogID = data.get("blogID");
+        String message = data.get("message");
+
+        rootDB.child("user").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                String imgID = snapshot.child(uid).child("blog").child(blogID).child("imgID").getValue().toString();
+                NotificationCompat.Builder builder = new NotificationCompat.Builder(context, "Ignight");
+                builder.setSmallIcon(R.mipmap.ic_launcher_round);
+
+                String senderUsername = snapshot.child(senderID).child("username").getValue().toString();
+
+                try{
+                    StorageReference storageReference = storage.getReference("blog").child(uid).child(imgID);
+                    File localfile = File.createTempFile("tempfile", ".png");
+                    storageReference.getFile(localfile).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
+                        @RequiresApi(api = Build.VERSION_CODES.N)
+                        @Override
+                        public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
+                            Bitmap bitmap = BitmapFactory.decodeFile(localfile.getAbsolutePath());
+                            builder.setLargeIcon(bitmap);
+                            builder.setContentTitle("IgNight");
+                            builder.setContentText(senderUsername + " commented on you blog: " + message);
+                            builder.setAutoCancel(true);
+
+                            Intent intent = new Intent(context, CommentSectionActivity.class);
+                            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+
+                            Bundle commentBundle = new Bundle();
+                            commentBundle.putString("blogOwnerUid", uid);
+                            commentBundle.putString("blogID", blogID);
+                            commentBundle.putString("imgID", imgID);
+
+                            intent.putExtras(commentBundle);
+
+                            PendingIntent pendingIntent = PendingIntent.getActivity(
+                                    context,
+                                    100,
+                                    intent,
+                                    PendingIntent.FLAG_UPDATE_CURRENT
+                            );
+
+                            builder.setContentIntent(pendingIntent);
+                            NotificationManager mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                                String channelId = "IgnightBlogs";
+                                NotificationChannel channel = new NotificationChannel(channelId, "Blogs", NotificationManager.IMPORTANCE_HIGH);
+                                channel.setShowBadge(true);
+                                channel.setLockscreenVisibility(Notification.VISIBILITY_PRIVATE);
+                                channel.enableVibration(true);
+
+                                mNotificationManager.createNotificationChannel(channel);
+                                builder.setChannelId(channelId);
+                            }
+
+
+                            mNotificationManager.notify(999, builder.build());
+                        }
+                    }).addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            Toast.makeText(context, "Failed to retrieve blog image", Toast.LENGTH_SHORT).show();
+                        }
+                    });
+
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                catch (Exception ex){
+                    Log.d("Load Image Error", "Failed to load image");
+                }
+
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
     }
 }
 

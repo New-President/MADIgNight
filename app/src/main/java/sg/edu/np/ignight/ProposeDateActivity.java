@@ -60,6 +60,8 @@ public class ProposeDateActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent back = new Intent(getApplicationContext(), ChatActivity.class);
+                back.putExtra("dateMessage", false);
+                setResult(1000, back);
                 finish();
             }
         });

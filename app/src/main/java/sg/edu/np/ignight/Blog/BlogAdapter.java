@@ -39,7 +39,7 @@ import sg.edu.np.ignight.CreateBlogActivity;
 import sg.edu.np.ignight.Objects.BlogObject;
 import sg.edu.np.ignight.Objects.UserObject;
 import sg.edu.np.ignight.R;
-import sg.edu.np.ignight.Notification.SendBlogNotification;
+import sg.edu.np.ignight.BlogNotification.SendBlogNotification;
 
 public class BlogAdapter extends RecyclerView.Adapter<BlogViewHolder> {
 
@@ -187,16 +187,16 @@ public class BlogAdapter extends RecyclerView.Adapter<BlogViewHolder> {
         return data.size();
     }
 
-    private void pushNotification(String userUID, String blogID, String message) {
+    private void pushNotification(String senderUID, String blogID, String message) {
 
         DatabaseReference myRef = FirebaseDatabase.getInstance("https://madignight-default-rtdb.asia-southeast1.firebasedatabase.app/").getReference();
 
-        myRef.child("user").child(userUID).child("fcmToken").addListenerForSingleValueEvent(new ValueEventListener() {
+        myRef.child("user").child(senderUID).child("fcmToken").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if (snapshot.exists()) {
                     String fcmToken = snapshot.getValue().toString();
-                    SendBlogNotification sender = new SendBlogNotification(fcmToken, FirebaseAuth.getInstance().getUid(), "hi", "hi", c);
+                    SendBlogNotification sender = new SendBlogNotification(fcmToken, senderUID, "hi", blogID, c);
                     sender.sendNotification();
                 }
             }
@@ -207,53 +207,5 @@ public class BlogAdapter extends RecyclerView.Adapter<BlogViewHolder> {
             }
         });
     }
-
-    /*private void sendNotification(String uid){
-
-        DatabaseReference databaseReference = FirebaseDatabase.getInstance("https://madignight-default-rtdb.asia-southeast1.firebasedatabase.app/")
-                .getReference("user").child(uid).child("fcmToken");
-        databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                token = snapshot.getValue().toString();
-                String title = "Liked message";
-                String body = "John";
-
-
-                Retrofit retrofit = new Retrofit.Builder()
-                        .baseUrl("https://fcm.googleapis.com/fcm/send/")
-                        .addConverterFactory(GsonConverterFactory.create())
-                        .build();
-
-                BlogApi api = retrofit.create(BlogApi.class);
-                Log.d("TAG", "Hello" + token);
-                Call<ResponseBody> call = api.sendNotification(token, title, body);
-
-                call.enqueue(new Callback<ResponseBody>() {
-                    @Override
-                    public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                        *//*try{
-                           Toast.makeText(c, response.body().string(), Toast.LENGTH_SHORT).show();
-                        }catch(IOException e){
-                            e.printStackTrace();
-                        }*//*
-                    }
-
-                    @Override
-                    public void onFailure(Call<ResponseBody> call, Throwable t) {
-
-                    }
-                });
-
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
-            }
-        });
-
-
-    }*/
 
 }

@@ -117,6 +117,7 @@ public class ChatActivity extends AppCompatActivity {
         chatName = bundle.getString("chatName");
         targetUserID = bundle.getString("targetUserID");
 
+
         currentUserUID = FirebaseAuth.getInstance().getUid();
 
         rootDB = FirebaseDatabase.getInstance("https://madignight-default-rtdb.asia-southeast1.firebasedatabase.app/").getReference();
@@ -745,18 +746,18 @@ public class ChatActivity extends AppCompatActivity {
             Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
         }
 
-        Boolean fromProposeDate= data.getBooleanExtra("dateMessage", true);
-        String dateDescription = data.getStringExtra("dateDescription");
-        String dateLocation = data.getStringExtra("dateLocation");
-        long dateTime = data.getLongExtra("datetime", 0);
-        String dateString = DateFormat.format("dd/MM/yyyy HH:mm", new Date(dateTime)).toString();
-        acceptButton = findViewById(R.id.acceptButton);
-        declineButton = findViewById(R.id.declineButton);
-        proposeDateViewStub = findViewById(R.id.proposeDateViewStub);
-        proposeDateViewStub.inflate();
-        proposeDateViewStub.setVisibility(View.INVISIBLE);
+        Boolean fromProposeDate= data.getBooleanExtra("dateMessage", false);
 
         if(fromProposeDate) {
+            String dateDescription = data.getStringExtra("dateDescription");
+            String dateLocation = data.getStringExtra("dateLocation");
+            long dateTime = data.getLongExtra("datetime", 0);
+            String dateString = DateFormat.format("dd/MM/yyyy HH:mm", new Date(dateTime)).toString();
+            acceptButton = findViewById(R.id.acceptButton);
+            declineButton = findViewById(R.id.declineButton);
+            proposeDateViewStub = findViewById(R.id.proposeDateViewStub);
+            proposeDateViewStub.inflate();
+            proposeDateViewStub.setVisibility(View.INVISIBLE);
             EditText call_text = findViewById(R.id.messageInput);
             call_text.setText("Date Description: " + dateDescription +"\nDate Location: " + dateLocation + "\nDate and Time: " + dateString);
             sendMessage();
