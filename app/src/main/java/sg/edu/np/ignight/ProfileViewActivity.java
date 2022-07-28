@@ -3,6 +3,7 @@ package sg.edu.np.ignight;
 import static android.content.ContentValues.TAG;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Build;
@@ -56,7 +57,7 @@ public class ProfileViewActivity extends AppCompatActivity {
 
     private TextView nameAndAge, textView8, textView9, textView11;
 
-    private Button ignightButton, viewBlogsButton;
+    private Button ignightButton, viewBlogsBtn;
     private ImageButton backButton;
 
     private ImageView profilePicture;
@@ -74,6 +75,7 @@ public class ProfileViewActivity extends AppCompatActivity {
     private UploadTask uploadTask;
 
     private Typeface amaranthFont,cormorantFont, poppinsFont, ropaFont, squarePegFont;
+    TextView personalInfoText, nameAndAgeText,myInterestsText,aboutMeText,whatImLookingForText,myIdealDate;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -104,6 +106,14 @@ public class ProfileViewActivity extends AppCompatActivity {
         userDB = db.getReference().child("user");
         chatDB = db.getReference().child("chat");
 
+
+        personalInfoText = (TextView) findViewById(R.id.PersonalInfo);
+        nameAndAgeText = (TextView) findViewById(R.id.NameAndAgeTextView);;
+        myInterestsText = (TextView) findViewById(R.id.textView);
+        aboutMeText = (TextView) findViewById(R.id.textView7);
+        whatImLookingForText = (TextView) findViewById(R.id.textView10);
+        myIdealDate = (TextView) findViewById(R.id.textView6);
+
         // obtain user info and init
         currentUserUID = FirebaseAuth.getInstance().getUid();
         targetUserUID = user.getUid();
@@ -111,11 +121,14 @@ public class ProfileViewActivity extends AppCompatActivity {
         interestsDisplay = user.getInterestList();
 
         // custom font type init
-        //amaranthFont = Typeface.createFromAsset(getAssets(), "font/amaranth_bold.xml");
-        //cormorantFont = Typeface.createFromAsset(getAssets(), "font/cormorant.ttf");
-        //poppinsFont = Typeface.createFromAsset(getAssets(), "font/poppins.ttf");
-        //ropaFont = Typeface.createFromAsset(getAssets(), "font/ropa.ttf");
-        //squarePegFont = Typeface.createFromAsset(getAssets(), "font/squarepeg.ttf");
+        /*amaranthFont = Typeface.createFromAsset(getAssets(), "font/amaranth_bold.xml");*/
+        /*cormorantFont = Typeface.createFromAsset(getAssets(), "font/cormorant.ttf");
+        poppinsFont = Typeface.createFromAsset(getAssets(), "font/poppins.ttf");
+        ropaFont = Typeface.createFromAsset(getAssets(), "font/ropa.ttf");
+        squarePegFont = Typeface.createFromAsset(getAssets(), "font/squarepeg.ttf");*/
+
+        // User customisation
+        profileCustomisation();
 
         // Show user information
         ShowInformation(user);
@@ -134,8 +147,8 @@ public class ProfileViewActivity extends AppCompatActivity {
         });
 
         // View the profile's blogs
-        viewBlogsButton = findViewById(R.id.ViewBlogsBtn);
-        viewBlogsButton.setOnClickListener(new View.OnClickListener() {
+        viewBlogsBtn = findViewById(R.id.ViewBlogsBtn);
+        viewBlogsBtn.setOnClickListener(new View.OnClickListener() {
             @RequiresApi(api = Build.VERSION_CODES.N)
             @Override
             public void onClick(View view) {
@@ -277,6 +290,7 @@ public class ProfileViewActivity extends AppCompatActivity {
                             bundle.putString("chatName", user.getUsername());
                             bundle.putString("targetUserID", targetUserUID);
                             intent.putExtras(bundle);
+                            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                             view.getContext().startActivity(intent);
                         }
 
@@ -428,40 +442,68 @@ public class ProfileViewActivity extends AppCompatActivity {
     }
 
     // profile view customisation check & application of themes, if any
-    private boolean profileCustomisation(){
-        boolean returnValue = false;
+    private void profileCustomisation(){
         userDB.child(targetUserUID).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 // If the target user chose to do font customisation
+
                 if(snapshot.child("FontOption").exists()){
                     // Obtain the user's font
                     String targetUserFontOption = snapshot.child("FontOption")
                             .getValue()
                             .toString();
-                    // Set the target user's font choice
-                    TextView personalInfoText = (TextView) findViewById(R.id.PersonalInfo);
-                    TextView nameAndAgeTextView = (TextView) findViewById(R.id.NameAndAgeTextView);
+
                     // Sets the font according to the option in the database
                     if(targetUserFontOption.equals("amaranthFont")){
                         personalInfoText.setTypeface(amaranthFont);
-                        nameAndAgeTextView.setTypeface(amaranthFont);
+                        nameAndAgeText.setTypeface(amaranthFont);
+                        viewBlogsBtn.setTypeface(amaranthFont);
+                        myInterestsText.setTypeface(amaranthFont);
+                        aboutMeText.setTypeface(amaranthFont);
+                        whatImLookingForText.setTypeface(amaranthFont);
+                        myIdealDate.setTypeface(amaranthFont);
+                        ignightButton.setTypeface(amaranthFont);
                     }
                     else if(targetUserFontOption.equals("cormorantFont")){
                         personalInfoText.setTypeface(cormorantFont);
-                        nameAndAgeTextView.setTypeface(cormorantFont);
+                        nameAndAgeText.setTypeface(cormorantFont);
+                        viewBlogsBtn.setTypeface(cormorantFont);
+                        myInterestsText.setTypeface(cormorantFont);
+                        aboutMeText.setTypeface(cormorantFont);
+                        whatImLookingForText.setTypeface(cormorantFont);
+                        myIdealDate.setTypeface(cormorantFont);
+                        ignightButton.setTypeface(cormorantFont);
                     }
                     else if(targetUserFontOption.equals("poppinsFont")){
                         personalInfoText.setTypeface(poppinsFont);
-                        nameAndAgeTextView.setTypeface(poppinsFont);
+                        nameAndAgeText.setTypeface(poppinsFont);
+                        viewBlogsBtn.setTypeface(poppinsFont);
+                        myInterestsText.setTypeface(poppinsFont);
+                        aboutMeText.setTypeface(poppinsFont);
+                        whatImLookingForText.setTypeface(poppinsFont);
+                        myIdealDate.setTypeface(poppinsFont);
+                        ignightButton.setTypeface(poppinsFont);
                     }
                     else if(targetUserFontOption.equals("ropaFont")){
                         personalInfoText.setTypeface(ropaFont);
-                        nameAndAgeTextView.setTypeface(ropaFont);
+                        nameAndAgeText.setTypeface(ropaFont);
+                        viewBlogsBtn.setTypeface(ropaFont);
+                        myInterestsText.setTypeface(ropaFont);
+                        aboutMeText.setTypeface(ropaFont);
+                        whatImLookingForText.setTypeface(ropaFont);
+                        myIdealDate.setTypeface(ropaFont);
+                        ignightButton.setTypeface(ropaFont);
                     }
                     else if(targetUserFontOption.equals("squarePegFont")){
                         personalInfoText.setTypeface(squarePegFont);
-                        nameAndAgeTextView.setTypeface(squarePegFont);
+                        nameAndAgeText.setTypeface(squarePegFont);
+                        viewBlogsBtn.setTypeface(squarePegFont);
+                        myInterestsText.setTypeface(squarePegFont);
+                        aboutMeText.setTypeface(squarePegFont);
+                        whatImLookingForText.setTypeface(squarePegFont);
+                        myIdealDate.setTypeface(squarePegFont);
+                        ignightButton.setTypeface(squarePegFont);
                     }
 
                 }
@@ -471,9 +513,45 @@ public class ProfileViewActivity extends AppCompatActivity {
                     String targetUserAccentThemeOption = snapshot.child("AccentThemeOption")
                             .getValue()
                             .toString();
-                    // Set the target user's aacent theme choice
+                    // Set the target user's accent theme choice
+                    if(targetUserAccentThemeOption.equals("Green")){
+                        // Init color in hex
+                        int green = Color.parseColor("#A7F432");
+                        // Set color to all buttons
+                        viewBlogsBtn.setBackgroundColor(green);
+                        ignightButton.setBackgroundColor(green);
+                    }
+                    else if(targetUserAccentThemeOption.equals("Yellow")){
+                        int yellow = Color.parseColor("#FCC267");
+                        viewBlogsBtn.setBackgroundColor(yellow);
+                        ignightButton.setBackgroundColor(yellow);
 
-
+                    }
+                    else if(targetUserAccentThemeOption.equals("Black")){
+                        int black = Color.parseColor("#000000");
+                        viewBlogsBtn.setBackgroundColor(black);
+                        ignightButton.setBackgroundColor(black);
+                    }
+                    else if(targetUserAccentThemeOption.equals("Purple")){
+                        int purple = Color.parseColor("#B24BF3");
+                        viewBlogsBtn.setBackgroundColor(purple);
+                        ignightButton.setBackgroundColor(purple);
+                    }
+                    else if(targetUserAccentThemeOption.equals("Blue")){
+                        int blue = Color.parseColor("#1338BE");
+                        viewBlogsBtn.setBackgroundColor(blue);
+                        ignightButton.setBackgroundColor(blue);
+                    }
+                    else if(targetUserAccentThemeOption.equals("Red")){
+                        int red = Color.parseColor("#FF2400");
+                        viewBlogsBtn.setBackgroundColor(red);
+                        ignightButton.setBackgroundColor(red);
+                    }
+                    else if(targetUserAccentThemeOption.equals("Brown")){
+                        int brown = Color.parseColor("#4A2511");
+                        viewBlogsBtn.setBackgroundColor(brown);
+                        ignightButton.setBackgroundColor(brown);
+                    }
                 }
             }
 
@@ -484,13 +562,26 @@ public class ProfileViewActivity extends AppCompatActivity {
                         Toast.LENGTH_LONG)
                         .show();
             }
-        });
-        return returnValue;
+        });;
     }
 
     // Revert the target user's customisation settings once the activity is exited
     @Override
     protected void onDestroy() {
         super.onDestroy();
+
+        // Reset the fonts and the accent themes
+        personalInfoText.setTypeface(amaranthFont);
+        nameAndAgeText.setTypeface(amaranthFont);
+        viewBlogsBtn.setTypeface(amaranthFont);
+        myInterestsText.setTypeface(amaranthFont);
+        aboutMeText.setTypeface(amaranthFont);
+        whatImLookingForText.setTypeface(amaranthFont);
+        myIdealDate.setTypeface(amaranthFont);
+        ignightButton.setTypeface(amaranthFont);
+
+        int yellow = Color.parseColor("#FCC267");
+        viewBlogsBtn.setBackgroundColor(yellow);
+        ignightButton.setBackgroundColor(yellow);
     }
 }

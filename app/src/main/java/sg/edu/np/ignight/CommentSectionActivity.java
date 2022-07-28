@@ -38,6 +38,7 @@ import java.util.ArrayList;
 import java.util.Date;
 
 import sg.edu.np.ignight.Blog.CommentsAdapter;
+import sg.edu.np.ignight.BlogNotification.SendCommentNotification;
 import sg.edu.np.ignight.Objects.Comment;
 
 public class CommentSectionActivity extends AppCompatActivity {
@@ -48,6 +49,8 @@ public class CommentSectionActivity extends AppCompatActivity {
     private DatabaseReference databaseReference;
     private FirebaseDatabase database;
     private ArrayList<String> commentIDList;
+
+    private String blogOwnerUID, blogID, imgID;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -55,11 +58,26 @@ public class CommentSectionActivity extends AppCompatActivity {
 
         Intent intent = getIntent();
 
+        if(intent.getStringExtra("uid") != null){
+            blogOwnerUID = intent.getStringExtra("uid");
+            blogID = intent.getStringExtra("blogID");
+            imgID = intent.getStringExtra("imgID");
+        }else{
+            Bundle bundle = getIntent().getExtras();
+            blogOwnerUID = bundle.getString("blogOwnerUid");
+            blogID = bundle.getString("blogID");
+            imgID = bundle.getString("imgID");
+        }
+        Log.d("TAG", "Hello1" + blogOwnerUID);
+
+
         // Retrieves uid who posted the blogs & id of blog
-        String blogOwnerUID = intent.getStringExtra("uid");
-        String blogID = intent.getStringExtra("blogID");
-        String imgID = intent.getStringExtra("imgID");
+        /*blogOwnerUID = intent.getStringExtra("uid");*/
+
+
         int numOfComments = intent.getIntExtra("numOfComments", 0);
+
+
 
         ImageView sendCommentBtn = findViewById(R.id.sendCommentBtn);
         ImageView commentProfilePic = findViewById(R.id.commentProfilePic);
@@ -72,6 +90,7 @@ public class CommentSectionActivity extends AppCompatActivity {
         database = FirebaseDatabase.getInstance("https://madignight-default-rtdb.asia-southeast1.firebasedatabase.app/");
         databaseReference = database.getReference("user").child(blogOwnerUID).child("blog").child(blogID);
         DatabaseReference databaseSelf = database.getReference("user").child(auth.getUid());
+        String uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
         getCommentsList();
         initRecyclerView(blogID, blogOwnerUID);
@@ -127,6 +146,8 @@ public class CommentSectionActivity extends AppCompatActivity {
 
                 databaseReference.child("comments").setValue(numOfComments + 1);
 
+                pushNotification(uid ,blogID, content, blogOwnerUID);
+
                 databaseSelf.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -135,6 +156,8 @@ public class CommentSectionActivity extends AppCompatActivity {
 
                         Comment newComment = new Comment(commentID, auth.getUid(), username, profUrl, content, timestamp, new ArrayList<String>(), 0);
                         databaseReference.child("commentList").child(commentID).setValue(newComment);
+
+
                     }
 
                     @Override
@@ -150,6 +173,9 @@ public class CommentSectionActivity extends AppCompatActivity {
         backBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                Intent intent = new Intent(getApplicationContext(), MainMenuActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(intent);
                 finish();
             }
         });
@@ -241,5 +267,34 @@ public class CommentSectionActivity extends AppCompatActivity {
 
 
         });
+    }
+
+    private void pushNotification(String senderUID, String blogID, String message, String blogOwnerUID) {
+
+        DatabaseReference myRef = FirebaseDatabase.getInstance("https://madignight-default-rtdb.asia-southeast1.firebasedatabase.app/").getReference();
+
+        myRef.child("user").child(blogOwnerUID).child("fcmToken").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (snapshot.exists()) {
+                    String fcmToken = snapshot.getValue().toString();
+                    SendCommentNotification sender = new SendCommentNotification(fcmToken, senderUID, message, blogID, getApplicationContext());
+                    sender.sendNotification();
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Log.e(TAG, "onCancelled: " + error.getMessage());
+            }
+        });
+    }
+
+    @Override
+    public void onBackPressed() {
+        Intent intent = new Intent(getApplicationContext(), MainMenuActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        startActivity(intent);
+        finish();
     }
 }

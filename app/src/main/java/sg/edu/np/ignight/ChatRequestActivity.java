@@ -37,6 +37,7 @@ public class ChatRequestActivity extends AppCompatActivity {
         backButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                startActivity(new Intent(getApplicationContext(), MainMenuActivity.class));
                 finish();
             }
         });
@@ -57,6 +58,12 @@ public class ChatRequestActivity extends AppCompatActivity {
                     }
                 }
         ).attach();
+    }
+
+    @Override
+    public void onBackPressed() {
+        startActivity(new Intent(getApplicationContext(), MainMenuActivity.class));
+        finish();
     }
 
     class fragmentAdapter extends FragmentStateAdapter {

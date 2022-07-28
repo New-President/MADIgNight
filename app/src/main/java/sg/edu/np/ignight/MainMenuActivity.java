@@ -60,6 +60,7 @@ public class MainMenuActivity extends AppCompatActivity {
         });
         updateConnection();
         getFCMToken();
+        getNotificationId();
 
         // save default values
         PreferenceManager.setDefaultValues(this, R.xml.root_preferences, false);
@@ -131,6 +132,7 @@ public class MainMenuActivity extends AppCompatActivity {
         });
     }
 
+    // sets fcm token for each user
     private void getFCMToken() {
         FirebaseMessaging.getInstance().getToken().addOnCompleteListener(new OnCompleteListener<String>() {
             @Override
@@ -148,7 +150,26 @@ public class MainMenuActivity extends AppCompatActivity {
                 userDB.updateChildren(tokenMap);
             }
         });
+    }
 
+    // create an id for each user to use for sending notifications
+    private void getNotificationId() {
+        DatabaseReference userDB = FirebaseDatabase.getInstance("https://madignight-default-rtdb.asia-southeast1.firebasedatabase.app/").getReference().child("user").child(FirebaseAuth.getInstance().getUid());
+        userDB.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (snapshot.child("notificationID").exists()) {
+                    return;
+                }
+
+                userDB.child("notificationID").setValue(snapshot.child("phone").getValue().toString().substring(2));
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Log.e(TAG, "onCancelled: " + error.getMessage());
+            }
+        });
     }
 
     // updates presence system - when user logs on, set connection to true, when user logs off, set connection to null and update last online time
