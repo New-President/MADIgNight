@@ -540,7 +540,7 @@ public class ChatNotificationService extends FirebaseMessagingService {
                                 String channelId = "IgnightBlogs";
                                 NotificationChannel channel = new NotificationChannel(channelId, "Blogs", NotificationManager.IMPORTANCE_HIGH);
                                 channel.setShowBadge(true);
-                                channel.setLockscreenVisibility(Notification.VISIBILITY_PRIVATE);
+                                channel.setLockscreenVisibility(NotificationCompat.VISIBILITY_PRIVATE);
                                 channel.enableVibration(true);
 
                                 mNotificationManager.createNotificationChannel(channel);
@@ -627,7 +627,7 @@ public class ChatNotificationService extends FirebaseMessagingService {
                                 String channelId = "IgnightBlogs";
                                 NotificationChannel channel = new NotificationChannel(channelId, "Blogs", NotificationManager.IMPORTANCE_HIGH);
                                 channel.setShowBadge(true);
-                                channel.setLockscreenVisibility(Notification.VISIBILITY_PRIVATE);
+                                channel.setLockscreenVisibility(NotificationCompat.VISIBILITY_PRIVATE);
                                 channel.enableVibration(true);
 
                                 mNotificationManager.createNotificationChannel(channel);
