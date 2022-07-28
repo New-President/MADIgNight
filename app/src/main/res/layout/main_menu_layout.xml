@@ -3,79 +3,80 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="#373737">
 
     <ImageView
         android:id="@+id/profilepic_menu"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginStart="30dp"
-        android:layout_marginTop="104dp"
         android:layout_marginEnd="30dp"
+        android:layout_marginTop="30dp"
         android:adjustViewBounds="true"
-        android:src="@mipmap/ic_launcher"
         app:layout_constraintDimensionRatio="1:1"
+        android:src="@mipmap/ic_launcher"
+        app:layout_constraintBottom_toTopOf="@+id/name_placement"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/name_placement"
-        android:layout_width="191dp"
-        android:layout_height="151dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_margin="20dp"
-        android:layout_marginStart="36dp"
-        android:layout_marginTop="28dp"
-        android:fontFamily="@font/poppins"
+        android:background="@drawable/dialog_bg"
         android:includeFontPadding="false"
         android:padding="8dp"
         android:text="John"
-        android:textColor="#000"
-        android:textSize="32sp"
-        android:textStyle="bold"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/profilepic_menu" />
-
-    <android.widget.Button
-        android:id="@+id/IgNight_Btn"
-        android:layout_width="127dp"
-        android:layout_height="48dp"
-        android:layout_margin="20dp"
-        android:layout_marginEnd="20dp"
-        android:background="@drawable/IgNightNewBtn"
         android:textSize="20sp"
+        app:layout_constraintBottom_toTopOf="@id/Reject_btn"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHeight_max="70dp"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <Button
+        android:id="@+id/IgNight_Btn"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
         app:layout_constraintHeight_min="50dp"
-        app:layout_constraintTop_toBottomOf="@+id/profilepic_menu" />
+        app:layout_constraintHeight_max="70dp"
+        android:layout_margin="20dp"
+        android:background="@drawable/ignight_btn"
+        android:backgroundTint="#00FFFFFF"
+        android:text="IgNight"
+        android:textSize="20sp"
+        app:iconTint="#00FFFFFF"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/mainMenuLayoutVerticalGuideline"
+        app:layout_constraintTop_toBottomOf="@id/mainMenuLayoutHorizontalGuidelineTop" />
 
     <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/mainMenuLayoutVerticalGuideline"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        app:layout_constraintGuide_percent="0.5" />
+        android:id="@+id/mainMenuLayoutVerticalGuideline"
+        app:layout_constraintGuide_percent="0.5"/>
 
     <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/mainMenuLayoutHorizontalGuidelineTop"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.9" />
+        android:id="@+id/mainMenuLayoutHorizontalGuidelineTop"
+        app:layout_constraintGuide_percent="0.8"/>
 
-    <android.widget.Button
+    <Button
         android:id="@+id/Reject_btn"
-        android:layout_width="97dp"
-        android:layout_height="49dp"
-        android:layout_margin="20dp"
-        android:layout_marginTop="44dp"
-        android:layout_marginEnd="72dp"
-        android:background="@drawable/SkipNextBtn"
-        android:textSize="20sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHeight_max="70dp"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
         app:layout_constraintHeight_min="50dp"
-        app:layout_constraintTop_toBottomOf="@+id/IgNight_Btn" />
+        app:layout_constraintHeight_max="70dp"
+        android:layout_margin="20dp"
+        android:background="@drawable/ignight_btn"
+        android:text="next"
+        android:textSize="20sp"
+        app:layout_constraintEnd_toStartOf="@id/mainMenuLayoutVerticalGuideline"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/mainMenuLayoutHorizontalGuidelineTop" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
