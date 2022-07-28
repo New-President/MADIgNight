@@ -41,8 +41,8 @@
     <string name="vibration_long">Long</string>
     <string name="vibration_none_value">0,0</string>
     <string name="vibration_short_value">0,500</string>
-    <string name="vibration_default_value">0,1000</string>
-    <string name="vibration_long_value">0,1000,200,1000</string>
+    <string name="vibration_default_value">0,500,200,500</string>
+    <string name="vibration_long_value">0,800,200,800</string>
 
     <string name="fcm_server_key">AAAA0fKydBU:APA91bFEsGLkVEtd9n_icYQdlVw20YI11Kvp7imYadZlFwAPZrVIYad7mPmGtvqWZk4cpvCLvJqLH6N_8Qw0rMNzazZakMDgQG4_rWkBiAmjYORPnhV34tS9qnaSuf-C_srwk0QZy-pb</string>
 </resources>

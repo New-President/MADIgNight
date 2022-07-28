@@ -290,6 +290,7 @@ public class ProfileViewActivity extends AppCompatActivity {
                             bundle.putString("chatName", user.getUsername());
                             bundle.putString("targetUserID", targetUserUID);
                             intent.putExtras(bundle);
+                            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                             view.getContext().startActivity(intent);
                         }
 
