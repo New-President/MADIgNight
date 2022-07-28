@@ -90,24 +90,6 @@ public class NotificationActivity extends AppCompatActivity {
 
         // NotificationHelper.displayNotification(this, "title", "body");
 
-        TextView textView = findViewById(R.id.textViewToken);
-        FirebaseMessaging.getInstance().getToken()
-                .addOnCompleteListener(new OnCompleteListener<String>() {
-                    @Override
-                    public void onComplete(@NonNull Task<String> task) {
-                        if(task.isSuccessful()){
-                            String token = task.getResult();
-                            DatabaseReference nested = databaseUserReference.child(FirebaseAuth.getInstance().getUid());
-                            nested.child("fcmToken").setValue(token);
-                            Toast.makeText(NotificationActivity.this, "token saved", Toast.LENGTH_SHORT).show();
-                            textView.setText("Token: " + token);
-                        }
-                        else{
-                            textView.setText(task.getException().getMessage());
-                        }
-                    }
-                });
-
     }
 
 
