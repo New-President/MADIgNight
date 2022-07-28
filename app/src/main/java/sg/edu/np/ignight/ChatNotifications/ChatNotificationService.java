@@ -54,9 +54,10 @@ public class ChatNotificationService extends FirebaseMessagingService {
     public void onMessageReceived(@NonNull RemoteMessage message) {
         super.onMessageReceived(message);
 
+        Log.d("TAG", " Hello"+message);
         // get data
         Map<String, String> data = message.getData();
-
+        Log.d("TAG", "Hello1" + data);
         String purpose = data.get("purpose");
         context = this;
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
@@ -243,6 +244,7 @@ public class ChatNotificationService extends FirebaseMessagingService {
 
         // get data
         String senderID = data.get("senderID");
+        Log.d("TAG", "Hello1" + senderID);
         String chatID = data.get("chatID");
         String messageID = data.get("messageID");
 

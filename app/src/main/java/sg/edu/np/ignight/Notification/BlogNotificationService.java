@@ -42,6 +42,7 @@ import com.google.firebase.messaging.RemoteMessage;
 
 import java.io.ByteArrayOutputStream;
 import java.net.URL;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -67,6 +68,12 @@ public class BlogNotificationService extends FirebaseMessagingService {
 
         Log.d("TAG", "Hello" + remoteMessage);
         // get data
+        Map<String, String> data = remoteMessage.getData();
+        for (String key: data.keySet()){
+            Log.d("TAG", "Hello" + key);
+        }
+
+
         Map<String, String> data123 = remoteMessage.getData();
         Log.d("TAG", "Hello1" + data123);
 
@@ -75,7 +82,6 @@ public class BlogNotificationService extends FirebaseMessagingService {
         try {
             json = mapper.writeValueAsString(data123);
             System.out.println(json);
-            Log.d("TAG", "Hello" + json);
         } catch (JsonProcessingException e) {
             e.printStackTrace();
         }
