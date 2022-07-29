@@ -46,6 +46,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.protobuf.StringValue;
 
 import java.util.concurrent.TimeUnit;
 
@@ -361,10 +362,9 @@ public class SideMenu extends Activity {
     // start to verify phone number (send otp to the retrieved phone number)
     private void startPhoneNumberVerification() {
         DatabaseReference phoneNum = FirebaseDatabase.getInstance("https://madignight-default-rtdb.asia-southeast1.firebasedatabase.app/").getReference("user").child(Uid).child("phone");
-        phoneNum.addValueEventListener(new ValueEventListener() {
+        phoneNum.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                Log.d("phone",snapshot.getValue().toString());
                 PhoneAuthOptions options = PhoneAuthOptions.newBuilder()
                         .setPhoneNumber(snapshot.getValue().toString())
                         .setTimeout(60L, TimeUnit.SECONDS)
@@ -420,22 +420,26 @@ public class SideMenu extends Activity {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
                 if (task.isSuccessful()) {
-                    user.delete().addOnCompleteListener(new OnCompleteListener<Void>() { // Delete the user
+                    DatabaseReference myRef = FirebaseDatabase.getInstance().getReference("user");
+                    myRef.child(Uid).removeValue().addOnCompleteListener(new OnCompleteListener<Void>() {
                         @Override
                         public void onComplete(@NonNull Task<Void> task) {
-                            if (task.isSuccessful()) {
-                                alertDialog.dismiss();
-                                FirebaseDatabase.getInstance("https://madignight-default-rtdb.asia-southeast1.firebasedatabase.app/").goOffline();
-                                FirebaseAuth.getInstance().signOut();
-                                Intent main_to_start = new Intent(getApplicationContext(), LoginActivity.class);
-                                main_to_start.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                                startActivity(main_to_start); // Go back to login
-                                finish();
-                                Log.d("Delete Status", "User account deleted.");
-                            }
-                            else {
-                                Toast.makeText(getApplicationContext(), "Wrong OTP", Toast.LENGTH_SHORT).show();
-                            }
+                            user.delete().addOnCompleteListener(new OnCompleteListener<Void>() { // Delete the user
+                                @Override
+                                public void onComplete(@NonNull Task<Void> task) {
+                                    if (task.isSuccessful()) {
+                                        alertDialog.dismiss();
+                                        Log.d("Delete Status", user.getUid());
+                                        Intent main_to_start = new Intent(getApplicationContext(), LoginActivity.class);
+                                        main_to_start.putExtra("deleteUser", user.getUid());
+                                        main_to_start.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                        startActivity(main_to_start); // Go back to login
+                                        finish();
+                                    } else {
+                                        Toast.makeText(getApplicationContext(), "Wrong OTP", Toast.LENGTH_SHORT).show();
+                                    }
+                                }
+                            });
                         }
                     });
                 }
