@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewStub;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -97,6 +98,10 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
         if (!thisMessage.getMessage().equals("")) {
             holder.messageText.setText(thisMessage.getMessage());
             holder.messageText.setVisibility(View.VISIBLE);
+            if(thisMessage.getProposeDate()){
+                holder.proposeDateViewStub.inflate();
+                holder.proposeDateViewStub.setVisibility(View.VISIBLE);
+            }
         }
         else {
             holder.messageText.setVisibility(View.GONE);
@@ -196,6 +201,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
         public ImageView mediaHolder, messageStatus;
         public ConstraintLayout messageLayout;
         public ViewStub proposeDateViewStub;
+        public Button acceptButton, declineButton;
 
         public MessageViewHolder(View itemView) {
             super(itemView);
@@ -208,6 +214,8 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
             messageLayout = itemView.findViewById(R.id.messageLayout);
             messageStatus = itemView.findViewById(R.id.messageStatus);
             proposeDateViewStub = itemView.findViewById(R.id.proposeDateViewStub);
+            acceptButton = itemView.findViewById(R.id.acceptButton);
+            declineButton = itemView.findViewById(R.id.declineButton);
         }
     }
 }

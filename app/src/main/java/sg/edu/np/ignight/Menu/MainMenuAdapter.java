@@ -10,7 +10,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.CheckedTextView;
 import android.widget.ImageView;
 import android.widget.Toast;
 
@@ -43,7 +42,7 @@ public class MainMenuAdapter extends RecyclerView.Adapter<MainMenuViewHolder>{
     private ArrayList<UserObject> data;
     private Context c;
     private LinearLayoutManager layoutManager;
-    private DatabaseReference myRef2;
+    private DatabaseReference userDB;
     private FirebaseDatabase db;
 
     public MainMenuAdapter(Context c, ArrayList<UserObject> data, LinearLayoutManager layoutManager){
@@ -63,7 +62,7 @@ public class MainMenuAdapter extends RecyclerView.Adapter<MainMenuViewHolder>{
     public void onBindViewHolder(@NonNull MainMenuViewHolder holder, int position) {
         UserObject user = data.get(position);
         db = FirebaseDatabase.getInstance("https://madignight-default-rtdb.asia-southeast1.firebasedatabase.app/");
-        myRef2 = db.getReference("user");
+        userDB = db.getReference("user");
         holder.Name.setText(user.getUsername());
         Button next = holder.Reject;
         Button ignight = holder.Accept;
@@ -273,7 +272,7 @@ public class MainMenuAdapter extends RecyclerView.Adapter<MainMenuViewHolder>{
             @Override
             public void onComplete(@NonNull Task task) {
                 if (task.isSuccessful()) {
-                    if (fcmToken != null) {
+                    if (fcmToken != null) {  // send notification if the other user has fcmToken
                         ChatRequestNotificationSender sender = new ChatRequestNotificationSender(fcmToken, c, newRequestID);
                         sender.sendNotification();
                     }
@@ -326,7 +325,7 @@ public class MainMenuAdapter extends RecyclerView.Adapter<MainMenuViewHolder>{
                     userDB.updateChildren(updateUserMap).addOnCompleteListener(new OnCompleteListener() {
                         @Override
                         public void onComplete(@NonNull Task task) {
-                            if (fcmToken != null) {
+                            if (fcmToken != null) {  // send notification if the other user has fcmToken
                                 ChatRequestNotificationSender sender = new ChatRequestNotificationSender(fcmToken, c, requestID, true);
                                 sender.sendNotification();
                             }

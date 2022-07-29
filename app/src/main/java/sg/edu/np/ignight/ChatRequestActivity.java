@@ -28,8 +28,6 @@ public class ChatRequestActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat_request);
 
-        Fresco.initialize(this);
-
         Intent intent = getIntent();
         int position = intent.getIntExtra("position", 0);
 
@@ -37,6 +35,7 @@ public class ChatRequestActivity extends AppCompatActivity {
         backButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                startActivity(new Intent(getApplicationContext(), MainMenuActivity.class));
                 finish();
             }
         });
@@ -59,6 +58,12 @@ public class ChatRequestActivity extends AppCompatActivity {
         ).attach();
     }
 
+    @Override
+    public void onBackPressed() {  // override onBackPressed to go to main menu if activity is started from notification
+        startActivity(new Intent(getApplicationContext(), MainMenuActivity.class));
+        finish();
+    }
+
     class fragmentAdapter extends FragmentStateAdapter {
 
         public fragmentAdapter(@NonNull FragmentActivity fragmentActivity) {
@@ -67,7 +72,7 @@ public class ChatRequestActivity extends AppCompatActivity {
 
         @NonNull
         @Override
-        public Fragment createFragment(int position) {
+        public Fragment createFragment(int position) {  // initialize activity at respective fragment based on position received
             return (position == 0)?new ChatRequestReceivedFragment():new ChatRequestSentFragment();
         }
 

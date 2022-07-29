@@ -1,4 +1,4 @@
-package sg.edu.np.ignight.Notification;
+package sg.edu.np.ignight.BlogNotification;
 
 import android.content.Context;
 import android.util.Log;
@@ -21,19 +21,19 @@ public class SendBlogNotification {
 
     private String fcmToken;
     private String title;
-    private String body;
+    private String blogID;
     private String senderID;
     private Context context;
 
-    private RequestQueue requestQueue;
+    private RequestQueue requestQueue1;
     private final String postUrl = "https://fcm.googleapis.com/fcm/send";
     private String fcmServerKey;
 
-    public SendBlogNotification(String fcmToken, String senderID, String title, String body, Context context) {
+    public SendBlogNotification(String fcmToken, String senderID, String title, String blogID, Context context) {
         this.fcmToken = fcmToken;
         this.title = title;
         this.senderID = senderID;
-        this.body = body;
+        this.blogID = blogID;
         this.context = context;
     }
 
@@ -41,7 +41,7 @@ public class SendBlogNotification {
     public void sendNotification() {
         fcmServerKey = context.getResources().getString(R.string.fcm_server_key);
 
-        requestQueue = Volley.newRequestQueue(context);
+        requestQueue1 = Volley.newRequestQueue(context);
         JSONObject jsonObject = new JSONObject();
 
         try {
@@ -49,9 +49,10 @@ public class SendBlogNotification {
             jsonObject.put("to", fcmToken);
 
             JSONObject data = new JSONObject();  // add custom data
+            data.put("purpose", "blog");
             data.put("title", title);
             data.put("senderID", senderID);
-            data.put("body", body);
+            data.put("blogID", blogID);
 
             jsonObject.put("data", data);
 
@@ -74,7 +75,7 @@ public class SendBlogNotification {
                     return header;
                 }
             };
-            requestQueue.add(request);
+            requestQueue1.add(request);
 
         }
         catch (Exception e) {

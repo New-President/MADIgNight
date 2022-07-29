@@ -11,19 +11,21 @@ public class MessageObject {
     private String messageId;
     private String creatorId;
     private String message;
+    private Boolean proposeDate;
     private TimestampObject timestamp;
     private ArrayList<String> mediaUrlList;
     private boolean isFirstMessage;
     private boolean isSent;
     private boolean isSeen;
 
-    public MessageObject(String chatId, String messageId, String creatorId, String message, String timestamp, ArrayList<String> mediaUrlList) throws ParseException {
+    public MessageObject(String chatId, String messageId, String creatorId, String message, String timestamp, ArrayList<String> mediaUrlList, Boolean proposeDate) throws ParseException {
         this.chatId = chatId;
         this.messageId = messageId;
         this.creatorId = creatorId;
         this.message = message;
         this.timestamp = new TimestampObject(timestamp);
         this.mediaUrlList = mediaUrlList;
+        this.proposeDate = proposeDate;
     }
 
     public String getChatId() {
@@ -37,6 +39,9 @@ public class MessageObject {
     }
     public String getMessage() {
         return message;
+    }
+    public Boolean getProposeDate() {
+        return proposeDate;
     }
     public TimestampObject getTimestamp() {
         return timestamp;

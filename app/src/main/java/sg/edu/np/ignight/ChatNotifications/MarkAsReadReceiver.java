@@ -7,6 +7,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.service.notification.StatusBarNotification;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
@@ -19,16 +20,16 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
+// broadcast receiver to set message to seen
 public class MarkAsReadReceiver extends BroadcastReceiver {
 
-    private String tag;
+    private int notificationID;
 
     @Override
     public void onReceive(Context context, Intent intent) {
         Bundle bundle = intent.getExtras();
         String chatID = bundle.getString("chatID");
-        tag = bundle.getString("tag");
-
+        notificationID = bundle.getInt("notificationID");
 
         DatabaseReference chatDB = FirebaseDatabase.getInstance("https://madignight-default-rtdb.asia-southeast1.firebasedatabase.app/").getReference().child("chat").child(chatID);
 
@@ -48,6 +49,7 @@ public class MarkAsReadReceiver extends BroadcastReceiver {
                         }
                     }
 
+                    // clear unread message count for current user
                     chatDB.child("unread").child(currentUserUID).setValue(0);
                 }
             }
@@ -63,7 +65,12 @@ public class MarkAsReadReceiver extends BroadcastReceiver {
 
     // cancel notification
     private void dismissNotification(Context context) {
-        NotificationManager notificationmanager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-        notificationmanager.cancel(tag, 999);
+        NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+        StatusBarNotification[] activeNotifications = notificationManager.getActiveNotifications();
+        for (StatusBarNotification notification : activeNotifications) {
+            if (notification.getId() == notificationID) {
+                notificationManager.cancel(notification.getTag(), notificationID);
+            }
+        }
     }
 }

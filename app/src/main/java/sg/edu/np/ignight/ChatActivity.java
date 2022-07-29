@@ -60,6 +60,7 @@ import org.jitsi.meet.sdk.JitsiMeet;
 import org.jitsi.meet.sdk.JitsiMeetActivity;
 import org.jitsi.meet.sdk.JitsiMeetConferenceOptions;
 
+import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.text.ParseException;
@@ -117,6 +118,7 @@ public class ChatActivity extends AppCompatActivity {
         chatName = bundle.getString("chatName");
         targetUserID = bundle.getString("targetUserID");
 
+
         currentUserUID = FirebaseAuth.getInstance().getUid();
 
         rootDB = FirebaseDatabase.getInstance("https://madignight-default-rtdb.asia-southeast1.firebasedatabase.app/").getReference();
@@ -145,7 +147,7 @@ public class ChatActivity extends AppCompatActivity {
         sendMessageButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                sendMessage();
+                sendMessage(false);
             }
         });
 
@@ -313,7 +315,7 @@ public class ChatActivity extends AppCompatActivity {
                         // Calling message notification
                         EditText call_text = findViewById(R.id.messageInput);
                         call_text.setText("Hey, I started a call come join me!");
-                        sendMessage();
+                        sendMessage(false);
                         BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
                             Integer total_count = 0;
                             @Override
@@ -323,7 +325,7 @@ public class ChatActivity extends AppCompatActivity {
                                     EditText call_text = findViewById(R.id.messageInput);
                                     call_text.setText("The call just ended, let's have another call next time!");
                                     Log.d("Call Ended","Yes");
-                                    sendMessage();
+                                    sendMessage(false);
                                     chatDB.child(chatID).child("onCall").setValue(false);
                                 }
                             }
@@ -376,7 +378,7 @@ public class ChatActivity extends AppCompatActivity {
                         // Calling message notification
                         EditText call_text = findViewById(R.id.messageInput);
                         call_text.setText("Hey, I started a call come join me!");
-                        sendMessage();
+                        sendMessage(false);
                         BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
                             Integer total_count = 0;
                             @Override
@@ -386,7 +388,7 @@ public class ChatActivity extends AppCompatActivity {
                                     EditText call_text = findViewById(R.id.messageInput);
                                     call_text.setText("The call just ended, let's have another call next time!");
                                     Log.d("Call Ended","Yes");
-                                    sendMessage();
+                                    sendMessage(false);
                                     chatDB.child(chatID).child("onCall").setValue(false);
                                 }
                             }
@@ -426,6 +428,15 @@ public class ChatActivity extends AppCompatActivity {
                 startActivityForResult(proposeDate, 1000);
             }
         });
+    }
+
+    @Override
+    public void onBackPressed() {  // override onBackPressed to go to chatlist and not close app (in case activity is started from notification)
+        Intent intent = new Intent(getApplicationContext(), MainMenuActivity.class);
+        intent.putExtra("showFrag", "chatlist");
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        startActivity(intent);
+        finish();
     }
 
     @Override
@@ -510,7 +521,12 @@ public class ChatActivity extends AppCompatActivity {
 
                         String creatorId = snapshot.child("creator").getValue().toString();
                         String timestamp = snapshot.child("timestamp").getValue().toString();
-
+                        Boolean proposeDate = false;
+                        try{
+                            proposeDate = Boolean.parseBoolean(snapshot.child("proposeDate").getValue().toString());
+                        }catch(Exception e) {
+                            e.printStackTrace();
+                        }
                         String text = "";
                         ArrayList<String> mediaUrlList = new ArrayList<>();
 
@@ -527,7 +543,7 @@ public class ChatActivity extends AppCompatActivity {
                         MessageObject message = null;
 
                         try {
-                            message = new MessageObject(chatID, snapshot.getKey(), creatorId, text, timestamp, mediaUrlList);
+                            message = new MessageObject(chatID, snapshot.getKey(), creatorId, text, timestamp, mediaUrlList, proposeDate);
                         } catch (ParseException e) {
                             e.printStackTrace();
                         }
@@ -588,7 +604,7 @@ public class ChatActivity extends AppCompatActivity {
     }
 
     // send message
-    private void sendMessage() {
+    private void sendMessage(Boolean proposeDate) {
 
         // checks if the text entered is valid (gets rid of leading and trailing spaces and checks length is not 0)
         String messageText = messageInput.getText().toString().trim();
@@ -620,6 +636,7 @@ public class ChatActivity extends AppCompatActivity {
         newMessageMap.put("messages/" + messageId + "/creator", currentUserUID);
         newMessageMap.put("messages/" + messageId + "/timestamp", timestamp);
         newMessageMap.put("messages/" + messageId + "/isSeen", false);
+        newMessageMap.put("messages/" + messageId + "/proposeDate", proposeDate);
 
         newMessageMap.put("lastUsed", timestamp);
 
@@ -695,7 +712,7 @@ public class ChatActivity extends AppCompatActivity {
         rootDB.child("user").child(targetUserID).child("fcmToken").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                if (snapshot.exists()) {
+                if (snapshot.exists()) {  // send notification if user has fcmToken
                     String fcmToken = snapshot.getValue().toString();
 
                     ChatNotificationSender sender = new ChatNotificationSender(fcmToken, FirebaseAuth.getInstance().getUid(), chatID, messageID, context);
@@ -745,22 +762,22 @@ public class ChatActivity extends AppCompatActivity {
             Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
         }
 
-        Boolean fromProposeDate= data.getBooleanExtra("dateMessage", true);
-        String dateDescription = data.getStringExtra("dateDescription");
-        String dateLocation = data.getStringExtra("dateLocation");
-        long dateTime = data.getLongExtra("datetime", 0);
-        String dateString = DateFormat.format("dd/MM/yyyy HH:mm", new Date(dateTime)).toString();
-        acceptButton = findViewById(R.id.acceptButton);
-        declineButton = findViewById(R.id.declineButton);
-        proposeDateViewStub = findViewById(R.id.proposeDateViewStub);
-        proposeDateViewStub.inflate();
-        proposeDateViewStub.setVisibility(View.INVISIBLE);
+        Boolean fromProposeDate= data.getBooleanExtra("dateMessage", false);
 
         if(fromProposeDate) {
+            String dateDescription = data.getStringExtra("dateDescription");
+            String dateLocation = data.getStringExtra("dateLocation");
+            long dateTime = data.getLongExtra("datetime", 0);
+            String dateString = DateFormat.format("dd/MM/yyyy HH:mm", new Date(dateTime)).toString();
+            /*acceptButton = findViewById(R.id.acceptButton);
+            declineButton = findViewById(R.id.declineButton);
+            proposeDateViewStub = findViewById(R.id.proposeDateViewStub);
+            proposeDateViewStub.inflate();
+            proposeDateViewStub.setVisibility(View.INVISIBLE);*/
             EditText call_text = findViewById(R.id.messageInput);
             call_text.setText("Date Description: " + dateDescription +"\nDate Location: " + dateLocation + "\nDate and Time: " + dateString);
-            sendMessage();
-            proposeDateViewStub.setVisibility(View.VISIBLE);
+            sendMessage(true);
+            /*proposeDateViewStub.setVisibility(View.VISIBLE);*/
         }
     }
 

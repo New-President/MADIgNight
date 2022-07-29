@@ -24,7 +24,7 @@ public class NotificationSettingsFragment extends PreferenceFragmentCompat {
     private SwitchPreference messageNotificationEnabled, highPriorityMessageNotification, chatRequestNotificationEnabled, highPriorityChatRequestNotification;
     private Preference messageRingtonePreference, chatRequestRingtonePreference;
     private ListPreference messageVibrationPreference, chatRequestVibrationPreference;
-    Context context;
+    private Context context;
 
     @Override
     public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
@@ -33,25 +33,31 @@ public class NotificationSettingsFragment extends PreferenceFragmentCompat {
         context = getActivity().getApplicationContext();
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);  // get sharedPreferences
 
-        // get preferences
+        // get current preferences
+
+        // message preferences
         messageNotificationEnabled = findPreference(SettingsActivity.KEY_MESSAGE_NOTIFICATION_ENABLED);
         messageRingtonePreference = findPreference(SettingsActivity.KEY_MESSAGE_NOTIFICATION_RINGTONE);
         messageVibrationPreference = findPreference(SettingsActivity.KEY_MESSAGE_NOTIFICATION_VIBRATION);
         highPriorityMessageNotification = findPreference(SettingsActivity.KEY_MESSAGE_NOTIFICATION_PRIORITY);
 
+        // chat request preferences
         chatRequestNotificationEnabled = findPreference(SettingsActivity.KEY_CHAT_REQUEST_NOTIFICATION_ENABLED);
         chatRequestRingtonePreference = findPreference(SettingsActivity.KEY_CHAT_REQUEST_NOTIFICATION_RINGTONE);
         chatRequestVibrationPreference = findPreference(SettingsActivity.KEY_CHAT_REQUEST_NOTIFICATION_VIBRATION);
         highPriorityChatRequestNotification = findPreference(SettingsActivity.KEY_CHAT_REQUEST_NOTIFICATION_PRIORITY);
 
         // initialize fields (show ringtone/vibration picker if notifications are enabled)
+        // for messages
         boolean messageNotificationEnabled = sharedPreferences.getBoolean(SettingsActivity.KEY_MESSAGE_NOTIFICATION_ENABLED, true);
         showMessagePreference(messageNotificationEnabled);
 
+        // for chat requests
         boolean chatRequestNotificationEnabled = sharedPreferences.getBoolean(SettingsActivity.KEY_CHAT_REQUEST_NOTIFICATION_ENABLED, true);
         showChatRequestPreference(chatRequestNotificationEnabled);
 
-        // hide/show ringtone/vibration picker when push notification value is changed
+        // hide/show notification settings when push notification value is changed
+        // for messages
         this.messageNotificationEnabled.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
             @Override
             public boolean onPreferenceChange(Preference preference, Object newValue) {
@@ -61,6 +67,7 @@ public class NotificationSettingsFragment extends PreferenceFragmentCompat {
             }
         });
 
+        // for chat requests
         this.chatRequestNotificationEnabled.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
             @Override
             public boolean onPreferenceChange(Preference preference, Object newValue) {
@@ -71,24 +78,31 @@ public class NotificationSettingsFragment extends PreferenceFragmentCompat {
         });
 
         // set default value to default ringtone
+        // for messages
         messageRingtonePreference.setDefaultValue(Settings.System.DEFAULT_NOTIFICATION_URI.toString());
+        // for chat requests
         chatRequestRingtonePreference.setDefaultValue(Settings.System.DEFAULT_NOTIFICATION_URI.toString());
 
         // get existing ringtone and initialize ringtone picker summary
+        // for messages
         currentMessageRingtone = sharedPreferences.getString(SettingsActivity.KEY_MESSAGE_NOTIFICATION_RINGTONE, null);
         setRingtoneSummary(currentMessageRingtone, messageRingtonePreference);
 
+        // for chat requests
         currentChatRequestRingtone = sharedPreferences.getString(SettingsActivity.KEY_CHAT_REQUEST_NOTIFICATION_RINGTONE, null);
         setRingtoneSummary(currentChatRequestRingtone, chatRequestRingtonePreference);
 
         // initialize summary
+        // for messages
         String messageVibration = sharedPreferences.getString(SettingsActivity.KEY_MESSAGE_NOTIFICATION_VIBRATION, getResources().getStringArray(R.array.vibration_preferences_values)[2]);
         messageVibrationPreference.setSummary(getResources().getStringArray(R.array.vibration_preferences)[messageVibrationPreference.findIndexOfValue(messageVibration)]);
 
+        // for chat requests
         String chatRequestVibration = sharedPreferences.getString(SettingsActivity.KEY_CHAT_REQUEST_NOTIFICATION_VIBRATION, getResources().getStringArray(R.array.vibration_preferences_values)[2]);
         chatRequestVibrationPreference.setSummary(getResources().getStringArray(R.array.vibration_preferences)[chatRequestVibrationPreference.findIndexOfValue(chatRequestVibration)]);
 
         // update summary of vibration picker when value changes
+        // for messages
         messageVibrationPreference.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
             @Override
             public boolean onPreferenceChange(Preference preference, Object newValue) {
@@ -98,6 +112,7 @@ public class NotificationSettingsFragment extends PreferenceFragmentCompat {
             }
         });
 
+        // for chat requests
         chatRequestVibrationPreference.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
             @Override
             public boolean onPreferenceChange(Preference preference, Object newValue) {
@@ -125,7 +140,7 @@ public class NotificationSettingsFragment extends PreferenceFragmentCompat {
     // ringtone picker reference: https://issuetracker.google.com/issues/37057453?pli=1#comment3
     @Override
     public boolean onPreferenceTreeClick(Preference preference) {
-        if (preference == messageRingtonePreference) {
+        if (preference == messageRingtonePreference) {  // for messages
 
             // get current ringtone
             currentMessageRingtone = sharedPreferences.getString(SettingsActivity.KEY_MESSAGE_NOTIFICATION_RINGTONE, null);
@@ -135,7 +150,7 @@ public class NotificationSettingsFragment extends PreferenceFragmentCompat {
             startActivityForResult(intent, PICK_MESSAGE_RINGTONE_REQUEST_CODE);
             return true;
         }
-        else if (preference == chatRequestRingtonePreference) {
+        else if (preference == chatRequestRingtonePreference) {  // for chat requests
 
             // get current ringtone
             currentChatRequestRingtone = sharedPreferences.getString(SettingsActivity.KEY_CHAT_REQUEST_NOTIFICATION_RINGTONE, null);
@@ -219,7 +234,7 @@ public class NotificationSettingsFragment extends PreferenceFragmentCompat {
             }
         }
         else {
-            ringtonePreference.setSummary("Silent");  // set summary to Silent if there is no ringtone picked
+            ringtonePreference.setSummary("None");  // set summary to None if there is no uri
         }
     }
 }

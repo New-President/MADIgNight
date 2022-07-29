@@ -6,6 +6,7 @@ import android.graphics.BitmapFactory;
 import java.net.URL;
 import java.util.concurrent.Callable;
 
+// callable to retrieve bitmap image from url
 public class UrlToBitmap implements Callable<Bitmap> {
 
     private URL url;
