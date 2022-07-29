@@ -762,15 +762,15 @@ public class ChatActivity extends AppCompatActivity {
             String dateLocation = data.getStringExtra("dateLocation");
             long dateTime = data.getLongExtra("datetime", 0);
             String dateString = DateFormat.format("dd/MM/yyyy HH:mm", new Date(dateTime)).toString();
-            acceptButton = findViewById(R.id.acceptButton);
+            /*acceptButton = findViewById(R.id.acceptButton);
             declineButton = findViewById(R.id.declineButton);
             proposeDateViewStub = findViewById(R.id.proposeDateViewStub);
             proposeDateViewStub.inflate();
-            proposeDateViewStub.setVisibility(View.INVISIBLE);
+            proposeDateViewStub.setVisibility(View.INVISIBLE);*/
             EditText call_text = findViewById(R.id.messageInput);
             call_text.setText("Date Description: " + dateDescription +"\nDate Location: " + dateLocation + "\nDate and Time: " + dateString);
             sendMessage();
-            proposeDateViewStub.setVisibility(View.VISIBLE);
+            /*proposeDateViewStub.setVisibility(View.VISIBLE);*/
         }
     }
 
