@@ -17,6 +17,8 @@ import android.os.Bundle;
 import android.provider.Settings;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -37,6 +39,8 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
@@ -50,12 +54,12 @@ public class ActivityReport_Activity extends AppCompatActivity {
 
     // init fields
     private ArrayList<PieEntry> pieChartData;
-    private ArrayList<BarEntry> barChartData;
 
     private PieChart pieChart;
     private BarChart barChart;
 
     private ImageButton backButton2;
+    private Button setGoalButton;
     private TextView timeUsageTestTextView;
 
     private String uid, timeSpentToday, packageName;
@@ -63,15 +67,33 @@ public class ActivityReport_Activity extends AppCompatActivity {
     private long foregroundTime, time;
 
     private int hours1, hours2, minutes1, minutes2, seconds1, seconds2,
-            USAGE_STATS_PERMISSION_CODE;
+            USAGE_STATS_PERMISSION_CODE, setTimeLimit;
 
+    private EditText inputText;
 
+    private FirebaseUser user;
+    private FirebaseDatabase database;
+    private DatabaseReference myRef;
+
+    BarDataSet barDataset1, barDataset2;
+    BarData barData;
 
     @SuppressLint("LogNotTimber")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activityreport_activity);
+
+        // Firebase will retrieve chat information.
+        // Firebase logic
+        // Retrieves current user
+
+        user = FirebaseAuth.getInstance().getCurrentUser();
+        //get the current user's UID
+        uid = user.getUid();
+        database = FirebaseDatabase.getInstance("https://madignight-default-rtdb.asia-southeast1.firebasedatabase.app/");
+        // getting the reference
+        myRef = database.getReference("");
 
         // Return back to main menu
         backButton2 = findViewById(R.id.backButton3);
@@ -105,9 +127,7 @@ public class ActivityReport_Activity extends AppCompatActivity {
         // Fields for charts
         pieChart = findViewById(R.id.PieChart);
         barChart = findViewById(R.id.BarChart);
-        barChartData = new ArrayList<>();
         pieChartData = new ArrayList<>();
-
 
         // After calling the generateIgNightChatData function below, the following pieces of data are retrieved:
         // barChartData.add(new BarEntry(1, foregroundTime)); <- added already in function
@@ -122,24 +142,45 @@ public class ActivityReport_Activity extends AppCompatActivity {
                 targetUserIDtotalNumberOfTextsKeypair);
         getTimeSpentToday();
 
-        // init bar data set
-        BarDataSet barDataSet = new BarDataSet(barChartData, "");
-        // set colors and hide draw value
-        barDataSet.setColors(ColorTemplate.COLORFUL_COLORS);
-        barDataSet.setDrawValues(false);
-        // input bar data
-        barChart.setData(new BarData(barDataSet));
-        // set animation
-        barChart.animateY(1100);
-        // set graph description
-        barChart.getDescription().setText("Test2");
-        barChart.getDescription().setTextColor(Color.BLUE);
-
 
         // Give dating suggestions based on a few parameters
         giveDatingSuggestions(chatIDtargetUserIDkeypair);
+
+        setGoalButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // If user chooses to edit their usage time goal
+                try{
+                    setTimeLimit = Integer.parseInt(String.valueOf(inputText.getText()));
+                    Log.d("newUsage", String.valueOf(setTimeLimit));
+                    DatabaseReference myRef3 = database.getReference("user").child(uid);
+                    myRef3.child("usageTimeLimit").setValue(setTimeLimit);
+                    Toast.makeText(ActivityReport_Activity.this,
+                            "Exit and return to see new bar chart value.",
+                            Toast.LENGTH_LONG)
+                            .show();
+                }
+                catch (Exception e){
+                    Toast.makeText(ActivityReport_Activity.this,
+                            "Enter a number.",
+                            Toast.LENGTH_LONG)
+                            .show();
+                }
+            }
+        });
+
     }
 
+    private ArrayList<BarEntry> barChartDataValues(int i){
+        ArrayList<BarEntry> dataValues = new ArrayList<BarEntry>();
+        dataValues.add(new BarEntry(0, i));
+        return dataValues;
+    }
+    private ArrayList<BarEntry> barChartDataValues2(int i){
+        ArrayList<BarEntry> dataValues = new ArrayList<BarEntry>();
+        dataValues.add(new BarEntry(1, i));
+        return dataValues;
+    }
     // Obtain time spent on the IgNight app and displays it
     // Also adds data to the barChartData for graph display
     private void getTimeSpentToday(){
@@ -150,6 +191,7 @@ public class ActivityReport_Activity extends AppCompatActivity {
         time = System.currentTimeMillis();
         hours2 = minutes2 = seconds2 = 0;
         timeUsageTestTextView = (TextView) findViewById(R.id.timeUsageTestTextView);
+        barData = new BarData();
 
         List<UsageStats> stats = mUsageStatsManager.queryUsageStats(UsageStatsManager.INTERVAL_DAILY, time-(1000), time);
         System.out.println(Arrays.toString(stats.toArray()));
@@ -168,11 +210,52 @@ public class ActivityReport_Activity extends AppCompatActivity {
                     timeSpentToday = "You spent " + hours1 + "h," + minutes1 + "min" + " on IgNight today.";
                     timeUsageTestTextView.setText(timeSpentToday);
 
-                    // Adds data to barChart list, so that the barChart can show the data
-                    barChartData.add(new BarEntry(1, foregroundTime));
+                    // Adds data to barChart return list, so that the barChart can show the data
+                    barDataset1 = new BarDataSet(barChartDataValues((int) (foregroundTime/3600000)), "Time you spent today");
                     // The time the user spent will be entered as the second value on the chart
                     // for comparative purposes to the user's "goal" time
 
+                    // Accesses and stores limit in the database so that limit setting will be "synced"
+                    // across different devices using the same account
+                    inputText = (EditText)findViewById(R.id.editTextNumber);
+                    setGoalButton = (Button) findViewById(R.id.setGoalButton);
+                    myRef.child("user").child(uid).addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        Log.d("onDataChange", "onDataChangeSuccess");
+                            // Checks for presence of existing data in the database
+
+                            for(DataSnapshot ds : snapshot.getChildren()) {
+                                if(ds.getKey().equals("usageTimeLimit")){
+                                    Log.d("hasChild", "hasChild");
+                                    // If the usage time limit child exists, set data and bar chart
+                                    setTimeLimit = Integer.parseInt(ds.getValue().toString());
+                                    Log.d("has setTimeLimit2", String.valueOf(setTimeLimit));
+                                    barDataset2 = new BarDataSet(barChartDataValues2(setTimeLimit), "Your usage goal");
+                                    barDataset2.setColor(Color.RED);
+                                    barData.addDataSet(barDataset2);
+                                }
+                            }
+                            barDataset1.setColor(Color.rgb(252,194,103)); // Colour here is #FCC267 IgNight yellow
+                            barData.addDataSet(barDataset1);
+
+
+                            // Remove description label and set barChart to display loaded data
+                            barChart.getDescription().setEnabled(false);
+                            barChart.animateY(1100);
+                            barChart.setData(barData);
+                            barChart.invalidate();
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) {
+                            Log.d("onCancelled", "hasChild");
+                            Toast.makeText(ActivityReport_Activity.this,
+                                    "Error retrieving usage time information",
+                                    Toast.LENGTH_LONG)
+                                    .show();
+                        }
+                    });
                     // Add time to sharedPreference to save it
                     sPdayEdit.putInt(packageName, hours1 * 60 + minutes1);
                     sPdayEdit.apply();
@@ -211,19 +294,11 @@ public class ActivityReport_Activity extends AppCompatActivity {
     }
 
     @SuppressLint("LogNotTimber")
+
+    // Generates IgNight chat data before displaying it on a pieChart
     private void generateIgNightChatData(HashMap<String, String> chatIDtargetUserIDkeypair,
                                          HashMap<String, String> targetUserIDusernamesTargetUserIDkeypair,
                                          HashMap<String, Integer> targetUserIDtotalNumberOfTextsKeypair) {
-        // Firebase will retrieve chat information.
-        // Firebase logic
-        // Retrieves current user
-
-        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-        //get the current user's UID
-        uid = user.getUid();
-        FirebaseDatabase database = FirebaseDatabase.getInstance("https://madignight-default-rtdb.asia-southeast1.firebasedatabase.app/");
-        // getting the reference
-        DatabaseReference myRef = database.getReference("");
         // Retrieves the number of chat messages sent to each IgNighted user,
         // and stores it in a key:pair dictionary
         // It does it everytime the user opens the activity report so that it refreshes correctly everytime
@@ -282,6 +357,31 @@ public class ActivityReport_Activity extends AppCompatActivity {
                     // the currentUser and the targetUser
                     // Adds data here to the pieChart ArrayList
                     pieChartData.add(new PieEntry(totalNumberOfTexts, targetUsername));
+                }
+
+                // Checks if there is any data generated. If so, display the top IgNight
+                if(targetUserIDtotalNumberOfTextsKeypair2.size()!=0){
+                    // Finds the highest text count and the associated target user with it
+                    Map.Entry<String, Integer> highestTextCount = null;
+                    for(Map.Entry<String, Integer> entry3: targetUserIDtotalNumberOfTextsKeypair.entrySet())
+                    {
+                        if (highestTextCount == null || entry3.getValue().compareTo(highestTextCount.getValue()) > 0)
+                        {
+                            highestTextCount = entry3;
+                        }
+                    }
+                    String topIgNightTargetUserID = highestTextCount.getKey();
+                    String topIgNightTargetUsername = "";
+                    for(Map.Entry<String, String> entry4: targetUserIDusernamesTargetUserIDkeypair.entrySet()) {
+                        // If the right username is found,
+                        if(entry4.getValue().equals(topIgNightTargetUserID)){
+                            // Set username value
+                            topIgNightTargetUsername = entry4.getKey().toString();
+                        }
+                    }
+
+                    TextView topIgNightDisplayText = (TextView) findViewById(R.id.topIgNightDisplay);
+                    topIgNightDisplayText.setText("Your top IgNight is " + topIgNightTargetUsername + ".");
                 }
 
                 // init pie data set
