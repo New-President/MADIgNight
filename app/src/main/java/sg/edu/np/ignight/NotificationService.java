@@ -71,7 +71,7 @@ public class NotificationService extends FirebaseMessagingService {
     public void onMessageReceived(@NonNull RemoteMessage message) {
         super.onMessageReceived(message);
 
-        // get data
+        // get data from firebase message
         Map<String, String> data = message.getData();
         context = this;
 
@@ -79,21 +79,25 @@ public class NotificationService extends FirebaseMessagingService {
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
 
         if (purpose != null) {
-            if (purpose.equals("message")) {
-                displayChatNotification(data);
-            }
-            else if (purpose.equals("request")) {
-                displayChatRequestNotification(data);
-            }
-            else if(purpose.equals("blog")){
-                displayBlogNotification(data);
-            }
-            else if(purpose.equals("comment")){
-                displayCommentNotification(data);
+            // send notification for corresponding notification type
+            switch (purpose) {
+                case "message":
+                    displayChatNotification(data);
+                    break;
+                case "request":
+                    displayChatRequestNotification(data);
+                    break;
+                case "blog":
+                    displayBlogNotification(data);
+                    break;
+                case "comment":
+                    displayCommentNotification(data);
+                    break;
             }
         }
     }
 
+    // update user token when new token is sent
     @Override
     public void onNewToken(@NonNull String token) {
         super.onNewToken(token);
@@ -109,9 +113,10 @@ public class NotificationService extends FirebaseMessagingService {
         userDB.updateChildren(tokenMap);
     }
 
+    // display notification for chat requests
     private void displayChatRequestNotification(Map<String, String> data) {
 
-        // get sharedPreferences for chat request notification settings
+        // get user preferences for chat request notification settings
         boolean pushNotifications = sharedPreferences.getBoolean(SettingsActivity.KEY_CHAT_REQUEST_NOTIFICATION_ENABLED, true);
 
         if (!pushNotifications) {  // don't send notifications if user disabled them from settings
@@ -130,16 +135,18 @@ public class NotificationService extends FirebaseMessagingService {
             vibrationPattern[i] = Long.parseLong(vibrationPatternString[i]);
         }
 
-
         String requestID = data.get("requestID");
-        boolean pending = data.get("pending").equals("true");
-        boolean accepted = false;
-        if (!pending) {
-            accepted = data.get("response").equals("true");
-        }
-
         DatabaseReference requestDB = rootDB.child("chatRequest");
+
         if (requestID != null) {
+
+            // check request status
+            boolean pending = data.get("pending").equals("true");
+            boolean accepted = false;
+            if (!pending) {
+                accepted = data.get("response").equals("true");
+            }
+
             boolean finalAccepted = accepted;  // to use within inner class
             requestDB.child(requestID).addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
@@ -152,7 +159,7 @@ public class NotificationService extends FirebaseMessagingService {
                                 profile = snapshot.child("receiverProfile").getValue().toString();
                                 username = snapshot.child("receiverName").getValue().toString();
                             }
-                            else {
+                            else {  // otherwise show creator details
                                 profile = snapshot.child("creatorProfile").getValue().toString();
                                 username = snapshot.child("creatorName").getValue().toString();
                             }
@@ -206,14 +213,15 @@ public class NotificationService extends FirebaseMessagingService {
 
                             builder.setContentTitle(username);
 
-                            if (pending) {
+                            // set text based on request status
+                            if (pending) {  // user received request
                                 builder.setContentText("Sent you a chat request. Tap to view.");
                             }
-                            else {
-                                if (finalAccepted) {
+                            else {  // user's request is responded to
+                                if (finalAccepted) {  // other user accepted the request
                                     builder.setContentText("Accepted your chat request. Tap to view.");
                                 }
-                                else {
+                                else {  // other user rejected the request
                                     builder.setContentText("Rejected your chat request. Tap to view.");
                                 }
                             }
@@ -234,7 +242,7 @@ public class NotificationService extends FirebaseMessagingService {
 
                             // send notification
                             Random random = new Random();
-                            notificationManager.notify(random.nextInt(), builder.build());
+                            notificationManager.notify(random.nextInt(), builder.build());  // get random number for notification id
                         }
                         catch (Exception e) {
                             e.printStackTrace();
@@ -250,9 +258,10 @@ public class NotificationService extends FirebaseMessagingService {
         }
     }
 
+    // display notification for messages
     private void displayChatNotification(Map<String, String> data) {
 
-        // get sharedPreferences for chat notification settings
+        // get user preferences for chat notification settings
         boolean pushNotifications = sharedPreferences.getBoolean(SettingsActivity.KEY_MESSAGE_NOTIFICATION_ENABLED, true);
 
         if (!pushNotifications) {  // don't send notifications if user disabled them from settings
@@ -276,7 +285,7 @@ public class NotificationService extends FirebaseMessagingService {
         String chatID = data.get("chatID");
         String messageID = data.get("messageID");
 
-        if (ChatActivity.currentChatID.equals(chatID)) {  // don't send notifications if user is in ChatActivity with the received chatID
+        if (ChatActivity.currentChatID.equals(chatID)) {  // don't send notifications if user is viewing chat
             return;
         }
 
@@ -286,6 +295,7 @@ public class NotificationService extends FirebaseMessagingService {
             rootDB.child("chat").child(chatID).addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    // get details of message
                     String senderName = snapshot.child("users").child(senderID).getValue().toString();  // get sender name
 
                     DataSnapshot messageSnapshot = snapshot.child("messages").child(messageID);
@@ -308,6 +318,7 @@ public class NotificationService extends FirebaseMessagingService {
                     rootDB.child("user").addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                            // get details of users
                             String senderProfile = dataSnapshot.child(senderID).child("profileUrl").getValue().toString();  // get sender profile picture
                             String myProfile = dataSnapshot.child(myID).child("profileUrl").getValue().toString();  // get my profile picture
                             int notificationID = Integer.parseInt(dataSnapshot.child(senderID).child("notificationID").getValue().toString());  // get sender notification id
@@ -410,8 +421,8 @@ public class NotificationService extends FirebaseMessagingService {
 
                                 // variables to use for checking if style exists
                                 boolean hasExistingStyle = false;
-                                String existingTag = "";
-                                String newTag = Long.toString(System.currentTimeMillis());
+                                String existingTag = "";  // to update with current notification tag
+                                String newTag = Long.toString(System.currentTimeMillis());  // create new tag to use if there is no existing notification
 
                                 // check if style exists and update variables
                                 StatusBarNotification[] activeNotifications = notificationManager.getActiveNotifications();
@@ -441,7 +452,7 @@ public class NotificationService extends FirebaseMessagingService {
                                 // set messagingStyle
                                 builder.setStyle(messagingStyle);
 
-                                // send direct replies
+                                // allow user to send direct replies
                                 // create remoteInput
                                 RemoteInput remoteInput = new RemoteInput.Builder("direct_reply").setLabel("Reply").build();
 
@@ -470,10 +481,10 @@ public class NotificationService extends FirebaseMessagingService {
                                 builder.addAction(replyAction);
 
                                 // send notification
-                                if (hasExistingStyle) {
+                                if (hasExistingStyle) {  // update current notification if it is already showing
                                     notificationManager.notify(existingTag, notificationID, builder.build());
                                 }
-                                else {
+                                else {  // otherwise create new notification with new tag
                                     notificationManager.notify(newTag, notificationID, builder.build());
                                 }
 

@@ -39,7 +39,7 @@ public class QueryChatbot extends AsyncTask<Void, Void, DetectIntentResponse> {
         return null;
     }
 
-    // return the response
+    // call interface when response is received
     @Override
     protected void onPostExecute(DetectIntentResponse detectIntentResponse) {
         chatbotReply.getResponse(detectIntentResponse);

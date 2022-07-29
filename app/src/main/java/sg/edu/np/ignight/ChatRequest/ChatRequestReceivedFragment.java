@@ -195,7 +195,7 @@ public class ChatRequestReceivedFragment extends Fragment {
             showRVEmpty.setVisibility(View.GONE);
         }
 
-        // to get updates when the number of items in the recyclerview changes
+        // to track changes in the number of items in the recyclerview
         RecyclerView.AdapterDataObserver observer = new RecyclerView.AdapterDataObserver() {
             @Override
             public void onChanged() {

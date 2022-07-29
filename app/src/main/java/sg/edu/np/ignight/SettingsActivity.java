@@ -9,6 +9,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 public class SettingsActivity extends AppCompatActivity {
 
+    // static key values for various preference fields
     public static final String KEY_MESSAGE_NOTIFICATION_ENABLED = "messageNotificationsEnabled";
     public static final String KEY_MESSAGE_NOTIFICATION_RINGTONE = "messageNotificationRingtone";
     public static final String KEY_MESSAGE_NOTIFICATION_VIBRATION = "messageNotificationVibration";
@@ -18,12 +19,12 @@ public class SettingsActivity extends AppCompatActivity {
     public static final String KEY_CHAT_REQUEST_NOTIFICATION_VIBRATION = "chatRequestNotificationVibration";
     public static final String KEY_CHAT_REQUEST_NOTIFICATION_PRIORITY = "chatRequestNotificationPriority";
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.settings_activity);
 
+        // go back to main menu when back button is clicked
         ImageButton backButton = findViewById(R.id.chatNotificationSettingsBack);
         backButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -35,7 +36,7 @@ public class SettingsActivity extends AppCompatActivity {
             }
         });
 
-        if (savedInstanceState == null) {
+        if (savedInstanceState == null) {  // load notification settings fragment
             getSupportFragmentManager()
                     .beginTransaction()
                     .replace(R.id.settingsFrame, new NotificationSettingsFragment())

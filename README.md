@@ -16,7 +16,7 @@ Keefe Cheong Wenkai (S10222423C)
 A revamped dating app that incorporates blogs to express their passions for potential friends and lovers to connect! Revolving around igniting sparks, the app is determined to make your love shine brighter than fireworks in a dimly lit nightscape. If you are looking for a flexible yet intuitive app featuring love with no bounds but well within the law, then look no further, because IgNight has got your back and your love story. With very little paywalls, you can experience twice the fun when scouring for connections to spice up your life.
 
 ## Contributions:
-
+Stage 1:
 Yong Zi Ren - Main Menu, Side Menu
 
 Lee Wee Kang - View Blog, Create Blog
@@ -26,6 +26,17 @@ Lim Long Teck - Create Profile, Edit Profile
 Han Xihe - View Profile, Play Store listing
 
 Keefe Cheong Wenkai - Login, Chat List Fragment, Chat
+
+Stage 2:
+Yong Zi Ren - 
+
+Lee Wee Kang - 
+
+Lim Long Teck - 
+
+Han Xihe - 
+
+Keefe Cheong Wenkai - Chatbot, Chat requests, Chat notification and settings, Chat request notification and settings
 
 ## Appendices (features, screenshots, user guide):
 
@@ -71,6 +82,7 @@ Keefe Cheong Wenkai - Login, Chat List Fragment, Chat
     * Time sent
     * Last seen online date and time
     * Video Call
+    * Chat notifications are sent when a new message is sent
 * Blogs
     * Create posts
     * See posts by other users
@@ -90,6 +102,16 @@ Keefe Cheong Wenkai - Login, Chat List Fragment, Chat
     * Set 'Preferences' for relationship type and gender 
     * Add date location
     * Save profile changes 
+ * Chatbot
+    * Chat with a bot, accessed from chatlist page
+ * Chat requests
+    * Send chat requests to another user
+    * Accept chat requests to start chat with the user
+    * Notifications sent when new requests are sent or when requests are responded to
+ * Notification settings
+    * Users can enable or disable push notification for chat and chat request notifications
+    * Users can customize notification settings for chat and chat request notifications
+    * Can control settings including ringtone, vibration and priority
 
 ### Play Store listing screenshots
 

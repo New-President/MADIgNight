@@ -431,7 +431,7 @@ public class ChatActivity extends AppCompatActivity {
     }
 
     @Override
-    public void onBackPressed() {
+    public void onBackPressed() {  // override onBackPressed to go to chatlist and not close app (in case activity is started from notification)
         Intent intent = new Intent(getApplicationContext(), MainMenuActivity.class);
         intent.putExtra("showFrag", "chatlist");
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
@@ -712,7 +712,7 @@ public class ChatActivity extends AppCompatActivity {
         rootDB.child("user").child(targetUserID).child("fcmToken").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                if (snapshot.exists()) {
+                if (snapshot.exists()) {  // send notification if user has fcmToken
                     String fcmToken = snapshot.getValue().toString();
 
                     ChatNotificationSender sender = new ChatNotificationSender(fcmToken, FirebaseAuth.getInstance().getUid(), chatID, messageID, context);
