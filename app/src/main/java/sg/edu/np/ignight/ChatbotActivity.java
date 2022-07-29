@@ -136,11 +136,11 @@ public class ChatbotActivity extends AppCompatActivity implements ChatbotReply {
             String projectId = ((ServiceAccountCredentials) credentials).getProjectId();
 
             SessionsSettings.Builder settingsBuilder = SessionsSettings.newBuilder();
-            SessionsSettings sessionsSettings = settingsBuilder.setCredentialsProvider(
-                    FixedCredentialsProvider.create(credentials)).build();
+            SessionsSettings sessionsSettings = settingsBuilder.setCredentialsProvider(FixedCredentialsProvider.create(credentials)).build();
             sessionsClient = SessionsClient.create(sessionsSettings);
             sessionName = SessionName.of(projectId, uuid);
 
+            // make the bot send welcome message
             initConvo();
         }catch (Exception e) {
             e.printStackTrace();
@@ -158,7 +158,7 @@ public class ChatbotActivity extends AppCompatActivity implements ChatbotReply {
                 ChatbotMessageObject newMessage = new ChatbotMessageObject(text, true);
                 messageList.add(newMessage);
                 chatbotAdapter.notifyDataSetChanged();
-                chatbotMessageRV.smoothScrollToPosition(messageList.size() - 1);
+                chatbotMessageRV.smoothScrollToPosition(messageList.size() - 1);  // scroll to the bottom of the chat
             }
         }
     }
@@ -211,7 +211,7 @@ public class ChatbotActivity extends AppCompatActivity implements ChatbotReply {
             if (!reply.isEmpty()) {  // there is text response
                 messageList.add(new ChatbotMessageObject(reply, false));
                 chatbotAdapter.notifyDataSetChanged();
-                chatbotMessageRV.smoothScrollToPosition(messageList.size() - 1);
+                chatbotMessageRV.smoothScrollToPosition(messageList.size() - 1);  // scroll to the bottom of the chat
             }
             else {
                 Toast.makeText(this, "Something went wrong, please try again.", Toast.LENGTH_SHORT).show();
@@ -224,9 +224,9 @@ public class ChatbotActivity extends AppCompatActivity implements ChatbotReply {
 
     // methods to parse value from response to valid json format
     // https://www.tabnine.com/web/assistant/code/rs/5c77e296df79be0001da9678#L74
-    public JsonObject structToJsonObject(Struct metadata) {
+    public JsonObject structToJsonObject(Struct data) {
         JsonObject jsonObject = new JsonObject();
-        for (Map.Entry<String, Value> entry : metadata.getFieldsMap().entrySet()) {
+        for (Map.Entry<String, Value> entry : data.getFieldsMap().entrySet()) {
             jsonObject.add(entry.getKey(), valueToJsonElement(entry.getValue()));
         }
         return jsonObject;
@@ -237,21 +237,27 @@ public class ChatbotActivity extends AppCompatActivity implements ChatbotReply {
     private JsonElement valueToJsonElement(Value value) {
         if (value.hasStructValue()) {
             return structToJsonObject(value.getStructValue());
-        } else if (value.hasListValue()) {
+        }
+        else if (value.hasListValue()) {
             JsonArray values = new JsonArray();
             for (Value listElement : value.getListValue().getValuesList()) {
                 values.add(valueToJsonElement(listElement));
             }
             return values;
-        } else if (value.getKindCase().equals(Value.KindCase.NULL_VALUE)) {
+        }
+        else if (value.getKindCase().equals(Value.KindCase.NULL_VALUE)) {
             return JsonNull.INSTANCE;
-        } else if (value.getKindCase().equals(Value.KindCase.BOOL_VALUE)) {
+        }
+        else if (value.getKindCase().equals(Value.KindCase.BOOL_VALUE)) {
             return new JsonPrimitive(value.getBoolValue());
-        } else if (value.getKindCase().equals(Value.KindCase.STRING_VALUE)) {
+        }
+        else if (value.getKindCase().equals(Value.KindCase.STRING_VALUE)) {
             return new JsonPrimitive(value.getStringValue());
-        } else if (value.getKindCase().equals(Value.KindCase.NUMBER_VALUE)) {
+        }
+        else if (value.getKindCase().equals(Value.KindCase.NUMBER_VALUE)) {
             return new JsonPrimitive(value.getNumberValue());
-        } else {
+        }
+        else {
             Log.d("valueToJsonElement", "Unknown metadata value field type");
             return null;
         }
