@@ -1,4 +1,4 @@
-package sg.edu.np.ignight.ChatNotifications;
+package sg.edu.np.ignight;
 
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
@@ -53,12 +53,15 @@ import java.util.concurrent.Future;
 
 import sg.edu.np.ignight.BlogActivity;
 import sg.edu.np.ignight.ChatActivity;
+import sg.edu.np.ignight.ChatNotifications.MarkAsReadReceiver;
+import sg.edu.np.ignight.ChatNotifications.ReplyReceiver;
+import sg.edu.np.ignight.ChatNotifications.UrlToBitmap;
 import sg.edu.np.ignight.ChatRequestActivity;
 import sg.edu.np.ignight.CommentSectionActivity;
 import sg.edu.np.ignight.R;
 import sg.edu.np.ignight.SettingsActivity;
 
-public class ChatNotificationService extends FirebaseMessagingService {
+public class NotificationService extends FirebaseMessagingService {
 
     private DatabaseReference rootDB = FirebaseDatabase.getInstance("https://madignight-default-rtdb.asia-southeast1.firebasedatabase.app/").getReference();
     private Context context;
