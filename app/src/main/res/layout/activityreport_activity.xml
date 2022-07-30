@@ -9,7 +9,7 @@
 
     <com.google.android.material.navigation.NavigationView
         android:id="@+id/navigationView"
-        andriod:background="@drawable/gradient_background"
+        android:background="@drawable/gradient_background"
         android:layout_width="0dp"
         android:layout_height="70dp"
         app:layout_constraintEnd_toEndOf="parent"
@@ -29,6 +29,7 @@
                 android:layout_marginBottom="8dp"
                 android:background="@drawable/ic_baseline_arrow_back_24"
                 android:backgroundTint="#00FFFFFF"
+                android:minWidth="48dp"
                 android:minHeight="48dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -57,15 +58,14 @@
     </com.google.android.material.navigation.NavigationView>
 
     <ScrollView
-        android:layout_width="411dp"
-        android:layout_height="643dp"
-        android:layout_marginTop="20dp"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/activityTitle2"
-        app:layout_constraintVertical_bias="1.0">
+        app:layout_constraintTop_toBottomOf="@+id/navigationView"
+        app:layout_constraintVertical_bias="0.111">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
@@ -89,13 +89,14 @@
                 android:id="@+id/activityReportTitle"
                 android:layout_width="278dp"
                 android:layout_height="91dp"
+                android:layout_marginTop="16dp"
                 android:fontFamily="@font/poppins"
                 android:text="Insert General Advice Here!"
                 android:textColor="#000"
                 android:textSize="34sp"
                 android:textStyle="bold"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.116"
+                app:layout_constraintHorizontal_bias="0.12"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
