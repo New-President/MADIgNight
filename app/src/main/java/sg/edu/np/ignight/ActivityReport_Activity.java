@@ -302,13 +302,15 @@ public class ActivityReport_Activity extends AppCompatActivity {
         // Retrieves the number of chat messages sent to each IgNighted user,
         // and stores it in a key:pair dictionary
         // It does it everytime the user opens the activity report so that it refreshes correctly everytime
-        myRef.addListenerForSingleValueEvent(new ValueEventListener() {
+        DatabaseReference altRef = database.getReference("");
+        altRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 // Retrieve the chat IDs of all chats that the user is in
                 // Puts all of the chat IDs and associated target user IDs into a hashMap
                 // targetUserId refers to the ID of the other user that the current user chats with\
                 for (DataSnapshot dataSnapshot : snapshot
+                        .child("user")
                         .child(uid)
                         .child("chats")
                         .getChildren()){
@@ -316,7 +318,20 @@ public class ActivityReport_Activity extends AppCompatActivity {
                     String chatId = dataSnapshot.getKey();
                     String targetUserId = (String) dataSnapshot.getValue();
                     chatIDtargetUserIDkeypair.put(chatId, targetUserId);
+                    Log.d("success1", chatId + " " + targetUserId);
                 }
+
+                for(Map.Entry<String,String> entry: chatIDtargetUserIDkeypair.entrySet()){
+                    Integer totalNumberOfTextsSent = (int) (long) snapshot
+                            .child("chat")
+                            .child(entry.getKey())
+                            .child("messages")
+                            .getChildrenCount();
+                    Log.d("testOndataChange", entry.getValue() + String.valueOf(totalNumberOfTextsSent));
+                    targetUserIDtotalNumberOfTextsKeypair.put(entry.getValue(), totalNumberOfTextsSent);
+                }
+
+                /*
                 for(Map.Entry<String,String> entry: chatIDtargetUserIDkeypair.entrySet()){
                     myRef2.addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
@@ -325,6 +340,7 @@ public class ActivityReport_Activity extends AppCompatActivity {
                                     .child(entry.getKey())
                                     .child("messages")
                                     .getChildrenCount();
+                            Log.d("testOndataChange3", String.valueOf(totalNumberOfTextsSent) + entry.getKey());
                             targetUserIDtotalNumberOfTextsKeypair.put(entry.getValue(), totalNumberOfTextsSent);
                         }
 
@@ -335,16 +351,25 @@ public class ActivityReport_Activity extends AppCompatActivity {
                                     Toast.LENGTH_LONG)
                                     .show();
                         }
+
                     });
-                }
+                    Log.d("async done", "success");
+
+                }*/
+                Log.d("async done2", "success");
 
                 for(Map.Entry<String, Integer> entry: targetUserIDtotalNumberOfTextsKeypair.entrySet()){
+                    Log.d("success2", "success2");
                     String targetUsernameRetrieved = snapshot
+                            .child("user")
                             .child(entry.getKey())
                             .child("username")
                             .getValue().toString();
+                    Log.d("test3", entry.getKey());
                     targetUserIDusernamesTargetUserIDkeypair.put(targetUsernameRetrieved, entry.getKey());
+                    Log.d("targetUserIDusernamesTargetUserIDkeypair success", targetUsernameRetrieved);
                 }
+
 
                 // We add the retrieved data to the pieChartData arrayList to display the data
                 // However, we only want the top 3 IgNights, so we filter the
@@ -361,6 +386,7 @@ public class ActivityReport_Activity extends AppCompatActivity {
                         if(entry2.getValue().equals(targetUserID)){
                             // Set username value
                             targetUsername = entry2.getKey().toString();
+                            Log.d("targetUsernameFound", targetUsername);
                         }
                     }
 
@@ -368,6 +394,7 @@ public class ActivityReport_Activity extends AppCompatActivity {
                     // the currentUser and the targetUser
                     // Adds data here to the pieChart ArrayList
                     pieChartData.add(new PieEntry(totalNumberOfTexts, targetUsername));
+                    Log.d("pieChartData", totalNumberOfTexts + " " + targetUsername);
                 }
 
                 // Checks if there is any data generated. If so, display the top IgNight
@@ -392,11 +419,13 @@ public class ActivityReport_Activity extends AppCompatActivity {
                     }
 
                     TextView topIgNightDisplayText = (TextView) findViewById(R.id.topIgNightDisplay);
+                    Log.d("Your top IgNight is", String.valueOf(topIgNightDisplayText));
                     topIgNightDisplayText.setText("Your top IgNight is " + topIgNightTargetUsername + ".");
                 }
 
                 // init pie data set
                 PieDataSet pieDataSet = new PieDataSet(pieChartData, "");
+                Log.d("pieDataSet", "success");
                 // set colors and hide draw value
                 pieDataSet.setColors(ColorTemplate.COLORFUL_COLORS);
                 // input bar data
