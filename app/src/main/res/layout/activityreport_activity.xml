@@ -7,86 +7,106 @@
     android:textAlignment="center"
     tools:context=".ActivityReport_Activity">
 
-    <ImageButton
-        android:id="@+id/backButton3"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="10dp"
-        android:layout_marginTop="10dp"
-        android:backgroundTint="#00FFFFFF"
-        android:minHeight="48dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="?attr/actionModeCloseDrawable"
-        tools:ignore="SpeakableTextPresentCheck" />
-
-    <TextView
-        android:id="@+id/activityReportTitle"
-        android:layout_width="274dp"
-        android:layout_height="52dp"
-        android:layout_marginTop="92dp"
-        android:fontFamily="@font/poppins"
-        android:text="Insert General Advice Here!"
-        android:textColor="#000"
-        android:textSize="34sp"
-        android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.175"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <TextView
-        android:id="@+id/activityTitle"
-        android:layout_width="162dp"
-        android:layout_height="35dp"
-        android:layout_marginTop="16dp"
-        android:fontFamily="sans-serif-light"
-        android:gravity="center"
-        android:text="Activity Report"
-        android:textColor="#808080"
-        android:textSize="24sp"
+    <com.google.android.material.navigation.NavigationView
+        android:id="@+id/navigationView"
+        andriod:background="@drawable/gradient_background"
+        android:layout_width="0dp"
+        android:layout_height="70dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent">
 
-    <TextView
-        android:id="@+id/activityTitle2"
-        android:layout_width="198dp"
-        android:layout_height="61dp"
-        android:layout_marginTop="3dp"
-        android:fontFamily="sans-serif-light"
-        android:text="Here is how you have done so far."
-        android:textColor="#808080"
-        android:textSize="20sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.112"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/activityReportTitle" />
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/gradient_background">
+
+            <ImageButton
+                android:id="@+id/backButton3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginBottom="8dp"
+                android:background="@drawable/ic_baseline_arrow_back_24"
+                android:backgroundTint="#00FFFFFF"
+                android:minHeight="48dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:srcCompat="?attr/actionModeCloseDrawable"
+                tools:ignore="SpeakableTextPresentCheck" />
+
+            <TextView
+                android:id="@+id/activityTitle"
+                android:layout_width="162dp"
+                android:layout_height="35dp"
+                android:layout_marginTop="16dp"
+                android:fontFamily="sans-serif-light"
+                android:gravity="center"
+                android:text="Activity Report"
+                android:textColor="#ffffff"
+                android:textSize="24sp"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.463"
+                app:layout_constraintStart_toStartOf="@+id/backButton3"
+                app:layout_constraintTop_toTopOf="parent" />
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </com.google.android.material.navigation.NavigationView>
 
     <ScrollView
-        android:layout_width="0dp"
-        android:layout_height="555dp"
+        android:layout_width="411dp"
+        android:layout_height="643dp"
         android:layout_marginTop="20dp"
-        android:layout_marginBottom="100dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/activityTitle2"
-        app:layout_constraintVertical_bias="0.153">
+        app:layout_constraintVertical_bias="1.0">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:windowSoftInputMode="adjustResize">
+
+            <TextView
+                android:id="@+id/activityTitle2"
+                android:layout_width="198dp"
+                android:layout_height="61dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="8dp"
+                android:fontFamily="sans-serif-light"
+                android:text="Here is how you have done so far."
+                android:textColor="#808080"
+                android:textSize="20sp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/activityReportTitle" />
+
+            <TextView
+                android:id="@+id/activityReportTitle"
+                android:layout_width="278dp"
+                android:layout_height="91dp"
+                android:fontFamily="@font/poppins"
+                android:text="Insert General Advice Here!"
+                android:textColor="#000"
+                android:textSize="34sp"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.116"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
             <ImageView
                 android:id="@+id/imageView3"
                 android:layout_width="39dp"
                 android:layout_height="25dp"
                 android:layout_marginStart="16dp"
-                android:layout_marginTop="32dp"
+                android:layout_marginTop="30dp"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/activityTitle2"
                 app:srcCompat="@drawable/heart" />
 
             <TextView
@@ -148,13 +168,13 @@
                 android:layout_width="155dp"
                 android:layout_height="43dp"
                 android:layout_marginStart="4dp"
-                android:layout_marginTop="32dp"
+                android:layout_marginTop="30dp"
                 android:fontFamily="@font/poppins"
                 android:text="Your top 3 IgNights by no. of texts sent:"
                 android:textColor="#000"
                 android:textSize="16sp"
                 app:layout_constraintStart_toEndOf="@+id/imageView3"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toBottomOf="@+id/activityTitle2" />
 
             <TextView
                 android:id="@+id/comfortBottomTextView"

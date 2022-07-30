@@ -94,7 +94,7 @@ public class ActivityReport_Activity extends AppCompatActivity {
         database = FirebaseDatabase.getInstance("https://madignight-default-rtdb.asia-southeast1.firebasedatabase.app/");
         // getting the reference
         myRef = database.getReference("user");
-        myRef2 = database.getReference("chat");
+        //myRef2 = database.getReference("chat");
 
         // Return back to main menu
         backButton2 = findViewById(R.id.backButton3);
@@ -142,10 +142,6 @@ public class ActivityReport_Activity extends AppCompatActivity {
                 targetUserIDusernamesTargetUserIDkeypair,
                 targetUserIDtotalNumberOfTextsKeypair);
         getTimeSpentToday();
-
-
-        // Give dating suggestions based on a few parameters
-        giveDatingSuggestions(chatIDtargetUserIDkeypair);
 
         setGoalButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -446,6 +442,19 @@ public class ActivityReport_Activity extends AppCompatActivity {
                 pieChart.setEntryLabelColor(Color.rgb(0,0,0));
                 pieDataSet.setValueTextSize(23);
                 pieDataSet.setValueTextColor(Color.rgb(0,0,0));
+
+
+                // sets dating suggestions based on some set statistics
+                TextView suggestionsText = findViewById(R.id.activityReportTitle);
+                if(chatIDtargetUserIDkeypair.size() < 3){
+                    suggestionsText.setText("Try Harder!");
+                }
+                if(chatIDtargetUserIDkeypair.size() >= 3){
+                    suggestionsText.setText("Keep it up!");
+                }
+                if(hours2 > 5){
+                    suggestionsText.setText("You're Addicted!");
+                }
             }
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
@@ -464,20 +473,6 @@ public class ActivityReport_Activity extends AppCompatActivity {
                 android.os.Process.myUid(),
                 context.getPackageName());
         return mode == MODE_ALLOWED;
-    }
-
-    // Gives dating suggestions based on the statistics
-    private void giveDatingSuggestions(HashMap<String, String> chatIDtargetUserIDkeypair){
-        TextView suggestionsText = findViewById(R.id.activityReportTitle);
-        if(chatIDtargetUserIDkeypair.size() < 3){
-            suggestionsText.setText("Try Harder!");
-        }
-        else if(chatIDtargetUserIDkeypair.size() > 10){
-            suggestionsText.setText("Slow Down!");
-        }
-        if(hours2 > 5){
-            suggestionsText.setText("You're Addicted!");
-        }
     }
 }
 
