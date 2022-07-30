@@ -73,7 +73,7 @@ public class ActivityReport_Activity extends AppCompatActivity {
 
     private FirebaseUser user;
     private FirebaseDatabase database;
-    private DatabaseReference myRef;
+    private DatabaseReference myRef, myRef2;
 
     BarDataSet barDataset1, barDataset2;
     BarData barData;
@@ -93,7 +93,8 @@ public class ActivityReport_Activity extends AppCompatActivity {
         uid = user.getUid();
         database = FirebaseDatabase.getInstance("https://madignight-default-rtdb.asia-southeast1.firebasedatabase.app/");
         // getting the reference
-        myRef = database.getReference("");
+        myRef = database.getReference("user");
+        myRef2 = database.getReference("chat");
 
         // Return back to main menu
         backButton2 = findViewById(R.id.backButton3);
@@ -153,8 +154,7 @@ public class ActivityReport_Activity extends AppCompatActivity {
                 try{
                     setTimeLimit = Integer.parseInt(String.valueOf(inputText.getText()));
                     Log.d("newUsage", String.valueOf(setTimeLimit));
-                    DatabaseReference myRef3 = database.getReference("user").child(uid);
-                    myRef3.child("usageTimeLimit").setValue(setTimeLimit);
+                    myRef.child(uid).child("usageTimeLimit").setValue(setTimeLimit);
                     Toast.makeText(ActivityReport_Activity.this,
                             "Exit and return to see new bar chart value.",
                             Toast.LENGTH_LONG)
@@ -219,7 +219,7 @@ public class ActivityReport_Activity extends AppCompatActivity {
                     // across different devices using the same account
                     inputText = (EditText)findViewById(R.id.editTextNumber);
                     setGoalButton = (Button) findViewById(R.id.setGoalButton);
-                    myRef.child("user").child(uid).addListenerForSingleValueEvent(new ValueEventListener() {
+                    myRef.child(uid).addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot snapshot) {
                         Log.d("onDataChange", "onDataChangeSuccess");
@@ -308,7 +308,7 @@ public class ActivityReport_Activity extends AppCompatActivity {
                 // Retrieve the chat IDs of all chats that the user is in
                 // Puts all of the chat IDs and associated target user IDs into a hashMap
                 // targetUserId refers to the ID of the other user that the current user chats with\
-                for (DataSnapshot dataSnapshot : snapshot.child("user")
+                for (DataSnapshot dataSnapshot : snapshot
                         .child(uid)
                         .child("chats")
                         .getChildren()){
@@ -318,17 +318,28 @@ public class ActivityReport_Activity extends AppCompatActivity {
                     chatIDtargetUserIDkeypair.put(chatId, targetUserId);
                 }
                 for(Map.Entry<String,String> entry: chatIDtargetUserIDkeypair.entrySet()){
-                    Integer totalNumberOfTextsSent = (int) (long) snapshot
-                            .child("chat")
-                            .child(entry.getKey())
-                            .child("messages")
-                            .getChildrenCount();
-                    targetUserIDtotalNumberOfTextsKeypair.put(entry.getValue(), totalNumberOfTextsSent);
+                    myRef2.addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                            Integer totalNumberOfTextsSent = (int) (long) snapshot
+                                    .child(entry.getKey())
+                                    .child("messages")
+                                    .getChildrenCount();
+                            targetUserIDtotalNumberOfTextsKeypair.put(entry.getValue(), totalNumberOfTextsSent);
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) {
+                            Toast.makeText(ActivityReport_Activity.this,
+                                    "Error retrieving chat information",
+                                    Toast.LENGTH_LONG)
+                                    .show();
+                        }
+                    });
                 }
 
                 for(Map.Entry<String, Integer> entry: targetUserIDtotalNumberOfTextsKeypair.entrySet()){
                     String targetUsernameRetrieved = snapshot
-                            .child("user")
                             .child(entry.getKey())
                             .child("username")
                             .getValue().toString();
