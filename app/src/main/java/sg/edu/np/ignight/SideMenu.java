@@ -195,6 +195,7 @@ public class SideMenu extends Activity {
             }
         });
 
+        /*
         // go to profile view customisation
         TextView profileViewCustomisation = findViewById(R.id.customiseProfleView_sideMenu);
         profileViewCustomisation.setOnClickListener(new View.OnClickListener() {
@@ -203,6 +204,8 @@ public class SideMenu extends Activity {
                 startActivity(new Intent(getApplicationContext(), ViewProfileCustomisation.class));
             }
         });
+        */
+
 
         // Delete user tab
         Button delete_acc = findViewById(R.id.delete_acc_btn);
