@@ -95,8 +95,6 @@ public class ChatActivity extends AppCompatActivity {
 
     private DatabaseReference rootDB, chatDB;
 
-    private boolean fromProposeDate;
-
     private ImageView removeMediaButton, scrollToChatBottomButton, profilePicture;
     private EditText messageInput;
     private ImageButton addMediaButton, sendMessageButton, backButton;
@@ -135,8 +133,8 @@ public class ChatActivity extends AppCompatActivity {
         sendMessageProgressBar = findViewById(R.id.sendMessageProgressBar);
         messageLayoutHeaderUserInfo = findViewById(R.id.messageLayoutHeaderUserInfo);
         profilePicture = findViewById(R.id.chatActivityProfilePicture);
-        acceptButton = findViewById(R.id.acceptButton);
-        declineButton = findViewById(R.id.declineButton);
+        proposeDateViewStub = findViewById(R.id.proposeDateViewStub);
+
 
         TextView headerChatName = findViewById(R.id.messageLayoutHeaderChatName);
         headerChatName.setText(chatName);
@@ -150,7 +148,7 @@ public class ChatActivity extends AppCompatActivity {
         sendMessageButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                sendMessage(false);
+                sendMessage(false, null, null, 0, 0);
             }
         });
 
@@ -318,7 +316,7 @@ public class ChatActivity extends AppCompatActivity {
                         // Calling message notification
                         EditText call_text = findViewById(R.id.messageInput);
                         call_text.setText("Hey, I started a call come join me!");
-                        sendMessage(false);
+                        sendMessage(false, null, null, 0, 0);
                         BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
                             Integer total_count = 0;
                             @Override
@@ -328,7 +326,7 @@ public class ChatActivity extends AppCompatActivity {
                                     EditText call_text = findViewById(R.id.messageInput);
                                     call_text.setText("The call just ended, let's have another call next time!");
                                     Log.d("Call Ended","Yes");
-                                    sendMessage(false);
+                                    sendMessage(false, null, null, 0, 0);
                                     chatDB.child(chatID).child("onCall").setValue(false);
                                 }
                             }
@@ -381,7 +379,7 @@ public class ChatActivity extends AppCompatActivity {
                         // Calling message notification
                         EditText call_text = findViewById(R.id.messageInput);
                         call_text.setText("Hey, I started a call come join me!");
-                        sendMessage(false);
+                        sendMessage(false,null, null, 0, 0);
                         BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
                             Integer total_count = 0;
                             @Override
@@ -391,7 +389,7 @@ public class ChatActivity extends AppCompatActivity {
                                     EditText call_text = findViewById(R.id.messageInput);
                                     call_text.setText("The call just ended, let's have another call next time!");
                                     Log.d("Call Ended","Yes");
-                                    sendMessage(false);
+                                    sendMessage(false, null, null, 0, 0);
                                     chatDB.child(chatID).child("onCall").setValue(false);
                                 }
                             }
@@ -432,6 +430,20 @@ public class ChatActivity extends AppCompatActivity {
             }
         });
 
+
+       /* if (proposeDateViewStub.getParent() != null) {
+            proposeDateViewStub.inflate();
+        } else {
+            View inflated =  proposeDateViewStub.inflate();
+            Button declineButton = (Button) inflated.findViewById(R.id.declineButton);
+            declineButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    messageInput.setText("Declined");
+                    sendMessage(false, null, null, 0, 0);
+                }
+            });
+        }*/
 
     }
 
@@ -527,8 +539,16 @@ public class ChatActivity extends AppCompatActivity {
                         String creatorId = snapshot.child("creator").getValue().toString();
                         String timestamp = snapshot.child("timestamp").getValue().toString();
                         Boolean proposeDate = false;
+                        String dateDescription = "";
+                        String dateLocation = "";
+                        long startDateTime = 0;
+                        long endDateTime = 0;
                         try{
                             proposeDate = Boolean.parseBoolean(snapshot.child("proposeDate").getValue().toString());
+                            dateDescription = snapshot.child("dateDescription").getValue().toString();
+                            dateLocation = snapshot.child("dateLocation").getValue().toString();
+                            startDateTime = Integer.parseInt(snapshot.child("startDateTime").getValue().toString());
+                            endDateTime = Integer.parseInt(snapshot.child("endDateTime").getValue().toString());
                         }catch(Exception e) {
                             e.printStackTrace();
                         }
@@ -548,7 +568,7 @@ public class ChatActivity extends AppCompatActivity {
                         MessageObject message = null;
 
                         try {
-                            message = new MessageObject(chatID, snapshot.getKey(), creatorId, text, timestamp, mediaUrlList, proposeDate);
+                            message = new MessageObject(chatID, snapshot.getKey(), creatorId, text, timestamp, mediaUrlList, proposeDate, dateDescription, dateLocation, startDateTime, endDateTime);
                         } catch (ParseException e) {
                             e.printStackTrace();
                         }
@@ -609,7 +629,7 @@ public class ChatActivity extends AppCompatActivity {
     }
 
     // send message
-    private void sendMessage(Boolean proposeDate) {
+    public void sendMessage(Boolean proposeDate, String dateDescription, String dateLocation, long startDateTime, long endDateTime) {
 
         // checks if the text entered is valid (gets rid of leading and trailing spaces and checks length is not 0)
         String messageText = messageInput.getText().toString().trim();
@@ -642,6 +662,11 @@ public class ChatActivity extends AppCompatActivity {
         newMessageMap.put("messages/" + messageId + "/timestamp", timestamp);
         newMessageMap.put("messages/" + messageId + "/isSeen", false);
         newMessageMap.put("messages/" + messageId + "/proposeDate", proposeDate);
+        newMessageMap.put("messages/" + messageId + "/dateDescription", dateDescription);
+        newMessageMap.put("messages/" + messageId + "/dateLocation", dateLocation);
+        newMessageMap.put("messages/" + messageId + "/startDateTime", startDateTime);
+        newMessageMap.put("messages/" + messageId + "/endDateTime", endDateTime);
+
 
         newMessageMap.put("lastUsed", timestamp);
 
@@ -772,13 +797,12 @@ public class ChatActivity extends AppCompatActivity {
         if(fromProposeDate) {
             String dateDescription = data.getStringExtra("dateDescription");
             String dateLocation = data.getStringExtra("dateLocation");
-
             long startDateTime = data.getLongExtra("startDateTime", 0);
             long endDateTime = data.getLongExtra("endDateTime", 0);
-            String dateString = DateFormat.format("dd/MM/yyyy HH:mm", new Date(startDateTime)).toString();
+            String dateString = DateFormat.format("dd/MM/yyyy | HH:mm", new Date(startDateTime)).toString();
             EditText call_text = findViewById(R.id.messageInput);
             call_text.setText("Date Description: " + dateDescription +"\nDate Location: " + dateLocation + "\nDate and Time: " + dateString);
-            sendMessage(true);
+            sendMessage(true, dateDescription, dateLocation, startDateTime, endDateTime);
 
         }
     }

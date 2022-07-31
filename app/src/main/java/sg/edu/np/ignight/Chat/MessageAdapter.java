@@ -104,29 +104,42 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
             holder.messageText.setText(thisMessage.getMessage());
             holder.messageText.setVisibility(View.VISIBLE);
             if(thisMessage.getProposeDate()){
-                View inflated = holder.proposeDateViewStub.inflate();
-                Button acceptButton = (Button) inflated.findViewById(R.id.acceptButton);
-                acceptButton.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        Intent insertCalendarIntent = new Intent(Intent.ACTION_INSERT);
-                        insertCalendarIntent.setData(CalendarContract.Events.CONTENT_URI);
-                        insertCalendarIntent.putExtra(CalendarContract.Events.TITLE, "Date")
-                                .putExtra(CalendarContract.EXTRA_EVENT_ALL_DAY, false)
-                                .putExtra(CalendarContract.Events.EVENT_LOCATION, "hi")
-                                .putExtra(CalendarContract.Events.DESCRIPTION, "hi")
-                                .putExtra(CalendarContract.EXTRA_EVENT_BEGIN_TIME, 00000)
-                                .putExtra(CalendarContract.EXTRA_EVENT_END_TIME, 11111)
-                                .putExtra(CalendarContract.Events.ACCESS_LEVEL, CalendarContract.Events.ACCESS_PRIVATE)
-                                .putExtra(CalendarContract.Events.AVAILABILITY, CalendarContract.Events.AVAILABILITY_FREE);
-                        insertCalendarIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                        context.startActivity(insertCalendarIntent);
-                    }
-                });
+                if (holder.proposeDateViewStub.getParent() != null) {
+                    /*holder.proposeDateViewStub.inflate();*/
+                } else {
+                    holder.proposeDateViewStub.setVisibility(View.VISIBLE);
+                    Button acceptButton = (Button) holder.inflated.findViewById(R.id.acceptButton);
+                    Button declineButton = (Button) holder.inflated.findViewById(R.id.declineButton);
+                    acceptButton.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            Intent insertCalendarIntent = new Intent(Intent.ACTION_INSERT);
+                            insertCalendarIntent.setData(CalendarContract.Events.CONTENT_URI);
+                            insertCalendarIntent.putExtra(CalendarContract.Events.TITLE, "Date")
+                                    .putExtra(CalendarContract.EXTRA_EVENT_ALL_DAY, false)
+                                    .putExtra(CalendarContract.Events.EVENT_LOCATION, thisMessage.getDateLocation())
+                                    .putExtra(CalendarContract.Events.DESCRIPTION, thisMessage.getDateDescription())
+                                    .putExtra(CalendarContract.EXTRA_EVENT_BEGIN_TIME, thisMessage.getStartDateTime())
+                                    .putExtra(CalendarContract.EXTRA_EVENT_END_TIME, thisMessage.getEndDateTime())
+                                    .putExtra(CalendarContract.Events.ACCESS_LEVEL, CalendarContract.Events.ACCESS_PRIVATE)
+                                    .putExtra(CalendarContract.Events.AVAILABILITY, CalendarContract.Events.AVAILABILITY_FREE);
+                            insertCalendarIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                            context.startActivity(insertCalendarIntent);
+                        }
+                    });
+
+                    declineButton.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+
+                        }
+                    });
+                }
             }
         }
         else {
             holder.messageText.setVisibility(View.GONE);
+            holder.proposeDateViewStub.setVisibility(View.INVISIBLE);
         }
 
         // set timestamp of message
@@ -224,6 +237,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
         public ConstraintLayout messageLayout;
         public ViewStub proposeDateViewStub;
         public Button acceptButton, declineButton;
+        public View inflated;
 
         public MessageViewHolder(View itemView) {
             super(itemView);
@@ -236,6 +250,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
             messageLayout = itemView.findViewById(R.id.messageLayout);
             messageStatus = itemView.findViewById(R.id.messageStatus);
             proposeDateViewStub = itemView.findViewById(R.id.proposeDateViewStub);
+            inflated = proposeDateViewStub.inflate();
         }
     }
 }
