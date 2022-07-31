@@ -28,7 +28,7 @@ Han Xihe - View Profile, Play Store listing
 Keefe Cheong Wenkai - Login, Chat List Fragment, Chat
 
 Stage 2:
-Yong Zi Ren - 
+Yong Zi Ren - Video/Voice call, Delete user
 
 Lee Wee Kang - 
 
