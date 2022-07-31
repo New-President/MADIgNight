@@ -9,6 +9,7 @@ import android.content.IntentFilter;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.CalendarContract;
 import android.text.format.DateFormat;
 import android.transition.Slide;
 import android.transition.Transition;
@@ -134,6 +135,8 @@ public class ChatActivity extends AppCompatActivity {
         sendMessageProgressBar = findViewById(R.id.sendMessageProgressBar);
         messageLayoutHeaderUserInfo = findViewById(R.id.messageLayoutHeaderUserInfo);
         profilePicture = findViewById(R.id.chatActivityProfilePicture);
+        acceptButton = findViewById(R.id.acceptButton);
+        declineButton = findViewById(R.id.declineButton);
 
         TextView headerChatName = findViewById(R.id.messageLayoutHeaderChatName);
         headerChatName.setText(chatName);
@@ -428,6 +431,8 @@ public class ChatActivity extends AppCompatActivity {
                 startActivityForResult(proposeDate, 1000);
             }
         });
+
+
     }
 
     @Override
@@ -767,17 +772,14 @@ public class ChatActivity extends AppCompatActivity {
         if(fromProposeDate) {
             String dateDescription = data.getStringExtra("dateDescription");
             String dateLocation = data.getStringExtra("dateLocation");
-            long dateTime = data.getLongExtra("datetime", 0);
-            String dateString = DateFormat.format("dd/MM/yyyy HH:mm", new Date(dateTime)).toString();
-            /*acceptButton = findViewById(R.id.acceptButton);
-            declineButton = findViewById(R.id.declineButton);
-            proposeDateViewStub = findViewById(R.id.proposeDateViewStub);
-            proposeDateViewStub.inflate();
-            proposeDateViewStub.setVisibility(View.INVISIBLE);*/
+
+            long startDateTime = data.getLongExtra("startDateTime", 0);
+            long endDateTime = data.getLongExtra("endDateTime", 0);
+            String dateString = DateFormat.format("dd/MM/yyyy HH:mm", new Date(startDateTime)).toString();
             EditText call_text = findViewById(R.id.messageInput);
             call_text.setText("Date Description: " + dateDescription +"\nDate Location: " + dateLocation + "\nDate and Time: " + dateString);
             sendMessage(true);
-            /*proposeDateViewStub.setVisibility(View.VISIBLE);*/
+
         }
     }
 

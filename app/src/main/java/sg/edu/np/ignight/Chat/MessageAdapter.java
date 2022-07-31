@@ -3,6 +3,9 @@ package sg.edu.np.ignight.Chat;
 import static android.content.ContentValues.TAG;
 
 import android.content.Context;
+import android.content.Intent;
+import android.os.Build;
+import android.provider.CalendarContract;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,6 +16,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -68,6 +72,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
         return new MessageViewHolder(layoutView);
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.P)
     @Override
     public void onBindViewHolder(@NonNull MessageViewHolder holder, int position) {
 
@@ -99,8 +104,25 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
             holder.messageText.setText(thisMessage.getMessage());
             holder.messageText.setVisibility(View.VISIBLE);
             if(thisMessage.getProposeDate()){
-                holder.proposeDateViewStub.inflate();
-                holder.proposeDateViewStub.setVisibility(View.VISIBLE);
+                View inflated = holder.proposeDateViewStub.inflate();
+                Button acceptButton = (Button) inflated.findViewById(R.id.acceptButton);
+                acceptButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Intent insertCalendarIntent = new Intent(Intent.ACTION_INSERT);
+                        insertCalendarIntent.setData(CalendarContract.Events.CONTENT_URI);
+                        insertCalendarIntent.putExtra(CalendarContract.Events.TITLE, "Date")
+                                .putExtra(CalendarContract.EXTRA_EVENT_ALL_DAY, false)
+                                .putExtra(CalendarContract.Events.EVENT_LOCATION, "hi")
+                                .putExtra(CalendarContract.Events.DESCRIPTION, "hi")
+                                .putExtra(CalendarContract.EXTRA_EVENT_BEGIN_TIME, 00000)
+                                .putExtra(CalendarContract.EXTRA_EVENT_END_TIME, 11111)
+                                .putExtra(CalendarContract.Events.ACCESS_LEVEL, CalendarContract.Events.ACCESS_PRIVATE)
+                                .putExtra(CalendarContract.Events.AVAILABILITY, CalendarContract.Events.AVAILABILITY_FREE);
+                        insertCalendarIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        context.startActivity(insertCalendarIntent);
+                    }
+                });
             }
         }
         else {
@@ -214,8 +236,6 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
             messageLayout = itemView.findViewById(R.id.messageLayout);
             messageStatus = itemView.findViewById(R.id.messageStatus);
             proposeDateViewStub = itemView.findViewById(R.id.proposeDateViewStub);
-            acceptButton = itemView.findViewById(R.id.acceptButton);
-            declineButton = itemView.findViewById(R.id.declineButton);
         }
     }
 }

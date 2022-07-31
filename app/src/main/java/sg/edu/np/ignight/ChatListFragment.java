@@ -217,9 +217,15 @@ public class ChatListFragment extends Fragment {
                                 userDB.child(targetUserUID).child("profileUrl").addValueEventListener(new ValueEventListener() {
                                     @Override
                                     public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                        String profileUrl = snapshot.getValue().toString();
-                                        finalChat.setProfileUrl(profileUrl);
-                                        chatListAdapter.notifyDataSetChanged();
+                                        try{
+                                            String profileUrl = snapshot.getValue().toString();
+                                            finalChat.setProfileUrl(profileUrl);
+                                            chatListAdapter.notifyDataSetChanged();
+                                        }
+                                        catch(Exception e){
+                                            e.printStackTrace();
+                                        }
+
                                     }
 
                                     @Override
@@ -241,8 +247,14 @@ public class ChatListFragment extends Fragment {
                         userDB.child(targetUserUID).child("username").addValueEventListener(new ValueEventListener() {
                             @Override
                             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                String chatName = snapshot.getValue().toString();
-                                chatDB.child(chatID).child("users").child(targetUserUID).setValue(chatName);
+                                try{
+                                    String chatName = snapshot.getValue().toString();
+                                    chatDB.child(chatID).child("users").child(targetUserUID).setValue(chatName);
+                                }
+                                catch (Exception e){
+                                    e.printStackTrace();
+                                }
+
                             }
 
                             @Override

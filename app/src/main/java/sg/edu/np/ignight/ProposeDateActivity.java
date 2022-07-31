@@ -107,7 +107,8 @@ public class ProposeDateActivity extends AppCompatActivity {
                     dateMessage.putExtra("dateMessage", true);
                     dateMessage.putExtra("dateDescription", description);
                     dateMessage.putExtra("dateLocation", location);
-                    dateMessage.putExtra("datetime", startMillis);
+                    dateMessage.putExtra("startDateTime", startMillis);
+                    dateMessage.putExtra("endDateTime", endMillis);
                     setResult(1000, dateMessage);
 
                     /*Intent toChat = new Intent(getApplicationContext(), ChatListAdapter.class);
