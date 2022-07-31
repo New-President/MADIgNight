@@ -28,9 +28,9 @@ Han Xihe - View Profile, Play Store listing
 Keefe Cheong Wenkai - Login, Chat List Fragment, Chat
 
 Stage 2:
-Yong Zi Ren - Video/Voice call, Delete user
+Yong Zi Ren - 
 
-Lee Wee Kang - 
+Lee Wee Kang - Map function (Google api and like locations), comments section (comment & like)
 
 Lim Long Teck - 
 
