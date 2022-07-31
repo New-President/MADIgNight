@@ -32,7 +32,7 @@ Yong Zi Ren - Video/Voice call, Delete user
 
 Lee Wee Kang - Map function (Google api and like locations), comments section (comment & like)
 
-Lim Long Teck - 
+Lim Long Teck - ProposeDate feature (Google Calendar), Notification Activity, Blogs Notification (Comments and likes)
 
 Han Xihe - Activity report
 
