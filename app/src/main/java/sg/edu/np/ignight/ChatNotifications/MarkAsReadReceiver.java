@@ -20,6 +20,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
+// broadcast receiver to set message to seen
 public class MarkAsReadReceiver extends BroadcastReceiver {
 
     private int notificationID;
@@ -48,6 +49,7 @@ public class MarkAsReadReceiver extends BroadcastReceiver {
                         }
                     }
 
+                    // clear unread message count for current user
                     chatDB.child("unread").child(currentUserUID).setValue(0);
                 }
             }

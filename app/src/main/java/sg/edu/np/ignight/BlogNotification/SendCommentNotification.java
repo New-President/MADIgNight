@@ -1,7 +1,11 @@
 package sg.edu.np.ignight.BlogNotification;
 
+import static android.content.ContentValues.TAG;
+
 import android.content.Context;
 import android.util.Log;
+
+import androidx.annotation.NonNull;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -9,6 +13,10 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import org.json.JSONObject;
 
@@ -39,47 +47,57 @@ public class SendCommentNotification {
 
     // send notification using Volley
     public void sendNotification() {
-        fcmServerKey = context.getResources().getString(R.string.fcm_server_key);
+        FirebaseDatabase.getInstance("https://madignight-default-rtdb.asia-southeast1.firebasedatabase.app/").getReference().addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                fcmServerKey = snapshot.getValue().toString();
 
-        requestQueue1 = Volley.newRequestQueue(context);
-        JSONObject jsonObject = new JSONObject();
+                requestQueue1 = Volley.newRequestQueue(context);
+                JSONObject jsonObject = new JSONObject();
 
-        try {
-            // create request
-            jsonObject.put("to", fcmToken);
+                try {
+                    // create request
+                    jsonObject.put("to", fcmToken);
 
-            JSONObject data = new JSONObject();  // add custom data
-            data.put("purpose", "comment");
-            data.put("message", message);
-            data.put("senderID", senderID);
-            data.put("blogID", blogID);
+                    JSONObject data = new JSONObject();  // add custom data
+                    data.put("purpose", "comment");
+                    data.put("message", message);
+                    data.put("senderID", senderID);
+                    data.put("blogID", blogID);
 
-            jsonObject.put("data", data);
+                    jsonObject.put("data", data);
 
-            JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, postUrl, jsonObject, new Response.Listener<JSONObject>() {
-                @Override
-                public void onResponse(JSONObject response) {
-                    Log.v("sendRequest", "got response");
+                    JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, postUrl, jsonObject, new Response.Listener<JSONObject>() {
+                        @Override
+                        public void onResponse(JSONObject response) {
+                            Log.v("sendRequest", "got response");
+                        }
+                    }, new Response.ErrorListener() {
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+                            error.printStackTrace();
+                        }
+                    }) {
+                        @Override
+                        public Map<String, String> getHeaders() {  // set headers
+                            Map<String, String> header = new HashMap<>();
+                            header.put("content-type", "application/json");
+                            header.put("authorization", "key=" + fcmServerKey);
+                            return header;
+                        }
+                    };
+                    requestQueue1.add(request);
+
                 }
-            }, new Response.ErrorListener() {
-                @Override
-                public void onErrorResponse(VolleyError error) {
-                    error.printStackTrace();
+                catch (Exception e) {
+                    e.printStackTrace();
                 }
-            }) {
-                @Override
-                public Map<String, String> getHeaders() {  // set headers
-                    Map<String, String> header = new HashMap<>();
-                    header.put("content-type", "application/json");
-                    header.put("authorization", "key=" + fcmServerKey);
-                    return header;
-                }
-            };
-            requestQueue1.add(request);
+            }
 
-        }
-        catch (Exception e) {
-            e.printStackTrace();
-        }
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Log.e(TAG, "onCancelled: " + error.getMessage());
+            }
+        });
     }
 }

@@ -11,7 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -94,18 +94,20 @@ public class ChatRequestReceivedAdapter extends RecyclerView.Adapter<ChatRequest
         showAccepted(holder, false);
         showRejected(holder, false);
 
+        // update request when accept button is clicked
         holder.acceptButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                enableButtons(holder, false);
+                enableButtons(holder, false);  // disable buttons to prevent multiple updates
                 startChat(holder, chatRequest, true);
             }
         });
 
+        // update request when reject button is clicked
         holder.rejectButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                enableButtons(holder, false);
+                enableButtons(holder, false);  // disable buttons to prevent multiple updates
                 startChat(holder, chatRequest, false);
             }
         });
@@ -218,7 +220,7 @@ public class ChatRequestReceivedAdapter extends RecyclerView.Adapter<ChatRequest
                                 userDB.updateChildren(updateUserMap).addOnCompleteListener(new OnCompleteListener() {
                                     @Override
                                     public void onComplete(@NonNull Task task) {
-                                        if (finalSender != null) {
+                                        if (finalSender != null) {  // send notification if sender is not null
                                             finalSender.sendNotification();
                                         }
                                     }
@@ -238,7 +240,7 @@ public class ChatRequestReceivedAdapter extends RecyclerView.Adapter<ChatRequest
                         @Override
                         public void onComplete(@NonNull Task task) {
                             if (task.isSuccessful()) {
-                                if (finalSender != null) {
+                                if (finalSender != null) {  // send notification if sender is not null
                                     finalSender.sendNotification();
                                 }
 
@@ -247,7 +249,6 @@ public class ChatRequestReceivedAdapter extends RecyclerView.Adapter<ChatRequest
                         }
                     });
                 }
-
             }
 
             @Override
@@ -259,6 +260,7 @@ public class ChatRequestReceivedAdapter extends RecyclerView.Adapter<ChatRequest
         enableButtons(holder, true);
     }
 
+    // method to enable/disable reject and accept buttons
     private void enableButtons(ChatRequestReceivedViewHolder holder, boolean enable) {
         holder.acceptButton.setEnabled(enable);
         holder.rejectButton.setEnabled(enable);
@@ -289,7 +291,7 @@ public class ChatRequestReceivedAdapter extends RecyclerView.Adapter<ChatRequest
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
-                        if (chatRequestList.contains(request)) {
+                        if (chatRequestList.contains(request)) {  // remove request from data
                             chatRequestList.remove(request);
                             notifyDataSetChanged();
                         }
@@ -333,7 +335,7 @@ public class ChatRequestReceivedAdapter extends RecyclerView.Adapter<ChatRequest
     class ChatRequestReceivedViewHolder extends RecyclerView.ViewHolder {
 
         private ImageView profilePicture;
-        private Button acceptButton, rejectButton;
+        private ImageButton acceptButton, rejectButton;
         private TextView username, requestTimestamp, requestAccepted, requestRejected;
         private RelativeLayout buttonContainer;
 

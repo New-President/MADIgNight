@@ -23,6 +23,7 @@ public class ChatbotAdapter extends RecyclerView.Adapter<ChatbotAdapter.ChatbotV
 
     @Override
     public int getItemViewType(int position) {
+        // check if the message is sent by user
         return (messageList.get(position).isCreator()?0:1);
     }
 
@@ -36,6 +37,7 @@ public class ChatbotAdapter extends RecyclerView.Adapter<ChatbotAdapter.ChatbotV
 
     @Override
     public void onBindViewHolder(@NonNull ChatbotViewHolder holder, int position) {
+        // set message text
         holder.messageText.setText(messageList.get(position).getMessage());
     }
 

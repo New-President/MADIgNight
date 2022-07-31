@@ -44,6 +44,7 @@ import sg.edu.np.ignight.ChatActivity;
 import sg.edu.np.ignight.R;
 import sg.edu.np.ignight.SettingsActivity;
 
+// broadcast receiver to send reply to other user and update notification with reply
 public class ReplyReceiver extends BroadcastReceiver {
 
     private String senderID;
@@ -64,6 +65,7 @@ public class ReplyReceiver extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
+        // get user preferences
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
 
         highPriority = sharedPreferences.getBoolean(SettingsActivity.KEY_MESSAGE_NOTIFICATION_PRIORITY, true);
@@ -167,16 +169,19 @@ public class ReplyReceiver extends BroadcastReceiver {
         });
     }
 
-    // update notification with replied text
+    // update current notification with replied text
     private void updateNotification(String replyText, Context context) {
+        // create new message
         NotificationCompat.MessagingStyle.Message newMessage = new NotificationCompat.MessagingStyle.Message(replyText, System.currentTimeMillis(), myself);
 
+        // get current notification messaging style
         NotificationCompat.MessagingStyle messagingStyle = getMessagingStyle(context);
 
         if (messagingStyle != null) {
-            messagingStyle.addMessage(newMessage);
+            messagingStyle.addMessage(newMessage);  // add message to messaging style
         }
 
+        // create builder for notification
         NotificationCompat.Builder builder = createBuilder(context);
 
         if (builder != null) {
@@ -283,6 +288,7 @@ public class ReplyReceiver extends BroadcastReceiver {
         return null;
     }
 
+    // get the messaging style for the current notification
     private NotificationCompat.MessagingStyle getMessagingStyle(Context context) {
         NotificationManager notificationmanager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
         StatusBarNotification[] activeNotifications = notificationmanager.getActiveNotifications();

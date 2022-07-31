@@ -46,8 +46,13 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.protobuf.StringValue;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
+
+import kotlin.collections.ArrayDeque;
 
 public class SideMenu extends Activity {
 
@@ -190,6 +195,7 @@ public class SideMenu extends Activity {
             }
         });
 
+        /*
         // go to profile view customisation
         TextView profileViewCustomisation = findViewById(R.id.customiseProfleView_sideMenu);
         profileViewCustomisation.setOnClickListener(new View.OnClickListener() {
@@ -198,6 +204,8 @@ public class SideMenu extends Activity {
                 startActivity(new Intent(getApplicationContext(), ViewProfileCustomisation.class));
             }
         });
+        */
+
 
         // Delete user tab
         Button delete_acc = findViewById(R.id.delete_acc_btn);
@@ -361,10 +369,9 @@ public class SideMenu extends Activity {
     // start to verify phone number (send otp to the retrieved phone number)
     private void startPhoneNumberVerification() {
         DatabaseReference phoneNum = FirebaseDatabase.getInstance("https://madignight-default-rtdb.asia-southeast1.firebasedatabase.app/").getReference("user").child(Uid).child("phone");
-        phoneNum.addValueEventListener(new ValueEventListener() {
+        phoneNum.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                Log.d("phone",snapshot.getValue().toString());
                 PhoneAuthOptions options = PhoneAuthOptions.newBuilder()
                         .setPhoneNumber(snapshot.getValue().toString())
                         .setTimeout(60L, TimeUnit.SECONDS)
@@ -414,28 +421,103 @@ public class SideMenu extends Activity {
         ReAuthPhoneAuthCredential(credential, alertDialog);
     }
 
-    // reauth the user with the credentials
+    // reauth the user with the credentials and delete
     private void ReAuthPhoneAuthCredential(PhoneAuthCredential phoneAuthCredential, AlertDialog alertDialog) {
+        DatabaseReference myRef = FirebaseDatabase.getInstance().getReference("user");
+        List<String> Chats = new ArrayList<>();
+        myRef.child(Uid).child("chats").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (snapshot.exists()) {
+                    for (DataSnapshot chatIDSnapshot : snapshot.getChildren()) {
+                        Chats.add(chatIDSnapshot.getKey());
+                    }
+                    DatabaseReference chatRef = FirebaseDatabase.getInstance().getReference("chat");
+                    chatRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                            if (snapshot.exists()) {
+                                for (DataSnapshot chatIDSnapshot : snapshot.getChildren()) {
+                                    if (Chats.contains(chatIDSnapshot.getValue())) {
+                                        chatRef.child(chatIDSnapshot.toString()).removeValue();
+                                    }
+                                }
+                            }
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) {
+                            Log.e("DeletingChatsError",error.toString());
+                        }
+                    });
+                    DatabaseReference chatRequest = FirebaseDatabase.getInstance().getReference("chatRequest");
+                    chatRequest.addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                            if (snapshot.exists()) {
+                                for (DataSnapshot chatIDSnapshot : snapshot.getChildren()) {
+                                    if (Chats.contains(chatIDSnapshot.getValue())) {
+                                        chatRequest.child(chatIDSnapshot.toString()).removeValue();
+                                    }
+                                }
+                            }
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) {
+                            Log.e("DeletingChatsError",error.toString());
+                        }
+                    });
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Log.e("DeletingChatsError",error.toString());
+            }
+        });
         user.reauthenticate(phoneAuthCredential).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
                 if (task.isSuccessful()) {
-                    user.delete().addOnCompleteListener(new OnCompleteListener<Void>() { // Delete the user
+                    myRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                            if (snapshot.exists()) {
+                                for (DataSnapshot userIDSnapshot : snapshot.getChildren()) {
+                                    for (DataSnapshot chatIDSnapshot : userIDSnapshot.child("chats").getChildren()) {
+                                        if (Chats.contains(chatIDSnapshot.getValue())) {
+                                            myRef.child(userIDSnapshot.getKey()).child("chats").child(chatIDSnapshot.toString()).removeValue();
+                                        }
+                                    }
+                                }
+                            }
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) {
+                            Log.e("DeletingChatsError",error.toString());
+                        }
+                    });
+                    myRef.child(Uid).removeValue().addOnCompleteListener(new OnCompleteListener<Void>() {
                         @Override
                         public void onComplete(@NonNull Task<Void> task) {
-                            if (task.isSuccessful()) {
-                                alertDialog.dismiss();
-                                FirebaseDatabase.getInstance("https://madignight-default-rtdb.asia-southeast1.firebasedatabase.app/").goOffline();
-                                FirebaseAuth.getInstance().signOut();
-                                Intent main_to_start = new Intent(getApplicationContext(), LoginActivity.class);
-                                main_to_start.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                                startActivity(main_to_start); // Go back to login
-                                finish();
-                                Log.d("Delete Status", "User account deleted.");
-                            }
-                            else {
-                                Toast.makeText(getApplicationContext(), "Wrong OTP", Toast.LENGTH_SHORT).show();
-                            }
+                            user.delete().addOnCompleteListener(new OnCompleteListener<Void>() { // Delete the user
+                                @Override
+                                public void onComplete(@NonNull Task<Void> task) {
+                                    if (task.isSuccessful()) {
+                                        alertDialog.dismiss();
+                                        Log.d("Delete Status", user.getUid());
+                                        Intent main_to_start = new Intent(getApplicationContext(), LoginActivity.class);
+                                        main_to_start.putExtra("deleteUser", user.getUid());
+                                        main_to_start.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                        startActivity(main_to_start); // Go back to login
+                                        finish();
+                                    } else {
+                                        Toast.makeText(getApplicationContext(), "Wrong OTP", Toast.LENGTH_SHORT).show();
+                                    }
+                                }
+                            });
                         }
                     });
                 }
