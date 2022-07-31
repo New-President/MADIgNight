@@ -48,7 +48,11 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.protobuf.StringValue;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
+
+import kotlin.collections.ArrayDeque;
 
 public class SideMenu extends Activity {
 
@@ -417,13 +421,84 @@ public class SideMenu extends Activity {
         ReAuthPhoneAuthCredential(credential, alertDialog);
     }
 
-    // reauth the user with the credentials
+    // reauth the user with the credentials and delete
     private void ReAuthPhoneAuthCredential(PhoneAuthCredential phoneAuthCredential, AlertDialog alertDialog) {
+        DatabaseReference myRef = FirebaseDatabase.getInstance().getReference("user");
+        List<String> Chats = new ArrayList<>();
+        myRef.child(Uid).child("chats").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (snapshot.exists()) {
+                    for (DataSnapshot chatIDSnapshot : snapshot.getChildren()) {
+                        Chats.add(chatIDSnapshot.getKey());
+                    }
+                    DatabaseReference chatRef = FirebaseDatabase.getInstance().getReference("chat");
+                    chatRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                            if (snapshot.exists()) {
+                                for (DataSnapshot chatIDSnapshot : snapshot.getChildren()) {
+                                    if (Chats.contains(chatIDSnapshot.getValue())) {
+                                        chatRef.child(chatIDSnapshot.toString()).removeValue();
+                                    }
+                                }
+                            }
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) {
+                            Log.e("DeletingChatsError",error.toString());
+                        }
+                    });
+                    DatabaseReference chatRequest = FirebaseDatabase.getInstance().getReference("chatRequest");
+                    chatRequest.addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                            if (snapshot.exists()) {
+                                for (DataSnapshot chatIDSnapshot : snapshot.getChildren()) {
+                                    if (Chats.contains(chatIDSnapshot.getValue())) {
+                                        chatRequest.child(chatIDSnapshot.toString()).removeValue();
+                                    }
+                                }
+                            }
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) {
+                            Log.e("DeletingChatsError",error.toString());
+                        }
+                    });
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Log.e("DeletingChatsError",error.toString());
+            }
+        });
         user.reauthenticate(phoneAuthCredential).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
                 if (task.isSuccessful()) {
-                    DatabaseReference myRef = FirebaseDatabase.getInstance().getReference("user");
+                    myRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                            if (snapshot.exists()) {
+                                for (DataSnapshot userIDSnapshot : snapshot.getChildren()) {
+                                    for (DataSnapshot chatIDSnapshot : userIDSnapshot.child("chats").getChildren()) {
+                                        if (Chats.contains(chatIDSnapshot.getValue())) {
+                                            myRef.child(userIDSnapshot.getKey()).child("chats").child(chatIDSnapshot.toString()).removeValue();
+                                        }
+                                    }
+                                }
+                            }
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) {
+                            Log.e("DeletingChatsError",error.toString());
+                        }
+                    });
                     myRef.child(Uid).removeValue().addOnCompleteListener(new OnCompleteListener<Void>() {
                         @Override
                         public void onComplete(@NonNull Task<Void> task) {
