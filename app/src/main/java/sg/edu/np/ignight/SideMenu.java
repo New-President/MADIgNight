@@ -428,41 +428,47 @@ public class SideMenu extends Activity {
         myRef.child(Uid).child("chats").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                for (DataSnapshot chatIDSnapshot : snapshot.getChildren()) {
-                    Chats.add(chatIDSnapshot.getKey());
+                if (snapshot.exists()) {
+                    for (DataSnapshot chatIDSnapshot : snapshot.getChildren()) {
+                        Chats.add(chatIDSnapshot.getKey());
+                    }
+                    DatabaseReference chatRef = FirebaseDatabase.getInstance().getReference("chat");
+                    chatRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                            if (snapshot.exists()) {
+                                for (DataSnapshot chatIDSnapshot : snapshot.getChildren()) {
+                                    if (Chats.contains(chatIDSnapshot.getValue())) {
+                                        chatRef.child(chatIDSnapshot.toString()).removeValue();
+                                    }
+                                }
+                            }
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) {
+                            Log.e("DeletingChatsError",error.toString());
+                        }
+                    });
+                    DatabaseReference chatRequest = FirebaseDatabase.getInstance().getReference("chatRequest");
+                    chatRequest.addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                            if (snapshot.exists()) {
+                                for (DataSnapshot chatIDSnapshot : snapshot.getChildren()) {
+                                    if (Chats.contains(chatIDSnapshot.getValue())) {
+                                        chatRequest.child(chatIDSnapshot.toString()).removeValue();
+                                    }
+                                }
+                            }
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) {
+                            Log.e("DeletingChatsError",error.toString());
+                        }
+                    });
                 }
-                DatabaseReference chatRef = FirebaseDatabase.getInstance().getReference("chat");
-                chatRef.addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        for (DataSnapshot chatIDSnapshot : snapshot.getChildren()) {
-                            if (Chats.contains(chatIDSnapshot.getValue())) {
-                                chatRef.child(chatIDSnapshot.toString()).removeValue();
-                            }
-                        }
-                    }
-
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError error) {
-                        Log.e("DeletingChatsError",error.toString());
-                    }
-                });
-                DatabaseReference chatRequest = FirebaseDatabase.getInstance().getReference("chatRequest");
-                chatRequest.addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        for (DataSnapshot chatIDSnapshot : snapshot.getChildren()) {
-                            if (Chats.contains(chatIDSnapshot.getValue())) {
-                                chatRequest.child(chatIDSnapshot.toString()).removeValue();
-                            }
-                        }
-                    }
-
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError error) {
-                        Log.e("DeletingChatsError",error.toString());
-                    }
-                });
             }
 
             @Override
@@ -477,10 +483,12 @@ public class SideMenu extends Activity {
                     myRef.addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot snapshot) {
-                            for (DataSnapshot userIDSnapshot : snapshot.getChildren()) {
-                                for (DataSnapshot chatIDSnapshot : userIDSnapshot.child("chats").getChildren()) {
-                                    if (Chats.contains(chatIDSnapshot.getValue())) {
-                                       myRef.child(userIDSnapshot.getKey()).child("chats").child(chatIDSnapshot.toString()).removeValue();
+                            if (snapshot.exists()) {
+                                for (DataSnapshot userIDSnapshot : snapshot.getChildren()) {
+                                    for (DataSnapshot chatIDSnapshot : userIDSnapshot.child("chats").getChildren()) {
+                                        if (Chats.contains(chatIDSnapshot.getValue())) {
+                                            myRef.child(userIDSnapshot.getKey()).child("chats").child(chatIDSnapshot.toString()).removeValue();
+                                        }
                                     }
                                 }
                             }
