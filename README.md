@@ -34,7 +34,7 @@ Lee Wee Kang -
 
 Lim Long Teck - 
 
-Han Xihe - 
+Han Xihe - Activity report
 
 Keefe Cheong Wenkai - Chatbot, Chat requests, Chat notification and settings, Chat request notification and settings
 
