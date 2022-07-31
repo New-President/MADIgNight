@@ -28,9 +28,9 @@ Han Xihe - View Profile, Play Store listing
 Keefe Cheong Wenkai - Login, Chat List Fragment, Chat
 
 Stage 2:
-Yong Zi Ren - 
+Yong Zi Ren - Video/Voice call, Delete user
 
-Lee Wee Kang - 
+Lee Wee Kang - Map function (Google api and like locations), comments section (comment & like)
 
 Lim Long Teck - 
 
@@ -60,7 +60,7 @@ Keefe Cheong Wenkai - Chatbot, Chat requests, Chat notification and settings, Ch
         * Delete User
     * Search for other users
     * 'Next' button to cycle to the next user
-    * 'IgNight' button to "IgNight" with a user, which starts a chat with them
+    * 'IgNight' button to send a chat request to the user
     * 'Home' button to return to home
 * View Profile
     * Displays profile information
@@ -69,7 +69,7 @@ Keefe Cheong Wenkai - Chatbot, Chat requests, Chat notification and settings, Ch
         * About Me
         * What I'm Looking For 
     * 'Blog' button to open the blog for the user 
-    * 'IgNight' button to "IgNight" with a user, which starts a chat with them
+    * 'IgNight' button to send a chat request to the user
 * Chat list
     * Shows RecyclerView of all IgNighted chats 
     * Select chats to open chat
