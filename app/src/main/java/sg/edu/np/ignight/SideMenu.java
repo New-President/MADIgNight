@@ -105,6 +105,17 @@ public class SideMenu extends Activity {
             }
         });
 
+        // Display profile
+        TextView profileCust = findViewById(R.id.ProfileCustTextView);
+        profileCust.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent profileCust = new Intent(SideMenu.this, ViewProfileCustomisation.class);
+                profileCust.putExtra("ProfileCreated", true);
+                startActivity(profileCust);
+            }
+        });
+
         // About us page
         TextView aboutus = findViewById(R.id.aboutus_sidemenu);
         aboutus.setOnClickListener(new View.OnClickListener() {
