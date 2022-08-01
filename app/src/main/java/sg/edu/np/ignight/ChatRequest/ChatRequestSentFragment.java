@@ -158,7 +158,12 @@ public class ChatRequestSentFragment extends Fragment {
                         userDB.child(receiverID).child("username").addValueEventListener(new ValueEventListener() {
                             @Override
                             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                chatRequestDB.child(requestID).child("receiverName").setValue(snapshot.getValue().toString());
+                                try {
+                                    chatRequestDB.child(requestID).child("receiverName").setValue(snapshot.getValue().toString());
+                                }
+                                catch (Exception e){
+                                    e.printStackTrace();
+                                }
                             }
 
                             @Override
@@ -170,7 +175,12 @@ public class ChatRequestSentFragment extends Fragment {
                         userDB.child(receiverID).child("profileUrl").addValueEventListener(new ValueEventListener() {
                             @Override
                             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                chatRequestDB.child(requestID).child("receiverProfile").setValue(snapshot.getValue().toString());
+                                try {
+                                    chatRequestDB.child(requestID).child("receiverProfile").setValue(snapshot.getValue().toString());
+                                }
+                                catch (Exception e){
+                                    e.printStackTrace();
+                                }
                             }
 
                             @Override
