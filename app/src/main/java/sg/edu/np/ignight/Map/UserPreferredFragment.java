@@ -42,6 +42,7 @@ public class UserPreferredFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_user_preferred, container, false);
 
+        // Filters off locations based on user's dating location preferences and stores in location list to be displayed
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
