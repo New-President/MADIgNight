@@ -112,7 +112,20 @@ Keefe Cheong Wenkai - Chatbot, Chat requests, Chat notification and settings, Ch
     * Users can enable or disable push notification for chat and chat request notifications
     * Users can customize notification settings for chat and chat request notifications
     * Can control settings including ringtone, vibration and priority
-
+* Map function
+    * Check out various dating locations spread across Singapore
+    * Displays dating locations dynamically using user dating location preferences
+    * Uses Google Maps API to display location
+    * Upon clicking the map cursor, brings the user to Google Maps app showing possible directions
+    * Like and save dating locations to be used next time
+* Comments section
+    * Express interest to user's blog
+    * Blog owner can view the profile of the commenters and see if they are their type
+    * Like comments to say thanks
+    * View the time of comment
+    
+    
+    
 ### Play Store listing screenshots
 
 ![Screenshot 2022-06-21 020225](https://user-images.githubusercontent.com/103987209/175459237-3f93641f-0432-4e65-a6aa-a2c41f7eab6d.png)
