@@ -64,6 +64,7 @@
                             android:id="@+id/notificationTextView"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:fontFamily="@font/poppins"
                             android:text="Notifications"
                             android:textSize="22sp"
                             android:textStyle="bold"

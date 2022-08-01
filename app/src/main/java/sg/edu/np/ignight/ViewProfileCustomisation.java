@@ -55,7 +55,7 @@ public class ViewProfileCustomisation extends AppCompatActivity implements Adapt
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_view_profile_customisation);
 
-        /*
+
         // Firebase logic to store the user's options
         // - Allows customisations to be shown on different devices on the same account
         // - Other users can see the personalisation on the current user's profile
@@ -136,7 +136,7 @@ public class ViewProfileCustomisation extends AppCompatActivity implements Adapt
             }
         });
 
-         */
+
     }
 
     // For spinner dropdown lists

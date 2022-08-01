@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#FFD596"
+    android:background="#fff"
     tools:context=".ProfileCreationActivity">
 
     <ScrollView
@@ -46,6 +46,7 @@
                             android:layout_height="wrap_content"
                             android:layout_marginStart="32dp"
                             android:layout_marginTop="16dp"
+                            android:fontFamily="@font/poppins"
                             android:text="About Me"
                             android:textSize="30sp"
                             android:textStyle="bold"
@@ -116,6 +117,7 @@
                                     android:layout_height="wrap_content"
                                     android:layout_marginStart="32dp"
                                     android:layout_marginTop="16dp"
+                                    android:fontFamily="@font/poppins"
                                     android:text="Preferences"
                                     android:textSize="30sp"
                                     android:textStyle="bold"
@@ -128,6 +130,7 @@
                                     android:layout_height="wrap_content"
                                     android:layout_marginStart="32dp"
                                     android:layout_marginTop="24dp"
+                                    android:fontFamily="@font/poppins"
                                     android:text="Relationship Preferences"
                                     android:textSize="20sp"
                                     android:textStyle="bold"
@@ -150,6 +153,7 @@
                                     android:layout_height="wrap_content"
                                     android:layout_marginStart="32dp"
                                     android:layout_marginTop="24dp"
+                                    android:fontFamily="@font/poppins"
                                     android:text="Gender"
                                     android:textSize="20sp"
                                     android:textStyle="bold"
@@ -164,7 +168,8 @@
                                     android:layout_marginTop="8dp"
                                     android:spinnerMode="dropdown"
                                     app:layout_constraintStart_toStartOf="parent"
-                                    app:layout_constraintTop_toBottomOf="@+id/PreferredGender" />
+                                    app:layout_constraintTop_toBottomOf="@+id/PreferredGender"
+                                    tools:ignore="SpeakableTextPresentCheck" />
 
                                 <TextView
                                     android:id="@+id/DateLocation"
@@ -172,6 +177,7 @@
                                     android:layout_height="wrap_content"
                                     android:layout_marginStart="32dp"
                                     android:layout_marginTop="24dp"
+                                    android:fontFamily="@font/poppins"
                                     android:text="Date Location"
                                     android:textSize="20sp"
                                     android:textStyle="bold"
@@ -210,28 +216,32 @@
 
                     <androidx.constraintlayout.widget.ConstraintLayout
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent">
+                        android:layout_height="match_parent"
+                        android:background="@drawable/gradient_background">
 
                         <ImageButton
                             android:id="@+id/profileCreationBackButton"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="16dp"
-                            android:layout_marginTop="10dp"
+                            android:layout_marginTop="20dp"
+                            android:background="@drawable/ic_baseline_arrow_back_24"
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toTopOf="parent"
-                            app:srcCompat="?attr/actionModeCloseDrawable" />
+                            app:srcCompat="?attr/actionModeCloseDrawable"
+                            tools:ignore="TouchTargetSizeCheck" />
 
                         <TextView
                             android:id="@+id/PersonalInfo"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="16dp"
-                            android:layout_marginEnd="40dp"
+                            android:fontFamily="@font/poppins"
                             android:text="Personal Information"
                             android:textSize="20sp"
+                            android:textStyle="bold"
+                            app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintEnd_toEndOf="parent"
-                            app:layout_constraintStart_toEndOf="@+id/profileCreationBackButton"
+                            app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toTopOf="parent" />
                     </androidx.constraintlayout.widget.ConstraintLayout>
                 </com.google.android.material.navigation.NavigationView>
@@ -256,6 +266,7 @@
                             android:layout_height="wrap_content"
                             android:layout_marginStart="32dp"
                             android:layout_marginTop="20dp"
+                            android:fontFamily="@font/poppins"
                             android:text="Username"
                             android:textSize="30sp"
                             android:textStyle="bold"
@@ -281,6 +292,7 @@
                             android:layout_height="wrap_content"
                             android:layout_marginStart="32dp"
                             android:layout_marginTop="16dp"
+                            android:fontFamily="@font/poppins"
                             android:text="Gender"
                             android:textSize="23sp"
                             android:textStyle="bold"
@@ -306,6 +318,7 @@
                             android:layout_height="wrap_content"
                             android:layout_marginTop="16dp"
                             android:layout_marginEnd="175dp"
+                            android:fontFamily="@font/poppins"
                             android:text="Age"
                             android:textSize="23sp"
                             android:textStyle="bold"
@@ -350,6 +363,7 @@
                             android:layout_height="wrap_content"
                             android:layout_marginStart="32dp"
                             android:layout_marginTop="8dp"
+                            android:fontFamily="@font/poppins"
                             android:text="Interests"
                             android:textSize="30sp"
                             android:textStyle="bold"
@@ -415,6 +429,7 @@
                             android:layout_height="wrap_content"
                             android:layout_marginStart="32dp"
                             android:layout_marginTop="20dp"
+                            android:fontFamily="@font/poppins"
                             android:text="Profile Picture"
                             android:textSize="30sp"
                             android:textStyle="bold"
@@ -438,6 +453,7 @@
                             android:layout_marginTop="25dp"
                             android:background="#FF9900"
                             android:text="Upload"
+                            android:textColor="#000"
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toBottomOf="@+id/ProfileCreationImage" />

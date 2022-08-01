@@ -5,9 +5,11 @@ import static android.content.ContentValues.TAG;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
+import android.os.Bundle;
 import android.provider.CalendarContract;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewStub;
@@ -18,6 +20,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.core.content.IntentCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
@@ -28,6 +31,8 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -38,7 +43,10 @@ import com.stfalcon.frescoimageviewer.ImageViewer;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
+import sg.edu.np.ignight.ChatActivity;
 import sg.edu.np.ignight.R;
 import sg.edu.np.ignight.Objects.TimestampObject;
 
@@ -47,6 +55,17 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
     private Context context;
     private ArrayList<MessageObject> messageList;
     private String date = "";
+    // Get the current user
+    FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+    //get the current user's UID
+    String Uid = user.getUid();
+
+    // Saving to Firebase database
+    FirebaseDatabase database = FirebaseDatabase.getInstance("https://madignight-default-rtdb.asia-southeast1.firebasedatabase.app/");
+    // getting the child user
+    DatabaseReference chatRef = database.getReference("chat");
+    DatabaseReference userRef = database.getReference("user");
+
 
     public MessageAdapter(Context context, ArrayList<MessageObject> messageList) {
         this.context = context;
@@ -103,43 +122,77 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
         if (!thisMessage.getMessage().equals("")) {
             holder.messageText.setText(thisMessage.getMessage());
             holder.messageText.setVisibility(View.VISIBLE);
-            if(thisMessage.getProposeDate()){
-                if (holder.proposeDateViewStub.getParent() != null) {
-                    /*holder.proposeDateViewStub.inflate();*/
-                } else {
-                    holder.proposeDateViewStub.setVisibility(View.VISIBLE);
-                    Button acceptButton = (Button) holder.inflated.findViewById(R.id.acceptButton);
-                    Button declineButton = (Button) holder.inflated.findViewById(R.id.declineButton);
-                    acceptButton.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            Intent insertCalendarIntent = new Intent(Intent.ACTION_INSERT);
-                            insertCalendarIntent.setData(CalendarContract.Events.CONTENT_URI);
-                            insertCalendarIntent.putExtra(CalendarContract.Events.TITLE, "Date")
-                                    .putExtra(CalendarContract.EXTRA_EVENT_ALL_DAY, false)
-                                    .putExtra(CalendarContract.Events.EVENT_LOCATION, thisMessage.getDateLocation())
-                                    .putExtra(CalendarContract.Events.DESCRIPTION, thisMessage.getDateDescription())
-                                    .putExtra(CalendarContract.EXTRA_EVENT_BEGIN_TIME, thisMessage.getStartDateTime())
-                                    .putExtra(CalendarContract.EXTRA_EVENT_END_TIME, thisMessage.getEndDateTime())
-                                    .putExtra(CalendarContract.Events.ACCESS_LEVEL, CalendarContract.Events.ACCESS_PRIVATE)
-                                    .putExtra(CalendarContract.Events.AVAILABILITY, CalendarContract.Events.AVAILABILITY_FREE);
-                            insertCalendarIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                            context.startActivity(insertCalendarIntent);
-                        }
-                    });
-
-                    declineButton.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-
-                        }
-                    });
-                }
-            }
+            holder.proposeDateViewStub.setVisibility(View.GONE);
         }
         else {
             holder.messageText.setVisibility(View.GONE);
-            holder.proposeDateViewStub.setVisibility(View.INVISIBLE);
+        }
+
+        DatabaseReference chatNested = chatRef.child(thisMessage.getChatId()).child("messages").child(thisMessage.getMessageId());
+        DatabaseReference userNested = userRef.child(thisMessage.getCreatorId()).child("username");
+        if(thisMessage.getProposeDate() && !thisMessage.getCreatorId().equals(Uid)){
+            if (holder.proposeDateViewStub.getParent() != null) {
+                holder.proposeDateViewStub.setVisibility(View.GONE);
+
+                View inflated = holder.proposeDateViewStub.inflate();
+                inflated.setVisibility(View.VISIBLE);
+                holder.messageTime.setText(thisMessage.getTimestamp().getTime());
+                Button acceptButton = inflated.findViewById(R.id.acceptButton);
+                Button declineButton =  inflated.findViewById(R.id.declineButton);
+                acceptButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Intent insertCalendarIntent = new Intent(Intent.ACTION_INSERT);
+                        insertCalendarIntent.setData(CalendarContract.Events.CONTENT_URI);
+                        insertCalendarIntent.putExtra(CalendarContract.Events.TITLE, "Date")
+                                .putExtra(CalendarContract.EXTRA_EVENT_ALL_DAY, false)
+                                .putExtra(CalendarContract.Events.EVENT_LOCATION, thisMessage.getDateLocation())
+                                .putExtra(CalendarContract.Events.DESCRIPTION, thisMessage.getDateDescription())
+                                .putExtra(CalendarContract.EXTRA_EVENT_BEGIN_TIME, thisMessage.getStartDateTime())
+                                .putExtra(CalendarContract.EXTRA_EVENT_END_TIME, thisMessage.getEndDateTime())
+                                .putExtra(CalendarContract.Events.ACCESS_LEVEL, CalendarContract.Events.ACCESS_PRIVATE)
+                                .putExtra(CalendarContract.Events.AVAILABILITY, CalendarContract.Events.AVAILABILITY_FREE);
+                        insertCalendarIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        context.startActivity(insertCalendarIntent);
+                        chatNested.child("proposeDate").setValue(false);
+                        chatNested.child("text").setValue(thisMessage.getMessage() + "\n Is Successful 👍");
+                        holder.messageText.setText(thisMessage.getMessage() + "\nIs Successful 👍");
+                        inflated.setVisibility(View.GONE);
+                    }
+                });
+                declineButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Intent intent = new Intent(context.getApplicationContext(),ChatActivity.class);
+                        Bundle bundle = new Bundle();
+                        bundle.putString("chatID", thisMessage.getChatId());
+                        bundle.putString("targetUserID", thisMessage.getCreatorId());
+                        userNested.addValueEventListener(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                String chatName = snapshot.getValue().toString();
+                                bundle.putString("chatName", chatName);
+                                intent.putExtras(bundle);
+                                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                context.startActivity(intent);
+                                chatNested.child("proposeDate").setValue(false);
+                                chatNested.child("text").setValue(thisMessage.getMessage() + "\n Is Unsuccessful 😞");
+                                holder.messageText.setText(thisMessage.getMessage() + "\nIs Unsuccessful 😞");
+                                inflated.setVisibility(View.GONE);
+                            }
+
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError error) {
+
+                            }
+                        });
+                    }
+                });
+
+            } else {
+                holder.proposeDateViewStub.setVisibility(View.GONE);
+
+            }
         }
 
         // set timestamp of message
@@ -239,6 +292,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
         public Button acceptButton, declineButton;
         public View inflated;
 
+
         public MessageViewHolder(View itemView) {
             super(itemView);
 
@@ -250,7 +304,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
             messageLayout = itemView.findViewById(R.id.messageLayout);
             messageStatus = itemView.findViewById(R.id.messageStatus);
             proposeDateViewStub = itemView.findViewById(R.id.proposeDateViewStub);
-            inflated = proposeDateViewStub.inflate();
+
         }
     }
 }

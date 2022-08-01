@@ -47,24 +47,10 @@
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:layout_marginTop="5dp"
-        android:layout_marginBottom="5dp"
         android:background="@android:color/darker_gray"
-        app:layout_constraintBottom_toTopOf="@+id/premium_sidemenu"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/aboutus_sidemenu" />
-
-    <View
-        android:id="@+id/view13"
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:layout_marginTop="5dp"
-        android:layout_marginBottom="5dp"
-        android:background="@android:color/darker_gray"
-        app:layout_constraintBottom_toTopOf="@+id/map_sidemenu"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/premium_sidemenu" />
 
     <View
         android:id="@+id/view14"
@@ -165,28 +151,17 @@
         app:layout_constraintTop_toBottomOf="@+id/view11" />
 
     <TextView
-        android:id="@+id/premium_sidemenu"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Premium Service"
-        android:textSize="20sp"
-        android:textColor="#000000"
-        app:layout_constraintBottom_toTopOf="@+id/view13"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/view12" />
-
-    <TextView
         android:id="@+id/map_sidemenu"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="3dp"
         android:text="Map"
-        android:textSize="20sp"
         android:textColor="#000000"
+        android:textSize="20sp"
         app:layout_constraintBottom_toTopOf="@+id/view14"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/view13" />
+        app:layout_constraintTop_toBottomOf="@+id/view12" />
 
     <TextView
         android:id="@+id/TandC_sidemenu"

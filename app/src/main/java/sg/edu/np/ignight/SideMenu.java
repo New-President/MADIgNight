@@ -114,15 +114,6 @@ public class SideMenu extends Activity {
             }
         });
 
-        // Premium services
-        TextView premium = findViewById(R.id.premium_sidemenu);
-        premium.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                mToast.show();
-            }
-        });
-
         TextView map = findViewById(R.id.map_sidemenu);
 
         // Asks for location permission (MAP)

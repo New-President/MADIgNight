@@ -101,7 +101,7 @@ public class ChatActivity extends AppCompatActivity {
     private TextView userOnlineStatus;
     private ProgressBar sendMessageProgressBar;
     private LinearLayout messageLayoutHeaderUserInfo;
-    private Button ProposeDateBtn, acceptButton, declineButton;
+    private Button ProposeDateBtn;
     private ViewStub proposeDateViewStub;
 
 
@@ -431,19 +431,7 @@ public class ChatActivity extends AppCompatActivity {
         });
 
 
-       /* if (proposeDateViewStub.getParent() != null) {
-            proposeDateViewStub.inflate();
-        } else {
-            View inflated =  proposeDateViewStub.inflate();
-            Button declineButton = (Button) inflated.findViewById(R.id.declineButton);
-            declineButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    messageInput.setText("Declined");
-                    sendMessage(false, null, null, 0, 0);
-                }
-            });
-        }*/
+
 
     }
 
@@ -547,8 +535,8 @@ public class ChatActivity extends AppCompatActivity {
                             proposeDate = Boolean.parseBoolean(snapshot.child("proposeDate").getValue().toString());
                             dateDescription = snapshot.child("dateDescription").getValue().toString();
                             dateLocation = snapshot.child("dateLocation").getValue().toString();
-                            startDateTime = Integer.parseInt(snapshot.child("startDateTime").getValue().toString());
-                            endDateTime = Integer.parseInt(snapshot.child("endDateTime").getValue().toString());
+                            startDateTime = Long.parseLong(snapshot.child("startDateTime").getValue().toString());
+                            endDateTime = Long.parseLong(snapshot.child("endDateTime").getValue().toString());
                         }catch(Exception e) {
                             e.printStackTrace();
                         }
@@ -860,5 +848,9 @@ public class ChatActivity extends AppCompatActivity {
         messageAdapter = new MessageAdapter(getApplicationContext(), messageList);
         messageRV.setAdapter(messageAdapter);
         messageRV.setItemAnimator(new DefaultItemAnimator());
+    }
+
+    public void refreshActivity(){
+        recreate();
     }
 }

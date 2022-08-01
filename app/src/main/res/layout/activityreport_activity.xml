@@ -26,30 +26,28 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
-                android:layout_marginBottom="8dp"
                 android:background="@drawable/ic_baseline_arrow_back_24"
                 android:backgroundTint="#00FFFFFF"
                 android:minWidth="48dp"
                 android:minHeight="48dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
                 app:srcCompat="?attr/actionModeCloseDrawable"
                 tools:ignore="SpeakableTextPresentCheck" />
 
             <TextView
                 android:id="@+id/activityTitle"
-                android:layout_width="162dp"
-                android:layout_height="35dp"
+                android:layout_width="195dp"
+                android:layout_height="36dp"
                 android:layout_marginTop="16dp"
-                android:fontFamily="sans-serif-light"
+                android:fontFamily="@font/poppins"
                 android:gravity="center"
                 android:text="Activity Report"
-                android:textColor="#ffffff"
                 android:textSize="24sp"
                 android:textStyle="bold"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.463"
-                app:layout_constraintStart_toStartOf="@+id/backButton3"
+                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
 
