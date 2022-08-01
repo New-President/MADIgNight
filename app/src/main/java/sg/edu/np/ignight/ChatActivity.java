@@ -101,7 +101,7 @@ public class ChatActivity extends AppCompatActivity {
     private TextView userOnlineStatus;
     private ProgressBar sendMessageProgressBar;
     private LinearLayout messageLayoutHeaderUserInfo;
-    private Button ProposeDateBtn, acceptButton, declineButton;
+    private Button ProposeDateBtn;
     private ViewStub proposeDateViewStub;
 
 
@@ -431,19 +431,7 @@ public class ChatActivity extends AppCompatActivity {
         });
 
 
-       /* if (proposeDateViewStub.getParent() != null) {
-            proposeDateViewStub.inflate();
-        } else {
-            View inflated =  proposeDateViewStub.inflate();
-            Button declineButton = (Button) inflated.findViewById(R.id.declineButton);
-            declineButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    messageInput.setText("Declined");
-                    sendMessage(false, null, null, 0, 0);
-                }
-            });
-        }*/
+
 
     }
 
@@ -860,5 +848,9 @@ public class ChatActivity extends AppCompatActivity {
         messageAdapter = new MessageAdapter(getApplicationContext(), messageList);
         messageRV.setAdapter(messageAdapter);
         messageRV.setItemAnimator(new DefaultItemAnimator());
+    }
+
+    public void refreshActivity(){
+        recreate();
     }
 }
