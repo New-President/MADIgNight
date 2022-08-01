@@ -22,7 +22,9 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
             android:layout_marginTop="10dp"
+            android:background="@drawable/ic_baseline_arrow_back_24"
             android:backgroundTint="#00FFFFFF"
+            android:minWidth="48dp"
             android:minHeight="48dp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
@@ -33,14 +35,13 @@
             android:id="@+id/PersonalInfo"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:layout_marginEnd="40dp"
+            android:layout_marginTop="16dp"
             android:fontFamily="@font/poppins"
             android:text="Profile"
-            android:textColor="#FFFFFF"
             android:textSize="24sp"
+            android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/profileViewBackButton"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
@@ -59,10 +60,11 @@
 
                 <TextView
                     android:id="@+id/NameAndAgeTextView"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="358dp"
+                    android:layout_height="54dp"
                     android:layout_marginTop="20dp"
                     android:fontFamily="@font/poppins"
+                    android:gravity="center"
                     android:text="NameAndAge"
                     android:textSize="34sp"
                     app:layout_constraintEnd_toEndOf="parent"
@@ -91,6 +93,7 @@
                     android:background="@drawable/gradient_background"
                     android:fontFamily="sans-serif"
                     android:text="ignight"
+                    android:textColor="#000"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="0.501"
@@ -203,6 +206,7 @@
                     android:background="@drawable/btn_bg"
                     android:fontFamily="sans-serif"
                     android:text="Blogs"
+                    android:textColor="#000"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/imageView" />

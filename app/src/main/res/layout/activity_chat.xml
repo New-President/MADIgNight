@@ -54,10 +54,10 @@
                 android:id="@+id/messageLayoutHeaderChatName"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:fontFamily="@font/amaranth_bold"
-                android:text="Username"
-                android:maxLines="1"
                 android:ellipsize="end"
+                android:fontFamily="@font/poppins"
+                android:maxLines="1"
+                android:text="Username"
                 android:textColor="#555555"
                 android:textSize="20sp" />
 

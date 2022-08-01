@@ -47,12 +47,13 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:fontFamily="@font/poppins"
             android:text="Ignight Bot"
             android:textSize="25sp"
-            app:layout_constraintStart_toEndOf="@+id/chatbotPicture"
-            app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
-            android:layout_marginStart="10dp"/>
+            app:layout_constraintStart_toEndOf="@+id/chatbotPicture"
+            app:layout_constraintTop_toTopOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

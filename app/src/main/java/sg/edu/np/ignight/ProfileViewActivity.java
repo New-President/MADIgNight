@@ -50,7 +50,7 @@ public class ProfileViewActivity extends AppCompatActivity {
     private String whatImLookingFor;
     private Integer age;
     private String nameAndAge1;
-    private String currentUserUID, targetUserUID;
+    private String currentUserUID, targetUserUID, gender;
     private String profilePictureUrl;
     private String preferredGender;
     private ArrayList preferredDateLocation;
@@ -324,6 +324,7 @@ public class ProfileViewActivity extends AppCompatActivity {
         whatImLookingFor = (String) userObject.getRelationshipPref();
         age = (Integer) userObject.getAge();
         preferredGender = (String) userObject.getGenderPref();
+        gender = (String) userObject.getGender();
         preferredDateLocation = (ArrayList) userObject.getDateLocList();
 
         // Changes preferred date locations to a string
@@ -335,7 +336,7 @@ public class ProfileViewActivity extends AppCompatActivity {
         }
         preferredDateLocationDisplay.append(preferredGender);
 
-        nameAndAge1 = username + ", " + age.toString();
+        nameAndAge1 = username + ", " + age.toString() + ", " + gender;
         nameAndAge = (TextView) findViewById(R.id.NameAndAgeTextView);
         nameAndAge.setText(nameAndAge1);
         textView8 = (TextView) findViewById(R.id.textView8);

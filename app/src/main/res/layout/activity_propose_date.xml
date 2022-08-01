@@ -67,6 +67,7 @@
                             android:id="@+id/proposeDateTextView"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:fontFamily="@font/poppins"
                             android:text="Propose a Date"
                             android:textSize="22sp"
                             android:textStyle="bold"

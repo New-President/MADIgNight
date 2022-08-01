@@ -22,12 +22,12 @@
 
             <ImageButton
                 android:id="@+id/MapBackButton"
-                andriod:background="#00FFFFFF"
-                andriod:layout_marginStart="16dp"
-                andriod:layout_marginTop="10dp"
-                andriod:minHeight="48dp"
                 android:layout_width="48dp"
                 android:layout_height="48dp"
+                andriod:layout_marginStart="16dp"
+                andriod:layout_marginTop="10dp"
+                andriod:background="#00FFFFFF"
+                andriod:minHeight="48dp"
                 android:src="@drawable/ic_baseline_arrow_back_24"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -35,11 +35,10 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
-                andriod:fontFamily="@font/amaranth_bold"
+                android:fontFamily="@font/poppins"
                 android:text="Dating Spots"
-                andriod:textColor="#FFFFFF"
                 andriod:textSize="24sp"
+                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
