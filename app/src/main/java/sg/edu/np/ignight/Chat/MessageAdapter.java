@@ -155,8 +155,8 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
                         insertCalendarIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                         context.startActivity(insertCalendarIntent);
                         chatNested.child("proposeDate").setValue(false);
-                        chatNested.child("text").setValue(thisMessage.getMessage() + "\n Is Successful 👍");
-                        holder.messageText.setText(thisMessage.getMessage() + "\nIs Successful 👍");
+                        chatNested.child("text").setValue(thisMessage.getMessage() + "\nDate Is Successful 👍");
+                        holder.messageText.setText(thisMessage.getMessage() + "\nDate Is Successful 👍");
                         inflated.setVisibility(View.GONE);
                     }
                 });
@@ -176,8 +176,8 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
                                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                                 context.startActivity(intent);
                                 chatNested.child("proposeDate").setValue(false);
-                                chatNested.child("text").setValue(thisMessage.getMessage() + "\n Is Unsuccessful 😞");
-                                holder.messageText.setText(thisMessage.getMessage() + "\nIs Unsuccessful 😞");
+                                chatNested.child("text").setValue(thisMessage.getMessage() + "\nDate Is Unsuccessful 😞");
+                                holder.messageText.setText(thisMessage.getMessage() + "\nDate Is Unsuccessful 😞");
                                 inflated.setVisibility(View.GONE);
                             }
 
