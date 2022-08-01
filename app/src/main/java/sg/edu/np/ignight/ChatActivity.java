@@ -547,8 +547,8 @@ public class ChatActivity extends AppCompatActivity {
                             proposeDate = Boolean.parseBoolean(snapshot.child("proposeDate").getValue().toString());
                             dateDescription = snapshot.child("dateDescription").getValue().toString();
                             dateLocation = snapshot.child("dateLocation").getValue().toString();
-                            startDateTime = Integer.parseInt(snapshot.child("startDateTime").getValue().toString());
-                            endDateTime = Integer.parseInt(snapshot.child("endDateTime").getValue().toString());
+                            startDateTime = Long.parseLong(snapshot.child("startDateTime").getValue().toString());
+                            endDateTime = Long.parseLong(snapshot.child("endDateTime").getValue().toString());
                         }catch(Exception e) {
                             e.printStackTrace();
                         }

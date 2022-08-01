@@ -28,6 +28,8 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -38,7 +40,10 @@ import com.stfalcon.frescoimageviewer.ImageViewer;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
+import sg.edu.np.ignight.ChatActivity;
 import sg.edu.np.ignight.R;
 import sg.edu.np.ignight.Objects.TimestampObject;
 
@@ -47,6 +52,15 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
     private Context context;
     private ArrayList<MessageObject> messageList;
     private String date = "";
+    // Get the current user
+    FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+    //get the current user's UID
+    String Uid = user.getUid();
+
+    // Saving to Firebase database
+    FirebaseDatabase database = FirebaseDatabase.getInstance("https://madignight-default-rtdb.asia-southeast1.firebasedatabase.app/");
+    // getting the child user
+    DatabaseReference myRef = database.getReference("chat");
 
     public MessageAdapter(Context context, ArrayList<MessageObject> messageList) {
         this.context = context;
@@ -103,43 +117,52 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
         if (!thisMessage.getMessage().equals("")) {
             holder.messageText.setText(thisMessage.getMessage());
             holder.messageText.setVisibility(View.VISIBLE);
-            if(thisMessage.getProposeDate()){
-                if (holder.proposeDateViewStub.getParent() != null) {
-                    /*holder.proposeDateViewStub.inflate();*/
-                } else {
-                    holder.proposeDateViewStub.setVisibility(View.VISIBLE);
-                    Button acceptButton = (Button) holder.inflated.findViewById(R.id.acceptButton);
-                    Button declineButton = (Button) holder.inflated.findViewById(R.id.declineButton);
-                    acceptButton.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            Intent insertCalendarIntent = new Intent(Intent.ACTION_INSERT);
-                            insertCalendarIntent.setData(CalendarContract.Events.CONTENT_URI);
-                            insertCalendarIntent.putExtra(CalendarContract.Events.TITLE, "Date")
-                                    .putExtra(CalendarContract.EXTRA_EVENT_ALL_DAY, false)
-                                    .putExtra(CalendarContract.Events.EVENT_LOCATION, thisMessage.getDateLocation())
-                                    .putExtra(CalendarContract.Events.DESCRIPTION, thisMessage.getDateDescription())
-                                    .putExtra(CalendarContract.EXTRA_EVENT_BEGIN_TIME, thisMessage.getStartDateTime())
-                                    .putExtra(CalendarContract.EXTRA_EVENT_END_TIME, thisMessage.getEndDateTime())
-                                    .putExtra(CalendarContract.Events.ACCESS_LEVEL, CalendarContract.Events.ACCESS_PRIVATE)
-                                    .putExtra(CalendarContract.Events.AVAILABILITY, CalendarContract.Events.AVAILABILITY_FREE);
-                            insertCalendarIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                            context.startActivity(insertCalendarIntent);
-                        }
-                    });
-
-                    declineButton.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-
-                        }
-                    });
-                }
-            }
         }
         else {
             holder.messageText.setVisibility(View.GONE);
-            holder.proposeDateViewStub.setVisibility(View.INVISIBLE);
+        }
+
+        DatabaseReference nested = myRef.child(thisMessage.getChatId()).child("messages").child(thisMessage.getMessageId());
+
+        if(thisMessage.getProposeDate() && !thisMessage.getCreatorId().equals(Uid)){
+            /*Log.d("TAG", "Hello1" + thisMessage.getMessage());*/
+            if (holder.proposeDateViewStub.getParent() != null) {
+                holder.messageText.setText(thisMessage.getMessage());
+                holder.messageText.setVisibility(View.VISIBLE);
+                View inflated = holder.proposeDateViewStub.inflate();
+                inflated.setVisibility(View.VISIBLE);
+                Button acceptButton = (Button) inflated.findViewById(R.id.acceptButton);
+                Button declineButton = (Button) inflated.findViewById(R.id.declineButton);
+                acceptButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Intent insertCalendarIntent = new Intent(Intent.ACTION_INSERT);
+                        insertCalendarIntent.setData(CalendarContract.Events.CONTENT_URI);
+                        insertCalendarIntent.putExtra(CalendarContract.Events.TITLE, "Date")
+                                .putExtra(CalendarContract.EXTRA_EVENT_ALL_DAY, false)
+                                .putExtra(CalendarContract.Events.EVENT_LOCATION, thisMessage.getDateLocation())
+                                .putExtra(CalendarContract.Events.DESCRIPTION, thisMessage.getDateDescription())
+                                .putExtra(CalendarContract.EXTRA_EVENT_BEGIN_TIME, thisMessage.getStartDateTime())
+                                .putExtra(CalendarContract.EXTRA_EVENT_END_TIME, thisMessage.getEndDateTime())
+                                .putExtra(CalendarContract.Events.ACCESS_LEVEL, CalendarContract.Events.ACCESS_PRIVATE)
+                                .putExtra(CalendarContract.Events.AVAILABILITY, CalendarContract.Events.AVAILABILITY_FREE);
+                        insertCalendarIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        context.startActivity(insertCalendarIntent);
+                        nested.child("proposeDate").setValue(false);
+                        inflated.setVisibility(View.GONE);
+                    }
+                });
+                declineButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        nested.child("proposeDate").setValue(false);
+                        inflated.setVisibility(View.GONE);
+                    }
+                });
+
+            } else {
+
+            }
         }
 
         // set timestamp of message
@@ -239,6 +262,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
         public Button acceptButton, declineButton;
         public View inflated;
 
+
         public MessageViewHolder(View itemView) {
             super(itemView);
 
@@ -250,7 +274,8 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
             messageLayout = itemView.findViewById(R.id.messageLayout);
             messageStatus = itemView.findViewById(R.id.messageStatus);
             proposeDateViewStub = itemView.findViewById(R.id.proposeDateViewStub);
-            inflated = proposeDateViewStub.inflate();
+            /*inflated = proposeDateViewStub.inflate();*/
+
         }
     }
 }
