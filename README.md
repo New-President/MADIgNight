@@ -122,7 +122,18 @@ Keefe Cheong Wenkai - Chatbot, Chat requests, Chat notification and settings, Ch
     * Express interest to user's blog
     * Blog owner can view the profile of the commenters and see if they are their type
     * Like comments to say thanks
-    * View the time of comment
+    * View the time of comment     
+* Propose Date
+    * For more introverted user who do not have the courage to ask for a date
+    * Use this feature to propose a date to the opposite party
+    * The initiating party would have to fill up the Main Activity, Description and Date Time for the date
+    * Accept and Decline buttons would be provided for the opposite party to choose to either accept or reject the proposal
+* Notification Activity 
+    * Capture the blog notifications
+    * Notification that would be displayed are the user who liked and commented on their blog
+    * The profile image of the user would be displayed on the notification activity
+    * The associated blog's image would also be displayed
+    * If the user click on the blog image, he/she would be brought to either the Blog Activity or Commentseciton Activity
     
     
     
