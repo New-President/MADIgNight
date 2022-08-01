@@ -130,33 +130,41 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
 
         DatabaseReference chatNested = chatRef.child(thisMessage.getChatId()).child("messages").child(thisMessage.getMessageId());
         DatabaseReference userNested = userRef.child(thisMessage.getCreatorId()).child("username");
+        // if the text is a date proposal and the message is not sent by the current user
         if(thisMessage.getProposeDate() && !thisMessage.getCreatorId().equals(Uid)){
             if (holder.proposeDateViewStub.getParent() != null) {
-                holder.proposeDateViewStub.setVisibility(View.GONE);
 
+                holder.proposeDateViewStub.setVisibility(View.GONE);
+                // Inflate the viewstub to show accept and decline buttons for the opposite party
                 View inflated = holder.proposeDateViewStub.inflate();
                 inflated.setVisibility(View.VISIBLE);
                 holder.messageTime.setText(thisMessage.getTimestamp().getTime());
+                // Get the button from the viewstub
                 Button acceptButton = inflated.findViewById(R.id.acceptButton);
                 Button declineButton =  inflated.findViewById(R.id.declineButton);
                 acceptButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
+                        // When the user clicks on the accpet button, save the date into the user's google calendar and mark him/her busy
                         Intent insertCalendarIntent = new Intent(Intent.ACTION_INSERT);
                         insertCalendarIntent.setData(CalendarContract.Events.CONTENT_URI);
-                        insertCalendarIntent.putExtra(CalendarContract.Events.TITLE, "Date")
-                                .putExtra(CalendarContract.EXTRA_EVENT_ALL_DAY, false)
-                                .putExtra(CalendarContract.Events.EVENT_LOCATION, thisMessage.getDateLocation())
-                                .putExtra(CalendarContract.Events.DESCRIPTION, thisMessage.getDateDescription())
-                                .putExtra(CalendarContract.EXTRA_EVENT_BEGIN_TIME, thisMessage.getStartDateTime())
-                                .putExtra(CalendarContract.EXTRA_EVENT_END_TIME, thisMessage.getEndDateTime())
-                                .putExtra(CalendarContract.Events.ACCESS_LEVEL, CalendarContract.Events.ACCESS_PRIVATE)
-                                .putExtra(CalendarContract.Events.AVAILABILITY, CalendarContract.Events.AVAILABILITY_FREE);
+                        insertCalendarIntent.putExtra(CalendarContract.Events.TITLE, "Date") // Title
+                                .putExtra(CalendarContract.EXTRA_EVENT_ALL_DAY, false) // The event might not be for a whole day so i set it to false
+                                .putExtra(CalendarContract.Events.EVENT_LOCATION, thisMessage.getDateLocation())  // The date location
+                                .putExtra(CalendarContract.Events.DESCRIPTION, thisMessage.getDateDescription()) // Date Description
+                                .putExtra(CalendarContract.EXTRA_EVENT_BEGIN_TIME, thisMessage.getStartDateTime()) // date start time
+                                .putExtra(CalendarContract.EXTRA_EVENT_END_TIME, thisMessage.getEndDateTime()) // date end time
+                                .putExtra(CalendarContract.Events.ACCESS_LEVEL, CalendarContract.Events.ACCESS_PRIVATE) // Private
+                                .putExtra(CalendarContract.Events.AVAILABILITY, CalendarContract.Events.AVAILABILITY_BUSY); // Busy for the day
                         insertCalendarIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        // start eh calendar activity with all the pre set data
                         context.startActivity(insertCalendarIntent);
+                        // After the user accpet the proposeDate, set the value back to false so that the viewstub would not get initialize again in the future
                         chatNested.child("proposeDate").setValue(false);
-                        chatNested.child("text").setValue(thisMessage.getMessage() + "\n Is Successful 👍");
-                        holder.messageText.setText(thisMessage.getMessage() + "\nIs Successful 👍");
+                        // Indicate the the proposal was a success
+                        chatNested.child("text").setValue(thisMessage.getMessage() + "\nDate Is Successful 👍");
+                        holder.messageText.setText(thisMessage.getMessage() + "\nDate Is Successful 👍");
+                        // Remove the viewstub so that user cannot click on the buttons again
                         inflated.setVisibility(View.GONE);
                     }
                 });
@@ -165,19 +173,24 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
                     public void onClick(View view) {
                         Intent intent = new Intent(context.getApplicationContext(),ChatActivity.class);
                         Bundle bundle = new Bundle();
+                        // pass in data back into the chat so that it would start properly and not crash
                         bundle.putString("chatID", thisMessage.getChatId());
                         bundle.putString("targetUserID", thisMessage.getCreatorId());
                         userNested.addValueEventListener(new ValueEventListener() {
                             @Override
                             public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                //Trying to refresh the page so that the display of the message would be fine
                                 String chatName = snapshot.getValue().toString();
                                 bundle.putString("chatName", chatName);
                                 intent.putExtras(bundle);
                                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                                 context.startActivity(intent);
+                                // After the user accpet the proposeDate, set the value back to false so that the viewstub would not get initialize again in the future
                                 chatNested.child("proposeDate").setValue(false);
-                                chatNested.child("text").setValue(thisMessage.getMessage() + "\n Is Unsuccessful 😞");
-                                holder.messageText.setText(thisMessage.getMessage() + "\nIs Unsuccessful 😞");
+                                // Indicate the the proposal has been declined
+                                chatNested.child("text").setValue(thisMessage.getMessage() + "\nDate Is Unsuccessful 😞");
+                                holder.messageText.setText(thisMessage.getMessage() + "\nDate Is Unsuccessful 😞");
+                                // Remove the viewstub so that user cannot click on the buttons again
                                 inflated.setVisibility(View.GONE);
                             }
 

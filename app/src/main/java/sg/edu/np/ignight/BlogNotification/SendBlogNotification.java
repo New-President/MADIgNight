@@ -50,20 +50,21 @@ public class SendBlogNotification {
         FirebaseDatabase.getInstance("https://madignight-default-rtdb.asia-southeast1.firebasedatabase.app/").getReference().addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
+                // Get the fcmServer key that is placed in the database
                 fcmServerKey = snapshot.getValue().toString();
-
+                // make a new volley request
                 requestQueue1 = Volley.newRequestQueue(context);
                 JSONObject jsonObject = new JSONObject();
 
                 try {
                     // create request
                     jsonObject.put("to", fcmToken);
-
-                    JSONObject data = new JSONObject();  // add custom data
+                    // adding the required data into the JSONObject that would be passed into the NotificationService
+                    JSONObject data = new JSONObject();
                     data.put("purpose", "blog");
-                    data.put("title", title);
-                    data.put("senderID", senderID);
-                    data.put("blogID", blogID);
+                    data.put("title", title); // Title
+                    data.put("senderID", senderID); // Sender's ID/UID
+                    data.put("blogID", blogID); //BlogID
 
                     jsonObject.put("data", data);
 
@@ -81,11 +82,12 @@ public class SendBlogNotification {
                         @Override
                         public Map<String, String> getHeaders() {  // set headers
                             Map<String, String> header = new HashMap<>();
-                            header.put("content-type", "application/json");
-                            header.put("authorization", "key=" + fcmServerKey);
+                            header.put("content-type", "application/json");  //using json as a form of passing the data
+                            header.put("authorization", "key=" + fcmServerKey); // add the fcm server Key
                             return header;
                         }
                     };
+                    // Add the JSONObjectrequest into a requestQueue
                     requestQueue1.add(request);
 
                 }

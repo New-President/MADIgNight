@@ -58,17 +58,20 @@ public class CommentSectionActivity extends AppCompatActivity {
 
         Intent intent = getIntent();
 
+
         if(intent.getStringExtra("uid") != null){
             blogOwnerUID = intent.getStringExtra("uid");
             blogID = intent.getStringExtra("blogID");
             imgID = intent.getStringExtra("imgID");
         }else{
+            // Get the data to start the commentSection activity from the notification
             Bundle bundle = getIntent().getExtras();
             blogOwnerUID = bundle.getString("blogOwnerUid");
             blogID = bundle.getString("blogID");
             imgID = bundle.getString("imgID");
         }
-        Log.d("TAG", "Hello1" + blogOwnerUID);
+
+
 
 
         // Retrieves uid who posted the blogs & id of blog
@@ -181,10 +184,10 @@ public class CommentSectionActivity extends AppCompatActivity {
         });
     }
 
+    // Initialize recyclerview with commentslist
     private void initRecyclerView(String blogID, String blogOwnerUID) {
         commentsList = new ArrayList<>();
         commmentRV = findViewById(R.id.commentsRV);
-        commmentRV.setNestedScrollingEnabled(false);
         commentAdapter = new CommentsAdapter(this, commentsList, blogID, blogOwnerUID);
         commmentRV.setNestedScrollingEnabled(false);
         commmentRV.setAdapter(commentAdapter);
@@ -193,7 +196,7 @@ public class CommentSectionActivity extends AppCompatActivity {
         commmentRV.setLayoutManager(commentLayoutManager);
     }
 
-
+    // Retreives and creates comment objects stored in commentslist
     private void getCommentsList() {
         commentIDList = new ArrayList<>();
 
@@ -269,10 +272,12 @@ public class CommentSectionActivity extends AppCompatActivity {
         });
     }
 
+    // send notification when other user comments on your blog
     private void pushNotification(String senderUID, String blogID, String message, String blogOwnerUID) {
 
         DatabaseReference myRef = FirebaseDatabase.getInstance("https://madignight-default-rtdb.asia-southeast1.firebasedatabase.app/").getReference();
 
+        // Get the owner of the blog fcmtoken
         myRef.child("user").child(blogOwnerUID).child("fcmToken").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -288,13 +293,5 @@ public class CommentSectionActivity extends AppCompatActivity {
                 Log.e(TAG, "onCancelled: " + error.getMessage());
             }
         });
-    }
-
-    @Override
-    public void onBackPressed() {
-        Intent intent = new Intent(getApplicationContext(), MainMenuActivity.class);
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        startActivity(intent);
-        finish();
     }
 }

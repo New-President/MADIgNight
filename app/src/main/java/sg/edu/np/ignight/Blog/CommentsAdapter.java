@@ -76,7 +76,7 @@ public class CommentsAdapter extends RecyclerView.Adapter<CommentsAdapter.Commen
         } catch (ParseException e) {
             e.printStackTrace();
         }
-
+        // Set profile picture of commenter
         Glide.with(c)
                 .load(comment.getProfUrl()).placeholder(R.drawable.failed)
                 .into(commenterProfPic);
@@ -95,6 +95,7 @@ public class CommentsAdapter extends RecyclerView.Adapter<CommentsAdapter.Commen
             likeCommentBtn.setBackgroundResource(R.drawable.heartwithhole);
         }
 
+        // Update booleans stored in Firebase that determine the state of liking of the comment
         likeCommentBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -144,6 +145,7 @@ public class CommentsAdapter extends RecyclerView.Adapter<CommentsAdapter.Commen
         DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("user")
                 .child(targetUid);
 
+        // Creates the user object to view their profile using their UID
         databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
