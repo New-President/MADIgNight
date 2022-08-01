@@ -181,10 +181,10 @@ public class CommentSectionActivity extends AppCompatActivity {
         });
     }
 
+    // Initialize recyclerview with commentslist
     private void initRecyclerView(String blogID, String blogOwnerUID) {
         commentsList = new ArrayList<>();
         commmentRV = findViewById(R.id.commentsRV);
-        commmentRV.setNestedScrollingEnabled(false);
         commentAdapter = new CommentsAdapter(this, commentsList, blogID, blogOwnerUID);
         commmentRV.setNestedScrollingEnabled(false);
         commmentRV.setAdapter(commentAdapter);
@@ -193,7 +193,7 @@ public class CommentSectionActivity extends AppCompatActivity {
         commmentRV.setLayoutManager(commentLayoutManager);
     }
 
-
+    // Retreives and creates comment objects stored in commentslist
     private void getCommentsList() {
         commentIDList = new ArrayList<>();
 
@@ -288,13 +288,5 @@ public class CommentSectionActivity extends AppCompatActivity {
                 Log.e(TAG, "onCancelled: " + error.getMessage());
             }
         });
-    }
-
-    @Override
-    public void onBackPressed() {
-        Intent intent = new Intent(getApplicationContext(), MainMenuActivity.class);
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        startActivity(intent);
-        finish();
     }
 }
