@@ -50,20 +50,21 @@ public class SendCommentNotification {
         FirebaseDatabase.getInstance("https://madignight-default-rtdb.asia-southeast1.firebasedatabase.app/").getReference().addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
+                // Get the fcmServer key that is placed in the database
                 fcmServerKey = snapshot.getValue().toString();
-
+                // make a new volley request
                 requestQueue1 = Volley.newRequestQueue(context);
                 JSONObject jsonObject = new JSONObject();
 
                 try {
                     // create request
                     jsonObject.put("to", fcmToken);
-
+                    // adding the required data into the JSONObject that would be passed into the NotificationService
                     JSONObject data = new JSONObject();  // add custom data
                     data.put("purpose", "comment");
-                    data.put("message", message);
-                    data.put("senderID", senderID);
-                    data.put("blogID", blogID);
+                    data.put("message", message); // content of the message
+                    data.put("senderID", senderID); // Sender's UID
+                    data.put("blogID", blogID); //BlogID
 
                     jsonObject.put("data", data);
 
@@ -81,11 +82,13 @@ public class SendCommentNotification {
                         @Override
                         public Map<String, String> getHeaders() {  // set headers
                             Map<String, String> header = new HashMap<>();
-                            header.put("content-type", "application/json");
-                            header.put("authorization", "key=" + fcmServerKey);
+                            header.put("content-type", "application/json");  // Using json as a form of passing the data
+                            header.put("authorization", "key=" + fcmServerKey); // add the fcmServerKey
                             return header;
                         }
                     };
+                    // Add the JSONObjectrequest into a requestQueue
+
                     requestQueue1.add(request);
 
                 }

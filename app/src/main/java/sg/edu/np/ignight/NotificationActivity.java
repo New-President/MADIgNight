@@ -72,6 +72,7 @@ public class NotificationActivity extends AppCompatActivity {
         notificationManager = NotificationManagerCompat.from(this);
 
         backButton = findViewById(R.id.notificationBackBtn);
+        // Back button to go back to main activity
         backButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -88,11 +89,10 @@ public class NotificationActivity extends AppCompatActivity {
 
         initRecyclerView();
 
-        // NotificationHelper.displayNotification(this, "title", "body");
-
     }
 
 
+    // initialize the recycler view in the notification activity
     public void initRecyclerView(){
         RecyclerView rv = findViewById(R.id.notificationRecyclerView);
         NotificationAdapter adapter = new NotificationAdapter(NotificationActivity.this, likedCommentList, userList, data);
@@ -102,19 +102,20 @@ public class NotificationActivity extends AppCompatActivity {
         rv.setLayoutManager(layout);
     }
 
+    // Get all the existing blog list
     private void getBlogList() {
 
         blogIDList = new ArrayList<>();
         databaseBlogReference.addChildEventListener(new ChildEventListener() {
-
-            // Updates changes to the activity when a change is made in the database
             @Override
             public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
-
+                // When there is a blog node in the user database
                 if (snapshot.exists()) {
+                    // check that we have not added the BlogIDList into the blogIDList
                     if (!blogIDList.contains(snapshot.getKey())) {
+                        // add the new blogID into the blogIDList
                         blogIDList.add(snapshot.getKey());
-                        Log.d("TAG", "Hello" + snapshot.getKey());
+                        // Get the values related to the blog
                         String blogID = snapshot.child("blogID").getValue().toString();
                         String description = snapshot.child("description").getValue().toString();
                         String imgID = snapshot.child("imgID").getValue().toString();
@@ -122,13 +123,11 @@ public class NotificationActivity extends AppCompatActivity {
                         int likes = Integer.parseInt(snapshot.child("likes").getValue().toString());
                         int comments = Integer.parseInt(snapshot.child("comments").getValue().toString());
 
-                        /*for (DataSnapshot dateLocSnapshot : childSnapshot.child("Date Location").getChildren()) {
-                            dateLocList.add(dateLocSnapshot.getValue().toString());
-                        }*/
-
                         ArrayList<String> commentsList = new ArrayList<>();
                         // Stores comments into commentlist to be retrieved
+                        //If there are any comments in the blog
                         if (snapshot.child("commentList").hasChildren()) {
+                            // Add each of the comment into the comment List
                             for (DataSnapshot commentSnapshot : snapshot.child("commentList").getChildren()) {
                                 commentsList.add(commentSnapshot.getKey());
                             }
@@ -136,50 +135,42 @@ public class NotificationActivity extends AppCompatActivity {
 
                         for (int i = 0; i < commentsList.size(); i++){
                             String commentKey = commentsList.get(i);
+                            // Get the uid of the person who made the comment and the content of the comment
                             String userUID = snapshot.child("commentList").child(commentKey).child("uid").getValue().toString();
                             String content = snapshot.child("commentList").child(commentKey).child("content").getValue().toString();
                             LikedCommentObject tempLCO = new LikedCommentObject(userUID, imgID,false, content);
+                            // Store the comment into a likedCommentList where all the comments and all the likes the user received for a certain blog
                             if (!userUID.equals(Unique)){
                                 likedCommentList.add(tempLCO);
                             }
                         }
 
-                        /*if (!commentsList.contains(commentSnapshot.getKey())){
-                                    String commentKey = commentSnapshot.getKey();
-                                    commentsList.add(commentKey);
-                                    String userUID = snapshot.child("commentList").child(commentKey).child("uid").getValue().toString();
-                                    String content = snapshot.child("commentList").child(commentKey).child("content").getValue().toString();
-                                    LikedCommentObject tempLCO = new LikedCommentObject(userUID, false, content);
-                                    Log.d("TAG", "Hello: " + userUID);
-                                    likedCommentList.add(tempLCO);
-                                }*/
-                               /*commentsList.add(commentSnapshot.getKey());
-                               Log.d("TAG", "Hello: " + commentSnapshot.getKey());*/
-
-
                         // Stores uid of user who liked the blog
                         if (snapshot.child("likedUsersList").hasChildren()) {
                             for (DataSnapshot likedUsersSnapshot : snapshot.child("likedUsersList").getChildren()) {
-                                Log.d("TAG", "Hello1 " + !likedUsers.contains(likedUsersSnapshot.getKey()));
+                                // if the user have any liked blog
                                 if (likedUsersSnapshot.getValue().toString().equals("true")) {
+                                    // add the person's uid as he liked the photo
                                     likedUsers.add(likedUsersSnapshot.getKey());
                                     LikedCommentObject tempLCO = new LikedCommentObject(likedUsersSnapshot.getKey(), imgID, true, "");
+                                    // If the person who liked the blog is not the own user
                                     if (!likedUsersSnapshot.getKey().equals(Unique)){
+                                        // Store the comment into a likedCommentList where all the comments and all the likes the user received for a certain blog
                                         likedCommentList.add(tempLCO);
                                     }
                                 }
                             }
                         }
-                        Log.d("TAG", "Hello" + likedCommentList.size());
 
                         BlogObject blogObject = new BlogObject(description, location, imgID, blogID, likes, comments, likedUsers);
+                        // add all the blog created by the user into a list
                         data.add(blogObject);
 
-                        /*NotificationAdapter.notifyDataSetChanged();*/
                     }
                 }
             }
 
+            // if there are changes made to the blog
             @Override
             public void onChildChanged(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
                 for (BlogObject existingBlog : data) {
@@ -231,7 +222,6 @@ public class NotificationActivity extends AppCompatActivity {
                         existingBlog.setComments(comments);
                         existingBlog.setLikedUsers(likedUsers);
 
-                        /*blogAdapter.notifyDataSetChanged();*/
                     }
                 }
             }
@@ -241,7 +231,6 @@ public class NotificationActivity extends AppCompatActivity {
                 int index = blogIDList.indexOf(snapshot.getKey());
                 data.remove(index);
                 blogIDList.remove(index);
-                /*blogAdapter.notifyDataSetChanged();*/
             }
 
             @Override
@@ -256,16 +245,17 @@ public class NotificationActivity extends AppCompatActivity {
         });
     }
 
+    // get all the existing user
     public void getUserList() {
         ValueEventListener getUserListListener = new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if (snapshot.exists()) {
                     for (DataSnapshot childSnapshot : snapshot.getChildren()) {
-
                         boolean exists = false;
-
+                        // if the uid is not the current user's own uid
                         if (!childSnapshot.getKey().equals(FirebaseAuth.getInstance().getUid())) {
+                            // ensure that the uid of the user is different
                             for (UserObject existingUser : userList) {
                                 if (childSnapshot.getKey().equals(existingUser.getUid())) {
                                     exists = true;
@@ -273,6 +263,7 @@ public class NotificationActivity extends AppCompatActivity {
                                 }
                             }
 
+                            // if the user have not created
                             if (exists || childSnapshot.child("profileCreated").getValue().toString().equals("false")) {
                                 continue;
                             }
@@ -281,6 +272,7 @@ public class NotificationActivity extends AppCompatActivity {
                             ArrayList<String> dateLocList = new ArrayList<>();
                             ArrayList<String> interestList = new ArrayList<>();
 
+                            // Get all the details about the user
                             String phone = childSnapshot.child("phone").getValue().toString();
                             String aboutMe = childSnapshot.child("About Me").getValue().toString();
                             String gender = childSnapshot.child("Gender").getValue().toString();
@@ -300,13 +292,8 @@ public class NotificationActivity extends AppCompatActivity {
 
                             UserObject user = new UserObject(uid, aboutMe, age, dateLocList, gender, genderPref, interestList, profilePicUrl, relationshipPref, phone, profileCreated, username);
 
+                            // store all the existing users into a list
                             userList.add(user);
-
-
-/*
-                            userList.add(user);
-                            userListAdapter.notifyDataSetChanged();
-*/
 
                         }
                     }
@@ -322,20 +309,4 @@ public class NotificationActivity extends AppCompatActivity {
 
         databaseUserReference.addValueEventListener(getUserListListener);
     }
-
-    /*public void sendOnChannel1(View v){
-        String title = editTextTitle.getText().toString();
-        String message =editTextMessage.getText().toString();
-
-        android.app.Notification notification = new NotificationCompat.Builder(this, CHANNEL_1_ID)
-                .setSmallIcon(R.drawable.ic_android_blacknoti)
-                .setContentTitle(title)
-                .setContentText(message)
-                .setPriority(NotificationCompat.PRIORITY_HIGH)
-                .setCategory(NotificationCompat.CATEGORY_MESSAGE)
-                .build();
-
-        notificationManager.notify(1,notification);
-
-    }*/
 }

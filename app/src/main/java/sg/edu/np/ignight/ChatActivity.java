@@ -422,10 +422,12 @@ public class ChatActivity extends AppCompatActivity {
         });
 
         ProposeDateBtn = findViewById(R.id.ProposeDate);
+        // When the propose date button is clicked, go to proposeDate Activity
         ProposeDateBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent proposeDate = new Intent(ChatActivity.this, ProposeDateActivity.class);
+                // From the proposeDate Activity, data would be passed back here
                 startActivityForResult(proposeDate, 1000);
             }
         });
@@ -783,12 +785,14 @@ public class ChatActivity extends AppCompatActivity {
         Boolean fromProposeDate= data.getBooleanExtra("dateMessage", false);
 
         if(fromProposeDate) {
+            // Retrieve the data that were keyed inside the proposeDate activity
             String dateDescription = data.getStringExtra("dateDescription");
             String dateLocation = data.getStringExtra("dateLocation");
             long startDateTime = data.getLongExtra("startDateTime", 0);
             long endDateTime = data.getLongExtra("endDateTime", 0);
             String dateString = DateFormat.format("dd/MM/yyyy | HH:mm", new Date(startDateTime)).toString();
             EditText call_text = findViewById(R.id.messageInput);
+            // Send message/ propose a date according to how the user filled up the proposeDate activity
             call_text.setText("Date Description: " + dateDescription +"\nDate Location: " + dateLocation + "\nDate and Time: " + dateString);
             sendMessage(true, dateDescription, dateLocation, startDateTime, endDateTime);
 

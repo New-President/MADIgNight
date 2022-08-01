@@ -40,12 +40,12 @@ public class ProposeDateActivity extends AppCompatActivity {
     Context context = this;
 
 
-    final ContentValues event = new ContentValues();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_propose_date);
 
+        // initializing the different Button, ImageView etc.
         backButton = findViewById(R.id.proposeDateBackBtn);
         calendarButton = findViewById(R.id.calendarButton);
         /*createButton = findViewById(R.id.createButton);*/
@@ -55,7 +55,7 @@ public class ProposeDateActivity extends AppCompatActivity {
         date = findViewById(R.id.editTextDateProposeDate);
         time = findViewById(R.id.editTextTimeProposeDate);
 
-
+        // Back button to navigate back to chat activity
         backButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -66,6 +66,7 @@ public class ProposeDateActivity extends AppCompatActivity {
             }
         });
 
+        // Open up google calendar for the user to see his/her schedule
         calendarButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -78,31 +79,47 @@ public class ProposeDateActivity extends AppCompatActivity {
             }
         });
 
+        // After clicking on the propose date button:
         proposeDateButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                // Retrieving the user's input from the description and location field.
                 String description = mainActivityText.getText().toString();
                 String location = locationText.getText().toString();
 
+                // If the input fields are not empty
                 if (validateFields()){
                     Calendar beginTime = Calendar.getInstance();
+                    // set the date and time according to the user's input
                     beginTime.set(date.getYear(), date.getMonth(), date.getDayOfMonth(), time.getHour(), time.getMinute());
+                    // Change the date and time into milliseconds
                     long startMillis = beginTime.getTimeInMillis();
+
                     Calendar endTime = Calendar.getInstance();
+                    // Set the time to the end of the day the user had inputted, assuming the date would last the whole day, starting from their inputted time.
                     endTime.set(date.getYear(), date.getMonth(), date.getDayOfMonth(), 23, 59);
+                    // Change the date and time into milliseconds
                     long endMillis = endTime.getTimeInMillis();
+
                     Intent insertCalendarIntent = new Intent(Intent.ACTION_INSERT);
+                    // Set the intent data for calendar
                     insertCalendarIntent.setData(CalendarContract.Events.CONTENT_URI);
+                    // initializing the data for the calendar
+                    // Set the title for the calendar event to "DATE"
                     insertCalendarIntent.putExtra(CalendarContract.Events.TITLE, "Date")
+                            // Set the value for event all day to be false, as we might not know when the user want the date to start
                             .putExtra(CalendarContract.EXTRA_EVENT_ALL_DAY, false)
-                            .putExtra(CalendarContract.Events.EVENT_LOCATION, location)
+                            .putExtra(CalendarContract.Events.EVENT_LOCATION, location) // Location
                             .putExtra(CalendarContract.Events.DESCRIPTION, description) // Description
-                            .putExtra(CalendarContract.EXTRA_EVENT_BEGIN_TIME, startMillis)
-                            .putExtra(CalendarContract.EXTRA_EVENT_END_TIME, endMillis)
-                            .putExtra(CalendarContract.Events.ACCESS_LEVEL, CalendarContract.Events.ACCESS_PRIVATE)
-                            .putExtra(CalendarContract.Events.AVAILABILITY, CalendarContract.Events.AVAILABILITY_FREE);
+                            .putExtra(CalendarContract.EXTRA_EVENT_BEGIN_TIME, startMillis) //Start Date and Time
+                            .putExtra(CalendarContract.EXTRA_EVENT_END_TIME, endMillis) //End date and Time
+                            .putExtra(CalendarContract.Events.ACCESS_LEVEL, CalendarContract.Events.ACCESS_PRIVATE) // The calendar event is private
+                            .putExtra(CalendarContract.Events.AVAILABILITY, CalendarContract.Events.AVAILABILITY_BUSY); // Indicate that the event would make the user busy
+                    //Start the calendar activity on the user's screen
+                    // The user would have the above inputted fields filled up for them
                     startActivity(insertCalendarIntent);
 
+                    // pass the user's inputted data back into Chatactivity to display in the chat
                     Intent dateMessage = new Intent(getApplicationContext(), ChatActivity.class);
                     dateMessage.putExtra("dateMessage", true);
                     dateMessage.putExtra("dateDescription", description);
@@ -118,6 +135,7 @@ public class ProposeDateActivity extends AppCompatActivity {
                     finish();
 
                 }else{
+                    // When the user did not fill up all the input fields, display a alert dialog
                     AlertDialog.Builder alert = new AlertDialog.Builder(ProposeDateActivity.this);
                     alert.setTitle("Invalid Inputs");
                     String message = "";
@@ -143,159 +161,9 @@ public class ProposeDateActivity extends AppCompatActivity {
                 }
             }
         });
-        /*createButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-                *//*long calID = 3;
-                long startMillis = 0;
-                long endMillis = 0;
-                Calendar beginTime = Calendar.getInstance();
-                beginTime.set(2022, 6, 19, 7, 30);
-                startMillis = beginTime.getTimeInMillis();
-                Calendar endTime = Calendar.getInstance();
-                endTime.set(2022, 6, 19, 8, 45);
-                endMillis = endTime.getTimeInMillis();
-
-                ContentResolver cr = getContentResolver();
-                ContentValues values = new ContentValues();
-                values.put(CalendarContract.EXTRA_EVENT_END_TIME, startMillis);
-                values.put(CalendarContract.EXTRA_EVENT_END_TIME, endMillis);
-                values.put(CalendarContract.Events.TITLE, "Jazzercise");
-                values.put(CalendarContract.Events.DESCRIPTION, "Group workout");
-                values.put(CalendarContract.Events.CALENDAR_ID, calID);
-                values.put(CalendarContract.Events.EVENT_TIMEZONE, "America/Los_Angeles");
-                Uri uri = cr.insert(CalendarContract.Events.CONTENT_URI, values);
-
-// get the event ID that is the last element in the Uri
-
-                Intent back = new Intent(getApplicationContext(), ChatActivity.class);
-                finish();*//*
-
-                *//*Calendar beginTime = Calendar.getInstance();
-                beginTime.set(2022, Calendar.JULY, 19, 3, 00);
-                long startMillis = beginTime.getTimeInMillis();
-                Calendar endTime = Calendar.getInstance();
-                endTime.set(2012, Calendar.JULY, 19, 4, 00);
-                long endMillis = endTime.getTimeInMillis();
-                CalendarEvent evt = new CalendarEvent(1, "LOL", "FWERWF", "Singapore", (int)startMillis, (int)endMillis);
-                addEvent(evt);*//*
-
-
-                Calendar beginTime = Calendar.getInstance();
-                beginTime.set(2022, 6, 19, 7, 30);
-                long startMillis = beginTime.getTimeInMillis();
-                Calendar endTime = Calendar.getInstance();
-                endTime.set(2012, 6, 19, 8, 45);
-                long endMillis = endTime.getTimeInMillis();
-                Intent insertCalendarIntent = new Intent(Intent.ACTION_INSERT);
-                insertCalendarIntent.setData(CalendarContract.Events.CONTENT_URI);
-                insertCalendarIntent.putExtra(CalendarContract.Events.TITLE, "TITLE")
-                        .putExtra(CalendarContract.EXTRA_EVENT_ALL_DAY, false)
-                        .putExtra(CalendarContract.Events.EVENT_LOCATION, "Hong Kong")
-                        .putExtra(CalendarContract.Events.DESCRIPTION, "DESCRIPTION") // Description
-                        .putExtra(Intent.EXTRA_EMAIL, "fooInviteeOne@gmail.com,fooInviteeTwo@gmail.com")
-                        .putExtra(CalendarContract.EXTRA_EVENT_BEGIN_TIME, startMillis)
-                        .putExtra(CalendarContract.EXTRA_EVENT_END_TIME, endMillis)
-                        .putExtra(CalendarContract.Events.ACCESS_LEVEL, CalendarContract.Events.ACCESS_PRIVATE)
-                        .putExtra(CalendarContract.Events.AVAILABILITY, CalendarContract.Events.AVAILABILITY_FREE);
-                startActivity(insertCalendarIntent);
-
-
-
-
-
-                *//*long calID = 4;
-                long startMillis = 0;
-                long endMillis = 0;
-                Calendar beginTime = Calendar.getInstance();
-                beginTime.set(2022, 6, 18, 7, 30);// set(int year, int month, int day, int hourOfDay, int minute)
-                startMillis = beginTime.getTimeInMillis();
-                Calendar endTime = Calendar.getInstance();
-                endTime.set(2022, 6, 19, 8, 30);
-                endMillis = endTime.getTimeInMillis();
-
-                TimeZone tz = TimeZone.getDefault();
-
-                ContentResolver cr = getContentResolver();
-                ContentValues values = new ContentValues();
-                values.put(CalendarContract.Events.DTSTART, startMillis);
-                values.put(CalendarContract.Events.DTEND, endMillis);
-                values.put(CalendarContract.Events.TITLE, "Jazzercise");
-                values.put(CalendarContract.Events.DESCRIPTION, "Group workout");
-                values.put(CalendarContract.Events.CALENDAR_ID, calID);
-                values.put(CalendarContract.Events.EVENT_TIMEZONE,  tz.getID());
-                Uri uri = cr.insert(CalendarContract.Events.CONTENT_URI, values);
-
-                // get the event ID that is the last element in the Uri
-                long eventID = Long.parseLong(uri.getLastPathSegment());
-
-
-                Uri.Builder builder = CalendarContract.CONTENT_URI.buildUpon();
-                builder.appendPath("time");
-                ContentUris.appendId(builder, startMillis);
-                Intent intent = new Intent(Intent.ACTION_VIEW).setData(builder.build());
-                startActivity(intent);*//*
-
-
-
-
-
-
-                *//*Calendar beginTime = Calendar.getInstance();
-                beginTime.set(2022, Calendar.JULY, 19, 3, 00);
-                long startMillis = beginTime.getTimeInMillis();
-                Calendar endTime = Calendar.getInstance();
-                endTime.set(2012, Calendar.JULY, 19, 4, 00);
-                long endMillis = endTime.getTimeInMillis();
-
-
-                event.put(CalendarContract.Events.CALENDAR_ID, 10001);
-                event.put(CalendarContract.Events.TITLE, "Test Android");
-                event.put(CalendarContract.Events.EVENT_LOCATION, "Test Location");
-                event.put(CalendarContract.Events.DESCRIPTION, "Test Description Examples");
-
-                event.put(CalendarContract.EXTRA_EVENT_BEGIN_TIME, startMillis);
-                event.put(CalendarContract.EXTRA_EVENT_END_TIME, endMillis);
-                event.put(CalendarContract.Events.ALL_DAY, false);
-                event.put(CalendarContract.Events.EVENT_END_TIMEZONE, "Europe/London");
-
-                String timeZone = TimeZone.getDefault().getID();
-                event.put(CalendarContract.Events.EVENT_TIMEZONE, timeZone);
-
-                event.put(CalendarContract.Events.ACCESS_LEVEL, CalendarContract.Events.ACCESS_PRIVATE);
-                event.put(CalendarContract.Events.AVAILABILITY, CalendarContract.Events.AVAILABILITY_BUSY);
-                Uri baseUri = Uri.parse("content://com.android.calendar/events");
-                if (Build.VERSION.SDK_INT >= 8) {
-                    baseUri = Uri.parse("content://com.android.calendar/events");
-                } else {
-                    baseUri = Uri.parse("content://calendar/events");
-                }
-
-                context.getContentResolver().insert(baseUri, event);
-
-                Intent back = new Intent(getApplicationContext(), ChatActivity.class);
-                finish();*//*
-
-                *//*Intent date = new Intent(Intent.ACTION_INSERT);
-                date.setData(CalendarContract.Events.CONTENT_URI);
-                date.putExtra(CalendarContract.Events.ALL_DAY, false);
-                date.putExtra(CalendarContract.Events.EVENT_LOCATION, "ChinaTown, Singapore");
-                String title = date.getStringExtra(CalendarContract.Events.TITLE);
-                Log.e(TAG, "Hello: " + title);
-
-                // see if there is a calendar app
-                if(getIntent().resolveActivity(getPackageManager()) != null){
-                    startActivityForResult(date, RESULT_CANCELED);
-                }
-                else{
-                    Toast.makeText(ProposeDateActivity.this, "There is no app that can support this action", Toast.LENGTH_SHORT).show();
-                }*//*
-            }
-        });*/
-
     }
 
+    // Ensure that the user have filled up all the input fields
     private Boolean validateFields(){
         String description = mainActivityText.getText().toString();
         String location = locationText.getText().toString();
@@ -313,14 +181,4 @@ public class ProposeDateActivity extends AppCompatActivity {
         }
         return (invalidFieldCount == 0);
     };
-
-    private void checkPermissions(int callbackId, String... permissionsId) {
-        boolean permissions = true;
-        for (String p : permissionsId) {
-            permissions = permissions && ContextCompat.checkSelfPermission(this, p) == PERMISSION_GRANTED;
-        }
-
-        if (!permissions)
-            ActivityCompat.requestPermissions(this, permissionsId, callbackId);
-    }
 }

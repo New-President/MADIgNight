@@ -518,13 +518,17 @@ public class NotificationService extends FirebaseMessagingService {
         rootDB.child("user").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
+                // Get the imgID of the blog that have been liked
                 String imgID = snapshot.child(uid).child("blog").child(blogID).child("imgID").getValue().toString();
                 NotificationCompat.Builder builder = new NotificationCompat.Builder(context, "Ignight");
+                // Set the ignight icon as the icon on the notification
                 builder.setSmallIcon(R.mipmap.ic_launcher_round);
 
+                // Get the username of the user who liked the blog
                 String senderUsername = snapshot.child(senderID).child("username").getValue().toString();
 
                 try{
+                    // Retrieve the image from Firebase Storage
                     StorageReference storageReference = storage.getReference("blog").child(uid).child(imgID);
                     File localfile = File.createTempFile("tempfile", ".png");
                     storageReference.getFile(localfile).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
@@ -532,15 +536,20 @@ public class NotificationService extends FirebaseMessagingService {
                         @Override
                         public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
                             Bitmap bitmap = BitmapFactory.decodeFile(localfile.getAbsolutePath());
+                            // set the image that have been liked as a large icon
                             builder.setLargeIcon(bitmap);
-                            builder.setContentTitle("IgNight");
+                            builder.setContentTitle("IgNight");  // Content as IgNight
+                            // display the text as seen on the notification as the username of the user who have the liked the blog
                             builder.setContentText(senderUsername + " liked you blog.");
+                            // After the user click on the blog, the notification would disappear
                             builder.setAutoCancel(true);
 
 
+                            // When the notification is clicked, bring the user to the blog activity
                             Intent intent = new Intent(context, BlogActivity.class);
                             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
 
+                            // if there is another new notification, update to that one
                             PendingIntent pendingIntent = PendingIntent.getActivity(
                                     context,
                                     100,
@@ -548,12 +557,18 @@ public class NotificationService extends FirebaseMessagingService {
                                     PendingIntent.FLAG_UPDATE_CURRENT
                             );
 
+                            // set the pending intent in the notification
                             builder.setContentIntent(pendingIntent);
                             NotificationManager mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
                             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                                 String channelId = "IgnightBlogs";
+                                // Set the notification channel
+                                // We set the level of importance for the notification to high
+                                // The notification would vibrate
                                 NotificationChannel channel = new NotificationChannel(channelId, "Blogs", NotificationManager.IMPORTANCE_HIGH);
                                 channel.setShowBadge(true);
+                                // Conceal all private information on secure lockscreens
+
                                 channel.setLockscreenVisibility(NotificationCompat.VISIBILITY_PRIVATE);
                                 channel.enableVibration(true);
 
@@ -561,7 +576,7 @@ public class NotificationService extends FirebaseMessagingService {
                                 builder.setChannelId(channelId);
                             }
 
-
+                            // launch the notification the way I built it earlier
                             mNotificationManager.notify(999, builder.build());
                         }
                     }).addOnFailureListener(new OnFailureListener() {
@@ -577,8 +592,6 @@ public class NotificationService extends FirebaseMessagingService {
                 catch (Exception ex){
                     Log.d("Load Image Error", "Failed to load image");
                 }
-
-
             }
 
             @Override
@@ -599,13 +612,17 @@ public class NotificationService extends FirebaseMessagingService {
         rootDB.child("user").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
+                // Get imgID of the blog
                 String imgID = snapshot.child(uid).child("blog").child(blogID).child("imgID").getValue().toString();
                 NotificationCompat.Builder builder = new NotificationCompat.Builder(context, "Ignight");
+                // Set the ignight icon as the icon on the notification
                 builder.setSmallIcon(R.mipmap.ic_launcher_round);
 
+                // get the user who commented on the blog username
                 String senderUsername = snapshot.child(senderID).child("username").getValue().toString();
 
                 try{
+                    // Retriving the image from firebase Storage
                     StorageReference storageReference = storage.getReference("blog").child(uid).child(imgID);
                     File localfile = File.createTempFile("tempfile", ".png");
                     storageReference.getFile(localfile).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
@@ -613,14 +630,19 @@ public class NotificationService extends FirebaseMessagingService {
                         @Override
                         public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
                             Bitmap bitmap = BitmapFactory.decodeFile(localfile.getAbsolutePath());
+                            // Set the large icon of the notification as the blog's image
                             builder.setLargeIcon(bitmap);
                             builder.setContentTitle("IgNight");
+                            // Display the comment on the blog together with the sender's username on the notification
                             builder.setContentText(senderUsername + " commented on you blog: " + message);
+                            // When user clicks on the notification, it disappears
                             builder.setAutoCancel(true);
 
+                            // When the notification is clicked, bring user to the commentSection Activity
                             Intent intent = new Intent(context, CommentSectionActivity.class);
                             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
 
+                            // Pass in data into the commentSection Activity to initialize the right data
                             Bundle commentBundle = new Bundle();
                             commentBundle.putString("blogOwnerUid", uid);
                             commentBundle.putString("blogID", blogID);
@@ -639,8 +661,12 @@ public class NotificationService extends FirebaseMessagingService {
                             NotificationManager mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
                             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                                 String channelId = "IgnightBlogs";
+                                // Set the notification channel
+                                // We set the level of importance for the notification to high
+                                // The notification would vibrate
                                 NotificationChannel channel = new NotificationChannel(channelId, "Blogs", NotificationManager.IMPORTANCE_HIGH);
                                 channel.setShowBadge(true);
+                                // Conceal all private information on secure lockscreens
                                 channel.setLockscreenVisibility(NotificationCompat.VISIBILITY_PRIVATE);
                                 channel.enableVibration(true);
 
@@ -648,7 +674,7 @@ public class NotificationService extends FirebaseMessagingService {
                                 builder.setChannelId(channelId);
                             }
 
-
+                            // Create the notification as we have built earlier
                             mNotificationManager.notify(999, builder.build());
                         }
                     }).addOnFailureListener(new OnFailureListener() {
