@@ -39,8 +39,6 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
@@ -66,8 +64,7 @@ public class ActivityReport_Activity extends AppCompatActivity {
 
     private long foregroundTime, time;
 
-    private int hours1, hours2, minutes1, minutes2, seconds1, seconds2,
-            USAGE_STATS_PERMISSION_CODE, setTimeLimit;
+    private int hours1, hours2, minutes1, setTimeLimit;
 
     private EditText inputText;
 
@@ -185,7 +182,7 @@ public class ActivityReport_Activity extends AppCompatActivity {
         SharedPreferences.Editor sPdayEdit = sharedPreferences.edit();
         UsageStatsManager mUsageStatsManager = (UsageStatsManager)getSystemService(USAGE_STATS_SERVICE);
         time = System.currentTimeMillis();
-        hours2 = minutes2 = seconds2 = 0;
+        hours2 = 0;
         timeUsageTestTextView = (TextView) findViewById(R.id.timeUsageTestTextView);
         barData = new BarData();
 
