@@ -70,7 +70,7 @@ public class FavouriteLocFragment extends Fragment {
         favLocationsReference.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
-                // Filters off the locations with user's preferences stored in a string array
+                // Filters off the locations with user's liked preferences stored in a string array
                 // , stored into filteredlocations list
                 for (DataSnapshot locNode : snapshot.getChildren()) {
                     if ((boolean) locNode.getValue()){
@@ -88,7 +88,7 @@ public class FavouriteLocFragment extends Fragment {
 
             @Override
             public void onChildChanged(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
-
+                // Updates the location list if user likes/unlikes a location
                 for (DataSnapshot locNode : snapshot.getChildren()) {
                     // if location preference is now set to true and is already stored in the favLocationNames list
                     // , location name is added into favLocationNames and the location with the same name is extracted
@@ -148,6 +148,7 @@ public class FavouriteLocFragment extends Fragment {
 
         DatabaseReference locationsReference = firebaseDatabase.getReference("location");
 
+        // Stores *all* locations kept in Firebase in a Location list
         locationsReference.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
@@ -157,8 +158,6 @@ public class FavouriteLocFragment extends Fragment {
                     String Addr = locNode.child("Address").getValue().toString();
                     String imgUri = locNode.child("imgUri").getValue().toString();
                     allLocationsList.add(new LocationObject(Name, Desc, snapshot.getKey(), Addr, imgUri));
-
-
                 }
             }
 

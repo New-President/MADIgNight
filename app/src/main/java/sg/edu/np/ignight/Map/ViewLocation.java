@@ -113,6 +113,7 @@ public class ViewLocation extends AppCompatActivity implements OnMapReadyCallbac
             }
         });
 
+        // Updates child value of location in firebase to true/false when liked/unliked
         favouriteBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -140,15 +141,14 @@ public class ViewLocation extends AppCompatActivity implements OnMapReadyCallbac
 
     }
 
+    // Displays Google Map
     private void initGoogleMap(Bundle savedInstanceState) {
         // Checks if location is enabled
         if (!isGPSEnabled()) {
             turnOnGPS();
         }
-        // *** IMPORTANT ***
-        // MapView requires that the Bundle you pass contain _ONLY_ MapView SDK
-        // objects or sub-Bundles.
         Bundle mapViewBundle = null;
+        // Gets Google Map API key (free trial) to initialize
         if (savedInstanceState != null) {
             mapViewBundle = savedInstanceState.getBundle(MAPVIEW_BUNDLE_KEY);
         }
@@ -188,12 +188,13 @@ public class ViewLocation extends AppCompatActivity implements OnMapReadyCallbac
         mapView.onStop();
     }
 
+    // Function to display Google Maps on the Google Map Fragment
     @Override
     public void onMapReady(GoogleMap map) {
         String locName = location.getName();
         try {
             List<Address> addressList = geocoder.getFromLocationName(locName, 1);
-
+            // Displays marker based on user's geolocation
             if (addressList.size() > 0) {
                 Address address = addressList.get(0);
                 LatLng latLng = new LatLng(address.getLatitude(), address.getLongitude());
@@ -204,7 +205,7 @@ public class ViewLocation extends AppCompatActivity implements OnMapReadyCallbac
         } catch (IOException e) {
             e.printStackTrace();
         }
-
+        // Checks that the user's location permission is turned on
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
                 != PackageManager.PERMISSION_GRANTED
                 && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION)
@@ -253,6 +254,7 @@ public class ViewLocation extends AppCompatActivity implements OnMapReadyCallbac
         return isEnabled;
     }
 
+    // When the google map cursor is clicked, it will display an alertdialog
     @Override
     public void onInfoWindowClick(@NonNull Marker marker) {
 
@@ -276,6 +278,7 @@ public class ViewLocation extends AppCompatActivity implements OnMapReadyCallbac
 
     }
 
+    // Gets location after checking for location premission access
     private void getCurrentLocation() {
 
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
@@ -288,6 +291,8 @@ public class ViewLocation extends AppCompatActivity implements OnMapReadyCallbac
             }
         });
     }
+
+    // Goes to google maps and displays the available routes from user location to destination
     private void displayTrack(String dest){
         try {
             Uri uri = Uri.parse("https://www.google.co.in/maps/dir/" + lastUserLoc.getLatitude() + "," + lastUserLoc.getLongitude()
@@ -308,6 +313,7 @@ public class ViewLocation extends AppCompatActivity implements OnMapReadyCallbac
         }
     }
 
+    // Requests for location to be turned on if off
     private void turnOnGPS(){
         new AlertDialog.Builder(ViewLocation.this)
                 .setTitle("Enable Location")

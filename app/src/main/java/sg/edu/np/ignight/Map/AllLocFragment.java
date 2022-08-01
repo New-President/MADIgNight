@@ -38,6 +38,7 @@ public class AllLocFragment extends Fragment {
 
         View view = inflater.inflate(R.layout.fragment_all_loc, container, false);
 
+        // Stores *all* locations kept in Firebase in a Location list
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
