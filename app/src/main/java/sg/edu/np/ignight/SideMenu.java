@@ -484,10 +484,10 @@ public class SideMenu extends Activity {
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if (snapshot.exists()) {
                     // Get Chat request
-                    for (DataSnapshot chatIDSnapshot : snapshot.getChildren()) {
-                        for (DataSnapshot chatreq : chatIDSnapshot.getChildren()) {
-                            Log.d("chatrequestdata",chatIDSnapshot.getKey());
-                            ChatsRequest.add(chatreq.getKey());
+                    for (DataSnapshot chatReqStatusSnapshot : snapshot.getChildren()) {
+                        for (DataSnapshot chatReq : chatReqStatusSnapshot.getChildren()) {
+                            Log.d("chatrequestdata",chatReqStatusSnapshot.getKey());
+                            ChatsRequest.add(chatReq.getKey());
                         }
                     }
                     // Delete Chat request
@@ -496,10 +496,10 @@ public class SideMenu extends Activity {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot snapshot) {
                             if (snapshot.exists()) {
-                                for (DataSnapshot chatIDSnapshot : snapshot.getChildren()) {
-                                    if (ChatsRequest.contains(chatIDSnapshot.getKey())) {
+                                for (DataSnapshot chatReqSnapshot : snapshot.getChildren()) {
+                                    if (ChatsRequest.contains(chatReqSnapshot.getKey())) {
                                         Log.d("chatrequest","deleted");
-                                        chatRequest.child(chatIDSnapshot.getKey()).removeValue();
+                                        chatRequest.child(chatReqSnapshot.getKey()).removeValue();
                                     }
                                 }
                             }
@@ -532,19 +532,15 @@ public class SideMenu extends Activity {
                                         if (Chats.contains(chatIDSnapshot.getKey())) {
                                             Log.d("people with chat","deleted");
                                             myRef.child(userIDSnapshot.getKey()).child("chats").child(chatIDSnapshot.getKey()).removeValue();
+                                            myRef.child(userIDSnapshot.getKey()).child("chatRequests").child("sent").removeValue();
                                         }
                                     }
                                     // Delete chatreq
-                                    for (DataSnapshot chatIDSnapshot : userIDSnapshot.child("chatRequests").getChildren()) {
-                                        for (DataSnapshot chatreq : chatIDSnapshot.getChildren()) {
-                                            if (ChatsRequest.contains(chatreq.getKey())) {
-                                                Log.d("people with chatREQ","deleted");
-                                                if (Objects.equals(chatIDSnapshot.getKey(), "sent")) {
-                                                    myRef.child(userIDSnapshot.getKey()).child("chatRequests").child(chatIDSnapshot.getKey()).removeValue();
-                                                }
-                                                else {
-                                                    myRef.child(userIDSnapshot.getKey()).child("chatRequests").child(chatIDSnapshot.getKey()).child(chatreq.getKey()).removeValue();
-                                                }
+                                    for (DataSnapshot chatReqStatusSnapshot : userIDSnapshot.child("chatRequests").getChildren()) {
+                                        for (DataSnapshot chatReq : chatReqStatusSnapshot.getChildren()) {
+                                            if (ChatsRequest.contains(chatReq.getKey())) {
+                                                Log.d("people with chatREQ",chatReq.getKey());
+                                                myRef.child(userIDSnapshot.getKey()).child("chatRequests").child(chatReqStatusSnapshot.getKey()).child(chatReq.getKey()).removeValue();
                                             }
                                         }
                                     }
