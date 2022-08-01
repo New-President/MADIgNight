@@ -192,10 +192,14 @@ public class ActivityReport_Activity extends AppCompatActivity {
             for (UsageStats usageStats : stats) {
                 // Shows the time spent on the IgNight app itself
                 packageName = usageStats.getPackageName();
+
+                // The system can only retrieve every single timing for each package in the phone.
+                // This picks out the timing for IgNight
                 if(packageName.equals("sg.edu.np.ignight")){
+                    // Sets the usage time
                     foregroundTime = usageStats.getTotalTimeInForeground();
 
-                    // Time unit conversion logic
+                    // Time unit conversion logic, time is retrieved in ms by the system
                     hours1 = (int) ((foregroundTime / (1000 * 60 * 60)) % 24);
                     minutes1 = (int) ((foregroundTime / (1000 * 60)) % 60);
 
@@ -205,7 +209,7 @@ public class ActivityReport_Activity extends AppCompatActivity {
 
                     // Adds data to barChart return list, so that the barChart can show the data
                     barDataset1 = new BarDataSet(barChartDataValues((int) (foregroundTime/3600000)), "Time you spent today");
-                    // The time the user spent will be entered as the second value on the chart
+                    // The time the user spent will be entered as another value on the chart
                     // for comparative purposes to the user's "goal" time
 
                     // Accesses and stores limit in the database so that limit setting will be "synced"
@@ -235,7 +239,9 @@ public class ActivityReport_Activity extends AppCompatActivity {
 
                             // Remove description label and set barChart to display loaded data
                             barChart.getDescription().setEnabled(false);
+                            // Nice animation
                             barChart.animateY(1100);
+                            // Loads data and chart itself
                             barChart.setData(barData);
                             barChart.invalidate();
                         }
@@ -286,6 +292,7 @@ public class ActivityReport_Activity extends AppCompatActivity {
         return topThreeIgNightUserChatsHashMap;
     }
 
+    // Disable timber alert
     @SuppressLint("LogNotTimber")
 
     // Generates IgNight chat data before displaying it on a pieChart
@@ -311,7 +318,9 @@ public class ActivityReport_Activity extends AppCompatActivity {
                     String chatId = dataSnapshot.getKey();
                     String targetUserId = (String) dataSnapshot.getValue();
                     chatIDtargetUserIDkeypair.put(chatId, targetUserId);
-                    Log.d("success1", chatId + " " + targetUserId);
+
+                    // Log testing
+                    //Log.d("success1", chatId + " " + targetUserId);
                 }
 
                 for(Map.Entry<String,String> entry: chatIDtargetUserIDkeypair.entrySet()){
@@ -324,6 +333,7 @@ public class ActivityReport_Activity extends AppCompatActivity {
                     targetUserIDtotalNumberOfTextsKeypair.put(entry.getValue(), totalNumberOfTextsSent);
                 }
 
+                // Alternate way of doing targetUserIDtotalNumberOfTextsKeypair if the current way fails
                 /*
                 for(Map.Entry<String,String> entry: chatIDtargetUserIDkeypair.entrySet()){
                     myRef2.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -349,18 +359,28 @@ public class ActivityReport_Activity extends AppCompatActivity {
                     Log.d("async done", "success");
 
                 }*/
-                Log.d("async done2", "success");
+
+                // Log testing
+                //Log.d("async done2", "success");
 
                 for(Map.Entry<String, Integer> entry: targetUserIDtotalNumberOfTextsKeypair.entrySet()){
-                    Log.d("success2", "success2");
+
+                    // Log testing
+                    //Log.d("success2", "success2");
+
                     String targetUsernameRetrieved = snapshot
                             .child("user")
                             .child(entry.getKey())
                             .child("username")
                             .getValue().toString();
-                    Log.d("test3", entry.getKey());
+
+                    // Log testing
+                    //Log.d("test3", entry.getKey());
+
                     targetUserIDusernamesTargetUserIDkeypair.put(targetUsernameRetrieved, entry.getKey());
-                    Log.d("targetUserIDusernamesTargetUserIDkeypair success", targetUsernameRetrieved);
+
+                    // Log testing
+                    //Log.d("targetUserIDusernamesTargetUserIDkeypair success", targetUsernameRetrieved);
                 }
 
 
@@ -379,7 +399,9 @@ public class ActivityReport_Activity extends AppCompatActivity {
                         if(entry2.getValue().equals(targetUserID)){
                             // Set username value
                             targetUsername = entry2.getKey().toString();
-                            Log.d("targetUsernameFound", targetUsername);
+
+                            // Log testing
+                            //Log.d("targetUsernameFound", targetUsername);
                         }
                     }
 
@@ -387,7 +409,9 @@ public class ActivityReport_Activity extends AppCompatActivity {
                     // the currentUser and the targetUser
                     // Adds data here to the pieChart ArrayList
                     pieChartData.add(new PieEntry(totalNumberOfTexts, targetUsername));
-                    Log.d("pieChartData", totalNumberOfTexts + " " + targetUsername);
+
+                    // Log testing
+                    //Log.d("pieChartData", totalNumberOfTexts + " " + targetUsername);
                 }
 
                 // Checks if there is any data generated. If so, display the top IgNight
@@ -411,8 +435,12 @@ public class ActivityReport_Activity extends AppCompatActivity {
                         }
                     }
 
+                    // Sets top IgNight by chat display
                     TextView topIgNightDisplayText = (TextView) findViewById(R.id.topIgNightDisplay);
-                    Log.d("Your top IgNight is", String.valueOf(topIgNightDisplayText));
+
+                    // Log testing
+                    //Log.d("Your top IgNight is", String.valueOf(topIgNightDisplayText));
+
                     topIgNightDisplayText.setText("Your top IgNight is " + topIgNightTargetUsername + ".");
                 }
 
@@ -463,7 +491,7 @@ public class ActivityReport_Activity extends AppCompatActivity {
         });
     }
 
-    // Do NOT invert method.
+    // Calls usage permissions
     private boolean usageStatsPermissionsRequest(Context context){
         AppOpsManager appOps = (AppOpsManager) context.getSystemService(Context.APP_OPS_SERVICE);
         int mode = appOps.checkOpNoThrow(AppOpsManager.OPSTR_GET_USAGE_STATS,
