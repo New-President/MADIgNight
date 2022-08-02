@@ -142,19 +142,28 @@
             app:layout_constraintTop_toBottomOf="@+id/removeMedia"
             android:visibility="gone"/>
 
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
         <View
             android:layout_width="match_parent"
-            android:layout_height="0.5dp"
+            android:layout_height="1dp"
             android:background="#000000"
             app:layout_constraintBottom_toTopOf="@id/messageInput"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/mediaRV"/>
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginBottom="1dp"
+            android:id="@+id/chatInputSeparator"/>
 
         <EditText
             android:id="@+id/messageInput"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:minHeight="45dp"
             android:layout_marginStart="5dp"
             android:layout_marginEnd="5dp"
             android:background="@drawable/delete_btn_bg"
@@ -167,7 +176,8 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@id/addMedia"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toBottomOf="@+id/chatInputSeparator"
+            app:layout_constraintVertical_bias="1"/>
 
         <ImageButton
             android:id="@+id/addMedia"
@@ -186,7 +196,9 @@
             android:id="@+id/sendMessageContainer"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@id/addMedia"
-            app:layout_constraintBottom_toBottomOf="parent">
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/messageInput"
+            app:layout_constraintVertical_bias="1">
 
             <ImageButton
                 android:id="@+id/sendMessage"

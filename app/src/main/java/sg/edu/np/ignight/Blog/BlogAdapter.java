@@ -147,6 +147,7 @@ public class BlogAdapter extends RecyclerView.Adapter<BlogViewHolder> {
                 commentSection.putExtra("imgID", blog.imgID);
                 commentSection.putExtra("numOfComments", blog.comments);
                 commentSection.putExtra("user", userObject);
+                commentSection.putExtra("canEdit", canEdit);
                 c.startActivity(commentSection);
             }
         });

@@ -305,16 +305,9 @@ public class NotificationService extends FirebaseMessagingService {
                         text = messageSnapshot.child("text").getValue().toString();
                     }
 
-                    String imageUrl = "";
-                    if (messageSnapshot.child("media").exists()) {
-                        for (DataSnapshot mediaSnapshot : messageSnapshot.child("media").getChildren()) {
-                            imageUrl = mediaSnapshot.getValue().toString();
-                            break;
-                        }
-                    }
+                    boolean hasImage = messageSnapshot.child("media").exists();
 
                     String finalText = text;
-                    String finalImageUrl = imageUrl;
                     rootDB.child("user").addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -439,11 +432,13 @@ public class NotificationService extends FirebaseMessagingService {
                                 messagingStyle.setConversationTitle(senderName);
 
                                 // create message
-                                NotificationCompat.MessagingStyle.Message notificationMessage = new NotificationCompat.MessagingStyle.Message(finalText, System.currentTimeMillis(), sender);
-                                if (!finalImageUrl.equals("")) {
-                                    // add image if there is image attached
-                                    Uri imageUri = Uri.parse(finalImageUrl).buildUpon().build();
-                                    notificationMessage.setData("Image/", imageUri);
+                                NotificationCompat.MessagingStyle.Message notificationMessage;
+
+                                if (!hasImage) {
+                                    notificationMessage = new NotificationCompat.MessagingStyle.Message(finalText, System.currentTimeMillis(), sender);
+                                }
+                                else {
+                                    notificationMessage = new NotificationCompat.MessagingStyle.Message("Photo", System.currentTimeMillis(), sender);
                                 }
 
                                 // add message

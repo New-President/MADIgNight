@@ -62,6 +62,7 @@ public class CommentSectionActivity extends AppCompatActivity {
         Intent intent = getIntent();
 
 
+        // Retrieves uid who posted the blogs & id of blog
         if(intent.getStringExtra("uid") != null){
             blogOwnerUID = intent.getStringExtra("uid");
             blogID = intent.getStringExtra("blogID");
@@ -74,16 +75,7 @@ public class CommentSectionActivity extends AppCompatActivity {
             imgID = bundle.getString("imgID");
         }
 
-
-
-
-        // Retrieves uid who posted the blogs & id of blog
-        /*blogOwnerUID = intent.getStringExtra("uid");*/
-
-
         int numOfComments = intent.getIntExtra("numOfComments", 0);
-
-
 
         ImageView sendCommentBtn = findViewById(R.id.sendCommentBtn);
         ImageView commentProfilePic = findViewById(R.id.commentProfilePic);
@@ -102,7 +94,7 @@ public class CommentSectionActivity extends AppCompatActivity {
         initRecyclerView(blogID, blogOwnerUID);
 
         UserObject userObject = (UserObject) getIntent().getSerializableExtra("user");
-
+        boolean canEdit = getIntent().getBooleanExtra("canEdit", false);
         // Display own profile picture beside comment input
         databaseSelf.child("profileUrl").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -181,7 +173,10 @@ public class CommentSectionActivity extends AppCompatActivity {
             public void onClick(View view) {
                 Intent intent = new Intent(getApplicationContext(), BlogActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                // Gets targetuser blog posts, if null, own user blogs will be shown
                 intent.putExtra("user", userObject);
+                // Display "My Blog Posts" as header
+                intent.putExtra("canEdit", canEdit);
                 startActivity(intent);
             }
         });
