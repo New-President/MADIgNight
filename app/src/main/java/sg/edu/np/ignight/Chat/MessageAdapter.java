@@ -203,7 +203,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
                 });
 
             } else {
-                holder.proposeDateViewStub.setVisibility(View.GONE);
+                holder.proposeDateViewStub.setVisibility(View.VISIBLE);
 
             }
         }
