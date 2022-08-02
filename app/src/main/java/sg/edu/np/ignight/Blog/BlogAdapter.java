@@ -70,6 +70,7 @@ public class BlogAdapter extends RecyclerView.Adapter<BlogViewHolder> {
         FirebaseStorage storage = FirebaseStorage.getInstance();
 
         String uid;
+        // Gets uid of passed in user object, otherwise own uid
         if (userObject != null){
             uid = userObject.getUid();
         }
