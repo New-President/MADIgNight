@@ -41,6 +41,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
@@ -126,6 +127,51 @@ public class LoginActivity extends AppCompatActivity {
 //            public void onDataChange(@NonNull DataSnapshot snapshot) {
 //                for (DataSnapshot chatSnapshot : snapshot.getChildren()) {
 //                    FirebaseDatabase.getInstance("https://madignight-default-rtdb.asia-southeast1.firebasedatabase.app/").getReference().child("chat").child(chatSnapshot.getKey()).child("onCall").setValue(false);
+//                }
+//            }
+//
+//            @Override
+//            public void onCancelled(@NonNull DatabaseError error) {
+//
+//            }
+//        });
+//
+//        // remove nodes with deleted user uids
+//        DatabaseReference rootDB = FirebaseDatabase.getInstance("https://madignight-default-rtdb.asia-southeast1.firebasedatabase.app/").getReference();
+//        ArrayList<String> uidList = new ArrayList<>();
+//        rootDB.child("user").addListenerForSingleValueEvent(new ValueEventListener() {
+//            @Override
+//            public void onDataChange(@NonNull DataSnapshot snapshot) {
+//                for (DataSnapshot childSnapshot : snapshot.getChildren()) {
+//                    if (childSnapshot.child("phone").exists()  && childSnapshot.child("profileCreated").exists()){
+//                        uidList.add(childSnapshot.getKey());
+//                    }
+//                }
+//
+//                for (DataSnapshot childSnapshot : snapshot.getChildren()) {
+//                    if (childSnapshot.child("chats").exists()) {
+//                        for (DataSnapshot chatSnapshot : childSnapshot.child("chats").getChildren()) {
+//                            if (!uidList.contains(chatSnapshot.getValue().toString())) {
+//                                chatSnapshot.getRef().setValue(null);
+//                            }
+//                        }
+//                    }
+//                    if (childSnapshot.child("chatRequests").exists()) {
+//                        if (childSnapshot.child("chatRequests").child("received").exists()) {
+//                            for (DataSnapshot receivedSnapshot : childSnapshot.child("chatRequests").child("received").getChildren()) {
+//                                if (!uidList.contains(receivedSnapshot.getValue().toString())) {
+//                                    receivedSnapshot.getRef().setValue(null);
+//                                }
+//                            }
+//                        }
+//                        if (childSnapshot.child("chatRequests").child("sent").exists()) {
+//                            for (DataSnapshot sentSnapshot : childSnapshot.child("chatRequests").child("received").getChildren()) {
+//                                if (!uidList.contains(sentSnapshot.getValue().toString())) {
+//                                    sentSnapshot.getRef().setValue(null);
+//                                }
+//                            }
+//                        }
+//                    }
 //                }
 //            }
 //

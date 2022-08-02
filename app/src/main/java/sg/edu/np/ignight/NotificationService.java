@@ -466,11 +466,7 @@ public class NotificationService extends FirebaseMessagingService {
                                 replyIntent.putExtra("myName", myDisplayName);
                                 replyIntent.putExtra("notificationID", notificationID);
                                 replyIntent.putExtra("tag", (existingTag == null || existingTag.equals(""))?newTag:existingTag);
-
-                                ByteArrayOutputStream stream = new ByteArrayOutputStream();
-                                myProfileBitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
-                                replyIntent.putExtra("bitmapBA", stream.toByteArray());
-                                replyIntent.addFlags(Intent.FLAG_RECEIVER_FOREGROUND);
+                                replyIntent.putExtra("profile", myProfile);
 
                                 PendingIntent replyPendingIntent = PendingIntent.getBroadcast(context, 1, replyIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 

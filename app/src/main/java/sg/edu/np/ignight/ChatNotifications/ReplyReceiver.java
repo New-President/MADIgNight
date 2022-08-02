@@ -10,7 +10,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.media.AudioAttributes;
 import android.net.Uri;
 import android.os.Build;
@@ -33,12 +32,14 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.google.gson.Gson;
 
-import java.io.ByteArrayOutputStream;
+import java.net.URL;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
 import sg.edu.np.ignight.ChatActivity;
 import sg.edu.np.ignight.R;
@@ -57,9 +58,10 @@ public class ReplyReceiver extends BroadcastReceiver {
     boolean highPriority;
     private String ringtone;
     private long[] vibrationPattern;
-    private Bitmap myBitmap;
     private String myName;
+    private String profileUrl;
     private String channelId = "IgnightChat";
+    private Future<Bitmap> myFutureBitmap;
 
     DatabaseReference rootDB, chatDB;
 
@@ -86,22 +88,26 @@ public class ReplyReceiver extends BroadcastReceiver {
         myName = intent.getStringExtra("myName");
         notificationID = intent.getIntExtra("notificationID", 1);
         tag = intent.getStringExtra("tag");
+        profileUrl = intent.getStringExtra("profile");
 
-        byte[] byteArray = intent.getByteArrayExtra("bitmapBA");
-        myBitmap = BitmapFactory.decodeByteArray(byteArray, 0, byteArray.length);
+        try {
+            ExecutorService executorService = Executors.newFixedThreadPool(2);
+            myFutureBitmap = executorService.submit(new UrlToBitmap(new URL(profileUrl)));
 
-        myself = new Person.Builder().setIcon(IconCompat.createWithBitmap(myBitmap)).setName(myName).build();
+            rootDB = FirebaseDatabase.getInstance("https://madignight-default-rtdb.asia-southeast1.firebasedatabase.app/").getReference();
+            chatDB = rootDB.child("chat").child(chatID);
 
-        rootDB = FirebaseDatabase.getInstance("https://madignight-default-rtdb.asia-southeast1.firebasedatabase.app/").getReference();
-        chatDB = rootDB.child("chat").child(chatID);
+            Bundle remoteInput = RemoteInput.getResultsFromIntent(intent);
 
-        Bundle remoteInput = RemoteInput.getResultsFromIntent(intent);
+            // send message if there is text input from the direct reply
+            if (remoteInput != null) {
+                String replyText = remoteInput.getString("direct_reply");
 
-        // send message if there is text input from the direct reply
-        if (remoteInput != null) {
-            String replyText = remoteInput.getString("direct_reply");
-
-            sendMessage(replyText, context);
+                sendMessage(replyText, context);
+            }
+        }
+        catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
@@ -171,48 +177,55 @@ public class ReplyReceiver extends BroadcastReceiver {
 
     // update current notification with replied text
     private void updateNotification(String replyText, Context context) {
-        // create new message
-        NotificationCompat.MessagingStyle.Message newMessage = new NotificationCompat.MessagingStyle.Message(replyText, System.currentTimeMillis(), myself);
+        try {
+            myself = new Person.Builder().setIcon(IconCompat.createWithBitmap(myFutureBitmap.get())).setName(myName).build();
 
-        // get current notification messaging style
-        NotificationCompat.MessagingStyle messagingStyle = getMessagingStyle(context);
+            // create new message
+            NotificationCompat.MessagingStyle.Message newMessage = new NotificationCompat.MessagingStyle.Message(replyText, System.currentTimeMillis(), myself);
 
-        if (messagingStyle != null) {
-            messagingStyle.addMessage(newMessage);  // add message to messaging style
-        }
+            // get current notification messaging style
+            NotificationCompat.MessagingStyle messagingStyle = getMessagingStyle(context);
 
-        // create builder for notification
-        NotificationCompat.Builder builder = createBuilder(context);
-
-        if (builder != null) {
-            builder.setStyle(messagingStyle);
-
-            NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-
-            // set notification channel for api level > 26
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                // create channel
-                NotificationChannel channel = new NotificationChannel(channelId, "Ignight Chat", highPriority?NotificationManager.IMPORTANCE_HIGH:NotificationManager.IMPORTANCE_DEFAULT);
-
-                notificationManager.createNotificationChannel(channel);
-
-                // retrieve channel to make updates
-                NotificationChannel targetChannel = notificationManager.getNotificationChannel(channelId);
-                if (!ringtone.isEmpty()) {
-                    targetChannel.setSound(Uri.parse(ringtone), new AudioAttributes.Builder().setUsage(AudioAttributes.USAGE_NOTIFICATION).setContentType(AudioAttributes.CONTENT_TYPE_UNKNOWN).build());
-                }
-                else {
-                    targetChannel.setSound(null, null);
-                }
-                targetChannel.setShowBadge(true);
-                targetChannel.setLockscreenVisibility(NotificationCompat.VISIBILITY_PRIVATE);
-                targetChannel.enableVibration(true);
-                targetChannel.setVibrationPattern(vibrationPattern);
-                targetChannel.setImportance(highPriority?NotificationManager.IMPORTANCE_HIGH:NotificationManager.IMPORTANCE_DEFAULT);
+            if (messagingStyle != null) {
+                messagingStyle.addMessage(newMessage);  // add message to messaging style
             }
 
-            // send notification
-            notificationManager.notify(tag, notificationID, builder.build());
+            // create builder for notification
+            NotificationCompat.Builder builder = createBuilder(context);
+
+            if (builder != null) {
+                builder.setStyle(messagingStyle);
+
+                NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+
+                // set notification channel for api level > 26
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                    // create channel
+                    NotificationChannel channel = new NotificationChannel(channelId, "Ignight Chat", highPriority?NotificationManager.IMPORTANCE_HIGH:NotificationManager.IMPORTANCE_DEFAULT);
+
+                    notificationManager.createNotificationChannel(channel);
+
+                    // retrieve channel to make updates
+                    NotificationChannel targetChannel = notificationManager.getNotificationChannel(channelId);
+                    if (!ringtone.isEmpty()) {
+                        targetChannel.setSound(Uri.parse(ringtone), new AudioAttributes.Builder().setUsage(AudioAttributes.USAGE_NOTIFICATION).setContentType(AudioAttributes.CONTENT_TYPE_UNKNOWN).build());
+                    }
+                    else {
+                        targetChannel.setSound(null, null);
+                    }
+                    targetChannel.setShowBadge(true);
+                    targetChannel.setLockscreenVisibility(NotificationCompat.VISIBILITY_PRIVATE);
+                    targetChannel.enableVibration(true);
+                    targetChannel.setVibrationPattern(vibrationPattern);
+                    targetChannel.setImportance(highPriority?NotificationManager.IMPORTANCE_HIGH:NotificationManager.IMPORTANCE_DEFAULT);
+                }
+
+                // send notification
+                notificationManager.notify(tag, notificationID, builder.build());
+            }
+        }
+        catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
@@ -265,11 +278,7 @@ public class ReplyReceiver extends BroadcastReceiver {
             replyIntent.putExtra("myName", myName);
             replyIntent.putExtra("notificationID", notificationID);
             replyIntent.putExtra("tag", tag);
-
-            ByteArrayOutputStream stream = new ByteArrayOutputStream();
-            myBitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
-            replyIntent.putExtra("bitmapBA", stream.toByteArray());
-            replyIntent.addFlags(Intent.FLAG_RECEIVER_FOREGROUND);
+            replyIntent.putExtra("profile", profileUrl);
 
             PendingIntent replyPendingIntent = PendingIntent.getBroadcast(context, 1, replyIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 

@@ -34,7 +34,7 @@ Lee Wee Kang - Map function (Google api and like locations), comments section (c
 
 Lim Long Teck - ProposeDate feature (Google Calendar), Notification Activity, Blogs Notification (Comments and likes)
 
-Han Xihe - Activity report
+Han Xihe - Activity report, profile personalisation (colour theming)
 
 Keefe Cheong Wenkai - Chatbot, Chat requests, Chat notification and settings, Chat request notification and settings
 
@@ -145,7 +145,8 @@ Keefe Cheong Wenkai - Chatbot, Chat requests, Chat notification and settings, Ch
         * Top IgNight user, where the current user has the largest total number of texts sent between both parties
         * Amount of time the user uses IgNight for current day as a bar graph
         * Bar graph has a second value that shows the "goal" amount of time the user sets as comparison to the actual amount of time they spent
-        * Displays the amount of time the user uses IgNight for current day in hours and minutes 
+        * Displays the amount of time the user uses IgNight for current day in hours and minutes * Profile Personalisation
+    * Colour theming of view profile, unique to each user 
     
 ### Play Store listing screenshots
 ![FeatureGraphic6](https://user-images.githubusercontent.com/103987209/182181996-9ec54524-2193-4877-bb7c-641370a1d502.png)

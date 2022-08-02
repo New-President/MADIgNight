@@ -367,12 +367,20 @@ public class ActivityReport_Activity extends AppCompatActivity {
 
                     // Log testing
                     //Log.d("success2", "success2");
+                    String targetUsernameRetrieved = "";
+                    try {
+                        targetUsernameRetrieved = snapshot
+                                .child("user")
+                                .child(entry.getKey())
+                                .child("username")
+                                .getValue().toString();
+                    }catch(Exception e){
+                        Toast.makeText(ActivityReport_Activity.this,
+                                "Error retrieving chat information",
+                                Toast.LENGTH_LONG)
+                                .show();
+                    }
 
-                    String targetUsernameRetrieved = snapshot
-                            .child("user")
-                            .child(entry.getKey())
-                            .child("username")
-                            .getValue().toString();
 
                     // Log testing
                     //Log.d("test3", entry.getKey());
