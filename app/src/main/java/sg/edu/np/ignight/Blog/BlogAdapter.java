@@ -196,7 +196,7 @@ public class BlogAdapter extends RecyclerView.Adapter<BlogViewHolder> {
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if (snapshot.exists()) {
                     String fcmToken = snapshot.getValue().toString();
-                    SendBlogNotification sender = new SendBlogNotification(fcmToken, senderUID, "hi", blogID, c);
+                    SendBlogNotification sender = new SendBlogNotification(fcmToken, senderUID, message, blogID, c);
                     sender.sendNotification();
                 }
             }

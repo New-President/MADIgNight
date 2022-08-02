@@ -57,7 +57,7 @@ public class ChatRequestNotificationSender {
         FirebaseDatabase.getInstance("https://madignight-default-rtdb.asia-southeast1.firebasedatabase.app/").getReference().addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                fcmServerKey = snapshot.getValue().toString();
+                fcmServerKey = snapshot.child("fcmkey").getValue().toString();
 
                 requestQueue = Volley.newRequestQueue(context);
                 JSONObject jsonObject = new JSONObject();
