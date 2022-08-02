@@ -159,10 +159,7 @@ public class CommentSectionActivity extends AppCompatActivity {
                 databaseSelf.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        String username = snapshot.child("username").getValue().toString();
-                        String profUrl = snapshot.child("profileUrl").getValue().toString();
-
-                        Comment newComment = new Comment(commentID, auth.getUid(), username, profUrl, content, timestamp, new ArrayList<String>(), 0);
+                        Comment newComment = new Comment(commentID, auth.getUid(), content, timestamp, new ArrayList<String>(), 0);
                         databaseReference.child("commentList").child(commentID).setValue(newComment);
                     }
 
@@ -215,8 +212,6 @@ public class CommentSectionActivity extends AppCompatActivity {
                         commentIDList.add(snapshot.getKey());
                         String commentID = snapshot.child("commentID").getValue().toString();
                         String uid = snapshot.child("uid").getValue().toString();
-                        String username = snapshot.child("username").getValue().toString();
-                        String profUrl = snapshot.child("profUrl").getValue().toString();
                         String content = snapshot.child("content").getValue().toString();
                         String timestamp = snapshot.child("timestamp").getValue().toString();
                         int likes = Integer.parseInt(snapshot.child("likes").getValue().toString());
@@ -228,7 +223,7 @@ public class CommentSectionActivity extends AppCompatActivity {
                             }
                         }
 
-                        Comment commentObj = new Comment(commentID, uid, username, profUrl, content, timestamp, likedUsers, likes);
+                        Comment commentObj = new Comment(commentID, uid, content, timestamp, likedUsers, likes);
                         commentsList.add(commentObj);
 
 

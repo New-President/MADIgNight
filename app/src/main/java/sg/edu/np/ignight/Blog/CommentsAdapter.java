@@ -52,12 +52,6 @@ public class CommentsAdapter extends RecyclerView.Adapter<CommentsAdapter.Commen
 
     @Override
     public void onBindViewHolder(@NonNull CommentsViewHolder holder, int position) {
-        String uid = FirebaseAuth.getInstance().getUid();
-        Comment comment = commentList.get(position);
-        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("user").child(blogOwnerUID)
-                .child("blog").child(blogID).child("commentList").child(comment.getCommentID());
-        String targetUid = comment.getUid();
-
         TextView commentContent = holder.commentContent;
         TextView username = holder.commenterUsername;
         TextView timestampView = holder.timestamp;
@@ -65,8 +59,34 @@ public class CommentsAdapter extends RecyclerView.Adapter<CommentsAdapter.Commen
         ImageView commenterProfPic = holder.commenterProfPic;
         ImageView likeCommentBtn = holder.likeCommentBtn;
 
+        String uid = FirebaseAuth.getInstance().getUid();
+        Comment comment = commentList.get(position);
+        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("user").child(blogOwnerUID)
+                .child("blog").child(blogID).child("commentList").child(comment.getCommentID());
+
+        // Retrieve user details
+        String targetUid = comment.getUid();
+        DatabaseReference commenterReference = FirebaseDatabase.getInstance().getReference("user").child(targetUid);
+
+        commenterReference.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                String name = snapshot.child("username").getValue().toString();
+                username.setText(name);
+                String url = snapshot.child("profileUrl").getValue().toString();
+                // Set profile picture of commenter
+                Glide.with(c)
+                        .load(url).placeholder(R.drawable.failed)
+                        .into(commenterProfPic);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
         commentContent.setText(comment.getContent());
-        username.setText(comment.getUsername());
         likesCount.setText(String.valueOf(comment.getLikes()));
 
         try {
@@ -76,10 +96,6 @@ public class CommentsAdapter extends RecyclerView.Adapter<CommentsAdapter.Commen
         } catch (ParseException e) {
             e.printStackTrace();
         }
-        // Set profile picture of commenter
-        Glide.with(c)
-                .load(comment.getProfUrl()).placeholder(R.drawable.failed)
-                .into(commenterProfPic);
 
         commenterProfPic.setOnClickListener(new View.OnClickListener() {
             @Override
