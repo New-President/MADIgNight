@@ -1,4 +1,4 @@
-package sg.edu.np.ignight;
+package sg.edu.np.ignight.Map;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
@@ -11,11 +11,12 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.Handler;
-import android.provider.Settings;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
+
+import sg.edu.np.ignight.MapActivity;
+import sg.edu.np.ignight.R;
 
 public class PermissionsActivity extends AppCompatActivity {
     private final int LOCATION_PERMISSION_CODE = 1;

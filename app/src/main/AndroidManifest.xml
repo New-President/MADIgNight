@@ -64,7 +64,7 @@
             android:screenOrientation="portrait"
             android:exported="false" />
         <activity
-            android:name=".PermissionsActivity"
+            android:name=".Map.PermissionsActivity"
             android:screenOrientation="portrait"
             android:exported="false" />
         <activity

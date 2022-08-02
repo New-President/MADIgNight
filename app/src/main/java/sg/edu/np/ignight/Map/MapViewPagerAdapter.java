@@ -41,9 +41,7 @@ public class MapViewPagerAdapter extends FragmentStateAdapter {
                 }
             }
             @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
-            }
+            public void onCancelled(@NonNull DatabaseError error) { }
         });
         // Changes fragments based on position selected
         switch (position){

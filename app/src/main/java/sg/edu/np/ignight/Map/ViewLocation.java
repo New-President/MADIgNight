@@ -17,6 +17,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -124,10 +125,12 @@ public class ViewLocation extends AppCompatActivity implements OnMapReadyCallbac
                         if (snapshot.exists() && (boolean) snapshot.getValue()){
                             databaseReference.setValue(false);
                             favouriteBtn.setBackgroundResource(R.drawable.heartwithhole);
+                            Toast.makeText(ViewLocation.this, "Unsaved", Toast.LENGTH_SHORT).show();
                         }
                         else{
                             databaseReference.setValue(true);
                             favouriteBtn.setBackgroundResource(R.drawable.heart);
+                            Toast.makeText(ViewLocation.this, "Saved", Toast.LENGTH_SHORT).show();
                         }
                     }
 
