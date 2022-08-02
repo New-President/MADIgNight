@@ -588,18 +588,6 @@ public class ProfileViewActivity extends AppCompatActivity {
     protected void onDestroy() {
         super.onDestroy();
 
-        /*
-        // Reset the fonts and the accent themes
-        personalInfoText.setTypeface(poppinsFont);
-        nameAndAgeText.setTypeface(poppinsFont);
-        viewBlogsBtn.setTypeface(poppinsFont);
-        myInterestsText.setTypeface(poppinsFont);
-        aboutMeText.setTypeface(poppinsFont);
-        whatImLookingForText.setTypeface(poppinsFont);
-        myIdealDate.setTypeface(poppinsFont);
-        ignightButton.setTypeface(poppinsFont);*/
-
-
         LayoutInflater inflater= getLayoutInflater();
         View view=inflater.inflate(R.layout.interest_layout, null);
         TextView TextView = view.findViewById(R.id.textView3);
