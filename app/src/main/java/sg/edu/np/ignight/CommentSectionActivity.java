@@ -154,7 +154,9 @@ public class CommentSectionActivity extends AppCompatActivity {
 
                 databaseReference.child("comments").setValue(numOfComments + 1);
 
-                pushNotification(uid ,blogID, content, blogOwnerUID);
+                if (!FirebaseAuth.getInstance().getCurrentUser().getUid().equals(blogOwnerUID)){
+                    pushNotification(uid ,blogID, content, blogOwnerUID);
+                }
 
                 databaseSelf.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override

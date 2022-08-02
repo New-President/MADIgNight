@@ -31,18 +31,20 @@ public class SendBlogNotification {
     private String title;
     private String blogID;
     private String senderID;
+    private String blogOwnerUID;
     private Context context;
 
     private RequestQueue requestQueue1;
     private final String postUrl = "https://fcm.googleapis.com/fcm/send";
     private String fcmServerKey;
 
-    public SendBlogNotification(String fcmToken, String senderID, String title, String blogID, Context context) {
+    public SendBlogNotification(String fcmToken, String senderID, String title, String blogID, Context context, String blogOwnerUID) {
         this.fcmToken = fcmToken;
         this.title = title;
         this.senderID = senderID;
         this.blogID = blogID;
         this.context = context;
+        this.blogOwnerUID = blogOwnerUID;
     }
 
     // send notification using Volley
@@ -65,6 +67,7 @@ public class SendBlogNotification {
                     data.put("title", title); // Title
                     data.put("senderID", senderID); // Sender's ID/UID
                     data.put("blogID", blogID); //BlogID
+                    data.put("blogOwnerUID", blogOwnerUID); //BlogOwnerUID
 
                     jsonObject.put("data", data);
                     JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, postUrl, jsonObject, new Response.Listener<JSONObject>() {

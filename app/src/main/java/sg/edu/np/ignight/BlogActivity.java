@@ -101,8 +101,12 @@ public class BlogActivity extends AppCompatActivity {
                     intent.putExtra("user", userObject);
                     intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                     startActivity(intent);
+                    finish();
                 }
                 else{
+                    Intent intent = new Intent(getApplicationContext(), MainMenuActivity.class);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    startActivity(intent);
                     finish();
                 }
             }

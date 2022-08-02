@@ -510,12 +510,13 @@ public class NotificationService extends FirebaseMessagingService {
         FirebaseStorage storage = FirebaseStorage.getInstance();
         String senderID = data.get("senderID");
         String blogID = data.get("blogID");
+        String blogOwnerUID = data.get("blogOwnerUID");
 
         rootDB.child("user").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 // Get the imgID of the blog that have been liked
-                String imgID = snapshot.child(uid).child("blog").child(blogID).child("imgID").getValue().toString();
+                String imgID = snapshot.child(blogOwnerUID).child("blog").child(blogID).child("imgID").getValue().toString();
                 NotificationCompat.Builder builder = new NotificationCompat.Builder(context, "Ignight");
                 // Set the ignight icon as the icon on the notification
                 builder.setSmallIcon(R.mipmap.ic_launcher_round);
