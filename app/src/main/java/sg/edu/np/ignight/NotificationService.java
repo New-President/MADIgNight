@@ -305,16 +305,9 @@ public class NotificationService extends FirebaseMessagingService {
                         text = messageSnapshot.child("text").getValue().toString();
                     }
 
-                    String imageUrl = "";
-                    if (messageSnapshot.child("media").exists()) {
-                        for (DataSnapshot mediaSnapshot : messageSnapshot.child("media").getChildren()) {
-                            imageUrl = mediaSnapshot.getValue().toString();
-                            break;
-                        }
-                    }
+                    boolean hasImage = messageSnapshot.child("media").exists();
 
                     String finalText = text;
-                    String finalImageUrl = imageUrl;
                     rootDB.child("user").addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -439,11 +432,13 @@ public class NotificationService extends FirebaseMessagingService {
                                 messagingStyle.setConversationTitle(senderName);
 
                                 // create message
-                                NotificationCompat.MessagingStyle.Message notificationMessage = new NotificationCompat.MessagingStyle.Message(finalText, System.currentTimeMillis(), sender);
-                                if (!finalImageUrl.equals("")) {
-                                    // add image if there is image attached
-                                    Uri imageUri = Uri.parse(finalImageUrl).buildUpon().build();
-                                    notificationMessage.setData("Image/", imageUri);
+                                NotificationCompat.MessagingStyle.Message notificationMessage;
+
+                                if (!hasImage) {
+                                    notificationMessage = new NotificationCompat.MessagingStyle.Message(finalText, System.currentTimeMillis(), sender);
+                                }
+                                else {
+                                    notificationMessage = new NotificationCompat.MessagingStyle.Message("Photo", System.currentTimeMillis(), sender);
                                 }
 
                                 // add message
@@ -510,12 +505,13 @@ public class NotificationService extends FirebaseMessagingService {
         FirebaseStorage storage = FirebaseStorage.getInstance();
         String senderID = data.get("senderID");
         String blogID = data.get("blogID");
+        String blogOwnerUID = data.get("blogOwnerUID");
 
         rootDB.child("user").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 // Get the imgID of the blog that have been liked
-                String imgID = snapshot.child(uid).child("blog").child(blogID).child("imgID").getValue().toString();
+                String imgID = snapshot.child(blogOwnerUID).child("blog").child(blogID).child("imgID").getValue().toString();
                 NotificationCompat.Builder builder = new NotificationCompat.Builder(context, "Ignight");
                 // Set the ignight icon as the icon on the notification
                 builder.setSmallIcon(R.mipmap.ic_launcher_round);
@@ -536,7 +532,7 @@ public class NotificationService extends FirebaseMessagingService {
                             builder.setLargeIcon(bitmap);
                             builder.setContentTitle("IgNight");  // Content as IgNight
                             // display the text as seen on the notification as the username of the user who have the liked the blog
-                            builder.setContentText(senderUsername + " liked you blog.");
+                            builder.setContentText(senderUsername + " liked your blog.");
                             // After the user click on the blog, the notification would disappear
                             builder.setAutoCancel(true);
 
@@ -560,7 +556,7 @@ public class NotificationService extends FirebaseMessagingService {
                                 String channelId = "IgnightBlogs";
                                 // Set the notification channel
                                 // We set the level of importance for the notification to high
-                                // The notification would vibrate
+                                // The notification would drop down and vibrate
                                 NotificationChannel channel = new NotificationChannel(channelId, "Blogs", NotificationManager.IMPORTANCE_HIGH);
                                 channel.setShowBadge(true);
                                 // Conceal all private information on secure lockscreens
@@ -659,7 +655,7 @@ public class NotificationService extends FirebaseMessagingService {
                                 String channelId = "IgnightBlogs";
                                 // Set the notification channel
                                 // We set the level of importance for the notification to high
-                                // The notification would vibrate
+                                // The notification would drop down and vibrate
                                 NotificationChannel channel = new NotificationChannel(channelId, "Blogs", NotificationManager.IMPORTANCE_HIGH);
                                 channel.setShowBadge(true);
                                 // Conceal all private information on secure lockscreens

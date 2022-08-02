@@ -5,6 +5,7 @@ import static android.content.ContentValues.TAG;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -14,6 +15,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -40,6 +42,7 @@ import java.util.Date;
 import sg.edu.np.ignight.Blog.CommentsAdapter;
 import sg.edu.np.ignight.BlogNotification.SendCommentNotification;
 import sg.edu.np.ignight.Objects.Comment;
+import sg.edu.np.ignight.Objects.UserObject;
 
 public class CommentSectionActivity extends AppCompatActivity {
     private ArrayList<Comment> commentsList;
@@ -59,6 +62,7 @@ public class CommentSectionActivity extends AppCompatActivity {
         Intent intent = getIntent();
 
 
+        // Retrieves uid who posted the blogs & id of blog
         if(intent.getStringExtra("uid") != null){
             blogOwnerUID = intent.getStringExtra("uid");
             blogID = intent.getStringExtra("blogID");
@@ -71,16 +75,7 @@ public class CommentSectionActivity extends AppCompatActivity {
             imgID = bundle.getString("imgID");
         }
 
-
-
-
-        // Retrieves uid who posted the blogs & id of blog
-        /*blogOwnerUID = intent.getStringExtra("uid");*/
-
-
         int numOfComments = intent.getIntExtra("numOfComments", 0);
-
-
 
         ImageView sendCommentBtn = findViewById(R.id.sendCommentBtn);
         ImageView commentProfilePic = findViewById(R.id.commentProfilePic);
@@ -98,6 +93,8 @@ public class CommentSectionActivity extends AppCompatActivity {
         getCommentsList();
         initRecyclerView(blogID, blogOwnerUID);
 
+        UserObject userObject = (UserObject) getIntent().getSerializableExtra("user");
+        boolean canEdit = getIntent().getBooleanExtra("canEdit", false);
         // Display own profile picture beside comment input
         databaseSelf.child("profileUrl").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -149,18 +146,15 @@ public class CommentSectionActivity extends AppCompatActivity {
 
                 databaseReference.child("comments").setValue(numOfComments + 1);
 
-                pushNotification(uid ,blogID, content, blogOwnerUID);
+                if (!FirebaseAuth.getInstance().getCurrentUser().getUid().equals(blogOwnerUID)){
+                    pushNotification(uid ,blogID, content, blogOwnerUID);
+                }
 
                 databaseSelf.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        String username = snapshot.child("username").getValue().toString();
-                        String profUrl = snapshot.child("profileUrl").getValue().toString();
-
-                        Comment newComment = new Comment(commentID, auth.getUid(), username, profUrl, content, timestamp, new ArrayList<String>(), 0);
+                        Comment newComment = new Comment(commentID, auth.getUid(), content, timestamp, new ArrayList<String>(), 0);
                         databaseReference.child("commentList").child(commentID).setValue(newComment);
-
-
                     }
 
                     @Override
@@ -174,12 +168,16 @@ public class CommentSectionActivity extends AppCompatActivity {
         });
 
         backBtn.setOnClickListener(new View.OnClickListener() {
+            @RequiresApi(api = Build.VERSION_CODES.N)
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(getApplicationContext(), MainMenuActivity.class);
+                Intent intent = new Intent(getApplicationContext(), BlogActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                // Gets targetuser blog posts, if null, own user blogs will be shown
+                intent.putExtra("user", userObject);
+                // Display "My Blog Posts" as header
+                intent.putExtra("canEdit", canEdit);
                 startActivity(intent);
-                finish();
             }
         });
     }
@@ -211,8 +209,6 @@ public class CommentSectionActivity extends AppCompatActivity {
                         commentIDList.add(snapshot.getKey());
                         String commentID = snapshot.child("commentID").getValue().toString();
                         String uid = snapshot.child("uid").getValue().toString();
-                        String username = snapshot.child("username").getValue().toString();
-                        String profUrl = snapshot.child("profUrl").getValue().toString();
                         String content = snapshot.child("content").getValue().toString();
                         String timestamp = snapshot.child("timestamp").getValue().toString();
                         int likes = Integer.parseInt(snapshot.child("likes").getValue().toString());
@@ -224,7 +220,7 @@ public class CommentSectionActivity extends AppCompatActivity {
                             }
                         }
 
-                        Comment commentObj = new Comment(commentID, uid, username, profUrl, content, timestamp, likedUsers, likes);
+                        Comment commentObj = new Comment(commentID, uid, content, timestamp, likedUsers, likes);
                         commentsList.add(commentObj);
 
 
