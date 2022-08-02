@@ -191,6 +191,8 @@ public class CommentSectionActivity extends AppCompatActivity {
         commmentRV.setNestedScrollingEnabled(false);
         commmentRV.setAdapter(commentAdapter);
         commentLayoutManager = new LinearLayoutManager(this);
+        commentLayoutManager.setReverseLayout(true);
+        commentLayoutManager.setStackFromEnd(true);
         commentLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         commmentRV.setLayoutManager(commentLayoutManager);
     }
