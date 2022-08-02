@@ -65,7 +65,7 @@
 
                                 <Spinner
                                     android:id="@+id/ChangeAccentThemeDropdown1"
-                                    android:layout_width="125dp"
+                                    android:layout_width="192dp"
                                     android:layout_height="50dp"
                                     android:layout_marginStart="32dp"
                                     android:spinnerMode="dropdown"
@@ -129,7 +129,7 @@
                     android:layout_marginBottom="24dp"
                     android:background="#fff"
                     android:backgroundTint="#fff"
-                    android:text="Save Changes"
+                    android:text="save and preview theme"
                     android:textColor="#fff"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"

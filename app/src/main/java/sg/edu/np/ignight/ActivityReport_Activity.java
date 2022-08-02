@@ -178,8 +178,6 @@ public class ActivityReport_Activity extends AppCompatActivity {
     // Also adds data to the barChartData for graph display
     private void getTimeSpentToday(){
         // Instantiate some fields
-        SharedPreferences sharedPreferences = getSharedPreferences("dataForDay", Context.MODE_PRIVATE);
-        SharedPreferences.Editor sPdayEdit = sharedPreferences.edit();
         UsageStatsManager mUsageStatsManager = (UsageStatsManager)getSystemService(USAGE_STATS_SERVICE);
         time = System.currentTimeMillis();
         hours2 = 0;
@@ -255,9 +253,6 @@ public class ActivityReport_Activity extends AppCompatActivity {
                                     .show();
                         }
                     });
-                    // Add time to sharedPreference to save it
-                    sPdayEdit.putInt(packageName, hours1 * 60 + minutes1);
-                    sPdayEdit.apply();
                 }
             }
         }
