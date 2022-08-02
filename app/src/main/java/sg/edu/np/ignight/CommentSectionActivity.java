@@ -141,29 +141,30 @@ public class CommentSectionActivity extends AppCompatActivity {
             public void onClick(View view) {
                 String content = commentInputField.getText().toString();
 
-                String  timestamp = new Date().toString();
-                String commentID = databaseReference.push().getKey();
+                if (!content.equals("")){
+                    String  timestamp = new Date().toString();
+                    String commentID = databaseReference.push().getKey();
 
-                databaseReference.child("comments").setValue(numOfComments + 1);
+                    databaseReference.child("comments").setValue(numOfComments + 1);
 
-                if (!FirebaseAuth.getInstance().getCurrentUser().getUid().equals(blogOwnerUID)){
-                    pushNotification(uid ,blogID, content, blogOwnerUID);
+                    if (!FirebaseAuth.getInstance().getCurrentUser().getUid().equals(blogOwnerUID)){
+                        pushNotification(uid ,blogID, content, blogOwnerUID);
+                    }
+
+                    databaseSelf.addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                            Comment newComment = new Comment(commentID, auth.getUid(), content, timestamp, new ArrayList<String>(), 0);
+                            databaseReference.child("commentList").child(commentID).setValue(newComment);
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) {
+
+                        }
+                    });
+                    commentInputField.setText("");
                 }
-
-                databaseSelf.addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        Comment newComment = new Comment(commentID, auth.getUid(), content, timestamp, new ArrayList<String>(), 0);
-                        databaseReference.child("commentList").child(commentID).setValue(newComment);
-                    }
-
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError error) {
-
-                    }
-                });
-
-                commentInputField.setText("");
             }
         });
 
