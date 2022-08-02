@@ -42,6 +42,7 @@ import java.util.Date;
 import sg.edu.np.ignight.Blog.CommentsAdapter;
 import sg.edu.np.ignight.BlogNotification.SendCommentNotification;
 import sg.edu.np.ignight.Objects.Comment;
+import sg.edu.np.ignight.Objects.UserObject;
 
 public class CommentSectionActivity extends AppCompatActivity {
     private ArrayList<Comment> commentsList;
@@ -99,6 +100,8 @@ public class CommentSectionActivity extends AppCompatActivity {
 
         getCommentsList();
         initRecyclerView(blogID, blogOwnerUID);
+
+        UserObject userObject = (UserObject) getIntent().getSerializableExtra("user");
 
         // Display own profile picture beside comment input
         databaseSelf.child("profileUrl").addListenerForSingleValueEvent(new ValueEventListener() {
@@ -179,6 +182,7 @@ public class CommentSectionActivity extends AppCompatActivity {
             public void onClick(View view) {
                 Intent intent = new Intent(getApplicationContext(), BlogActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                intent.putExtra("user", userObject);
                 startActivity(intent);
             }
         });
