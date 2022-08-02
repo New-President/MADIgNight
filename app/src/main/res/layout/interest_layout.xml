@@ -6,7 +6,7 @@
     android:layout_height="wrap_content"
     android:textAlignment="center">
 
-    <TextView
+    <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/textView3"
         android:layout_width="102dp"
         android:layout_height="35dp"

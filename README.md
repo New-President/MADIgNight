@@ -34,7 +34,7 @@ Lee Wee Kang - Map function (Google api and like locations), comments section (c
 
 Lim Long Teck - ProposeDate feature (Google Calendar), Notification Activity, Blogs Notification (Comments and likes)
 
-Han Xihe - Activity report
+Han Xihe - Activity report, profile personalisation (colour theming)
 
 Keefe Cheong Wenkai - Chatbot, Chat requests, Chat notification and settings, Chat request notification and settings
 
@@ -134,16 +134,28 @@ Keefe Cheong Wenkai - Chatbot, Chat requests, Chat notification and settings, Ch
     * The profile image of the user would be displayed on the notification activity
     * The associated blog's image would also be displayed
     * If the user click on the blog image, he/she would be brought to either the Blog Activity or Commentseciton Activity
-    
-    
+ * Activity Report 
+    * Collects the user's data: 
+        * Number of chats 
+        * Target user of each chat 
+        * Number of texts sent between both users 
+        * Amount of time the user uses IgNight for each day
+    * Displays the user's data in an informative graphical manner:
+        * Top 3 IgNights by the total number of texts sent between both users as a pie chart 
+        * Top IgNight user, where the current user has the largest total number of texts sent between both parties
+        * Amount of time the user uses IgNight for current day as a bar graph
+        * Bar graph has a second value that shows the "goal" amount of time the user sets as comparison to the actual amount of time they spent
+        * Displays the amount of time the user uses IgNight for current day in hours and minutes * Profile Personalisation
+    * Colour theming of view profile, unique to each user 
     
 ### Play Store listing screenshots
-
-![Screenshot 2022-06-21 020225](https://user-images.githubusercontent.com/103987209/175459237-3f93641f-0432-4e65-a6aa-a2c41f7eab6d.png)
-![Screenshot 2022-06-21 030326](https://user-images.githubusercontent.com/103987209/175459245-9168ea27-3479-4263-be1a-deb57992567a.png)
-![Screenshot 2022-06-21 030346](https://user-images.githubusercontent.com/103987209/175459248-83e01fb2-0ecb-40b1-bae5-3d74d2c880e8.png)
-![Screenshot 2022-06-21 030403](https://user-images.githubusercontent.com/103987209/175459263-e1ea3a16-4931-47ff-a107-86392d463027.png)
-![Screenshot 2022-06-23 232659](https://user-images.githubusercontent.com/103987209/175459273-51aa8912-ff8b-4f8e-ab1e-300dbd4762ea.png)
+![FeatureGraphic6](https://user-images.githubusercontent.com/103987209/182181996-9ec54524-2193-4877-bb7c-641370a1d502.png)
+![Slide1](https://user-images.githubusercontent.com/103987209/182182002-701beb90-23ff-4893-ab60-f5760d42347c.PNG)
+![Slide2](https://user-images.githubusercontent.com/103987209/182182009-70346355-2ea7-4c69-96e1-ba502ba3e77d.PNG)
+![Slide3](https://user-images.githubusercontent.com/103987209/182182014-5889a46d-c9a0-4128-a5d5-e7d48ce17bc5.PNG)
+![Slide4](https://user-images.githubusercontent.com/103987209/182182020-ca6b70ea-8078-4aed-ace8-aa8231d93135.PNG)
+![Slide5](https://user-images.githubusercontent.com/103987209/182182026-7311948d-a0e7-4bf1-8567-56517b3fcb93.PNG)
+![Slide6](https://user-images.githubusercontent.com/103987209/182182028-0e92f689-a178-4d83-9efd-c5d198ede45a.PNG)
 
 ### User guide
 

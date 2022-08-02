@@ -10,8 +10,8 @@ android {
         applicationId "sg.edu.np.ignight"
         minSdk 23
         targetSdk 32
-        versionCode 17
-        versionName '4.3'
+        versionCode 19
+        versionName '4.5'
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }

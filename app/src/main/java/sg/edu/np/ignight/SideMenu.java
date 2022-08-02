@@ -50,6 +50,7 @@ import com.google.protobuf.StringValue;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
 import kotlin.collections.ArrayDeque;
@@ -101,6 +102,17 @@ public class SideMenu extends Activity {
                 Intent editProfile = new Intent(SideMenu.this, ProfileCreationActivity.class);
                 editProfile.putExtra("ProfileCreated", true);
                 startActivity(editProfile);
+            }
+        });
+
+        // Display profile
+        TextView profileCust = findViewById(R.id.ProfileCustTextView);
+        profileCust.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent profileCust = new Intent(SideMenu.this, ViewProfileCustomisation.class);
+                profileCust.putExtra("ProfileCreated", true);
+                startActivity(profileCust);
             }
         });
 
@@ -416,39 +428,28 @@ public class SideMenu extends Activity {
     private void ReAuthPhoneAuthCredential(PhoneAuthCredential phoneAuthCredential, AlertDialog alertDialog) {
         DatabaseReference myRef = FirebaseDatabase.getInstance().getReference("user");
         List<String> Chats = new ArrayList<>();
+        List<String> ChatsId = new ArrayList<>();
+        List<String> ChatsRequest = new ArrayList<>();
+        // Get chats
         myRef.child(Uid).child("chats").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if (snapshot.exists()) {
                     for (DataSnapshot chatIDSnapshot : snapshot.getChildren()) {
+                        Log.d("chat data",chatIDSnapshot.getKey());
                         Chats.add(chatIDSnapshot.getKey());
+                        ChatsId.add(chatIDSnapshot.getValue().toString());
                     }
+                    //Delete chat
                     DatabaseReference chatRef = FirebaseDatabase.getInstance().getReference("chat");
                     chatRef.addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot snapshot) {
                             if (snapshot.exists()) {
                                 for (DataSnapshot chatIDSnapshot : snapshot.getChildren()) {
-                                    if (Chats.contains(chatIDSnapshot.getValue())) {
+                                    if (Chats.contains(chatIDSnapshot.getKey())) {
+                                        Log.d("chat data in chat","deleted");
                                         chatRef.child(chatIDSnapshot.toString()).removeValue();
-                                    }
-                                }
-                            }
-                        }
-
-                        @Override
-                        public void onCancelled(@NonNull DatabaseError error) {
-                            Log.e("DeletingChatsError",error.toString());
-                        }
-                    });
-                    DatabaseReference chatRequest = FirebaseDatabase.getInstance().getReference("chatRequest");
-                    chatRequest.addListenerForSingleValueEvent(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(@NonNull DataSnapshot snapshot) {
-                            if (snapshot.exists()) {
-                                for (DataSnapshot chatIDSnapshot : snapshot.getChildren()) {
-                                    if (Chats.contains(chatIDSnapshot.getValue())) {
-                                        chatRequest.child(chatIDSnapshot.toString()).removeValue();
                                     }
                                 }
                             }
@@ -467,6 +468,68 @@ public class SideMenu extends Activity {
                 Log.e("DeletingChatsError",error.toString());
             }
         });
+        // Get chat request
+        for (String i : ChatsId) {
+            myRef.child(i).child("chatRequests").addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    if (snapshot.exists()) {
+                        for (DataSnapshot reqSnapshot : snapshot.getChildren()) {
+                            for (DataSnapshot chatIDSnapshot : reqSnapshot.getChildren()) {
+                                if (chatIDSnapshot.getValue() == Uid) {
+                                    Log.d("newreqchat",chatIDSnapshot.getKey());
+                                    ChatsRequest.add(chatIDSnapshot.getKey());
+                                }
+                            }
+                        }
+                    }
+                }
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+                    Log.e("GettingChatReqError",error.toString());
+                }
+            });
+        }
+        myRef.child(Uid).child("chatRequests").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (snapshot.exists()) {
+                    // Get Chat request
+                    for (DataSnapshot chatReqStatusSnapshot : snapshot.getChildren()) {
+                        for (DataSnapshot chatReq : chatReqStatusSnapshot.getChildren()) {
+                            Log.d("chatrequestdata",chatReqStatusSnapshot.getKey());
+                            ChatsRequest.add(chatReq.getKey());
+                        }
+                    }
+                    // Delete Chat request
+                    DatabaseReference chatRequest = FirebaseDatabase.getInstance().getReference("chatRequest");
+                    chatRequest.addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                            if (snapshot.exists()) {
+                                for (DataSnapshot chatReqSnapshot : snapshot.getChildren()) {
+                                    if (ChatsRequest.contains(chatReqSnapshot.getKey())) {
+                                        Log.d("chatrequest","deleted");
+                                        chatRequest.child(chatReqSnapshot.getKey()).removeValue();
+                                    }
+                                }
+                            }
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) {
+                            Log.e("DeletingChatsError",error.toString());
+                        }
+                    });
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Log.e("DeletingChatsError",error.toString());
+            }
+        });
+        // Delete all user with data of chats
         user.reauthenticate(phoneAuthCredential).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
@@ -477,8 +540,19 @@ public class SideMenu extends Activity {
                             if (snapshot.exists()) {
                                 for (DataSnapshot userIDSnapshot : snapshot.getChildren()) {
                                     for (DataSnapshot chatIDSnapshot : userIDSnapshot.child("chats").getChildren()) {
-                                        if (Chats.contains(chatIDSnapshot.getValue())) {
-                                            myRef.child(userIDSnapshot.getKey()).child("chats").child(chatIDSnapshot.toString()).removeValue();
+                                        if (Chats.contains(chatIDSnapshot.getKey())) {
+                                            Log.d("people with chat","deleted");
+                                            myRef.child(userIDSnapshot.getKey()).child("chats").child(chatIDSnapshot.getKey()).removeValue();
+                                            myRef.child(userIDSnapshot.getKey()).child("chatRequests").child("sent").removeValue();
+                                        }
+                                    }
+                                    // Delete chatreq
+                                    for (DataSnapshot chatReqStatusSnapshot : userIDSnapshot.child("chatRequests").getChildren()) {
+                                        for (DataSnapshot chatReq : chatReqStatusSnapshot.getChildren()) {
+                                            if (ChatsRequest.contains(chatReq.getKey())) {
+                                                Log.d("people with chatREQ",chatReq.getKey());
+                                                myRef.child(userIDSnapshot.getKey()).child("chatRequests").child(chatReqStatusSnapshot.getKey()).child(chatReq.getKey()).removeValue();
+                                            }
                                         }
                                     }
                                 }
