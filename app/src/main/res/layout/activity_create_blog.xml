@@ -86,12 +86,21 @@
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@+id/uploadBtn" />
 
+                    <view
+                        android:id="@+id/divider2"
+                        class="androidx.appcompat.widget.ActionMenuView"
+                        android:layout_width="0dp"
+                        android:layout_height="1dp"
+                        android:layout_marginTop="16dp"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/editBlogDesc" />
+
                     <TextView
                         android:id="@+id/createBlogLocation"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="24dp"
-                        android:layout_marginTop="16dp"
                         android:layout_marginEnd="28dp"
                         android:elevation="5dp"
                         android:padding="5dp"
@@ -101,12 +110,12 @@
                         app:layout_constraintHorizontal_bias="0.5"
                         app:layout_constraintHorizontal_chainStyle="packed"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/createBlogDesc" />
+                        app:layout_constraintTop_toBottomOf="@+id/divider2" />
 
                     <EditText
                         android:id="@+id/editBlogDesc"
                         android:layout_width="0dp"
-                        android:layout_height="35dp"
+                        android:layout_height="80dp"
                         android:layout_marginStart="8dp"
                         android:layout_marginTop="48dp"
                         android:layout_marginEnd="16dp"
@@ -167,7 +176,6 @@
                         android:layout_width="0dp"
                         android:layout_height="35dp"
                         android:layout_marginStart="18dp"
-                        android:layout_marginTop="16dp"
                         android:layout_marginEnd="16dp"
                         android:background="@drawable/custom_input"
                         android:ems="10"
@@ -177,7 +185,7 @@
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintHorizontal_bias="0.5"
                         app:layout_constraintStart_toEndOf="@+id/createBlogLocation"
-                        app:layout_constraintTop_toBottomOf="@+id/editBlogDesc" />
+                        app:layout_constraintTop_toBottomOf="@+id/divider2" />
 
                     <TextView
                         android:id="@+id/errorMsg"
