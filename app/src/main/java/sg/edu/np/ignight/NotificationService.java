@@ -555,7 +555,7 @@ public class NotificationService extends FirebaseMessagingService {
                                 String channelId = "IgnightBlogs";
                                 // Set the notification channel
                                 // We set the level of importance for the notification to high
-                                // The notification would vibrate
+                                // The notification would drop down and vibrate
                                 NotificationChannel channel = new NotificationChannel(channelId, "Blogs", NotificationManager.IMPORTANCE_HIGH);
                                 channel.setShowBadge(true);
                                 // Conceal all private information on secure lockscreens
@@ -654,7 +654,7 @@ public class NotificationService extends FirebaseMessagingService {
                                 String channelId = "IgnightBlogs";
                                 // Set the notification channel
                                 // We set the level of importance for the notification to high
-                                // The notification would vibrate
+                                // The notification would drop down and vibrate
                                 NotificationChannel channel = new NotificationChannel(channelId, "Blogs", NotificationManager.IMPORTANCE_HIGH);
                                 channel.setShowBadge(true);
                                 // Conceal all private information on secure lockscreens
