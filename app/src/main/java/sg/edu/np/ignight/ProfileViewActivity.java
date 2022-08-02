@@ -523,7 +523,7 @@ public class ProfileViewActivity extends AppCompatActivity {
                 if(snapshot.child("AccentThemeOption").exists()){
                     // Obtain the user's font
                     String targetUserAccentThemeOption = snapshot.child("AccentThemeOption")
-                            .child("fonts")
+                            .child("themes")
                             .getValue()
                             .toString();
                     LayoutInflater inflater= getLayoutInflater();
