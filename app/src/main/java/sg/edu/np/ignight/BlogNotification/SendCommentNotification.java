@@ -51,7 +51,7 @@ public class SendCommentNotification {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 // Get the fcmServer key that is placed in the database
-                fcmServerKey = snapshot.getValue().toString();
+                fcmServerKey = snapshot.child("fcmkey").getValue().toString();
                 // make a new volley request
                 requestQueue1 = Volley.newRequestQueue(context);
                 JSONObject jsonObject = new JSONObject();

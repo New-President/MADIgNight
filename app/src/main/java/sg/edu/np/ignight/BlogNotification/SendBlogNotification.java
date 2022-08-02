@@ -51,7 +51,7 @@ public class SendBlogNotification {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 // Get the fcmServer key that is placed in the database
-                fcmServerKey = snapshot.getValue().toString();
+                fcmServerKey = snapshot.child("fcmkey").getValue().toString();
                 // make a new volley request
                 requestQueue1 = Volley.newRequestQueue(context);
                 JSONObject jsonObject = new JSONObject();
@@ -67,7 +67,6 @@ public class SendBlogNotification {
                     data.put("blogID", blogID); //BlogID
 
                     jsonObject.put("data", data);
-
                     JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, postUrl, jsonObject, new Response.Listener<JSONObject>() {
                         @Override
                         public void onResponse(JSONObject response) {
