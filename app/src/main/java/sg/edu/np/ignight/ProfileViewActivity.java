@@ -93,7 +93,6 @@ public class ProfileViewActivity extends AppCompatActivity {
         // Get userObject from main menu to obtain user info
         UserObject user = (UserObject) getIntent().getSerializableExtra("user");
 
-        Log.d("viewprofileuid", user.getUid());
         /*
         // for testing when there is no userObject. do not remove.
         /*

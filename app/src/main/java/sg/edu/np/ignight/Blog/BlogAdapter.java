@@ -132,7 +132,9 @@ public class BlogAdapter extends RecyclerView.Adapter<BlogViewHolder> {
                     databaseReference.child("likes").setValue(blog.likes);
                     holder.likes.setText(String.valueOf(blog.likes));
                     likebutton.setBackgroundResource(R.drawable.heart);
-                    pushNotification(uid, blogID, "liked");
+                    if (uid != firebaseUser.getUid()){
+                        pushNotification(firebaseUser.getUid(), blogID, "liked", uid);
+                    }
                 }
             }
         });
@@ -190,16 +192,16 @@ public class BlogAdapter extends RecyclerView.Adapter<BlogViewHolder> {
         return data.size();
     }
 
-    private void pushNotification(String senderUID, String blogID, String message) {
+    private void pushNotification(String senderUID, String blogID, String message, String blogOwnerUid) {
 
         DatabaseReference myRef = FirebaseDatabase.getInstance("https://madignight-default-rtdb.asia-southeast1.firebasedatabase.app/").getReference();
 
-        myRef.child("user").child(senderUID).child("fcmToken").addListenerForSingleValueEvent(new ValueEventListener() {
+        myRef.child("user").child(blogOwnerUid).child("fcmToken").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if (snapshot.exists()) {
                     String fcmToken = snapshot.getValue().toString();
-                    SendBlogNotification sender = new SendBlogNotification(fcmToken, senderUID, message, blogID, c);
+                    SendBlogNotification sender = new SendBlogNotification(fcmToken, senderUID, message, blogID, c, blogOwnerUid);
                     sender.sendNotification();
                 }
             }
