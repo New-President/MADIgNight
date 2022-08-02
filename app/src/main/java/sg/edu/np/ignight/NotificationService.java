@@ -626,7 +626,7 @@ public class NotificationService extends FirebaseMessagingService {
                             builder.setLargeIcon(bitmap);
                             builder.setContentTitle("IgNight");
                             // Display the comment on the blog together with the sender's username on the notification
-                            builder.setContentText(senderUsername + " commented on you blog: " + message);
+                            builder.setContentText(senderUsername + " commented on your blog: " + message);
                             // When user clicks on the notification, it disappears
                             builder.setAutoCancel(true);
 
