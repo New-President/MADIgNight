@@ -159,8 +159,6 @@ public class CommentSectionActivity extends AppCompatActivity {
 
                         Comment newComment = new Comment(commentID, auth.getUid(), username, profUrl, content, timestamp, new ArrayList<String>(), 0);
                         databaseReference.child("commentList").child(commentID).setValue(newComment);
-
-
                     }
 
                     @Override
