@@ -103,7 +103,6 @@ public class FavouriteLocFragment extends Fragment {
                                 Log.d("Added", locNode.getKey());
                             }
                         }
-
                     }
                     // if not specified, all location names will be removed under the same category (can be true but stored in list)
                     else if (!(boolean) locNode.getValue() && favLocationNames.contains(locNode.getKey())){

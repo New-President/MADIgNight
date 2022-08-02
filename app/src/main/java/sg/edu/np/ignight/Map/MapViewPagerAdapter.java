@@ -30,7 +30,7 @@ public class MapViewPagerAdapter extends FragmentStateAdapter {
         userPrefList = new ArrayList<>();
         FirebaseAuth auth = FirebaseAuth.getInstance();
         String uid = auth.getCurrentUser().getUid();
-        FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance("https://madignight-default-rtdb.asia-southeast1.firebasedatabase.app");
+        FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
         DatabaseReference databaseReference = firebaseDatabase.getReference("user").child(uid).child("Date Location");
 
         databaseReference.addValueEventListener(new ValueEventListener() {
@@ -39,21 +39,19 @@ public class MapViewPagerAdapter extends FragmentStateAdapter {
                 for (DataSnapshot keynode : snapshot.getChildren()) {
                     userPrefList.add(keynode.getValue().toString());
                 }
-
             }
-
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
 
             }
         });
+        // Changes fragments based on position selected
         switch (position){
             case (1):
                 return new FavouriteLocFragment();
             case (2):
                 return new AllLocFragment();
             default:
-                Log.d("prefsize", String.valueOf(userPrefList.size()));
                 return new UserPreferredFragment(userPrefList, locationObjectList);
 
         }

@@ -275,7 +275,6 @@ public class ViewLocation extends AppCompatActivity implements OnMapReadyCallbac
                         dialogInterface.cancel();
                     }
                 }).create().show();
-
     }
 
     // Gets location after checking for location premission access
