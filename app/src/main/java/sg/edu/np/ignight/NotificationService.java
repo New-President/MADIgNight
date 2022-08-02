@@ -532,7 +532,7 @@ public class NotificationService extends FirebaseMessagingService {
                             builder.setLargeIcon(bitmap);
                             builder.setContentTitle("IgNight");  // Content as IgNight
                             // display the text as seen on the notification as the username of the user who have the liked the blog
-                            builder.setContentText(senderUsername + " liked you blog.");
+                            builder.setContentText(senderUsername + " liked your blog.");
                             // After the user click on the blog, the notification would disappear
                             builder.setAutoCancel(true);
 

@@ -214,6 +214,9 @@ public class ViewLocation extends AppCompatActivity implements OnMapReadyCallbac
         }
         map.setMyLocationEnabled(true);
         map.setOnInfoWindowClickListener(this);
+        map.getUiSettings().setMapToolbarEnabled(false);
+        map.getUiSettings().setRotateGesturesEnabled(true);
+        map.getUiSettings().setZoomGesturesEnabled(true);
         getCurrentLocation();
     }
 

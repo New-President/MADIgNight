@@ -55,7 +55,6 @@ public class MapAdapter extends RecyclerView.Adapter<MapAdapter.MapViewHolder>{
                 c.startActivity(viewloc);
             }
         });
-        Log.d("AdapterLocation", "onBindViewHolder: " + location.getName());
     }
 
     @Override
