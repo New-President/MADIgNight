@@ -145,7 +145,8 @@ Keefe Cheong Wenkai - Chatbot, Chat requests, Chat notification and settings, Ch
         * Top IgNight user, where the current user has the largest total number of texts sent between both parties
         * Amount of time the user uses IgNight for current day as a bar graph
         * Bar graph has a second value that shows the "goal" amount of time the user sets as comparison to the actual amount of time they spent
-        * Displays the amount of time the user uses IgNight for current day in hours and minutes * Profile Personalisation
+        * Displays the amount of time the user uses IgNight for current day in hours and minutes
+        * Gives usage suggestion based on the user's usage data
 * Profile personalisation (colour theming)
    * Theme view profile of the current user with different colours 
    * For other users to see the colour theme
