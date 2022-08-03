@@ -188,7 +188,7 @@ public class CommentsAdapter extends RecyclerView.Adapter<CommentsAdapter.Commen
                         interestList.add(interestSnapshot.getValue().toString());
                     }
 
-                    UserObject user = new UserObject(uid, aboutMe, age, dateLocList, gender, genderPref, interestList, profilePicUrl, relationshipPref, phone, profileCreated, username);
+                    UserObject user = new UserObject(targetUid, aboutMe, age, dateLocList, gender, genderPref, interestList, profilePicUrl, relationshipPref, phone, profileCreated, username);
 
                     Intent viewUser = new Intent(c, ProfileViewActivity.class);
                     viewUser.putExtra("user", user);
