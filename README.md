@@ -146,7 +146,10 @@ Keefe Cheong Wenkai - Chatbot, Chat requests, Chat notification and settings, Ch
         * Amount of time the user uses IgNight for current day as a bar graph
         * Bar graph has a second value that shows the "goal" amount of time the user sets as comparison to the actual amount of time they spent
         * Displays the amount of time the user uses IgNight for current day in hours and minutes * Profile Personalisation
-    * Colour theming of view profile, unique to each user 
+* Profile personalisation (colour theming)
+   * Theme view profile of the current user with different colours 
+   * For other users to see the colour theme
+   * Saving theme will also preview the current user's theme 
     
 ### Play Store listing screenshots
 ![FeatureGraphic6](https://user-images.githubusercontent.com/103987209/182181996-9ec54524-2193-4877-bb7c-641370a1d502.png)
