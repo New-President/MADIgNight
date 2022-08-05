@@ -9,7 +9,7 @@
         android:id="@+id/notificationImageView"
         android:layout_width="102dp"
         android:layout_height="104dp"
-        android:layout_marginStart="4dp"
+        android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -18,11 +18,13 @@
 
     <TextView
         android:id="@+id/notificationComment"
-        android:layout_width="190dp"
+        android:layout_width="150dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
         android:text="Someone liked your blog"
         app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/blogImage"
         app:layout_constraintStart_toEndOf="@+id/notificationImageView"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -30,12 +32,9 @@
         android:id="@+id/blogImage"
         android:layout_width="102dp"
         android:layout_height="104dp"
-        android:layout_marginStart="16dp"
         android:layout_marginTop="8dp"
-        android:layout_marginEnd="16dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/notificationComment"
         app:layout_constraintTop_toTopOf="parent"
         tools:srcCompat="@tools:sample/avatars" />
 </androidx.constraintlayout.widget.ConstraintLayout>
